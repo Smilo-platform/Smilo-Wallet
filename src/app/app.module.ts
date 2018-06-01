@@ -5,21 +5,20 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 
 import { SmiloWallet } from './app.component';
-import { HomePage } from '../pages/home/home';
+import { HomePageModule } from '../pages/home/home.module';
 
 @NgModule({
   declarations: [
-    SmiloWallet,
-    HomePage
+    SmiloWallet
   ],
   imports: [
     BrowserModule,
+    HomePageModule,
     IonicModule.forRoot(SmiloWallet)
   ],
   bootstrap: [IonicApp],
   entryComponents: [
-    SmiloWallet,
-    HomePage
+    SmiloWallet
   ],
   providers: [
     StatusBar,
