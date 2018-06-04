@@ -1,5 +1,15 @@
 {
+    "slogan": "The latest generation hybrid blockchain platform",
+    "landing": {
+        "get_started": "Get started",
+        "restore_from_backup": "Restore from backup"
+    },
     "home": {
-        "title": "The latest generation hybrid blockchain platform"
+        "buttons": {
+            "new_wallet": "New wallet",
+            "my_wallet": "My wallet",
+            "about": "What is Smilo platform?",
+            "faq": "FAQ"
+        }
     }
 }
