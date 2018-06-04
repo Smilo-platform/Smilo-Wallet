@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { Component } from "@angular/core";
+import { IonicPage, NavController, NavParams } from "ionic-angular";
 
 /**
  * Generated class for the SettingsGeneralPage page.
@@ -10,8 +10,8 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 @IonicPage()
 @Component({
-  selector: 'page-settings-general',
-  templateUrl: 'settings-general.html',
+  selector: "page-settings-general",
+  templateUrl: "settings-general.html",
 })
 export class SettingsGeneralPage {
 
@@ -19,7 +19,7 @@ export class SettingsGeneralPage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad SettingsGeneralPage');
+    console.log("ionViewDidLoad SettingsGeneralPage");
   }
 
 }

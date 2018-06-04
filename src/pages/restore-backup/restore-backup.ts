@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { Component } from "@angular/core";
+import { IonicPage, NavController, NavParams } from "ionic-angular";
 
 /**
  * Generated class for the RestoreBackupPage page.
@@ -10,8 +10,8 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 @IonicPage()
 @Component({
-  selector: 'page-restore-backup',
-  templateUrl: 'restore-backup.html',
+  selector: "page-restore-backup",
+  templateUrl: "restore-backup.html",
 })
 export class RestoreBackupPage {
 
@@ -19,7 +19,7 @@ export class RestoreBackupPage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad RestoreBackupPage');
+    console.log("ionViewDidLoad RestoreBackupPage");
   }
 
 }

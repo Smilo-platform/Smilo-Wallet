@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { Component } from "@angular/core";
+import { IonicPage, NavController, NavParams } from "ionic-angular";
 
 /**
  * Generated class for the WalletImportPrivatekeyPage page.
@@ -10,8 +10,8 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 @IonicPage()
 @Component({
-  selector: 'page-wallet-import-privatekey',
-  templateUrl: 'wallet-import-privatekey.html',
+  selector: "page-wallet-import-privatekey",
+  templateUrl: "wallet-import-privatekey.html",
 })
 export class WalletImportPrivatekeyPage {
 
@@ -19,7 +19,7 @@ export class WalletImportPrivatekeyPage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad WalletImportPrivatekeyPage');
+    console.log("ionViewDidLoad WalletImportPrivatekeyPage");
   }
 
 }

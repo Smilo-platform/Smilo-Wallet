@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { Component } from "@angular/core";
+import { IonicPage, NavController, NavParams } from "ionic-angular";
 
 /**
  * Generated class for the SettingsWalletPage page.
@@ -10,8 +10,8 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 @IonicPage()
 @Component({
-  selector: 'page-settings-wallet',
-  templateUrl: 'settings-wallet.html',
+  selector: "page-settings-wallet",
+  templateUrl: "settings-wallet.html",
 })
 export class SettingsWalletPage {
 
@@ -19,7 +19,7 @@ export class SettingsWalletPage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad SettingsWalletPage');
+    console.log("ionViewDidLoad SettingsWalletPage");
   }
 
 }

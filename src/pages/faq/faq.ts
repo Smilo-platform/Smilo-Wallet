@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { Component } from "@angular/core";
+import { IonicPage, NavController, NavParams } from "ionic-angular";
 
 /**
  * Generated class for the FaqPage page.
@@ -10,8 +10,8 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 @IonicPage()
 @Component({
-  selector: 'page-faq',
-  templateUrl: 'faq.html',
+  selector: "page-faq",
+  templateUrl: "faq.html",
 })
 export class FaqPage {
 
@@ -19,7 +19,6 @@ export class FaqPage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad FaqPage');
+    console.log("ionViewDidLoad FaqPage");
   }
-
 }

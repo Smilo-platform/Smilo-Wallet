@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { IonicPage } from 'ionic-angular';
+import { Component } from "@angular/core";
+import { IonicPage } from "ionic-angular";
 
 /**
  * Generated class for the HomePage page.
@@ -11,7 +11,7 @@ import { IonicPage } from 'ionic-angular';
 @IonicPage()
 @Component({
   selector: "page-home",
-  templateUrl: 'home.html',
+  templateUrl: "home.html",
 })
 export class HomePage {
 
@@ -19,10 +19,6 @@ export class HomePage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad HomePage');
-  }
-
-  multiply(a: number, b: number): number {
-    return a * b;
+    console.log("ionViewDidLoad HomePage");
   }
 }

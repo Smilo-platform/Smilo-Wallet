@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { Component } from "@angular/core";
+import { IonicPage, NavController, NavParams } from "ionic-angular";
 
 /**
  * Generated class for the WalletImportLedgerPage page.
@@ -10,8 +10,8 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 @IonicPage()
 @Component({
-  selector: 'page-wallet-import-ledger',
-  templateUrl: 'wallet-import-ledger.html',
+  selector: "page-wallet-import-ledger",
+  templateUrl: "wallet-import-ledger.html",
 })
 export class WalletImportLedgerPage {
 
@@ -19,7 +19,7 @@ export class WalletImportLedgerPage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad WalletImportLedgerPage');
+    console.log("ionViewDidLoad WalletImportLedgerPage");
   }
 
 }

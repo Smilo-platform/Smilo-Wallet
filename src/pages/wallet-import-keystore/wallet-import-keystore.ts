@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { Component } from "@angular/core";
+import { IonicPage, NavController, NavParams } from "ionic-angular";
 
 /**
  * Generated class for the WalletImportKeystorePage page.
@@ -10,8 +10,8 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 @IonicPage()
 @Component({
-  selector: 'page-wallet-import-keystore',
-  templateUrl: 'wallet-import-keystore.html',
+  selector: "page-wallet-import-keystore",
+  templateUrl: "wallet-import-keystore.html",
 })
 export class WalletImportKeystorePage {
 
@@ -19,7 +19,7 @@ export class WalletImportKeystorePage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad WalletImportKeystorePage');
+    console.log("ionViewDidLoad WalletImportKeystorePage");
   }
 
 }
