@@ -21,3 +21,11 @@ Next run the following command to run the project locally:
 ```
 ionic serve
 ```
+
+## Testing the project
+
+We use Jasmine and Karma to unit test this project. To test the project run the following command in the root of this project:
+
+````
+npm run test
+````
