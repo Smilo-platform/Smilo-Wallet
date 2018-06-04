@@ -5,19 +5,19 @@ import { SplashScreen } from "@ionic-native/splash-screen";
 
 import { HomePage } from "../pages/home/home";
 import { TranslateService } from "@ngx-translate/core";
-import { CryptoKeyService } from "../services/crypto-key-service";
 import { LandingPage } from "../pages/landing/landing";
+import { WalletService } from "../services/wallet-service/wallet-service";
 @Component({
   templateUrl: "app.html"
 })
 export class SmiloWallet {
   rootPage: any;
 
-  constructor(private platform: Platform, 
-              private statusBar: StatusBar, 
-              private splashScreen: SplashScreen,
-              private translate: TranslateService,
-              private cryptoKeyService: CryptoKeyService) {
+  constructor(platform: Platform, 
+              statusBar: StatusBar, 
+              splashScreen: SplashScreen,
+              translate: TranslateService,
+              walletService: WalletService) {
     platform.ready().then(() => {
       statusBar.styleDefault();
       splashScreen.hide();
@@ -25,9 +25,9 @@ export class SmiloWallet {
       translate.setDefaultLang("en");
       translate.use("en");
 
-      this.cryptoKeyService.isNew().then(
-        (isNew) => {
-          if(isNew) {
+      walletService.getAll().then(
+        (wallets) => {
+          if(wallets.length == 0) {
             this.rootPage = LandingPage;
           }
           else {
@@ -38,7 +38,7 @@ export class SmiloWallet {
           // Something went wrong reading the crypto keys.
           // How will we handle this? Generic error page maybe?
         }
-      )
+      );
     });
   }
 }
