@@ -1,12 +1,42 @@
-<ion-header>
-
-  <ion-navbar>
-    <ion-title>home</ion-title>
-  </ion-navbar>
-
-</ion-header>
-
-
 <ion-content padding>
+
+  <div class="logo-container">
+    <img class="logo-container-image" src="/assets/imgs/smilo-logo.png">
+    <div class="logo-container-title">
+      {{ 'home.title' | translate }}
+    </div>
+  </div>
+
+  <div class="button-container">
+    <div (click)="openNewWallet()" class="block-button">
+      {{ 'home.buttons.new_wallet' | translate }}
+    </div>
+
+    <div (click)="openMyWallet()" class="block-button">
+        {{ 'home.buttons.my_wallet' | translate }}
+    </div>
+
+    <div (click)="openAbout()" class="block-button">
+        {{ 'home.buttons.about' | translate }}
+    </div>
+
+    <div (click)="openFaq()" class="block-button">
+        {{ 'home.buttons.faq' | translate }}
+    </div>
+  </div>
+
+  <div class="social-links-container">
+    <img class="social-media-button" src="/assets/imgs/social/telegram.png">
+
+    <img class="social-media-button" src="/assets/imgs/social/facebook.png">
+
+    <img class="social-media-button" src="/assets/imgs/social/twitter.png">
+
+    <img class="social-media-button" src="/assets/imgs/social/linkedin.png">
+
+    <img class="social-media-button" src="/assets/imgs/social/reddit.png">
+
+    <img class="social-media-button" src="/assets/imgs/social/medium.png">
+  </div>
 
 </ion-content>

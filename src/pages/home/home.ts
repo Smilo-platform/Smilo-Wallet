@@ -1,5 +1,9 @@
 import { Component } from "@angular/core";
-import { IonicPage } from "ionic-angular";
+import { IonicPage, NavController } from "ionic-angular";
+import { WalletPage } from "../wallet/wallet";
+import { WalletOverviewPage } from "../wallet-overview/wallet-overview";
+import { AboutPage } from "../about/about";
+import { FaqPage } from "../faq/faq";
 
 /**
  * Generated class for the HomePage page.
@@ -15,10 +19,22 @@ import { IonicPage } from "ionic-angular";
 })
 export class HomePage {
 
-  constructor() {
+  constructor(private navController: NavController) {
   }
 
-  ionViewDidLoad() {
-    console.log("ionViewDidLoad HomePage");
+  openNewWallet() {
+    this.navController.push(WalletPage);
+  }
+
+  openMyWallet() {
+    this.navController.push(WalletOverviewPage);
+  }
+
+  openAbout() {
+    this.navController.push(AboutPage);
+  }
+
+  openFaq() {
+    this.navController.push(FaqPage);
   }
 }
