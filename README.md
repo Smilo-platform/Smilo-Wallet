@@ -24,8 +24,14 @@ ionic serve
 
 ## Testing the project
 
-We use Jasmine and Karma to unit test this project. To test the project run the following command in the root of this project:
+We use Jasmine and Karma to unit test this project. To unit test the project run the following command in the root of this project:
 
 ````
 npm run test
 ````
+
+For end-to-end testing we use Protractor and Jasmine. To e2e test the project first ensure the project is running with `ionic serve`. Next run the following command in the root of this project:
+
+```
+npm run e2e
+```
