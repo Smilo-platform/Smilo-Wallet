@@ -11,5 +11,14 @@
             "about": "What is Smilo platform?",
             "faq": "FAQ"
         }
+    },
+    "create_wallet": {
+        "title": "How would you like to access your wallet?",
+        "buttons": {
+            "keystore": "Keystore file",
+            "private_key": "Private key",
+            "ledger": "Ledger wallet",
+            "restore_backup": "Restore backup"
+        }
     }
 }

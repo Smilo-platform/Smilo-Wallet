@@ -14,3 +14,20 @@
 // To declare rules for a specific mode, create a child rule
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
+
+$smilo-logo-max-height: 125px;
+
+.smilo-button {
+    border: 1px solid gray;
+    margin-bottom: 25px;
+    width: 200px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 2px;
+    color: white;
+    background-color: #4F586B;
+    font-size: 14px;
+    font-weight: bold;
+}
