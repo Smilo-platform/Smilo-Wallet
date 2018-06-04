@@ -8,19 +8,19 @@
   </div>
 
   <div class="action-container">
-    <button class="smilo-button">
+    <button class="smilo-button" (click)="openImportKeystorePage()">
       {{ 'create_wallet.buttons.keystore' | translate }}
     </button>
 
-    <button class="smilo-button">
+    <button class="smilo-button" (click)="openImportPrivatekeyPage()">
       {{ 'create_wallet.buttons.private_key' | translate }}
     </button>
 
-    <button class="smilo-button">
+    <button class="smilo-button" (click)="openImportLedgerPage()">
       {{ 'create_wallet.buttons.ledger' | translate }}
     </button>
 
-    <button class="restore-backup-button">
+    <button class="restore-backup-button" (click)="openRestoreBackupPage()">
       {{ 'create_wallet.buttons.restore_backup' | translate }}
     </button>
   </div>
