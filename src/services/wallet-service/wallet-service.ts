@@ -1,6 +1,8 @@
 import { Injectable } from "@angular/core";
 import { IWallet } from "../../models/IWallet";
-import { File } from "@ionic-native/file";
+import { Storage } from "@ionic/storage";
+
+const WALLET_STORAGE_KEY = "wallets";
 
 export interface IWalletService {
     getAll(): Promise<IWallet[]>;
@@ -12,12 +14,10 @@ export interface IWalletService {
 
 @Injectable()
 export class WalletService implements IWalletService {
-    /**
-     * The storage location relative to the base storage location.
-     */
-    private readonly relativeStorageLocation = "wallets";
 
-    constructor(private file: File) {
+    private wallets: IWallet[];
+
+    constructor(private storage: Storage) {
 
     }
 
@@ -25,43 +25,25 @@ export class WalletService implements IWalletService {
      * Retrieves all wallets from disk.
      */
     getAll(): Promise<IWallet[]> {
-        return this.file.listDir(this.getBaseStorageLocation(), this.relativeStorageLocation).then(
-            (entries) => {
-                // Filter until we only have wallet files left.
-                entries = entries.filter(x => x.fullPath.endsWith(".wallet"));
+        return this.storage.get(WALLET_STORAGE_KEY).then(
+            (walletsJson) => {
+                let wallets: IWallet[] = null;
 
-                // Load the content of each wallet file
-                let promises: Promise<IWallet>[] = [];
-                for(let entry of entries) {
-                    promises.push(
-                        this.file.readAsText(
-                            this.getBaseStorageLocation(), 
-                            `${ this.getBaseStorageLocation() }/${ this.relativeStorageLocation }/${ entry.name }`
-                        ).then(
-                            (text) => {
-                                let wallet: IWallet = null;
-
-                                try {
-                                    wallet = JSON.parse(text);
-                                }
-                                catch(ex) {
-                                    // Could not read wallet because JSON appears to be malformed.
-                                    // How will we handle this?
-                                }
-
-                                return wallet;
-                            }
-                        )
-                    );
+                try {
+                    wallets = JSON.parse(walletsJson);
+                }
+                catch(ex) {
+                    return <any>Promise.reject(`Wallet data appears to be malformed: ${ ex }`);
                 }
 
-                return Promise.all(promises).then(
-                    (wallets) => {
-                        // We must filter one last time to prevent wallets which failed to
-                        // load from existing in the returned array.
-                        return wallets.filter(x => x != null);
-                    }
-                );
+                return wallets;
+            }
+        ).then(
+            (wallets) => {
+                // Do some sanity checks on the wallets here?
+                this.wallets = wallets;
+
+                return wallets;
             }
         );
     }
@@ -71,12 +53,14 @@ export class WalletService implements IWalletService {
      * @param wallet 
      */
     store(wallet: IWallet): Promise<void> {
-        return this.file.writeFile(
-            this.getBaseStorageLocation(),
-            `wallets/${ wallet.id }.wallet`,
-            JSON.stringify(wallet),
-            {replace: true}
-        );
+        
+        // return this.file.writeFile(
+        //     this.getBaseStorageLocation(),
+        //     `wallets/${ wallet.id }.wallet`,
+        //     JSON.stringify(wallet),
+        //     {replace: true}
+        // );
+        return Promise.resolve();
     }
 
     /**
@@ -84,16 +68,10 @@ export class WalletService implements IWalletService {
      * @param wallet 
      */
     remove(wallet: IWallet): Promise<void> {
-        return this.file.removeFile(
-            this.getBaseStorageLocation(),
-            `${ this.relativeStorageLocation }/${ wallet.name }.wallet`
-        ).then<void>();
-    }
-
-    /**
-     * Returns the base storage location of the wallets.
-     */
-    getBaseStorageLocation(): string {
-        return this.file.dataDirectory;
+        // return this.file.removeFile(
+        //     this.getBaseStorageLocation(),
+        //     `${ this.relativeStorageLocation }/${ wallet.name }.wallet`
+        // ).then<void>();
+        return Promise.resolve();
     }
 }

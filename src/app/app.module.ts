@@ -23,6 +23,7 @@ import { RestoreBackupPageModule } from "../pages/restore-backup/restore-backup.
 import { CryptoKeyService } from "../services/crypto-key-service/crypto-key-service";
 import { LandingPageModule } from "../pages/landing/landing.module";
 import { WalletService } from "../services/wallet-service/wallet-service";
+import { IonicStorageModule } from "@ionic/storage";
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -42,6 +43,7 @@ export function HttpLoaderFactory(http: HttpClient) {
         deps: [HttpClient]
       }
     }),
+    IonicStorageModule.forRoot(),
     HomePageModule,
     AboutPageModule,
     WalletOverviewPageModule,
