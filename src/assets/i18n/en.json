@@ -13,11 +13,18 @@
         }
     },
     "create_wallet": {
-        "title": "How would you like to access your wallet?",
+        "title": "What would you like to do?",
         "buttons": {
-            "keystore": "Keystore file",
-            "private_key": "Private key",
-            "ledger": "Ledger wallet",
+            "new": "Create a new wallet",
+            "load": "Load an existing wallet"
+        }
+    },
+    "import_wallet": {
+        "title": "How would you like to import your wallet?",
+        "buttons": {
+            "keystore": "From a keystore file",
+            "private_key": "From a private key",
+            "ledger": "Using a ledger wallet",
             "restore_backup": "Restore backup"
         }
     }

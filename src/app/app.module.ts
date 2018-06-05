@@ -24,6 +24,8 @@ import { CryptoKeyService } from "../services/crypto-key-service/crypto-key-serv
 import { LandingPageModule } from "../pages/landing/landing.module";
 import { WalletService } from "../services/wallet-service/wallet-service";
 import { IonicStorageModule } from "@ionic/storage";
+import { WalletNewPageModule } from "../pages/wallet-new/wallet-new.module";
+import { WalletImportPageModule } from "../pages/wallet-import/wallet-import.module";
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -57,6 +59,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     WalletImportPrivatekeyPageModule,
     RestoreBackupPageModule,
     LandingPageModule,
+    WalletNewPageModule,
+    WalletImportPageModule,
     IonicModule.forRoot(SmiloWallet)
   ],
   bootstrap: [IonicApp],

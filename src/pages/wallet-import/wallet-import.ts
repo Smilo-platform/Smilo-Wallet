@@ -4,25 +4,31 @@ import { WalletImportKeystorePage } from "../wallet-import-keystore/wallet-impor
 import { WalletImportPrivatekeyPage } from "../wallet-import-privatekey/wallet-import-privatekey";
 import { WalletImportLedgerPage } from "../wallet-import-ledger/wallet-import-ledger";
 import { RestoreBackupPage } from "../restore-backup/restore-backup";
-import { WalletNewPage } from "../wallet-new/wallet-new";
-import { WalletImportPage } from "../wallet-import/wallet-import";
 
 @IonicPage()
 @Component({
-  selector: "page-wallet",
-  templateUrl: "wallet.html",
+  selector: "page-wallet-import",
+  templateUrl: "wallet-import.html",
 })
-export class WalletPage {
+export class WalletImportPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
 
-  openNewWalletPage() {
-    this.navCtrl.push(WalletNewPage);
+  openImportKeystorePage() {
+    this.navCtrl.push(WalletImportKeystorePage);
   }
 
-  openLoadWalletPage() {
-    this.navCtrl.push(WalletImportPage);
+  openImportPrivatekeyPage() {
+    this.navCtrl.push(WalletImportPrivatekeyPage);
+  }
+
+  openImportLedgerPage() {
+    this.navCtrl.push(WalletImportLedgerPage);
+  }
+
+  openRestoreBackupPage() {
+    this.navCtrl.push(RestoreBackupPage);
   }
 
 }
