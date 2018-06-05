@@ -20,5 +20,17 @@
             "ledger": "Ledger wallet",
             "restore_backup": "Restore backup"
         }
+    },
+    "settings_page": {
+        "title": "Settings",
+        "headers": {
+            "visual": "Visual",
+            "security": "Security",
+            "language": "Language"
+        },
+        "text": {
+            "night_mode": "Night mode",
+            "2fa": "Two-Factor Authentication"
+        }
     }
 }

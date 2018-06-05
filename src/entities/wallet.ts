@@ -1,6 +1,6 @@
-export declare type WalletType = "local" | "ledger";
+import { IWallet, WalletType } from '../models/IWallet';
 
-export interface IWallet {
+export class Wallet implements IWallet {
     /**
      * Id of this wallet.
      */

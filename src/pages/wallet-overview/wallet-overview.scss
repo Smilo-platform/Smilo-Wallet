@@ -1,3 +1,72 @@
 page-wallet-overview {
+    #totalWalletValue {
+        float: right;
+        font-size: 30px;
+    }
 
+    #totalValueText {
+        float: left;
+    }
+
+    #totalWalletValueCurrency {
+        float: right;
+        font-size: 16px;
+        margin-right: 8px;
+        margin-top: 15px;
+    }
+
+    #doughnutAgenda {
+        margin-top: 20px;
+    }
+
+    .agendaBlock {
+        width: 20px;
+        height: 17px;
+        display: inline-block;
+        margin-right: 8px;
+        margin-top: 10px;
+    }
+    
+    .agendaText {
+        display: inline-block;
+        font-size: 20px;
+    }
+
+    .blue {
+        background-color: #36A1EB;
+    }
+
+    .yellow {
+        background-color: #FFCD55;
+    }
+
+    .agendaTextPercentage {
+        float: right;
+        font-size: 25px;
+    }
+
+    .marginTop {
+        margin-top: 10px;
+    }
+
+    .amountHeader {
+        font-size: 13px;
+    }
+
+    .valueText {
+        font-size: 20px;
+    }
+
+    #aboutWalletHeader{ 
+        margin-top: 30px;
+        margin-bottom: 20px;
+    }
+
+    #walletHeader {
+        margin-bottom: 15px;
+    }
+
+    .walletAddress {
+        font-size: 13px;
+    }
 }

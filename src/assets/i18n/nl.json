@@ -1,3 +1,36 @@
 {
-    
+    "slogan": "The latest generation hybrid blockchain platform",
+    "landing": {
+        "get_started": "Get started",
+        "restore_from_backup": "Restore from backup"
+    },
+    "home": {
+        "buttons": {
+            "new_wallet": "New wallet",
+            "my_wallet": "My wallet",
+            "about": "What is Smilo platform?",
+            "faq": "FAQ"
+        }
+    },
+    "create_wallet": {
+        "title": "How would you like to access your wallet?",
+        "buttons": {
+            "keystore": "Keystore file",
+            "private_key": "Private key",
+            "ledger": "Ledger wallet",
+            "restore_backup": "Restore backup"
+        }
+    },
+    "settings_page": {
+        "title": "Instellingen",
+        "headers": {
+            "visual": "Visueel",
+            "security": "Beveiliging",
+            "language": "Taal"
+        },
+        "text": {
+            "night_mode": "Nacht modus",
+            "2fa": "Twee-Factor Authenticatie"
+        }
+    }
 }

@@ -24,6 +24,7 @@ import { CryptoKeyService } from "../services/crypto-key-service/crypto-key-serv
 import { LandingPageModule } from "../pages/landing/landing.module";
 import { WalletService } from "../services/wallet-service/wallet-service";
 import { IonicStorageModule } from "@ionic/storage";
+import { SettingsProvider } from './../providers/settings/settings';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -67,6 +68,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     StatusBar,
     SplashScreen,
     CryptoKeyService,
+    SettingsProvider,
     WalletService,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]

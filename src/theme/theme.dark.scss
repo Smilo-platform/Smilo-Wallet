@@ -1,0 +1,40 @@
+.dark-theme {
+    ion-content {
+      background-color: #142634;
+      color: #fff;
+    }
+   
+    .toolbar-title {
+      color: #fff;
+      text-align: center;
+    }
+
+    .toolbar-title md {
+      color: #fff;
+      text-align: center;
+    }
+   
+    .header .toolbar-background {
+      background-color: #7E8889;
+    }
+
+    .item-md {
+      background-color: #7E8889;
+    }
+
+    .label {
+      color: #fff;
+    }
+
+    .item-radio-checked div ion-radio div div {
+      background-color: #000080;
+    }
+
+    .item-radio-checked div ion-radio div {
+      border-color:#000080;
+    }
+    
+    .item-radio-checked.item-md ion-label {
+      color:#000080;
+    }
+  }  

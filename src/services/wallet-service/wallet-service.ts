@@ -25,6 +25,7 @@ export class WalletService implements IWalletService {
      * Retrieves all wallets from disk.
      */
     getAll(): Promise<IWallet[]> {
+        console.log("WalletService: Get all wallets");
         return this.storage.get(WALLET_STORAGE_KEY).then(
             (walletsJson) => {
                 let wallets: IWallet[] = null;
@@ -53,7 +54,6 @@ export class WalletService implements IWalletService {
      * @param wallet 
      */
     store(wallet: IWallet): Promise<void> {
-        
         // return this.file.writeFile(
         //     this.getBaseStorageLocation(),
         //     `wallets/${ wallet.id }.wallet`,
