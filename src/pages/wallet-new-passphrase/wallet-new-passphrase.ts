@@ -78,7 +78,7 @@ export class WalletNewPassphrasePage {
    */
   pickWord(word: string) {
     // Extra check to prevent clicking on already clicked words.
-    if(this.enteredWords.indexOf(word) != -1)
+    if(this.isPickedWord(word))
       return;
 
     this.enteredWords.push(word);
