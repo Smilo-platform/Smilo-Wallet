@@ -5,6 +5,7 @@ import { MockNavController } from "../../../test-config/mocks/MockNavController"
 import { MockNavParams } from "../../../test-config/mocks/MockNavParams";
 import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
 import { MockTranslationLoader } from "../../../test-config/mocks/MockTranslationLoader";
+import { PassphraseService } from "../../services/passphrase-service/passphrase-service";
 
 describe("WalletNewPassphrasePage", () => {
   let comp: WalletNewPassphrasePage;
@@ -23,6 +24,7 @@ describe("WalletNewPassphrasePage", () => {
         })
       ],
       providers: [
+        PassphraseService,
         { provide: NavController, useValue: navController },
         { provide: NavParams, useValue: new MockNavParams() }
       ]

@@ -42,5 +42,23 @@
             "download_backup": "Download backup",
             "show_passphrase": "Show passphrase"
         }
+    },
+    "passphrase": {
+        "show": {
+            "title": "Do NOT share your password phrase!",
+            "sub_title": "Please write down the following phrase in the correct word order",
+            "buttons": {
+                "next": "Next"
+            }
+        },
+        "enter": {
+            "title": "Do NOT lose your password phrase!",
+            "sub_title": "Confirm your passphrase in the correct word order.",
+            "passphrase_error": "The passphrase word order is incorrect",
+            "buttons": {
+                "reset": "Reset",
+                "next": "Next"
+            }
+        }
     }
 }
