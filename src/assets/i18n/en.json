@@ -27,5 +27,20 @@
             "ledger": "Using a ledger wallet",
             "restore_backup": "Restore backup"
         }
+    },
+    "new_wallet": {
+        "warning1": "Smilo's wallet is a free, open-source, client-side interface.",
+        "warning2": "You remain in full control of your keys & your funds.",
+        "warning3": "We cannot recover your funds or freeze your account if you visit a phishing site or lose your private key.",
+        "warning4": "Do not lose acces to your wallet!",
+        "warning5": "Make safe back-ups of your wallet file and private key!",
+        "warning6": "Do NOT share your wallet file or private key with anyone!",
+        "warning7": "Your funds will be stolen if you share those details or enter them on a malicious phishing site.",
+        "warning8": "A mnemonic phrase is a list of words which store all the information needed to recover your Smilo wallet.",
+        "warning9": "It is important to make a secure back-up of the words in the correct order!",
+        "buttons": {
+            "download_backup": "Download backup",
+            "show_passphrase": "Show passphrase"
+        }
     }
 }

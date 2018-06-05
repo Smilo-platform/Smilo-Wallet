@@ -6,7 +6,113 @@
 
 </ion-header>
 
-
 <ion-content padding>
+  <div *ngIf="warningState == 'first'">
+    <div class="warning-container">
+      <div class="warning-sub-container">
+        <div class="warning-side">
+          <ion-icon name="alert"></ion-icon>
+        </div>
+  
+        <div class="warning-content">
+          <span class="warning-line">
+            {{ 'new_wallet.warning1' | translate }}
+          </span>
+  
+          <span class="warning-line">
+            {{ 'new_wallet.warning2' | translate }}
+          </span>
+  
+          <span class="warning-line">
+            {{ 'new_wallet.warning3' | translate }}
+          </span>
+        </div>
+  
+        <div class="warning-side">
+          <ion-icon name="alert"></ion-icon>
+        </div>
+      </div>
+  
+      <div class="warning-sub-container">
+          <div class="warning-side">
+            <ion-icon name="alert"></ion-icon>
+          </div>
+    
+          <div class="warning-content">
+            <span class="warning-line bold">
+              {{ 'new_wallet.warning4' | translate }}
+            </span>
+    
+            <span class="warning-line">
+              {{ 'new_wallet.warning5' | translate }}
+            </span>
+          </div>
+    
+          <div class="warning-side">
+            <ion-icon name="alert"></ion-icon>
+          </div>
+        </div>
+    </div>
+  
+    <div class="action-container">
+      <ion-icon class="button-icon" name="download"></ion-icon>
+  
+      <button class="smilo-button" (click)="warningState = 'second'">
+        {{ 'new_wallet.buttons.download_backup' | translate }}
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="warningState == 'second'">
+    <div class="warning-container">
+      <div class="warning-sub-container">
+        <div class="warning-side">
+          <ion-icon name="alert"></ion-icon>
+        </div>
+  
+        <div class="warning-content">
+          <span class="warning-line">
+            {{ 'new_wallet.warning6' | translate }}
+          </span>
+  
+          <span class="warning-line">
+            {{ 'new_wallet.warning7' | translate }}
+          </span>
+        </div>
+  
+        <div class="warning-side">
+          <ion-icon name="alert"></ion-icon>
+        </div>
+      </div>
+  
+      <div class="warning-sub-container">
+          <div class="warning-side">
+            <ion-icon name="alert"></ion-icon>
+          </div>
+    
+          <div class="warning-content">
+            <span class="warning-line">
+              {{ 'new_wallet.warning8' | translate }}
+            </span>
+    
+            <span class="warning-line">
+              {{ 'new_wallet.warning9' | translate }}
+            </span>
+          </div>
+    
+          <div class="warning-side">
+            <ion-icon name="alert"></ion-icon>
+          </div>
+        </div>
+    </div>
+  
+    <div class="action-container">
+      <ion-icon class="button-icon" name="unlock"></ion-icon>
+  
+      <button class="smilo-button" (click)="goToPassphrasePage()">
+        {{ 'new_wallet.buttons.show_passphrase' | translate }}
+      </button>
+    </div>
+  </div>
   
 </ion-content>

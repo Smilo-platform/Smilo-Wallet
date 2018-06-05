@@ -1,12 +1,8 @@
 import { Component } from "@angular/core";
 import { IonicPage, NavController, NavParams } from "ionic-angular";
+import { WalletNewPassphrasePage } from "../wallet-new-passphrase/wallet-new-passphrase";
 
-/**
- * Generated class for the WalletNewPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
+declare type WarningState = "first" | "second";
 
 @IonicPage()
 @Component({
@@ -15,11 +11,13 @@ import { IonicPage, NavController, NavParams } from "ionic-angular";
 })
 export class WalletNewPage {
 
+  warningState: WarningState = "first";
+
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
 
-  ionViewDidLoad() {
-    console.log("ionViewDidLoad WalletNewPage");
+  goToPassphrasePage() {
+    this.navCtrl.push(WalletNewPassphrasePage);
   }
 
 }
