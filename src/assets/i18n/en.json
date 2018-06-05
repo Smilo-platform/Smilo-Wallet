@@ -13,11 +13,18 @@
         }
     },
     "create_wallet": {
-        "title": "How would you like to access your wallet?",
+        "title": "What would you like to do?",
         "buttons": {
-            "keystore": "Keystore file",
-            "private_key": "Private key",
-            "ledger": "Ledger wallet",
+            "new": "Create a new wallet",
+            "load": "Load an existing wallet"
+        }
+    },
+    "import_wallet": {
+        "title": "How would you like to import your wallet?",
+        "buttons": {
+            "keystore": "From a keystore file",
+            "private_key": "From a private key",
+            "ledger": "Using a ledger wallet",
             "restore_backup": "Restore backup"
         }
     },
@@ -31,6 +38,39 @@
         "text": {
             "night_mode": "Night mode",
             "2fa": "Two-Factor Authentication"
+        }
+    },
+    "new_wallet": {
+        "warning1": "Smilo's wallet is a free, open-source, client-side interface.",
+        "warning2": "You remain in full control of your keys & your funds.",
+        "warning3": "We cannot recover your funds or freeze your account if you visit a phishing site or lose your private key.",
+        "warning4": "Do not lose acces to your wallet!",
+        "warning5": "Make safe back-ups of your wallet file and private key!",
+        "warning6": "Do NOT share your wallet file or private key with anyone!",
+        "warning7": "Your funds will be stolen if you share those details or enter them on a malicious phishing site.",
+        "warning8": "A mnemonic phrase is a list of words which store all the information needed to recover your Smilo wallet.",
+        "warning9": "It is important to make a secure back-up of the words in the correct order!",
+        "buttons": {
+            "download_backup": "Download backup",
+            "show_passphrase": "Show passphrase"
+        }
+    },
+    "passphrase": {
+        "show": {
+            "title": "Do NOT share your password phrase!",
+            "sub_title": "Please write down the following phrase in the correct word order",
+            "buttons": {
+                "next": "Next"
+            }
+        },
+        "enter": {
+            "title": "Do NOT lose your password phrase!",
+            "sub_title": "Confirm your passphrase in the correct word order.",
+            "passphrase_error": "The passphrase word order is incorrect",
+            "buttons": {
+                "reset": "Reset",
+                "next": "Next"
+            }
         }
     }
 }

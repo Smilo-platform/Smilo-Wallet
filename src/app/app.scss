@@ -30,4 +30,9 @@ $smilo-logo-max-height: 125px;
     background-color: #4F586B;
     font-size: 14px;
     font-weight: bold;
+
+    &.small {
+        width: 100px;
+        height: 25px;
+    }
 }

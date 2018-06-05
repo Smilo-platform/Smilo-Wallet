@@ -1,0 +1,86 @@
+page-wallet-new-passphrase {
+    .top-container {
+        margin-top: 30px;
+
+        text-align: center;
+
+        .title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .sub-title {
+            font-size: 12px;
+        }
+    }
+
+    .center-container {
+        margin-top: 30px;
+
+        display: flex;
+        justify-content: center;
+
+        .passphrase-box {
+            flex: 1;
+            max-width: 500px;
+            height: 300px;
+            padding: 20px;
+
+            .passphrase-content {
+                height: 100%;
+                border: 1px dotted gray;
+                border-radius: 10px;
+                margin-bottom: 10px;
+
+                .word {
+                    display: inline-flex;
+                    justify-content: center;
+                    align-items: center;
+                    width: 25%;
+                    height: 33%;
+
+                    &:hover {
+                        cursor: pointer;
+                    }
+    
+                    span {
+                        &.is-picked {
+                            color: white;
+                        }
+                    }
+                }
+            }
+
+            .passphrase-footer {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+
+                .passphrase-error {
+                    color: red;
+                    margin-bottom: 10px;
+                }
+            }
+        }
+    }
+
+    @media only screen and (max-width: 950px) {
+        .center-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            
+            .passphrase-box {
+                width: 95vw;
+            }
+        }
+    }
+
+    .bottom-container {
+        margin-top: 30px;
+
+        display: flex;
+        justify-content: center;
+    }
+}

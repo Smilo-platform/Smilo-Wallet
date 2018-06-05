@@ -1,3 +1,9 @@
+<ion-header>
+  <ion-navbar>
+    
+  </ion-navbar>
+</ion-header>
+
 <ion-content padding>
   <div class="top-container">
     <img class="logo" src="/assets/imgs/smilo-logo.png">
@@ -8,7 +14,15 @@
   </div>
 
   <div class="action-container">
-    <button class="smilo-button" (click)="openImportKeystorePage()">
+    <button class="smilo-button" (click)="openNewWalletPage()">
+      {{ 'create_wallet.buttons.new' | translate }}
+    </button>
+
+    <button class="smilo-button" (click)="openLoadWalletPage()">
+      {{ 'create_wallet.buttons.load' | translate }}
+    </button>
+
+    <!-- <button class="smilo-button" (click)="openImportKeystorePage()">
       {{ 'create_wallet.buttons.keystore' | translate }}
     </button>
 
@@ -22,6 +36,6 @@
 
     <button class="restore-backup-button" (click)="openRestoreBackupPage()">
       {{ 'create_wallet.buttons.restore_backup' | translate }}
-    </button>
+    </button> -->
   </div>
 </ion-content>

@@ -1,0 +1,51 @@
+page-wallet-new {
+    .scroll-content {
+        display: flex;
+        justify-content: center;
+
+        .container {
+            .warning-container {
+                .warning-sub-container {
+                    display: flex;
+                    margin-bottom: 50px;
+        
+                    .warning-side {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 30px;
+                        color: red;
+                    }
+        
+                    .warning-content {
+                        flex: 1;
+                        padding: 10px;
+                        .warning-line {
+                            display: block;
+                            margin-bottom: 10px;
+                            font-size: 14px;
+                            text-align: center;
+        
+                            &.bold {
+                                font-weight: bold;
+                            }
+                        }
+                    }
+                }
+            }
+        
+            .action-container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+        
+                .button-icon {
+                    font-size: 30px;
+                    margin-bottom: 20px;
+                }
+            }
+        }
+    }
+    
+}

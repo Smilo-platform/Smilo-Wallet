@@ -1,29 +1,27 @@
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
-import { WalletPage } from "./wallet";
+import { WalletImportPage } from "./wallet-import";
 import { IonicModule, NavController, NavParams} from "ionic-angular/index";
 import { MockNavController } from "../../../test-config/mocks/MockNavController";
 import { MockNavParams } from "../../../test-config/mocks/MockNavParams";
+import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
+import { MockTranslationLoader } from "../../../test-config/mocks/MockTranslationLoader";
 import { WalletImportKeystorePage } from "../wallet-import-keystore/wallet-import-keystore";
 import { WalletImportPrivatekeyPage } from "../wallet-import-privatekey/wallet-import-privatekey";
 import { WalletImportLedgerPage } from "../wallet-import-ledger/wallet-import-ledger";
 import { RestoreBackupPage } from "../restore-backup/restore-backup";
-import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
-import { MockTranslationLoader } from "../../../test-config/mocks/MockTranslationLoader";
-import { WalletNewPage } from "../wallet-new/wallet-new";
-import { WalletImportPage } from "../wallet-import/wallet-import";
 
-describe("WalletPage", () => {
-  let comp: WalletPage;
-  let fixture: ComponentFixture<WalletPage>;
+describe("WalletImportPage", () => {
+  let comp: WalletImportPage;
+  let fixture: ComponentFixture<WalletImportPage>;
   let navController: NavController;
 
   beforeEach(async(() => {
     navController = new MockNavController();
 
     TestBed.configureTestingModule({
-      declarations: [WalletPage],
+      declarations: [WalletImportPage],
       imports: [
-        IonicModule.forRoot(WalletPage),
+        IonicModule.forRoot(WalletImportPage),
         TranslateModule.forRoot({
           loader: {provide: TranslateLoader, useClass: MockTranslationLoader},
         })
@@ -36,25 +34,41 @@ describe("WalletPage", () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(WalletPage);
+    fixture = TestBed.createComponent(WalletImportPage);
     comp = fixture.componentInstance;
   });
 
   it("should create component", () => expect(comp).toBeDefined());
 
-  it("should open the new wallet page correctly", () => {
+  it("should open the import keystore file page correctly", () => {
     spyOn(navController, "push");
 
-    comp.openNewWalletPage();
+    comp.openImportKeystorePage();
 
-    expect(navController.push).toHaveBeenCalledWith(WalletNewPage);
+    expect(navController.push).toHaveBeenCalledWith(WalletImportKeystorePage);
   });
 
-  it("should open the import wallet page correctly", () => {
+  it("should open the import privatekey pagecorrectly", () => {
     spyOn(navController, "push");
 
-    comp.openLoadWalletPage();
+    comp.openImportPrivatekeyPage();
 
-    expect(navController.push).toHaveBeenCalledWith(WalletImportPage);
+    expect(navController.push).toHaveBeenCalledWith(WalletImportPrivatekeyPage);
+  });
+
+  it("should open the import ledger page correctly", () => {
+    spyOn(navController, "push");
+
+    comp.openImportLedgerPage();
+
+    expect(navController.push).toHaveBeenCalledWith(WalletImportLedgerPage);
+  });
+
+  it("should open the restore backup page correctly", () => {
+    spyOn(navController, "push");
+
+    comp.openRestoreBackupPage();
+
+    expect(navController.push).toHaveBeenCalledWith(RestoreBackupPage);
   });
 });

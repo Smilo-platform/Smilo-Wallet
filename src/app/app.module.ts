@@ -25,6 +25,11 @@ import { LandingPageModule } from "../pages/landing/landing.module";
 import { WalletService } from "../services/wallet-service/wallet-service";
 import { IonicStorageModule } from "@ionic/storage";
 import { SettingsProvider } from './../providers/settings/settings';
+import { WalletNewPageModule } from "../pages/wallet-new/wallet-new.module";
+import { WalletImportPageModule } from "../pages/wallet-import/wallet-import.module";
+import { WalletNewPassphrasePageModule } from "../pages/wallet-new-passphrase/wallet-new-passphrase.module";
+import { WalletNewPasswordPageModule } from "../pages/wallet-new-password/wallet-new-password.module";
+import { WalletNewDisclaimerPageModule } from "../pages/wallet-new-disclaimer/wallet-new-disclaimer.module";
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -58,6 +63,11 @@ export function HttpLoaderFactory(http: HttpClient) {
     WalletImportPrivatekeyPageModule,
     RestoreBackupPageModule,
     LandingPageModule,
+    WalletNewPageModule,
+    WalletNewPassphrasePageModule,
+    WalletNewPasswordPageModule,
+    WalletNewDisclaimerPageModule,
+    WalletImportPageModule,
     IonicModule.forRoot(SmiloWallet)
   ],
   bootstrap: [IonicApp],

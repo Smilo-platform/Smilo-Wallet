@@ -31,29 +31,21 @@ export class SmiloWallet {
       translate.setDefaultLang("en");
       translate.use("en");
 
-      this.rootPage = WalletOverviewPage;
-
-      // setTimeout(() => {
-      //   console.log("Retrieving wallets...");
-      //   walletService.getAll().then(
-      //     (wallets) => {
-      //       console.log("Wallets retrieved!");
-      //       if(wallets.length == 0) {
-      //         this.rootPage = LandingPage;
-      //       }
-      //       else {
-      //         this.rootPage = HomePage;
-      //       }
-      //     },
-      //     (error) => {
-      //       // Something went wrong reading the crypto keys.
-      //       // How will we handle this? Generic error page maybe?
-      //       console.error(error);
-      //     }
-      //   );
-      // }, 2000);
-
-      
+      walletService.getAll().then(
+        (wallets) => {
+          if(wallets.length == 0) {
+            this.rootPage = LandingPage;
+          }
+          else {
+            this.rootPage = HomePage;
+          }
+        },
+        (error) => {
+          // Something went wrong reading the crypto keys.
+          // How will we handle this? Generic error page maybe?
+          console.error(error);
+        }
+      );
     });
   }
 }
