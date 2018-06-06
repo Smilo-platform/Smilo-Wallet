@@ -33,8 +33,6 @@ export class WalletNewDisclaimerPage {
       // Do final steps to create the wallet, then go to wallet overview page.
       let wallet = this.prepareWallet();
 
-      console.log(wallet);
-
       return this.walletService.store(wallet).then(
         () => {
           // Wallet created! Now navigate to the wallet overview page.
