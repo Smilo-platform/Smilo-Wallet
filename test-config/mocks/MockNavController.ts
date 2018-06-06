@@ -30,7 +30,8 @@ export class MockNavController extends NavController {
         throw new Error("Method not implemented.");
     }
     setRoot(pageOrViewCtrl: string | Page | ViewController, params?: any, opts?: NavOptions, done?: TransitionDoneFn): Promise<any> {
-        throw new Error("Method not implemented.");
+        return Promise.resolve();
+        //throw new Error("Method not implemented.");
     }
     goToRoot(options: NavOptions): Promise<any> {
         throw new Error("Method not implemented.");

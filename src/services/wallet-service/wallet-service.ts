@@ -10,6 +10,8 @@ export interface IWalletService {
     store(wallet: IWallet): Promise<void>;
 
     remove(wallet: IWallet): Promise<void>;
+
+    generateId(): string;
 }
 
 @Injectable()
@@ -100,6 +102,16 @@ export class WalletService implements IWalletService {
             // Wallet does not exist
             return Promise.resolve();
         }
+    }
+
+    /**
+     * Generates a new wallet id which is unique among the current set of wallets.
+     */
+    generateId() {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            let r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
     }
 
     private writeWalletsToDisk(): Promise<void> {

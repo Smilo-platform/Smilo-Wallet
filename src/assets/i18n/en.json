@@ -85,5 +85,15 @@
         "buttons": {
             "next": "Next"
         }
+    },
+    "disclaimer": {
+        "title": "Just to be sure",
+        "term1": "I am fully responsible for my own funds.",
+        "term2": "My funds will be lost if I lose my 12-word passphrase.",
+        "term3": "My funds will be lost if I use a malicious phising website",
+        "term4": "I have read, understood and agreed to the Terms of Use.",
+        "buttons": {
+            "finish": "Finish"
+        }
     }
 }
