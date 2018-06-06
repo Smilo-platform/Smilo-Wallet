@@ -72,5 +72,18 @@
                 "next": "Next"
             }
         }
+    },
+    "password": {
+        "title": "Keep your password a secret!",
+        "sub_title": "Set a password",
+        "description_title": "Why do I need an additional password?",
+        "description": "The password is nessecary for a user friendly environment!<p>A password in combination with your wallet file will be able to unlock your wallet.<p>If you lose your password, or want to access your wallet from a new device, you will need your 12-word recovery phrase.",
+        "password_title": "Enter your password",
+        "password_hint": "Enter a password",
+        "password_check_hint": "Confirm password",
+        "password_not_matching": "The passwords you entered do not match",
+        "buttons": {
+            "next": "Next"
+        }
     }
 }
