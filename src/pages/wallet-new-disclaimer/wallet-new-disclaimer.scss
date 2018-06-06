@@ -27,6 +27,10 @@ page-wallet-new-disclaimer {
 
                 .term-description-container {
                     flex: 0.9;
+
+                    &:hover {
+                        cursor: pointer;
+                    }
                 }
             }
         }
