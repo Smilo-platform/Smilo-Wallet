@@ -1,4 +1,5 @@
 var webpackConfig = require('./webpack.test.js');
+process.env.CHROME_BIN = require('puppeteer').executablePath();
 
 module.exports = function(config) {
   var _config = {
@@ -54,7 +55,22 @@ module.exports = function(config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['Chrome'],
+    browsers: ['HeadlessChrome'],
+
+    customLaunchers: {
+      HeadlessChrome: {
+        base: 'ChromeHeadless',
+        flags: [
+          '--no-sandbox',
+          '--disable-gpu',
+          '--disable-background-timer-throttling',
+          '--disable-renderer-backgrounding',
+          '--proxy-bypass-list=*',
+          '--proxy-server=\'direct://\''
+       ]
+      }
+    },
+
     singleRun: false
   };
 
