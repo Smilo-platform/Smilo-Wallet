@@ -4,6 +4,8 @@ import { Chart } from 'chart.js';
 import { WalletService } from '../../services/wallet-service/wallet-service';
 import { IWallet, WalletType } from "../../models/IWallet";
 import { ICurrency } from '../../models/ICurrency';
+import { AlertController } from 'ionic-angular';
+import { trigger, state, style, animate, transition } from '@angular/animations';
 
 /**
  * Generated class for the WalletOverviewPage page.
@@ -16,6 +18,13 @@ import { ICurrency } from '../../models/ICurrency';
 @Component({
   selector: "page-wallet-overview",
   templateUrl: "wallet-overview.html",
+  animations: [
+    trigger('visibilityChanged', [
+      state('shown', style({ opacity: 1 })),
+      state('hidden', style({ opacity: 0 , display: "none"})),
+      transition('* => *', animate('500ms'))
+    ])
+  ]
 })
 export class WalletOverviewPage {
   @ViewChild('doughnutCanvas') doughnutCanvas;
@@ -34,10 +43,15 @@ export class WalletOverviewPage {
   currentWalletIndex = 0;
   legendList: string[];
   availableCurrencies: string[] = [];
+  showFundsStatus: boolean = true;
+  twoFactorStatus: boolean = false;
+  visibility: string = 'shown';
+
 
   constructor(public navCtrl: NavController, 
               public navParams: NavParams, 
-              public walletService: WalletService) {
+              public walletService: WalletService,
+              public alertCtrl: AlertController) {
     this.currentWallet = "ETm9QUJLVdJkTqRojTNqswmeAQGaofojJJ";
     this.getAllWallets();
     this.getAvailableCurrencies();
@@ -45,6 +59,47 @@ export class WalletOverviewPage {
 
   ionViewDidLoad() {
     console.log("ionViewDidLoad WalletOverviewPage");
+  }
+
+  showFundsSwitch() {
+    console.log("Show funds switch: " + this.showFundsStatus);
+    if (this.visibility === "shown") {
+      this.visibility = "hidden";
+    } else if (this.visibility === "hidden") {
+      this.visibility = "shown";
+    }
+  }
+
+  twoFactorStatusSwitch() {
+    console.log("Two factor switch: " + this.twoFactorStatus);
+  }
+
+  backupWalletClick() {
+    console.log("Backup wallet click!");
+  }
+
+  deleteWalletClick() {
+    console.log("Delete wallet click!");
+    const confirm = this.alertCtrl.create({
+      title: 'Delete wallet',
+      message: "Are you <b>sure</b> you want to delete this wallet ('" + this.currentWallet.publicKey + "')?",
+      buttons: [
+        {
+          text: 'No, cancel',
+          handler: () => {
+            console.log('No, cancel delete wallet!');
+          }
+        },
+        {
+          text: 'Yes, delete',
+          cssClass: 'deleteButtonCss',
+          handler: () => {
+            console.log('Delete wallet now!');
+          }
+        }
+      ]
+    });
+    confirm.present();
   }
 
   getAllWallets() {
@@ -62,8 +117,6 @@ export class WalletOverviewPage {
       for (var i = 0; i < json.length; i++) {
         this.availableCurrencies.push(json[i].currency);
       }
-      console.log("Available currencies");
-      console.log(this.availableCurrencies);
     });
   }
 
@@ -88,7 +141,6 @@ export class WalletOverviewPage {
   }
 
   setCalculatedCurrencyValue() {
-    console.log("Picked currency:" + this.pickedCurrency);
     this.walletService.getCurrencyValue(this.pickedCurrency).then(data => {
       var json = JSON.parse(JSON.stringify(data));
       var totalValue: number = 0;
@@ -144,11 +196,9 @@ export class WalletOverviewPage {
         labels: this.currenciesForDoughnutCanvasCurrencies
       },
       options: {
-        responsive: true,
         legend: {
           display: false
         },
-        maintainAspectRatio: true,
         legendCallback: function(chart) {
           var text = [];
           for (var i= 0; i < chart.data.datasets[0].data.length; i++) {

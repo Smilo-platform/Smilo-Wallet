@@ -14,6 +14,12 @@ export interface IWalletService {
     remove(wallet: IWallet): Promise<void>;
 
     generateId(): string;
+
+    getWallets();
+
+    getCurrencyValue(currency: string);
+
+    getAvailableCurrencies();
 }
 
 @Injectable()

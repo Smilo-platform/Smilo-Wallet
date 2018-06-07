@@ -18,6 +18,7 @@ page-wallet-overview {
 
     #doughnutAgenda {
         margin-top: 20px;
+        text-align: center;
     }
 
     .blue {
@@ -41,12 +42,12 @@ page-wallet-overview {
         font-size: 26px;
     }
 
-    #aboutWalletHeader{ 
+    .marginHeader { 
         margin-top: 30px;
         margin-bottom: 20px;
     }
 
-    #walletHeader {
+    .walletHeader {
         margin-bottom: 15px;
     }
 
@@ -68,5 +69,16 @@ page-wallet-overview {
     .legendList {
         list-style-type: none;
         padding-left: 6px;
+    }
+
+    .headerIcon {
+        width: auto;
+        float: right;
+    }
+
+    .distributionDougnut {
+        margin: 0 auto;
+        max-height: 162px !important;
+        max-width: 327px !important;
     }
 }

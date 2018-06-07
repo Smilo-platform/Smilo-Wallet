@@ -1,46 +1,80 @@
 <ion-header>
-  <ion-navbar>
-    <ion-title>{{ 'wallet_overview.title' | translate }}</ion-title>
-  </ion-navbar>
+    <ion-navbar>
+        <ion-title>{{ 'wallet_overview.title' | translate }}</ion-title>
+    </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-    <h4 id="walletHeader">{{ 'wallet_overview.wallets' | translate }}</h4>
-    <ion-list radio-group>
-        <ion-item *ngFor="let wallet of wallets; let i = index;">
-            <ion-label class="walletAddress">{{ wallet.publicKey }}</ion-label>
-            <ion-radio *ngIf="i === 0" checked="true" (ionSelect)="setCurrentWallet(i)" value="{{ wallet.publicKey }}"></ion-radio>
-            <ion-radio *ngIf="i > 0" checked="false" (ionSelect)="setCurrentWallet(i)" value="{{ wallet.publicKey }}"></ion-radio>
-        </ion-item>
-    </ion-list>
-    <h4 id="aboutWalletHeader">{{ 'wallet_overview.wallet_info' | translate }}</h4>
-    <ion-card>
-        <ion-card-header *ngFor="let currency of currentWallet.currencies;">
-            <p class="amountHeader">{{ currency.currency }}</p><p class="valueText">{{ currency.amount }}</p>
-        </ion-card-header>
-        <ion-card-header>
-          <p id="totalValueText">{{ 'wallet_overview.total_value' | translate }}</p><p id="totalWalletValue">{{ currentWallet.totalCurrentCurrencyValue }}</p><p id="totalWalletValueCurrency">{{ pickedCurrency }}</p>
-        </ion-card-header>
-    </ion-card>
-    <ion-list>
-          <ion-item>
-            <ion-label>{{ 'wallet_overview.choose_value_currency' | translate }}</ion-label>
-            <ion-select [(ngModel)]="pickedCurrency" (ionChange)="setCalculatedCurrencyValue()" interface="action-sheet">
-              <ion-option  *ngFor="let currency of availableCurrencies" [value]="currency">{{ currency }}</ion-option>
-            </ion-select>
-          </ion-item>
-    </ion-list>
-    <ion-card>
-        <ion-card-header>
-            {{ 'wallet_overview.distribution' | translate }}
-            <canvas #doughnutCanvas> </canvas>
-            <div id="doughnutAgenda" class="legend__list" ref="legend">
-                <ul class="legendList" *ngFor="let legendItem of legendList">
-                    <li>
-                        <div class="legendColorBlock" [style.backgroundColor]="legendItem.backgroundColor"></div><p class="legendText">{{ legendItem.label }} {{ legendItem.data }}%</p>
-                    </li>
-                </ul>
-            </div>
-        </ion-card-header>
-    </ion-card>
+    <ion-grid>
+         <ion-row justify-content-center>
+            <ion-col col-12 col-xl-3>
+                <h4 class="walletHeader">{{ 'wallet_overview.wallets' | translate }}</h4>
+                <ion-list radio-group>
+                    <ion-item *ngFor="let wallet of wallets; let i = index;">
+                        <ion-label class="walletAddress">{{ wallet.publicKey }}</ion-label>
+                        <ion-radio *ngIf="i === 0" checked="true" (ionSelect)="setCurrentWallet(i)" value="{{ wallet.publicKey }}"></ion-radio>
+                        <ion-radio *ngIf="i > 0" checked="false" (ionSelect)="setCurrentWallet(i)" value="{{ wallet.publicKey }}"></ion-radio>
+                    </ion-item>
+                </ion-list>
+            </ion-col>
+            <ion-col [@visibilityChanged]="visibility" col-xl-3>
+                <h4 class="marginHeader">{{ 'wallet_overview.wallet_info' | translate }}</h4>
+                <ion-card>
+                    <ion-card-header *ngFor="let currency of currentWallet.currencies;">
+                        <p class="amountHeader">{{ currency.currency }}</p><p class="valueText">{{ currency.amount }}</p>
+                    </ion-card-header>
+                    <ion-card-header>
+                    <p id="totalValueText">{{ 'wallet_overview.total_value' | translate }}</p><p id="totalWalletValue">{{ currentWallet.totalCurrentCurrencyValue }}</p><p id="totalWalletValueCurrency">{{ pickedCurrency }}</p>
+                    </ion-card-header>
+                </ion-card>
+                <ion-list>
+                    <ion-item>
+                        <ion-label>{{ 'wallet_overview.choose_value_currency' | translate }}</ion-label>
+                        <ion-select [(ngModel)]="pickedCurrency" (ionChange)="setCalculatedCurrencyValue()" interface="action-sheet">
+                        <ion-option  *ngFor="let currency of availableCurrencies" [value]="currency">{{ currency }}</ion-option>
+                        </ion-select>
+                    </ion-item>
+                </ion-list>
+                <ion-card>
+                    <ion-card-header>
+                        {{ 'wallet_overview.distribution' | translate }}
+                        <canvas #doughnutCanvas class="distributionDougnut"> </canvas>
+                        <div id="doughnutAgenda" class="legend__list" ref="legend">
+                            <ul class="legendList" *ngFor="let legendItem of legendList">
+                                <li>
+                                    <div class="legendColorBlock" [style.backgroundColor]="legendItem.backgroundColor"></div><p class="legendText">{{ legendItem.label }} {{ legendItem.data }}%</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </ion-card-header>
+                </ion-card>
+            </ion-col>
+            <ion-col col-12 col-xl-3>
+                <h4 class="marginHeader">Settings</h4>
+                <ion-card>
+                    <ion-list>
+                        <button ion-item>
+                            <ion-label>Show funds</ion-label>
+                            <ion-toggle [(ngModel)]="showFundsStatus" (ionChange)="showFundsSwitch()" color="secondary"></ion-toggle>
+                        </button>
+
+                        <button ion-item>
+                            <ion-label>Two-Factor Authentication</ion-label>
+                            <ion-toggle [(ngModel)]="twoFactorStatus" (ionChange)="twoFactorStatusSwitch()" color="secondary"></ion-toggle>
+                        </button>  
+                    
+                        <button ion-item (click)="backupWalletClick()">
+                            <ion-icon style="color: blue;" name="archive" item-end></ion-icon>
+                            Backup wallet
+                        </button>
+                    
+                        <button ion-item (click)="deleteWalletClick()">
+                            <ion-icon style="color: red;" name="trash" item-end></ion-icon>
+                            Delete wallet
+                        </button>  
+                    </ion-list>
+                </ion-card>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
 </ion-content>
