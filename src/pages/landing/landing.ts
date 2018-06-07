@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { WalletPage } from '../wallet/wallet';
+import { WalletPage, NAVIGATION_ORIGIN_KEY } from '../wallet/wallet';
 import { RestoreBackupPage } from '../restore-backup/restore-backup';
 
 @IonicPage()
@@ -15,10 +15,16 @@ export class LandingPage {
   }
 
   openNewWallet() {
-    this.navCtrl.push(WalletPage);
+    let params = {};
+    params[NAVIGATION_ORIGIN_KEY] = "landing";
+
+    this.navCtrl.push(WalletPage, params);
   }
 
   openRestoreBackup() {
-    this.navCtrl.push(RestoreBackupPage);
+    let params = {};
+    params[NAVIGATION_ORIGIN_KEY] = "landing";
+
+    this.navCtrl.push(RestoreBackupPage, params);
   }
 }

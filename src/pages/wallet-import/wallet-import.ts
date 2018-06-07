@@ -4,6 +4,8 @@ import { WalletImportKeystorePage } from "../wallet-import-keystore/wallet-impor
 import { WalletImportPrivatekeyPage } from "../wallet-import-privatekey/wallet-import-privatekey";
 import { WalletImportLedgerPage } from "../wallet-import-ledger/wallet-import-ledger";
 import { RestoreBackupPage } from "../restore-backup/restore-backup";
+import { NAVIGATION_ORIGIN_KEY } from "../wallet/wallet";
+import { Page } from "ionic-angular/navigation/nav-util";
 
 @IonicPage()
 @Component({
@@ -16,19 +18,26 @@ export class WalletImportPage {
   }
 
   openImportKeystorePage() {
-    this.navCtrl.push(WalletImportKeystorePage);
+    this.navigateTo(WalletImportKeystorePage);
   }
 
   openImportPrivatekeyPage() {
-    this.navCtrl.push(WalletImportPrivatekeyPage);
+    this.navigateTo(WalletImportPrivatekeyPage);
   }
 
   openImportLedgerPage() {
-    this.navCtrl.push(WalletImportLedgerPage);
+    this.navigateTo(WalletImportLedgerPage);
   }
 
   openRestoreBackupPage() {
-    this.navCtrl.push(RestoreBackupPage);
+    this.navigateTo(RestoreBackupPage);
+  }
+
+  navigateTo(page: Page) {
+    let params = {};
+    params[NAVIGATION_ORIGIN_KEY] = this.navParams.get(NAVIGATION_ORIGIN_KEY);
+
+    this.navCtrl.push(page, params);
   }
 
 }
