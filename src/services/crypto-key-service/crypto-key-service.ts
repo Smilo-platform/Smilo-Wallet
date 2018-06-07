@@ -3,12 +3,19 @@ import { IWallet } from "../../models/IWallet";
 import { IKeyPair } from "../../models/IKeyPair";
 
 export interface ICryptoKeyService {
-    generateKeyPair(): IKeyPair;
+    generateKeyPair(passphrase: string[], password: string): IKeyPair;
 }
 
 @Injectable()
 export class CryptoKeyService implements ICryptoKeyService {
-    generateKeyPair(): IKeyPair {
+    /**
+     * Generates a key pair based on the given passphrase and password.
+     * 
+     * The generated private key will be encrypted using the given password.
+     * @param passphrase 
+     * @param password 
+     */
+    generateKeyPair(passphrase: string[], password: string): IKeyPair {
         return {
             privateKey: "SOME_PRIVATE_KEY",
             publicKey: "SOME_PUBLIC_KEY"

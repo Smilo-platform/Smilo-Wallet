@@ -8,7 +8,8 @@
 
 <ion-content padding>
   <div class="container">
-    <div *ngIf="warningState == 'first'">
+    <!-- First warning page -->
+    <div class="warning-1" *ngIf="warningState == 'first'">
       <div class="warning-container">
         <div class="warning-sub-container">
           <div class="warning-side">
@@ -58,13 +59,14 @@
       <div class="action-container">
         <ion-icon class="button-icon" name="download"></ion-icon>
     
-        <button class="smilo-button" (click)="warningState = 'second'">
+        <button class="smilo-button download-backup-button" (click)="warningState = 'second'">
           {{ 'new_wallet.buttons.download_backup' | translate }}
         </button>
       </div>
     </div>
   
-    <div *ngIf="warningState == 'second'">
+    <!-- Second warning page -->
+    <div class="warning-2" *ngIf="warningState == 'second'">
       <div class="warning-container">
         <div class="warning-sub-container">
           <div class="warning-side">
@@ -110,7 +112,7 @@
       <div class="action-container">
         <ion-icon class="button-icon" name="unlock"></ion-icon>
     
-        <button class="smilo-button" (click)="goToPassphrasePage()">
+        <button class="smilo-button show-passphrase-button" (click)="goToPassphrasePage()">
           {{ 'new_wallet.buttons.show_passphrase' | translate }}
         </button>
       </div>

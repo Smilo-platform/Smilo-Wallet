@@ -1,3 +1,43 @@
 page-wallet-new-disclaimer {
+    .top-container {
+        margin-top: 30px;
+        margin-bottom: 30px;
+        text-align: center;
 
+        .title {
+            font-size: 24px;
+            font-weight: bold;
+        }
+    }
+
+    .center-container {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 30px;
+
+        .center-container-content {
+            max-width: 500px;
+
+            .term-container {
+                display: flex;
+                margin-bottom: 20px;
+                .checkbox-container {
+                    flex: 0.1;
+                }
+
+                .term-description-container {
+                    flex: 0.9;
+
+                    &:hover {
+                        cursor: pointer;
+                    }
+                }
+            }
+        }
+    }
+
+    .bottom-container {
+        display: flex;
+        justify-content: center;
+    }
 }

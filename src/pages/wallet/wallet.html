@@ -14,28 +14,12 @@
   </div>
 
   <div class="action-container">
-    <button class="smilo-button" (click)="openNewWalletPage()">
+    <button class="smilo-button new-wallet-button" (click)="openNewWalletPage()">
       {{ 'create_wallet.buttons.new' | translate }}
     </button>
 
-    <button class="smilo-button" (click)="openLoadWalletPage()">
+    <button class="smilo-button import-wallet-button" (click)="openLoadWalletPage()">
       {{ 'create_wallet.buttons.load' | translate }}
     </button>
-
-    <!-- <button class="smilo-button" (click)="openImportKeystorePage()">
-      {{ 'create_wallet.buttons.keystore' | translate }}
-    </button>
-
-    <button class="smilo-button" (click)="openImportPrivatekeyPage()">
-      {{ 'create_wallet.buttons.private_key' | translate }}
-    </button>
-
-    <button class="smilo-button" (click)="openImportLedgerPage()">
-      {{ 'create_wallet.buttons.ledger' | translate }}
-    </button>
-
-    <button class="restore-backup-button" (click)="openRestoreBackupPage()">
-      {{ 'create_wallet.buttons.restore_backup' | translate }}
-    </button> -->
   </div>
 </ion-content>

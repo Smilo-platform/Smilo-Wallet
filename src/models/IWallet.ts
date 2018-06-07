@@ -20,8 +20,4 @@ export interface IWallet {
      * when it is time to sign a transaction.
      */
     type: WalletType;
-    /**
-     * Coins stored on the wallet
-     */
-    storedCoins: ICurrency[];
 }

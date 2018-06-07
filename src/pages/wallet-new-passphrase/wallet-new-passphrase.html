@@ -34,7 +34,7 @@
     </div>
   
     <div class="bottom-container">
-      <button class="smilo-button" (click)="goToEnterState()">
+      <button class="smilo-button next-button" (click)="goToEnterState()">
         {{ 'passphrase.show.buttons.next' | translate }}
       </button>
     </div>
@@ -53,7 +53,7 @@
     </div>
   
     <div class="center-container">
-      <div class="passphrase-box">
+      <div class="passphrase-box shuffled-box">
         <div class="passphrase-content">
           <div class="word" *ngFor="let word of shuffledWords" (click)="pickWord(word)">
             <span [ngClass]="{'is-picked': isPickedWord(word)}">
@@ -63,7 +63,7 @@
         </div>
       </div>
 
-      <div class="passphrase-box">
+      <div class="passphrase-box entered-box">
         <div class="passphrase-content">
           <div class="word" *ngFor="let word of enteredWords">
             <span>
@@ -77,7 +77,7 @@
             {{ 'passphrase.enter.passphrase_error' | translate }}
           </span>
   
-          <button *ngIf="!passphraseIsValid"class="smilo-button small" (click)="reset()">
+          <button *ngIf="!passphraseIsValid"class="smilo-button small reset-button" (click)="reset()">
             {{ 'passphrase.enter.buttons.reset' | translate }}
           </button>
         </div>
@@ -85,7 +85,7 @@
     </div>
   
     <div class="bottom-container">
-      <button *ngIf="passphraseIsValid" class="smilo-button" (click)="next()">
+      <button *ngIf="passphraseIsValid" class="smilo-button next-button" (click)="next()">
         {{ 'passphrase.enter.buttons.next' | translate }}
       </button>
     </div>
