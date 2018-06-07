@@ -1,6 +1,12 @@
 export declare type WalletType = "local" | "ledger";
 
+import { ICurrency } from './ICurrency';
+
 export interface IWallet {
+    /**
+    * The public key
+    */
+    publicKey: string;
     /**
      * Id of this wallet.
      */
@@ -15,7 +21,7 @@ export interface IWallet {
      */
     type: WalletType;
     /**
-    * The public key
-    */
-    publicKey: string;
+     * Coins stored on the wallet
+     */
+    storedCoins: ICurrency[];
 }

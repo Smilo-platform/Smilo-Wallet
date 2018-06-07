@@ -1,58 +1,45 @@
 <ion-header>
-
   <ion-navbar>
-    <ion-title>{{ title }}</ion-title>
+    <ion-title>{{ 'wallet_overview.title' | translate }}</ion-title>
   </ion-navbar>
-
 </ion-header>
 
-
 <ion-content padding>
-    <h4 id="walletHeader">Wallets</h4>
+    <h4 id="walletHeader">{{ 'wallet_overview.wallets' | translate }}</h4>
     <ion-list radio-group>
-        <ion-item>
-          <ion-label class="walletAddress">ETm9QUJLVdJkTqRojTNqswmeAQGaofojJJ</ion-label>
-          <ion-radio checked="true" (ionSelect)="getWalletData()" value="ETm9QUJLVdJkTqRojTNqswmeAQGaofojJJ"></ion-radio>
-        </ion-item>
-
-        <ion-item>
-          <ion-label class="walletAddress">EZ7tP3CBdBKrB9MaBgZNHyDcTg5TFRRpaY</ion-label>
-          <ion-radio checked="false" (ionSelect)="getWalletData()" value="EZ7tP3CBdBKrB9MaBgZNHyDcTg5TFRRpaY"></ion-radio>
+        <ion-item *ngFor="let wallet of wallets; let i = index;">
+            <ion-label class="walletAddress">{{ wallet.publicKey }}</ion-label>
+            <ion-radio *ngIf="i === 0" checked="true" (ionSelect)="setCurrentWallet(i)" value="{{ wallet.publicKey }}"></ion-radio>
+            <ion-radio *ngIf="i > 0" checked="false" (ionSelect)="setCurrentWallet(i)" value="{{ wallet.publicKey }}"></ion-radio>
         </ion-item>
     </ion-list>
-    <h4 id="aboutWalletHeader">Wallet info</h4>
+    <h4 id="aboutWalletHeader">{{ 'wallet_overview.wallet_info' | translate }}</h4>
     <ion-card>
-        <ion-card-header>
-            <p class="amountHeader">Smilo</p><p class="valueText">5712.55234</p>
+        <ion-card-header *ngFor="let currency of currentWallet.currencies;">
+            <p class="amountHeader">{{ currency.currency }}</p><p class="valueText">{{ currency.amount }}</p>
         </ion-card-header>
         <ion-card-header>
-            <p class="amountHeader">SmiloPay</p><p class="valueText">234.27106</p>
-        </ion-card-header>
-        <ion-card-header>
-          <p id="totalValueText">Total value </p><p id="totalWalletValue">{{ currencyAmount }}</p><p id="totalWalletValueCurrency">{{ defaultCurrency }}</p>
+          <p id="totalValueText">{{ 'wallet_overview.total_value' | translate }}</p><p id="totalWalletValue">{{ currentWallet.totalCurrentCurrencyValue }}</p><p id="totalWalletValueCurrency">{{ pickedCurrency }}</p>
         </ion-card-header>
     </ion-card>
     <ion-list>
           <ion-item>
-            <ion-label>Choose value currency</ion-label>
-            <ion-select [(ngModel)]="defaultCurrency" (ionChange)="currencySelected()" interface="action-sheet">
-              <ion-option value="$">$</ion-option>
-              <ion-option value="ETH">ETH</ion-option>
-              <ion-option value="BTC">BTC</ion-option>
+            <ion-label>{{ 'wallet_overview.choose_value_currency' | translate }}</ion-label>
+            <ion-select [(ngModel)]="pickedCurrency" (ionChange)="setCalculatedCurrencyValue()" interface="action-sheet">
+              <ion-option  *ngFor="let currency of availableCurrencies" [value]="currency">{{ currency }}</ion-option>
             </ion-select>
           </ion-item>
     </ion-list>
     <ion-card>
         <ion-card-header>
-            Distribution
+            {{ 'wallet_overview.distribution' | translate }}
             <canvas #doughnutCanvas> </canvas>
-            <div id="doughnutAgenda">
-              <div>
-                  <div class="agendaBlock blue"></div><p class="agendaText">Smilo</p><p class="agendaTextPercentage">73.25%</p>
-              </div>
-              <div class="marginTop">
-                  <div class="agendaBlock yellow"></div><p class="agendaText">SmiloPay</p><p class="agendaTextPercentage">26.75%</p>
-              </div>
+            <div id="doughnutAgenda" class="legend__list" ref="legend">
+                <ul class="legendList" *ngFor="let legendItem of legendList">
+                    <li>
+                        <div class="legendColorBlock" [style.backgroundColor]="legendItem.backgroundColor"></div><p class="legendText">{{ legendItem.label }} {{ legendItem.data }}%</p>
+                    </li>
+                </ul>
             </div>
         </ion-card-header>
     </ion-card>

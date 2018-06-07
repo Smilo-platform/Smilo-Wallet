@@ -36,6 +36,7 @@
     "@types/jasmine": "^2.8.8",
     "angular2-template-loader": "^0.6.2",
     "chart.js": "^2.7.2",
+    "chartjs-plugin-datalabels": "^0.3.0",
     "cordova-sqlite-storage": "^2.3.2",
     "html-loader": "^0.5.5",
     "ionic-angular": "3.9.2",

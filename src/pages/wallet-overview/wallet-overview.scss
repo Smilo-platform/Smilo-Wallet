@@ -6,6 +6,7 @@ page-wallet-overview {
 
     #totalValueText {
         float: left;
+        font-weight: 100;
     }
 
     #totalWalletValueCurrency {
@@ -19,19 +20,6 @@ page-wallet-overview {
         margin-top: 20px;
     }
 
-    .agendaBlock {
-        width: 20px;
-        height: 17px;
-        display: inline-block;
-        margin-right: 8px;
-        margin-top: 10px;
-    }
-    
-    .agendaText {
-        display: inline-block;
-        font-size: 20px;
-    }
-
     .blue {
         background-color: #36A1EB;
     }
@@ -40,21 +28,17 @@ page-wallet-overview {
         background-color: #FFCD55;
     }
 
-    .agendaTextPercentage {
-        float: right;
-        font-size: 25px;
-    }
-
     .marginTop {
         margin-top: 10px;
     }
 
     .amountHeader {
-        font-size: 13px;
+        font-size: 16px;
+        font-weight: 100;
     }
 
     .valueText {
-        font-size: 20px;
+        font-size: 26px;
     }
 
     #aboutWalletHeader{ 
@@ -68,5 +52,21 @@ page-wallet-overview {
 
     .walletAddress {
         font-size: 13px;
+    }
+
+    .legendColorBlock {
+        display: inline-block;
+        margin-right: 8px;
+        width: 26px;
+        height: 10px;
+    }
+
+    .legendText {
+        display: inline-block;
+    }
+    
+    .legendList {
+        list-style-type: none;
+        padding-left: 6px;
     }
 }

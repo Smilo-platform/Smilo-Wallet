@@ -72,5 +72,13 @@
                 "next": "Next"
             }
         }
+    },
+    "wallet_overview": {
+        "title": "Wallet Overview",
+        "wallets": "Wallets",
+        "wallet_info": "Wallet info",
+        "total_value": "Total value",
+        "choose_value_currency": "Choose value currency",
+        "distribution": "Distribution"
     }
 }

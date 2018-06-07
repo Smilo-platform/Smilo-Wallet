@@ -1,8 +1,9 @@
 import { Component, ViewChild } from "@angular/core";
 import { IonicPage, NavController, NavParams } from "ionic-angular";
 import { Chart } from 'chart.js';
-import { Wallet } from '../../entities/wallet';
 import { WalletService } from '../../services/wallet-service/wallet-service';
+import { IWallet, WalletType } from "../../models/IWallet";
+import { ICurrency } from '../../models/ICurrency';
 
 /**
  * Generated class for the WalletOverviewPage page.
@@ -17,45 +18,116 @@ import { WalletService } from '../../services/wallet-service/wallet-service';
   templateUrl: "wallet-overview.html",
 })
 export class WalletOverviewPage {
-  title = "Wallet Overview";
-  defaultCurrency = "$";
   @ViewChild('doughnutCanvas') doughnutCanvas;
+  title = "Wallet Overview";
+  pickedCurrency = "$";
   yellows: number;
   blues: number;
-  doughnutChart: any;
   currencyAmount: number;
-  currentWallet: string;
-  userWallets: string[];
+  smiloWorthPerCoin: number;
+  smiloPayWorthPerCoin: number;
+  doughnutChart: any;
+  wallets: any = [];
+  currenciesForDoughnutCanvas: any = [];
+  currenciesForDoughnutCanvasCurrencies: any = [];
+  currentWallet: any;
+  currentWalletIndex = 0;
+  legendList: string[];
+  availableCurrencies: string[] = [];
 
   constructor(public navCtrl: NavController, 
               public navParams: NavParams, 
               public walletService: WalletService) {
-    this.currencyAmount = 5723.55;
     this.currentWallet = "ETm9QUJLVdJkTqRojTNqswmeAQGaofojJJ";
-    this.getWalletData();
-  }
-
-  getWalletData() {
-    console.log("Get wallet data: ");
-    console.log(this.walletService.getAll());
+    this.getAllWallets();
+    this.getAvailableCurrencies();
   }
 
   ionViewDidLoad() {
     console.log("ionViewDidLoad WalletOverviewPage");
-    this.yellows = 26.75;
-    this.blues = 73.25;
-    this.displayChart();
   }
 
-  currencySelected() {
-    console.log("WalletOverview: Value currency selected: " + this.defaultCurrency);
-    if (this.defaultCurrency === "$") {
-      this.currencyAmount = 5723.55;
-    } else if (this.defaultCurrency === "ETH") {
-      this.currencyAmount = 7.65125;
-    } else if (this.defaultCurrency === "BTC") {
-      this.currencyAmount = 0.65123;
-    }
+  getAllWallets() {
+    this.walletService.getWallets().then(data => {
+      var json = JSON.parse(JSON.stringify(data));
+      this.wallets = json;
+      this.setCurrentWallet(0);
+      this.setCalculatedCurrencyValue();
+    });
+  }
+
+  getAvailableCurrencies() {
+    this.walletService  .getAvailableCurrencies().then(data => {
+      var json = JSON.parse(JSON.stringify(data));
+      for (var i = 0; i < json.length; i++) {
+        this.availableCurrencies.push(json[i].currency);
+      }
+      console.log("Available currencies");
+      console.log(this.availableCurrencies);
+    });
+  }
+
+  getWalletCurrency(publicKey: string) {
+    this.walletService.getWalletCurrency(publicKey).then(data => {
+      var json = JSON.parse(JSON.stringify(data));
+      if (Object.keys(json).length === 0) {
+        console.log("Fail!");
+      } else {
+        console.log("Success!");
+        console.log(json);
+        var currencies = [];
+        for (var i = 0; i < json.storedCoins.length; i++) {
+          let currency: string = json.storedCoins[i].currency;
+          let amount: number = json.storedCoins[i].amount;
+          currencies.push({currency: currency, amount: amount});
+        }
+        this.currentWallet.currencies = currencies;
+        this.setCalculatedCurrencyValue();
+      }
+    });
+  }
+
+  setCalculatedCurrencyValue() {
+    console.log("Picked currency:" + this.pickedCurrency);
+    this.walletService.getCurrencyValue(this.pickedCurrency).then(data => {
+      var json = JSON.parse(JSON.stringify(data));
+      var totalValue: number = 0;
+      var totalCurrencies: number = 0;
+      this.currenciesForDoughnutCanvasCurrencies = [];
+      this.currenciesForDoughnutCanvas = [];
+      for (var i = 0; i < json.length; i++) {
+        var currencyFromApi = json[i].currencyFrom;
+        var valueApi = json[i].value;
+        for (var y = 0; y < this.currentWallet.currencies.length; y++) {
+          if (currencyFromApi === this.currentWallet.currencies[y].currency) {
+            totalValue += (this.currentWallet.currencies[y].amount * valueApi);
+            if (this.currenciesForDoughnutCanvasCurrencies.indexOf(this.currentWallet.currencies[y].currency) === -1) {
+              this.currenciesForDoughnutCanvasCurrencies.push(this.currentWallet.currencies[y].currency);
+              this.currenciesForDoughnutCanvas.push(this.currentWallet.currencies[y].amount);
+              totalCurrencies += this.currentWallet.currencies[y].amount;
+            } 
+            break;
+          }
+        }
+      }
+      for (var i = 0; i < this.currenciesForDoughnutCanvas.length; i++) {
+        var percentage = ((100 / totalCurrencies) * this.currenciesForDoughnutCanvas[i]).toFixed(2);
+        this.currenciesForDoughnutCanvas[i] = percentage;
+      }
+      var fixedNumbers = 7;
+      if (this.pickedCurrency === "$") {
+        fixedNumbers = 2;
+      }
+      this.currentWallet.totalCurrentCurrencyValue = totalValue.toFixed(fixedNumbers);
+      this.displayChart();
+      this.legendList = this.doughnutChart.generateLegend();
+    });
+  }
+
+  setCurrentWallet(index) {
+    this.currentWalletIndex = index;
+    this.currentWallet = this.wallets[this.currentWalletIndex];
+    this.getWalletCurrency(this.currentWallet.publicKey);
   }
  
   displayChart() {
@@ -63,24 +135,31 @@ export class WalletOverviewPage {
       type: 'doughnut',
       data: {
         datasets: [{
-          data: [this.yellows, this.blues],
+          data: this.currenciesForDoughnutCanvas,
           backgroundColor: [
             '#FFCD55',
             '#36A1EB'
           ]
-        }]
+        }],
+        labels: this.currenciesForDoughnutCanvasCurrencies
       },
       options: {
+        responsive: true,
         legend: {
           display: false
         },
-        tooltips: {
-          enabled: false
+        maintainAspectRatio: true,
+        legendCallback: function(chart) {
+          var text = [];
+          for (var i= 0; i < chart.data.datasets[0].data.length; i++) {
+              text.push({backgroundColor: chart.data.datasets[0].backgroundColor[i],
+                         label: chart.data.labels[i],
+                         data: chart.data.datasets[0].data[i]});
+          }
+          return text;
         },
         title: {
-          display: false,
-          fontStyle: 'bold',
-          fontSize: 18
+          display: false
         }
       },
     });
