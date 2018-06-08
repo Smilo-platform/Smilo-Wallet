@@ -51,6 +51,7 @@
     "karma-jasmine-html-reporter": "^1.1.0",
     "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "^3.0.0",
+    "node-forge": "^0.7.5",
     "null-loader": "^0.1.1",
     "protractor": "^5.1.1",
     "rxjs": "5.5.11",
