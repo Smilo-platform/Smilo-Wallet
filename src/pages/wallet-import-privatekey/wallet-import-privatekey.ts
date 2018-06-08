@@ -80,8 +80,6 @@ export class WalletImportPrivatekeyPage {
   showPasswordExplanation() {
     let modal = this.modalController.create(PasswordExplanationPage);
 
-    console.log(`MODEL = ${ modal }`);
-
     modal.present();
   }
 

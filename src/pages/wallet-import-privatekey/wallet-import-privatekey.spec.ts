@@ -14,6 +14,7 @@ import { ILocalWallet } from "../../models/ILocalWallet";
 import { MockCryptoKeyService } from "../../../test-config/mocks/MockCryptoKeyService";
 import { NavigationOrigin, NAVIGATION_ORIGIN_KEY } from "../wallet/wallet";
 import { HomePage } from "../home/home";
+import { MockModalController } from "../../../test-config/mocks/MockModalController";
 
 describe("WalletImportPrivatekeyPage", () => {
   let comp: WalletImportPrivatekeyPage;
@@ -31,9 +32,7 @@ describe("WalletImportPrivatekeyPage", () => {
     navParams = new MockNavParams();
     navController = new MockNavController();
     navigationHelperService = new NavigationHelperService();
-    modalController = <any>{
-      create: () => {}
-    };
+    modalController = new MockModalController();
 
     TestBed.configureTestingModule({
       declarations: [WalletImportPrivatekeyPage],
@@ -133,10 +132,7 @@ describe("WalletImportPrivatekeyPage", () => {
       present: () => {}
     };
 
-    console.log("I AM HERE TOOOOOO");
-    console.log(modalController.create);
     spyOn(modalController, "create").and.callFake(() => {
-      console.log("I AM BEING CALLED HERE BRO!");
       return mockModal
     });
     spyOn(mockModal, "present");
