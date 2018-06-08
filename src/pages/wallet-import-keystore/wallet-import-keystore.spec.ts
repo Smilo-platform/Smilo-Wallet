@@ -259,14 +259,15 @@ describe("WalletImportKeystorePage", () => {
 
     comp.import().then(
       () => {
-        // This path should never be reached!
-        expect(true).toBeFalsy("Promise resolve should not be called");
+        expect(comp.passwordIsInvalid).toBeTruthy("Password should be marked as invalid");
+
+        
 
         done();
       },
       (error) => {
-        expect(error).toBe("Password is not valid for import");
-        expect(comp.passwordIsInvalid).toBeTruthy("Password should be marked as invalid");
+        // This path should never be reached!
+        expect(true).toBeFalsy("Promise resolve should not be called");
 
         done();
       }
@@ -278,10 +279,11 @@ describe("WalletImportKeystorePage", () => {
 
     comp.import().then(
       () => {
-        expect(true).toBeFalsy("Promise resolve should not be called");
+        expect(true).toBeTruthy();
+        done();
       },
       (error) => {
-        expect(error).toBe("Data is not valid for import");
+        expect(true).toBeFalsy("Promise resolve should not be called");
         done();
       }
     )

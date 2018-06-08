@@ -65,7 +65,7 @@ export class WalletImportKeystorePage {
       let wallet = this.prepareWallet();
       if(wallet == null) {
         this.passwordIsInvalid = true;
-        return Promise.reject("Password is not valid for import");
+        return Promise.resolve();
       }
 
       return this.walletService.store(wallet).then(
@@ -84,7 +84,7 @@ export class WalletImportKeystorePage {
       );
     }
     else {
-      return Promise.reject("Data is not valid for import");
+      return Promise.resolve();
     }
   }
 
