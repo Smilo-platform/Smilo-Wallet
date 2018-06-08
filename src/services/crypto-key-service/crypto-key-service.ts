@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-import { IWallet } from "../../models/IWallet";
 import { IKeyPair } from "../../models/IKeyPair";
 
 export interface ICryptoKeyService {

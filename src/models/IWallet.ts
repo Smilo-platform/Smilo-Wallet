@@ -1,7 +1,5 @@
 export declare type WalletType = "local" | "ledger";
 
-import { ICurrency } from './ICurrency';
-
 export interface IWallet {
     /**
     * The public key

@@ -31,8 +31,6 @@ import { WalletNewPassphrasePageModule } from "../pages/wallet-new-passphrase/wa
 import { WalletNewPasswordPageModule } from "../pages/wallet-new-password/wallet-new-password.module";
 import { WalletNewDisclaimerPageModule } from "../pages/wallet-new-disclaimer/wallet-new-disclaimer.module";
 import { NavigationHelperService } from "../services/navigation-helper-service/navigation-helper-service";
-import { PasswordExplanationComponent } from "../components/password-explanation/password-explanation";
-import { ComponentsModule } from "../components/components.module";
 import { PasswordExplanationPage } from "../pages/password-explanation/password-explanation";
 import { PasswordExplanationPageModule } from "../pages/password-explanation/password-explanation.module";
 
