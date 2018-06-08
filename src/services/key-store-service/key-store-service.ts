@@ -1,6 +1,5 @@
 import { Injectable } from "@angular/core";
 import { IKeyStore } from "../../models/IKeyStore";
-import { SSL_OP_NETSCAPE_DEMO_CIPHER_CHANGE_BUG } from "constants";
 
 /**
  * Forge library does not have Typescript typings...
@@ -13,6 +12,7 @@ const CIPHER_ALGO = "AES-CTR";
 
 export interface IKeyStoreService {
     createKeyStore(privateKey: string, password: string): IKeyStore;
+    decryptKeyStore(keyStore: IKeyStore, password: string): string;
 }
 
 @Injectable()

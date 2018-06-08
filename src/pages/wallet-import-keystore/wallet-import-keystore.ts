@@ -65,7 +65,7 @@ export class WalletImportKeystorePage {
       let wallet = this.prepareWallet();
       if(wallet == null) {
         this.passwordIsInvalid = true;
-        return;
+        return Promise.reject("Password is not valid for import");
       }
 
       return this.walletService.store(wallet).then(
@@ -161,35 +161,42 @@ export class WalletImportKeystorePage {
     }
 
     // Run some quick checks to see if all required properties are available
-    if(testKeyStore.cipher != "AES-CTR")
-      return;
-
-    if(!testKeyStore.cipherParams)
-      return;
-
-    if(!this.isDefinedAndFilledString(testKeyStore.cipherParams.iv))
-      return;
-
-    if(!this.isDefinedAndFilledString(testKeyStore.cipherText))
-      return;
-
-    if(!testKeyStore.keyParams)
-      return;
-
-    if(!this.isDefinedAndFilledString(testKeyStore.keyParams.salt))
-      return;
-
-    if(!this.isNumber(testKeyStore.keyParams.iterations))
-      return;
-
-    if(!this.isNumber(testKeyStore.keyParams.keySize))
-      return;
-
-    if(!this.isDefinedAndFilledString(testKeyStore.controlHash))
+    if(!this.isValidKeyStore(testKeyStore))
       return;
 
     this.keyStore = testKeyStore;
     this.keyStoreIsInvalid = false;
+  }
+
+  isValidKeyStore(keyStore: IKeyStore): boolean {
+    if(keyStore.cipher != "AES-CTR")
+      return false;
+
+    if(!keyStore.cipherParams)
+      return false;
+
+    if(!this.isDefinedAndFilledString(keyStore.cipherParams.iv))
+      return false;
+
+    if(!this.isDefinedAndFilledString(keyStore.cipherText))
+      return false;
+
+    if(!keyStore.keyParams)
+      return false;
+
+    if(!this.isDefinedAndFilledString(keyStore.keyParams.salt))
+      return false;
+
+    if(!this.isNumber(keyStore.keyParams.iterations))
+      return false;
+
+    if(!this.isNumber(keyStore.keyParams.keySize))
+      return false;
+
+    if(!this.isDefinedAndFilledString(keyStore.controlHash))
+      return false;
+
+    return true;
   }
 
   /**
