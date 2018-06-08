@@ -3,7 +3,6 @@ import { IonicPage, NavController, NavParams, ModalController } from "ionic-angu
 import { WalletService } from "../../services/wallet-service/wallet-service";
 import { ILocalWallet } from "../../models/ILocalWallet";
 import { CryptoKeyService } from "../../services/crypto-key-service/crypto-key-service";
-import { IWallet } from "../../models/IWallet";
 import { HomePage } from "../home/home";
 import { NavigationOrigin, NAVIGATION_ORIGIN_KEY } from "../wallet/wallet";
 import { NavigationHelperService } from "../../services/navigation-helper-service/navigation-helper-service";
@@ -67,7 +66,7 @@ export class WalletImportPrivatekeyPage {
   /**
    * Prepares the wallet based on the currently entered data.
    */
-  prepareWallet(): IWallet {
+  prepareWallet(): ILocalWallet {
     let wallet: ILocalWallet = {
       id: this.walletService.generateId(),
       name: this.name,
