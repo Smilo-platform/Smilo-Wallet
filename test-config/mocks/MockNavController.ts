@@ -3,7 +3,7 @@ import { Page, NavOptions, TransitionDoneFn } from "ionic-angular/navigation/nav
 
 export class MockNavController extends NavController {
     push(page: string | Page, params?: any, opts?: NavOptions, done?: TransitionDoneFn): Promise<any> {
-        throw new Error("Method not implemented.");
+        return Promise.resolve();
     }
     insert(insertIndex: number, page: string | Page, params?: any, opts?: NavOptions, done?: TransitionDoneFn): Promise<any> {
         throw new Error("Method not implemented.");

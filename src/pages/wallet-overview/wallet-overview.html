@@ -11,13 +11,13 @@
                 <h4 class="walletHeader">{{ 'wallet_overview.wallets' | translate }}</h4>
                 <ion-list radio-group>
                     <ion-item *ngFor="let wallet of wallets; let i = index;">
-                        <ion-label class="walletAddress">{{ wallet.publicKey }}</ion-label>
+                        <ion-label class="walletAddress">{{ wallet.name }} ({{ wallet.publicKey }})</ion-label>
                         <ion-radio *ngIf="i === 0" checked="true" (ionSelect)="setCurrentWallet(i)" value="{{ wallet.publicKey }}"></ion-radio>
                         <ion-radio *ngIf="i > 0" checked="false" (ionSelect)="setCurrentWallet(i)" value="{{ wallet.publicKey }}"></ion-radio>
                     </ion-item>
                 </ion-list>
             </ion-col>
-            <ion-col [@visibilityChanged]="visibility" col-xl-3>
+            <ion-col *ngIf="currentWallet" [@visibilityChanged]="walletFundsVisibility" col-xl-3>
                 <h4 class="marginHeader">{{ 'wallet_overview.wallet_info' | translate }}</h4>
                 <ion-card>
                     <ion-card-header *ngFor="let currency of currentWallet.currencies;">
@@ -55,7 +55,7 @@
                     <ion-list>
                         <button ion-item>
                             <ion-label>Show funds</ion-label>
-                            <ion-toggle [(ngModel)]="showFundsStatus" (ionChange)="showFundsSwitch()" color="secondary"></ion-toggle>
+                            <ion-toggle [(ngModel)]="showFundsStatus" (ionChange)="fundsSwitch()" color="secondary"></ion-toggle>
                         </button>
 
                         <button ion-item>
@@ -65,12 +65,12 @@
                     
                         <button ion-item (click)="backupWalletClick()">
                             <ion-icon style="color: blue;" name="archive" item-end></ion-icon>
-                            Backup wallet
+                            <ion-label>Backup wallet</ion-label>
                         </button>
                     
                         <button ion-item (click)="deleteWalletClick()">
                             <ion-icon style="color: red;" name="trash" item-end></ion-icon>
-                            Delete wallet
+                            <ion-label>Delete wallet</ion-label>
                         </button>  
                     </ion-list>
                 </ion-card>

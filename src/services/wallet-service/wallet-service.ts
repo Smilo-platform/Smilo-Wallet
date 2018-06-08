@@ -15,11 +15,13 @@ export interface IWalletService {
 
     generateId(): string;
 
-    getWallets();
+    getWallets(mockData);
 
-    getCurrencyValue(currency: string);
+    getCurrencyValue(mockData, currency: string);
 
-    getAvailableCurrencies();
+    getAvailableCurrencies(mockData);
+
+    getWalletCurrency(mockData, publicKey: string);
 }
 
 @Injectable()
@@ -70,7 +72,7 @@ export class WalletService implements IWalletService {
     }
 
 
-    getWallets() {
+    getWallets(mockData) {
         return new Promise(resolve => {
             this.http.get('assets/data/walletData.json').subscribe(data => {
                 resolve(data);
@@ -80,7 +82,7 @@ export class WalletService implements IWalletService {
         });
     }
 
-    getCurrencyValue(currency: string) {
+    getCurrencyValue(mockData, currency: string) {
         return new Promise((resolve, reject) => {
             this.http.get('assets/data/currencyValues.json').subscribe(data => {
                 var json = JSON.parse(JSON.stringify(data));
@@ -103,7 +105,7 @@ export class WalletService implements IWalletService {
         });
     }
 
-    getWalletCurrency(publicKey: string) {
+    getWalletCurrency(mockData, publicKey: string) {
         return new Promise((resolve, reject) => {
             this.http.get('assets/data/storedCoins.json').subscribe(data => {
                 var json = JSON.parse(JSON.stringify(data));
@@ -127,7 +129,7 @@ export class WalletService implements IWalletService {
         });
     }
 
-    getAvailableCurrencies() {
+    getAvailableCurrencies(mockData) {
         return new Promise(resolve => {
             this.http.get('assets/data/availableCurrencies.json').subscribe(data => {
                 resolve(data);

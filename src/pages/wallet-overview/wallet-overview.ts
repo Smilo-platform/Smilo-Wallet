@@ -6,6 +6,10 @@ import { IWallet, WalletType } from "../../models/IWallet";
 import { ICurrency } from '../../models/ICurrency';
 import { AlertController } from 'ionic-angular';
 import { trigger, state, style, animate, transition } from '@angular/animations';
+import { LandingPage } from "../landing/landing";
+import { ToastController } from 'ionic-angular';
+import { markParentViewsForCheckProjectedViews } from "@angular/core/src/view/util";
+import { PromiseObservable } from "rxjs/observable/PromiseObservable";
 
 /**
  * Generated class for the WalletOverviewPage page.
@@ -28,58 +32,62 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 })
 export class WalletOverviewPage {
   @ViewChild('doughnutCanvas') doughnutCanvas;
-  title = "Wallet Overview";
-  pickedCurrency = "$";
-  yellows: number;
-  blues: number;
-  currencyAmount: number;
-  smiloWorthPerCoin: number;
-  smiloPayWorthPerCoin: number;
+  pickedCurrency: string;
   doughnutChart: any;
   wallets: any = [];
   currenciesForDoughnutCanvas: any = [];
   currenciesForDoughnutCanvasCurrencies: any = [];
   currentWallet: any;
   currentWalletIndex = 0;
-  legendList: string[];
+  legendList: string[] = [];
   availableCurrencies: string[] = [];
   showFundsStatus: boolean = true;
   twoFactorStatus: boolean = false;
-  visibility: string = 'shown';
+  walletFundsVisibility: string = 'shown';
+  mockData = false;
 
 
   constructor(public navCtrl: NavController, 
               public navParams: NavParams, 
               public walletService: WalletService,
-              public alertCtrl: AlertController) {
-    this.currentWallet = "ETm9QUJLVdJkTqRojTNqswmeAQGaofojJJ";
-    this.getAllWallets();
+              public alertCtrl: AlertController,
+              public toastCtrl: ToastController) {
+    this.getAllWallets().then(data => {
+
+    });
     this.getAvailableCurrencies();
   }
 
   ionViewDidLoad() {
-    console.log("ionViewDidLoad WalletOverviewPage");
+    
   }
 
-  showFundsSwitch() {
-    console.log("Show funds switch: " + this.showFundsStatus);
-    if (this.visibility === "shown") {
-      this.visibility = "hidden";
-    } else if (this.visibility === "hidden") {
-      this.visibility = "shown";
+  fundsSwitch() {
+    if (this.walletFundsVisibility === "shown") {
+      this.walletFundsVisibility = "hidden";
+      this.showFundsStatus = false;
+    } else if (this.walletFundsVisibility === "hidden") {
+      this.walletFundsVisibility = "shown";
+      this.showFundsStatus = true;
     }
   }
 
   twoFactorStatusSwitch() {
-    console.log("Two factor switch: " + this.twoFactorStatus);
+    if (this.twoFactorStatus) {
+      this.twoFactorStatus = false;
+    } else {
+      this.twoFactorStatus = true;
+    }
   }
 
   backupWalletClick() {
-    console.log("Backup wallet click!");
+
   }
 
   deleteWalletClick() {
-    console.log("Delete wallet click!");
+    if (this.currentWallet === null || this.currentWallet === undefined) {
+      return null;
+    }
     const confirm = this.alertCtrl.create({
       title: 'Delete wallet',
       message: "Are you <b>sure</b> you want to delete this wallet ('" + this.currentWallet.publicKey + "')?",
@@ -87,47 +95,73 @@ export class WalletOverviewPage {
         {
           text: 'No, cancel',
           handler: () => {
-            console.log('No, cancel delete wallet!');
+            
           }
         },
         {
           text: 'Yes, delete',
           cssClass: 'deleteButtonCss',
           handler: () => {
-            console.log('Delete wallet now!');
+            this.deleteSelectedWallet(this.currentWallet.publicKey);
           }
         }
       ]
     });
-    confirm.present();
+    if (confirm !== null) {
+      confirm.present();
+    } else {
+      return null;
+    }
   }
 
-  getAllWallets() {
-    this.walletService.getWallets().then(data => {
+  deleteSelectedWallet(publicKey: string) {
+    var index = -1;
+    for (var i = 0; i < this.wallets.length; i++) {
+      if (publicKey === this.wallets[i].publicKey) {
+        index = i;
+        break;
+      }
+    }
+    if (index !== -1) {
+      this.wallets.splice(index, 1);
+      this.setCurrentWallet(0);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  getAllWallets(): Promise<any> {
+    return new Promise(resolve => { this.walletService.getWallets(this.mockData).then(data => {
       var json = JSON.parse(JSON.stringify(data));
       this.wallets = json;
       this.setCurrentWallet(0);
-      this.setCalculatedCurrencyValue();
-    });
+      if (this.currentWallet !== undefined) {
+        this.setCalculatedCurrencyValue();
+      } 
+      resolve(json);
+    })});
   }
 
-  getAvailableCurrencies() {
-    this.walletService  .getAvailableCurrencies().then(data => {
+  getAvailableCurrencies(): Promise<any> {
+    return new Promise(resolve => {this.walletService.getAvailableCurrencies(this.mockData).then(data => {
       var json = JSON.parse(JSON.stringify(data));
       for (var i = 0; i < json.length; i++) {
         this.availableCurrencies.push(json[i].currency);
       }
-    });
+      if (this.availableCurrencies !== undefined) {
+        this.pickedCurrency = this.availableCurrencies[0];
+      }
+      resolve(json);
+    })});
   }
 
-  getWalletCurrency(publicKey: string) {
-    this.walletService.getWalletCurrency(publicKey).then(data => {
+  getWalletCurrency(publicKey: string): Promise<any> {
+    return new Promise(resolve => { this.walletService.getWalletCurrency(this.mockData, publicKey).then(data => {
       var json = JSON.parse(JSON.stringify(data));
       if (Object.keys(json).length === 0) {
-        console.log("Fail!");
+    
       } else {
-        console.log("Success!");
-        console.log(json);
         var currencies = [];
         for (var i = 0; i < json.storedCoins.length; i++) {
           let currency: string = json.storedCoins[i].currency;
@@ -137,11 +171,17 @@ export class WalletOverviewPage {
         this.currentWallet.currencies = currencies;
         this.setCalculatedCurrencyValue();
       }
-    });
+      resolve(json);
+    })});
   }
 
   setCalculatedCurrencyValue() {
-    this.walletService.getCurrencyValue(this.pickedCurrency).then(data => {
+    if (this.pickedCurrency === undefined) {
+      return new Promise(resolve => {
+        resolve([]);
+      });
+    }
+    return new Promise(resolve => {this.walletService.getCurrencyValue(this.mockData, this.pickedCurrency).then(data => {
       var json = JSON.parse(JSON.stringify(data));
       var totalValue: number = 0;
       var totalCurrencies: number = 0;
@@ -172,17 +212,43 @@ export class WalletOverviewPage {
       }
       this.currentWallet.totalCurrentCurrencyValue = totalValue.toFixed(fixedNumbers);
       this.displayChart();
-      this.legendList = this.doughnutChart.generateLegend();
-    });
+      if (this.doughnutChart !== undefined) {
+        this.legendList = this.doughnutChart.generateLegend();
+      }
+      resolve(json);
+    })});
+  }
+
+  openLandingPage() {
+    this.navCtrl.push(LandingPage);
   }
 
   setCurrentWallet(index) {
-    this.currentWalletIndex = index;
-    this.currentWallet = this.wallets[this.currentWalletIndex];
-    this.getWalletCurrency(this.currentWallet.publicKey);
+    if (index < this.wallets.length) {
+      this.currentWalletIndex = index;
+      this.currentWallet = this.wallets[this.currentWalletIndex];
+      this.getWalletCurrency(this.currentWallet.publicKey);
+      return true;
+    } else {
+      this.openLandingPage();
+      let toast = this.toastCtrl.create({
+        message: 'You deleted all your wallets. Returning to main screen.',
+        duration: 5000,
+        position: "Bottom"
+      });
+      if (toast !== null) {
+        toast.present(toast);
+      }
+      return false;
+    }
   }
  
   displayChart() {
+    if (this.currenciesForDoughnutCanvasCurrencies === undefined || 
+        this.currenciesForDoughnutCanvasCurrencies === undefined || 
+        this.doughnutCanvas === undefined) {
+      return false;
+    }
     this.doughnutChart = new Chart(this.doughnutCanvas.nativeElement, {
       type: 'doughnut',
       data: {
