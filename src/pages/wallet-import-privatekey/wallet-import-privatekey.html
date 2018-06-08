@@ -13,28 +13,28 @@
       <ion-label stacked>
         {{ 'import_privatekey.privatekey' | translate }}
       </ion-label>
-      <ion-textarea [(ngModel)]="privateKey" rows="10" cols="50"></ion-textarea> 
+      <ion-textarea class="private-key-input" [(ngModel)]="privateKey" rows="10" cols="50"></ion-textarea> 
     </ion-item>
 
     <ion-item>
       <ion-label stacked>
         {{ 'import_privatekey.name' | translate }}
       </ion-label>
-      <ion-input [(ngModel)]="name"></ion-input>
+      <ion-input class="name-input" [(ngModel)]="name"></ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label stacked>
         {{ 'import_privatekey.password' | translate }}
       </ion-label>
-      <ion-input type="password" [(ngModel)]="password"></ion-input>
+      <ion-input class="password-input" type="password" [(ngModel)]="password"></ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label stacked>
         {{ 'import_privatekey.validate_password' | translate }}
       </ion-label>
-      <ion-input  type="password" [(ngModel)]="confirmedPassword"></ion-input>
+      <ion-input class="password-confirmation-input" type="password" [(ngModel)]="confirmedPassword"></ion-input>
     </ion-item>
   </div>
 
