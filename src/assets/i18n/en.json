@@ -73,6 +73,14 @@
             }
         }
     },
+    "wallet_overview": {
+        "title": "Wallet Overview",
+        "wallets": "Wallets",
+        "wallet_info": "Wallet info",
+        "total_value": "Total value",
+        "choose_value_currency": "Choose value currency",
+        "distribution": "Distribution"
+    },
     "password": {
         "title": "Keep your password a secret!",
         "sub_title": "Set a password",

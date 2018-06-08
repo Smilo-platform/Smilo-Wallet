@@ -1,6 +1,8 @@
 import { Injectable } from "@angular/core";
 import { IWallet } from "../../models/IWallet";
 import { Storage } from "@ionic/storage";
+import { HttpClient } from '@angular/common/http';
+import 'rxjs/add/operator/map';
 
 const WALLET_STORAGE_KEY = "wallets";
 
@@ -16,10 +18,9 @@ export interface IWalletService {
 
 @Injectable()
 export class WalletService implements IWalletService {
-
     private wallets: IWallet[];
 
-    constructor(private storage: Storage) {
+    constructor(private storage: Storage, private http: HttpClient) {
 
     }
 
@@ -60,6 +61,74 @@ export class WalletService implements IWalletService {
                 }
             );
         }
+    }
+
+
+    getWallets() {
+        return new Promise(resolve => {
+            this.http.get('assets/data/walletData.json').subscribe(data => {
+                resolve(data);
+            }, err => {
+                console.log("Get Wallet Data error: " + err);
+            });
+        });
+    }
+
+    getCurrencyValue(currency: string) {
+        return new Promise((resolve, reject) => {
+            this.http.get('assets/data/currencyValues.json').subscribe(data => {
+                var json = JSON.parse(JSON.stringify(data));
+                var foundCurrencies = [];
+                var found = false;
+                for (var i = 0; i < json.length; i++) {
+                    if (json[i].currencyTo === currency) {
+                        found = true;
+                        foundCurrencies.push(json[i]);
+                    }
+                }
+                if (found) {
+                    resolve(foundCurrencies);
+                } else {
+                    reject({});
+                }
+            });
+        }).catch(function(result) {
+            return result;
+        });
+    }
+
+    getWalletCurrency(publicKey: string) {
+        return new Promise((resolve, reject) => {
+            this.http.get('assets/data/storedCoins.json').subscribe(data => {
+                var json = JSON.parse(JSON.stringify(data));
+                var foundWallet = null;
+                var found = false;
+                for (var i = 0; i < json.length; i++) {
+                    if (json[i].publicKey === publicKey) {
+                        found = true;
+                        foundWallet = json[i];
+                        break;
+                    }
+                }
+                if (found) {
+                    resolve(foundWallet);
+                } else {
+                    reject({});
+                }
+            });
+        }).catch(function(result) {
+            return result;
+        });
+    }
+
+    getAvailableCurrencies() {
+        return new Promise(resolve => {
+            this.http.get('assets/data/availableCurrencies.json').subscribe(data => {
+                resolve(data);
+            }, err => {
+                console.log("Get Available Currencies error: " + err);
+            });
+        });
     }
 
     /**
@@ -141,7 +210,6 @@ export class WalletService implements IWalletService {
             if(this.wallets[i].id == wallet.id)
                 return i;
         }
-
         return -1;
     }
 }

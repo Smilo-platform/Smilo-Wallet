@@ -32,5 +32,13 @@
             "night_mode": "Nacht modus",
             "2fa": "Twee-Factor Authenticatie"
         }
+    },
+    "walletOverview": {
+        "title": "Wallet overzicht",
+        "wallets": "Wallets",
+        "wallet_info": "Wallet informatie",
+        "total_value": "Totaal waarde",
+        "choose_value_currency": "Kies valuta waarde",
+        "distribution": "Verdeling"
     }
 }
