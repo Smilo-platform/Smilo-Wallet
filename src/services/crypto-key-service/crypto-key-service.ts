@@ -4,8 +4,6 @@ import { IKeyPair } from "../../models/IKeyPair";
 export interface ICryptoKeyService {
     generateKeyPair(passphrase: string[], password: string): IKeyPair;
     generatePublicKey(privateKey: string): string;
-    encryptPrivateKey(privateKey: string, password: string): string;
-    decryptPrivateKey(privateKey: string, password: string): string;
 }
 
 @Injectable()
@@ -30,22 +28,5 @@ export class CryptoKeyService implements ICryptoKeyService {
      */
     generatePublicKey(privateKey: string): string {
         return "SOME_PUBLIC_KEY";
-    }
-
-    /**
-     * Encrypts the given private key with the given password.
-     * @param privateKey 
-     * @param password 
-     */
-    encryptPrivateKey(privateKey: string, password: string): string {
-        return privateKey;
-    }
-    /**
-     * Decrypts the given encrypted private key with the given password.
-     * @param encryptedPrivateKey 
-     * @param password 
-     */
-    decryptPrivateKey(encryptedPrivateKey: string, password: string): string {
-        return encryptedPrivateKey;
     }
 }
