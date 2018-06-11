@@ -15,6 +15,9 @@ import { MockCryptoKeyService } from "../../../test-config/mocks/MockCryptoKeySe
 import { NavigationOrigin, NAVIGATION_ORIGIN_KEY } from "../wallet/wallet";
 import { HomePage } from "../home/home";
 import { MockModalController } from "../../../test-config/mocks/MockModalController";
+import { IKeyStoreService, KeyStoreService } from "../../services/key-store-service/key-store-service";
+import { MockKeyStoreService } from "../../../test-config/mocks/MockKeyStoreService";
+import { IKeyStore } from "../../models/IKeyStore";
 
 describe("WalletImportPrivatekeyPage", () => {
   let comp: WalletImportPrivatekeyPage;
@@ -25,6 +28,7 @@ describe("WalletImportPrivatekeyPage", () => {
   let navParams: NavParams;
   let navController: NavController;
   let navigationHelperService: NavigationHelperService;
+  let keyStoreService: IKeyStoreService;
 
   beforeEach(async(() => {
     walletService = new MockWalletService();
@@ -33,6 +37,7 @@ describe("WalletImportPrivatekeyPage", () => {
     navController = new MockNavController();
     navigationHelperService = new NavigationHelperService();
     modalController = new MockModalController();
+    keyStoreService = new MockKeyStoreService();
 
     TestBed.configureTestingModule({
       declarations: [WalletImportPrivatekeyPage],
@@ -43,6 +48,7 @@ describe("WalletImportPrivatekeyPage", () => {
         })
       ],
       providers: [
+        { provide: KeyStoreService, useValue: keyStoreService },
         { provide: ModalController, useValue: modalController },
         { provide: NavigationHelperService, useValue: navigationHelperService },
         { provide: CryptoKeyService, useValue: cryptoKeyService },
@@ -144,8 +150,21 @@ describe("WalletImportPrivatekeyPage", () => {
   });
 
   it("should prepare the wallet correctly", () => {
+    let dummyKeyStore: IKeyStore = {
+      cipher: "AES-CTR",
+      cipherParams: {
+        iv: "iv"
+      },
+      cipherText: "cipherText",
+      keyParams: {
+        salt: "salt",
+        iterations: 32,
+        keySize: 32
+      },
+      controlHash: "controlHash"
+    };
+    spyOn(keyStoreService, "createKeyStore").and.returnValue(dummyKeyStore);
     spyOn(cryptoKeyService, "generatePublicKey").and.returnValue("SOME_PUBLIC_KEY");
-    spyOn(cryptoKeyService, "encryptPrivateKey").and.returnValue("ENCRYPTED_PRIVATE_KEY");
     spyOn(walletService, "generateId").and.returnValue("WALLET_ID");
 
     comp.name = "Wallet #1";
@@ -154,16 +173,25 @@ describe("WalletImportPrivatekeyPage", () => {
     
     let wallet = comp.prepareWallet();
 
-    expect(<ILocalWallet>wallet).toEqual({
-      id: "WALLET_ID",
-      name: "Wallet #1",
-      type: "local",
-      publicKey: "SOME_PUBLIC_KEY",
-      encryptedPrivateKey: "ENCRYPTED_PRIVATE_KEY"
-    });
+    expect(wallet.lastUpdateTime).toBeDefined("wallet lastUpdateTime should be defined");
+
+    // Set wallet update time. Since this is set to the current time
+    // there is no real way to unit test its value for correctness.
+    wallet.lastUpdateTime = null;
+
+    expect(wallet).toEqual(
+      {
+        id: "WALLET_ID",
+        name: "Wallet #1",
+        type: "local",
+        publicKey: "SOME_PUBLIC_KEY",
+        keyStore: dummyKeyStore,
+        transactions: [],
+        lastUpdateTime: null
+      }
+    );
 
     expect(cryptoKeyService.generatePublicKey).toHaveBeenCalledWith("SOME_PRIVATE_KEY");
-    expect(cryptoKeyService.encryptPrivateKey).toHaveBeenCalledWith("SOME_PRIVATE_KEY", "pass123");
   });
 
   it("should handle the import correctly", (done) => {

@@ -33,6 +33,7 @@ import { WalletNewDisclaimerPageModule } from "../pages/wallet-new-disclaimer/wa
 import { NavigationHelperService } from "../services/navigation-helper-service/navigation-helper-service";
 import { PasswordExplanationPage } from "../pages/password-explanation/password-explanation";
 import { PasswordExplanationPageModule } from "../pages/password-explanation/password-explanation.module";
+import { KeyStoreService } from "../services/key-store-service/key-store-service";
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -87,6 +88,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     SettingsProvider,
     WalletService,
     NavigationHelperService,
+    KeyStoreService,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

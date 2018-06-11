@@ -113,6 +113,19 @@
             "import": "Import"
         }
     },
+    "import_keystore": {
+        "keystore": "Paste your key store below",
+        "name": "Wallet name",
+        "password": "Keystore password",
+        "error_format": "The key store appears to have an invalid format. Please ensure the key store is a valid Smilo key store!",
+        "error_password": "The entered password is invalid",
+        "buttons": {
+            "import": "Import"
+        },
+        "toast": {
+            "success": "Wallet imported!"
+        }
+    },
     "password_explanation": {
         "title": "Why do I need an additional password?",
         "content": "The password is nessecary for a user friendly environment!<p>A password in combination with your wallet file will be able to unlock your wallet.<p>If you lose your password, or want to access your wallet from a new device, you will need your 12-word recovery phrase.",

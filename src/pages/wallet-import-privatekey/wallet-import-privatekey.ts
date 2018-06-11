@@ -3,11 +3,11 @@ import { IonicPage, NavController, NavParams, ModalController } from "ionic-angu
 import { WalletService } from "../../services/wallet-service/wallet-service";
 import { ILocalWallet } from "../../models/ILocalWallet";
 import { CryptoKeyService } from "../../services/crypto-key-service/crypto-key-service";
-import { IWallet } from "../../models/IWallet";
 import { HomePage } from "../home/home";
 import { NavigationOrigin, NAVIGATION_ORIGIN_KEY } from "../wallet/wallet";
 import { NavigationHelperService } from "../../services/navigation-helper-service/navigation-helper-service";
 import { PasswordExplanationPage } from "../password-explanation/password-explanation";
+import { KeyStoreService } from "../../services/key-store-service/key-store-service";
 
 @IonicPage()
 @Component({
@@ -26,7 +26,8 @@ export class WalletImportPrivatekeyPage {
               private walletService: WalletService,
               private cryptoKeyService: CryptoKeyService,
               private navigationHelperService: NavigationHelperService,
-              private modalController: ModalController) {
+              private modalController: ModalController,
+              private keyStoreService: KeyStoreService) {
   }
 
   import(): Promise<void> {
@@ -65,13 +66,15 @@ export class WalletImportPrivatekeyPage {
   /**
    * Prepares the wallet based on the currently entered data.
    */
-  prepareWallet(): IWallet {
+  prepareWallet(): ILocalWallet {
     let wallet: ILocalWallet = {
       id: this.walletService.generateId(),
       name: this.name,
       type: "local",
       publicKey: this.cryptoKeyService.generatePublicKey(this.privateKey),
-      encryptedPrivateKey: this.cryptoKeyService.encryptPrivateKey(this.privateKey, this.password)
+      keyStore: this.keyStoreService.createKeyStore(this.privateKey, this.password),
+      transactions: [],
+      lastUpdateTime: null
     };
 
     return wallet;
