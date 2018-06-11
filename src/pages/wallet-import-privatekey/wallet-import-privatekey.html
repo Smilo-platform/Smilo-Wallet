@@ -27,20 +27,20 @@
       <ion-label stacked>
         {{ 'import_privatekey.password' | translate }}
       </ion-label>
-      <ion-input class="password-input" type="password" [(ngModel)]="password"></ion-input>
+      <ion-input class="password-input" type="password" [(ngModel)]="password" (ionChange)="onPasswordsChanged()"></ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label stacked>
         {{ 'import_privatekey.validate_password' | translate }}
       </ion-label>
-      <ion-input class="password-confirmation-input" type="password" [(ngModel)]="confirmedPassword"></ion-input>
+      <ion-input class="password-confirmation-input" type="password" [(ngModel)]="confirmedPassword" (ionChange)="onPasswordsChanged()"></ion-input>
     </ion-item>
   </div>
 
   <div class="action-container">
-    <span *ngIf="!passwordsArePristine() && !passwordsAreValid()" class="password-error">
-      {{ 'import_privatekey.password_error' | translate }}
+    <span *ngIf="!passwordsArePristine() && passwordStatus.type != 'success'" class="password-error">
+      {{ passwordStatus.message }}
     </span>
 
     <a class="password-explanation" (click)="showPasswordExplanation()">

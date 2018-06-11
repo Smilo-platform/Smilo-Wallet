@@ -27,7 +27,7 @@
         <ion-input type="password" 
                    class="password-input"
                    [(ngModel)]="password" 
-                   (ngModelChange)="onPasswordChanged()"></ion-input>
+                   (ionChange)="onPasswordChanged()"></ion-input>
       </ion-item>
   
       <ion-item>
@@ -37,7 +37,7 @@
         <ion-input type="password" 
                    class="password-confirm-input"
                    [(ngModel)]="passwordConfirm" 
-                   (ngModelChange)="onPasswordChanged()"></ion-input>
+                   (ionChange)="onPasswordChanged()"></ion-input>
       </ion-item>
 
       <ion-item>

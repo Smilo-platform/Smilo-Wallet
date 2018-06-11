@@ -8,6 +8,7 @@ import { NavigationOrigin, NAVIGATION_ORIGIN_KEY } from "../wallet/wallet";
 import { NavigationHelperService } from "../../services/navigation-helper-service/navigation-helper-service";
 import { PasswordExplanationPage } from "../password-explanation/password-explanation";
 import { KeyStoreService } from "../../services/key-store-service/key-store-service";
+import { IPasswordValidationResult, PasswordService } from "../../services/password-service/password-service";
 
 @IonicPage()
 @Component({
@@ -20,6 +21,7 @@ export class WalletImportPrivatekeyPage {
   name: string = "";
   password: string = "";
   confirmedPassword: string = "";
+  passwordStatus: IPasswordValidationResult;
 
   constructor(private navCtrl: NavController,
               private navParams: NavParams,
@@ -27,7 +29,8 @@ export class WalletImportPrivatekeyPage {
               private cryptoKeyService: CryptoKeyService,
               private navigationHelperService: NavigationHelperService,
               private modalController: ModalController,
-              private keyStoreService: KeyStoreService) {
+              private keyStoreService: KeyStoreService,
+              private passwordService: PasswordService) {
   }
 
   import(): Promise<void> {
@@ -79,6 +82,10 @@ export class WalletImportPrivatekeyPage {
 
     return wallet;
   }
+
+  onPasswordsChanged() {
+    this.passwordStatus = this.passwordService.validate(this.password, this.confirmedPassword);
+  }
   
   showPasswordExplanation() {
     let modal = this.modalController.create(PasswordExplanationPage);
@@ -89,15 +96,13 @@ export class WalletImportPrivatekeyPage {
   dataIsValid() {
     return this.privateKey.length > 0 &&
            !this.passwordsArePristine() &&
-           this.passwordsAreValid() &&
+           this.passwordStatus &&
+           this.passwordStatus.type == "success" &&
            this.name.length > 0;
   }
 
   passwordsArePristine(): boolean {
     return this.password.length == 0 ||
            this.confirmedPassword.length == 0;
-  }
-  passwordsAreValid(): boolean {
-    return this.password == this.confirmedPassword;
   }
 }
