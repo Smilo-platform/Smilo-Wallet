@@ -1,12 +1,67 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>restore-backup</ion-title>
+    <ion-title></ion-title>
   </ion-navbar>
 
 </ion-header>
 
-
 <ion-content padding>
+  <div class="center-container">
+    <div class="input-container">
+      <ion-item>
+        <ion-label stacked>
+          {{ 'restore_backup.instruction' | translate }}
+        </ion-label>
+        <ion-textarea rows="3"
+                   [(ngModel)]="passphrase" 
+                   (blur)="onPassphraseChanged()"
+                   class="passphrase-input"
+                   [placeholder]="'restore_backup.passphrase_hint' | translate"></ion-textarea>
+      </ion-item>
+  
+      <ion-item>
+        <ion-label stacked>
+          {{ 'restore_backup.password_instruction' | translate }}
+        </ion-label>
+        <ion-input type="password" 
+                   class="password-input"
+                   [(ngModel)]="password" 
+                   (ngModelChange)="onPasswordChanged()"></ion-input>
+      </ion-item>
+  
+      <ion-item>
+        <ion-label stacked>
+          {{ 'restore_backup.password_confirm_instruction' | translate }}
+        </ion-label>
+        <ion-input type="password" 
+                   class="password-confirm-input"
+                   [(ngModel)]="passwordConfirm" 
+                   (ngModelChange)="onPasswordChanged()"></ion-input>
+      </ion-item>
 
+      <ion-item>
+          <ion-label stacked>
+            {{ 'restore_backup.wallet_name' | translate }}
+          </ion-label>
+          <ion-input class="name-input" [(ngModel)]="walletName"></ion-input>
+        </ion-item>
+    </div>
+  </div>
+  
+  <div class="action-container">
+    <span *ngIf="passwordStatus && passwordStatus.type != 'success'" 
+          [ngClass]="{'error-box': passwordStatus.type == 'error', 'warning-box': passwordStatus.type == 'warning'}" 
+          class="password-message-box">
+      {{ passwordStatus.message }}
+    </span>
+
+    <span *ngIf="passphrase.length > 0 && passphraseIsValid == false" class="error-box passphrase-message-box">
+      {{ 'restore_backup.passphrase_error' | translate }}
+    </span>
+
+    <button *ngIf="dataIsValid()" class="smilo-button import-button" (click)="import()">
+      {{ 'restore_backup.buttons.import' | translate }}
+    </button>
+  </div>
 </ion-content>

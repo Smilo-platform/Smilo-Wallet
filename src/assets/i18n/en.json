@@ -132,5 +132,24 @@
         "buttons": {
             "ok": "ok"
         }
+    },
+    "restore_backup": {
+        "instruction": "Enter your 12-word recovery phrase",
+        "passphrase_hint": "Add spaces between each word",
+        "password_instruction": "Set password",
+        "wallet_name": "Wallet name",
+        "password_confirm_instruction": "Confirm password",
+        "passphrase_error": "The passphrase you entered is incorrect. Please make sure you enter the correct amount of words.",
+        "buttons": {
+            "import": "Import"
+        }
+    },
+    "password_messages": {
+        "warnings": {
+            "weak": "Your password is very weak. Consider using a stronger password."
+        },
+        "errors": {
+            "not_matching": "The passwords do not match."
+        }
     }
 }
