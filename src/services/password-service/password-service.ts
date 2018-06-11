@@ -34,7 +34,7 @@ export class PasswordService implements IPasswordService {
     }
 
     /**
-     * Validates if the given password 
+     * Validates if the given password are valid.
      */
     validate(password: string, passwordConfirm: string): IPasswordValidationResult {
         // TODO: do a password strength test
