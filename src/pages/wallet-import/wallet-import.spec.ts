@@ -14,9 +14,11 @@ describe("WalletImportPage", () => {
   let comp: WalletImportPage;
   let fixture: ComponentFixture<WalletImportPage>;
   let navController: NavController;
+  let navParams: NavParams;
 
   beforeEach(async(() => {
     navController = new MockNavController();
+    navParams = new MockNavParams();
 
     TestBed.configureTestingModule({
       declarations: [WalletImportPage],
@@ -28,10 +30,23 @@ describe("WalletImportPage", () => {
       ],
       providers: [
         { provide: NavController, useValue: navController },
-        { provide: NavParams, useValue: new MockNavParams() }
+        { provide: NavParams, useValue: navParams }
       ]
     }).compileComponents();
   }));
+
+  beforeEach(() => {
+    let realGetFunction = navParams.get;
+
+    spyOn(navParams, "get").and.callFake((key) => {
+      if(key == "NAVIGATION_ORIGIN") {
+        return "home";
+      }
+      else {
+        realGetFunction.call(navParams, key);
+      }
+    });
+  })
 
   beforeEach(() => {
     fixture = TestBed.createComponent(WalletImportPage);
@@ -45,7 +60,7 @@ describe("WalletImportPage", () => {
 
     comp.openImportKeystorePage();
 
-    expect(navController.push).toHaveBeenCalledWith(WalletImportKeystorePage);
+    expect(navController.push).toHaveBeenCalledWith(WalletImportKeystorePage, {NAVIGATION_ORIGIN: "home"});
   });
 
   it("should open the import privatekey pagecorrectly", () => {
@@ -53,7 +68,7 @@ describe("WalletImportPage", () => {
 
     comp.openImportPrivatekeyPage();
 
-    expect(navController.push).toHaveBeenCalledWith(WalletImportPrivatekeyPage);
+    expect(navController.push).toHaveBeenCalledWith(WalletImportPrivatekeyPage, {NAVIGATION_ORIGIN: "home"});
   });
 
   it("should open the import ledger page correctly", () => {
@@ -61,7 +76,7 @@ describe("WalletImportPage", () => {
 
     comp.openImportLedgerPage();
 
-    expect(navController.push).toHaveBeenCalledWith(WalletImportLedgerPage);
+    expect(navController.push).toHaveBeenCalledWith(WalletImportLedgerPage, {NAVIGATION_ORIGIN: "home"});
   });
 
   it("should open the restore backup page correctly", () => {
@@ -69,6 +84,6 @@ describe("WalletImportPage", () => {
 
     comp.openRestoreBackupPage();
 
-    expect(navController.push).toHaveBeenCalledWith(RestoreBackupPage);
+    expect(navController.push).toHaveBeenCalledWith(RestoreBackupPage, {NAVIGATION_ORIGIN: "home"});
   });
 });

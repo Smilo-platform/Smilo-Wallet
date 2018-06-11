@@ -84,8 +84,6 @@
     "password": {
         "title": "Keep your password a secret!",
         "sub_title": "Set a password",
-        "description_title": "Why do I need an additional password?",
-        "description": "The password is nessecary for a user friendly environment!<p>A password in combination with your wallet file will be able to unlock your wallet.<p>If you lose your password, or want to access your wallet from a new device, you will need your 12-word recovery phrase.",
         "password_title": "Enter your password",
         "password_hint": "Enter a password",
         "password_check_hint": "Confirm password",
@@ -102,6 +100,24 @@
         "term4": "I have read, understood and agreed to the Terms of Use.",
         "buttons": {
             "finish": "Finish"
+        }
+    },
+    "import_privatekey": {
+        "privatekey": "Paste your private key below",
+        "name": "Wallet name",
+        "password": "Enter password",
+        "password_why": "Why do I need a password?",
+        "password_error": "The passwords you entered do not match",
+        "validate_password": "Confirm password",
+        "buttons": {
+            "import": "Import"
+        }
+    },
+    "password_explanation": {
+        "title": "Why do I need an additional password?",
+        "content": "The password is nessecary for a user friendly environment!<p>A password in combination with your wallet file will be able to unlock your wallet.<p>If you lose your password, or want to access your wallet from a new device, you will need your 12-word recovery phrase.",
+        "buttons": {
+            "ok": "ok"
         }
     }
 }

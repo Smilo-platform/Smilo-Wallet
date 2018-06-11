@@ -30,10 +30,10 @@ describe("WalletOverviewPage", () => {
     }).compileComponents();
   }));
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(WalletOverviewPage);
-    comp = fixture.componentInstance;
-  });
+  // beforeEach(() => {
+  //   fixture = TestBed.createComponent(WalletOverviewPage);
+  //   comp = fixture.componentInstance;
+  // });
 
-  it("should create component", () => expect(comp).toBeDefined())
+  // it("should create component", () => expect(comp).toBeDefined())
 });

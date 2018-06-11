@@ -54,7 +54,7 @@ describe("HomePage", () => {
 
     comp.openNewWallet();
 
-    expect(navController.push).toHaveBeenCalledWith(WalletPage);
+    expect(navController.push).toHaveBeenCalledWith(WalletPage, {NAVIGATION_ORIGIN: "home"});
   });
 
   it("should open the about page correctly", () => {
