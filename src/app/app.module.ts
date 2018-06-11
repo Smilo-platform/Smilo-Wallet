@@ -34,6 +34,7 @@ import { NavigationHelperService } from "../services/navigation-helper-service/n
 import { PasswordExplanationPage } from "../pages/password-explanation/password-explanation";
 import { PasswordExplanationPageModule } from "../pages/password-explanation/password-explanation.module";
 import { KeyStoreService } from "../services/key-store-service/key-store-service";
+import { PasswordService } from "../services/password-service/password-service";
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, "assets/i18n/");
@@ -89,6 +90,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     WalletService,
     NavigationHelperService,
     KeyStoreService,
+    PasswordService,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
