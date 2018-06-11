@@ -40,6 +40,22 @@ Or directly run the project using:
 ionic cordova run android
 ```
 
+### Building and running on iOS
+
+First make sure you have xCode installed.
+
+Next build the project for iOS using the following command:
+
+```
+ionic cordova build ios
+```
+
+Or directly run the project using:
+
+```
+ionic cordova run ios
+```
+
 ## Testing the project
 
 We use Jasmine and Karma to unit test this project. To unit test the project run the following command in the root of this project:
