@@ -151,5 +151,17 @@
         "errors": {
             "not_matching": "The passwords do not match."
         }
+    },
+    "faq": {
+        "question1": "What is a SmiloWallet?",
+        "answer1": "Smilo's web wallet is a free, open-source, client-side interface. You remain in full control of your keys and your funds. We cannot recover your funds or freeze your account if you visit a phishing site or lose your private key.",
+        "question2": "Is the SmiloWallet a bank?",
+        "answer2": "No, the SmiloWallet is not a bank. The SmiloWallet is just an interface which allows you to communicate with Smilo’s blockchain network. When you create an account on SmiloWallet, you are generating a cryptographic set of numbers: your private key and your public key (address). The handling of your keys happens entirely on your computer, inside your browser. We never transmit, receive or store your private key, password, or other account information.",
+        "question3": "How secure is it?",
+        "answer3": "",
+        "question4": "How can I trust the SmiloWallet?",
+        "answer4": "The SmiloWallet source code is available on Github for anyone to verify. We serve the wallet over SSL (https) which eliminates the possibility of tampering with the code between our servers and your browser. Still not sure? Download the latest standalone release on our Github releases page and run the SmiloWallet locally. Alternatively, you can build directly from the source.",
+        "question5": "What if I lose my private key or forget my encrypted Keystore file’s password?",
+        "answer5": "You remain in full control of your keys and your funds. We cannot recover your funds or freeze your account if you visit a phishing site or lose your private key. <p /> We are not responsible for any loss. <p /> SmiloWallet.io is under active development. While we have thoroughly tested the wallet, there is always the possibility that something unexpected happens which causes your funds to be lost. Do not invest more than you are willing to lose."
     }
 }
