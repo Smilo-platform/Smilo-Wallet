@@ -81,4 +81,22 @@ page-wallet-overview {
         max-height: 162px !important;
         max-width: 327px !important;
     }
+    
+    .transferButton {
+        width: 100%;
+        margin: 0px;
+    }
+
+    .settings {
+        position: absolute;
+        right: 16px;
+        top: 15px;
+        font-size: 28px;
+        color: white;
+    }
+
+    .settings:hover {
+        opacity: 75%;
+        cursor: pointer;
+    }
 }

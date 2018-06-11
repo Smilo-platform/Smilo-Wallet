@@ -72,9 +72,9 @@ export class WalletService implements IWalletService {
     }
 
 
-    getWallets(mockData) {
+    getWallets() {
         return new Promise(resolve => {
-            this.http.get('assets/data/walletData.json').subscribe(data => {
+            this.http.get('http://localhost:3000/wallets').subscribe(data => {
                 resolve(data);
             }, err => {
                 console.log("Get Wallet Data error: " + err);
@@ -82,9 +82,9 @@ export class WalletService implements IWalletService {
         });
     }
 
-    getCurrencyValue(mockData, currency: string) {
+    getCurrencyValue(currency: string) {
         return new Promise((resolve, reject) => {
-            this.http.get('assets/data/currencyValues.json').subscribe(data => {
+            this.http.get('http://localhost:3000/currencyValue').subscribe(data => { // different exchanges support
                 var json = JSON.parse(JSON.stringify(data));
                 var foundCurrencies = [];
                 var found = false;
@@ -105,9 +105,9 @@ export class WalletService implements IWalletService {
         });
     }
 
-    getWalletCurrency(mockData, publicKey: string) {
+    getWalletCurrency(publicKey: string) {
         return new Promise((resolve, reject) => {
-            this.http.get('assets/data/storedCoins.json').subscribe(data => {
+            this.http.get('http://localhost:3000/walletCurrency').subscribe(data => {
                 var json = JSON.parse(JSON.stringify(data));
                 var foundWallet = null;
                 var found = false;
@@ -129,13 +129,16 @@ export class WalletService implements IWalletService {
         });
     }
 
-    getAvailableCurrencies(mockData) {
-        return new Promise(resolve => {
-            this.http.get('assets/data/availableCurrencies.json').subscribe(data => {
+    getAvailableCurrencies() {
+        return new Promise((resolve, reject) => {
+            this.http.get('http://localhost:3000/availableCurrencies').subscribe(data => { // exchanges support
                 resolve(data);
             }, err => {
                 console.log("Get Available Currencies error: " + err);
+                reject();
             });
+        }).catch(function(result) {
+            return result;
         });
     }
 

@@ -34,7 +34,7 @@ export class SmiloWallet {
       walletService.getAll().then(
         (wallets) => {
           if(wallets.length == 0) {
-            this.rootPage = WalletOverviewPage;
+            this.rootPage = LandingPage;
           }
           else {
             this.rootPage = HomePage;

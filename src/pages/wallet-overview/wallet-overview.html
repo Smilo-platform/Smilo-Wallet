@@ -1,6 +1,7 @@
 <ion-header>
     <ion-navbar>
         <ion-title>{{ 'wallet_overview.title' | translate }}</ion-title>
+        <ion-icon class="settings" name="settings" (click)="settingsClick()"></ion-icon>
     </ion-navbar>
 </ion-header>
 
@@ -26,6 +27,7 @@
                     <ion-card-header>
                     <p id="totalValueText">{{ 'wallet_overview.total_value' | translate }}</p><p id="totalWalletValue">{{ currentWallet.totalCurrentCurrencyValue }}</p><p id="totalWalletValueCurrency">{{ pickedCurrency }}</p>
                     </ion-card-header>
+                    <button class="transferButton" ion-button>Transfer</button>
                 </ion-card>
                 <ion-list>
                     <ion-item>
