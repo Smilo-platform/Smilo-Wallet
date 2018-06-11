@@ -36,7 +36,7 @@ import { PasswordExplanationPageModule } from "../pages/password-explanation/pas
 import { KeyStoreService } from "../services/key-store-service/key-store-service";
 
 export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http);
+  return new TranslateHttpLoader(http, "assets/i18n/");
 }
 
 @NgModule({
