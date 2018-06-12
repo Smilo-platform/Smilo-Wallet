@@ -4,6 +4,7 @@ import { CryptoKeyService } from "../../services/crypto-key-service/crypto-key-s
 import { WalletService } from "../../services/wallet-service/wallet-service";
 import { ILocalWallet } from "../../models/ILocalWallet";
 import { WalletOverviewPage } from "../wallet-overview/wallet-overview";
+import { KeyStoreService } from "../../services/key-store-service/key-store-service";
 
 @IonicPage()
 @Component({
@@ -23,7 +24,8 @@ export class WalletNewDisclaimerPage {
   constructor(public navCtrl: NavController, 
               public navParams: NavParams,
               private cryptoKeyService: CryptoKeyService,
-              private walletService: WalletService) {
+              private walletService: WalletService,
+              private keyStoreService: KeyStoreService) {
     this.passphrase = this.navParams.get("passphrase");
     this.password = this.navParams.get("password");
   }
@@ -53,14 +55,16 @@ export class WalletNewDisclaimerPage {
    * Prepares and returns the wallet based on the current passphrase and password.
    */
   prepareWallet(): ILocalWallet {
-    let keyPair = this.cryptoKeyService.generateKeyPair(this.passphrase, this.password);
+    let keyPair = this.cryptoKeyService.generateKeyPair(this.passphrase);
 
     let wallet: ILocalWallet = {
       id: this.walletService.generateId(),
       type: "local",
       name: "Some Wallet",
       publicKey: keyPair.publicKey,
-      encryptedPrivateKey: keyPair.privateKey
+      keyStore: this.keyStoreService.createKeyStore(keyPair.privateKey, this.password),
+      transactions: [],
+      lastUpdateTime: new Date()
     };
 
     return wallet;

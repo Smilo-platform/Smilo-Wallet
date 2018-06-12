@@ -9,6 +9,9 @@ import { WalletService, IWalletService } from "../../services/wallet-service/wal
 import { CryptoKeyService } from "../../services/crypto-key-service/crypto-key-service";
 import { MockWalletService } from "../../../test-config/mocks/MockWalletService";
 import { WalletOverviewPage } from "../wallet-overview/wallet-overview";
+import { KeyStoreService, IKeyStoreService } from "../../services/key-store-service/key-store-service";
+import { MockKeyStoreService } from "../../../test-config/mocks/MockKeyStoreService";
+import { IKeyStore } from "../../models/IKeyStore";
 
 describe("WalletNewDisclaimerPage", () => {
   let comp: WalletNewDisclaimerPage;
@@ -17,12 +20,14 @@ describe("WalletNewDisclaimerPage", () => {
   let navParams: NavParams;
   let walletService: IWalletService;
   let cryptoKeyService: CryptoKeyService;
+  let keyStoreService: IKeyStoreService;
 
   beforeEach(async(() => {
     navController = new MockNavController();
     navParams = new MockNavParams();
     walletService = new MockWalletService();
     cryptoKeyService = new CryptoKeyService();
+    keyStoreService = new MockKeyStoreService();
 
     TestBed.configureTestingModule({
       declarations: [WalletNewDisclaimerPage],
@@ -33,6 +38,7 @@ describe("WalletNewDisclaimerPage", () => {
         })
       ],
       providers: [
+        { provide: KeyStoreService, useValue: keyStoreService },
         { provide: WalletService, useValue: walletService },
         { provide: CryptoKeyService, useValue: cryptoKeyService },
         { provide: NavController, useValue: navController },
@@ -131,7 +137,28 @@ describe("WalletNewDisclaimerPage", () => {
   });
 
   it("should prepare the wallet correctly", () => {
+    let dummyKeyStore: IKeyStore = {
+      cipher: "AES-CTR",
+      cipherParams: {
+        iv: "iv"
+      },
+      cipherText: "cipherText",
+      keyParams: {
+        salt: "salt",
+        iterations: 32,
+        keySize: 32
+      },
+      controlHash: "controlHash"
+    };
+    spyOn(keyStoreService, "createKeyStore").and.returnValue(dummyKeyStore);
+
     let wallet = comp.prepareWallet();
+
+    expect(wallet.lastUpdateTime).toBeDefined("wallet lastUpdateTime should be defined");
+
+    // Set wallet update time. Since this is set to the current time
+    // there is no real way to unit test its value for correctness.
+    wallet.lastUpdateTime = null;
 
     expect(wallet).toEqual(
       {
@@ -139,7 +166,9 @@ describe("WalletNewDisclaimerPage", () => {
         type: "local",
         name: "Some Wallet",
         publicKey: "PUBLIC_KEY",
-        encryptedPrivateKey: "PRIVATE_KEY"
+        keyStore: dummyKeyStore,
+        transactions: [],
+        lastUpdateTime: null
       }
     );
 
@@ -147,8 +176,7 @@ describe("WalletNewDisclaimerPage", () => {
       [
         "one", "two", "three", "four", "five", "six",
         "seven", "eight", "nine", "ten", "eleven", "twelve"
-      ],
-      "pass123"
+      ]
     );
   });
 

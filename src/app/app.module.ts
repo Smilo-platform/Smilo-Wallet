@@ -31,9 +31,14 @@ import { WalletNewPassphrasePageModule } from "../pages/wallet-new-passphrase/wa
 import { WalletNewPasswordPageModule } from "../pages/wallet-new-password/wallet-new-password.module";
 import { WalletNewDisclaimerPageModule } from "../pages/wallet-new-disclaimer/wallet-new-disclaimer.module";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NavigationHelperService } from "../services/navigation-helper-service/navigation-helper-service";
+import { PasswordExplanationPage } from "../pages/password-explanation/password-explanation";
+import { PasswordExplanationPageModule } from "../pages/password-explanation/password-explanation.module";
+import { KeyStoreService } from "../services/key-store-service/key-store-service";
+import { PasswordService } from "../services/password-service/password-service";
 
 export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http);
+  return new TranslateHttpLoader(http, "assets/i18n/");
 }
 
 @NgModule({
@@ -70,11 +75,14 @@ export function HttpLoaderFactory(http: HttpClient) {
     WalletNewPasswordPageModule,
     WalletNewDisclaimerPageModule,
     WalletImportPageModule,
+    WalletNewPasswordPageModule,
+    PasswordExplanationPageModule,
     IonicModule.forRoot(SmiloWallet)
   ],
   bootstrap: [IonicApp],
   entryComponents: [
-    SmiloWallet
+    SmiloWallet,
+    PasswordExplanationPage
   ],
   providers: [
     StatusBar,
@@ -82,6 +90,9 @@ export function HttpLoaderFactory(http: HttpClient) {
     CryptoKeyService,
     SettingsProvider,
     WalletService,
+    NavigationHelperService,
+    KeyStoreService,
+    PasswordService,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

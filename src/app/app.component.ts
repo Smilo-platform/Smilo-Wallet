@@ -6,9 +6,7 @@ import { HomePage } from "../pages/home/home";
 import { TranslateService } from "@ngx-translate/core";
 import { LandingPage } from "../pages/landing/landing";
 import { WalletService } from "../services/wallet-service/wallet-service";
-import { SettingsGeneralPage } from "../pages/settings-general/settings-general";
 import { SettingsProvider } from './../providers/settings/settings';
-import { WalletOverviewPage } from "../pages/wallet-overview/wallet-overview";
 
 @Component({
   templateUrl: "app.html"

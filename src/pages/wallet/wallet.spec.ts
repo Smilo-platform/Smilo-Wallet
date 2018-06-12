@@ -16,9 +16,11 @@ describe("WalletPage", () => {
   let comp: WalletPage;
   let fixture: ComponentFixture<WalletPage>;
   let navController: NavController;
+  let navParams: MockNavParams;
 
   beforeEach(async(() => {
     navController = new MockNavController();
+    navParams = new MockNavParams();
 
     TestBed.configureTestingModule({
       declarations: [WalletPage],
@@ -30,10 +32,23 @@ describe("WalletPage", () => {
       ],
       providers: [
         { provide: NavController, useValue: navController },
-        { provide: NavParams, useValue: new MockNavParams() }
+        { provide: NavParams, useValue: navParams }
       ]
     }).compileComponents();
   }));
+
+  beforeEach(() => {
+    let realGetFunction = navParams.get;
+
+    spyOn(navParams, "get").and.callFake((key: string) => {
+      if(key == "NAVIGATION_ORIGIN") {
+        return "home";
+      }
+      else {
+        realGetFunction.call(navParams, key);
+      }
+    });
+  })
 
   beforeEach(() => {
     fixture = TestBed.createComponent(WalletPage);
@@ -47,7 +62,7 @@ describe("WalletPage", () => {
 
     comp.openNewWalletPage();
 
-    expect(navController.push).toHaveBeenCalledWith(WalletNewPage);
+    expect(navController.push).toHaveBeenCalledWith(WalletNewPage, {NAVIGATION_ORIGIN: "home"});
   });
 
   it("should open the import wallet page correctly", () => {
@@ -55,6 +70,6 @@ describe("WalletPage", () => {
 
     comp.openLoadWalletPage();
 
-    expect(navController.push).toHaveBeenCalledWith(WalletImportPage);
+    expect(navController.push).toHaveBeenCalledWith(WalletImportPage, {NAVIGATION_ORIGIN: "home"});
   });
 });

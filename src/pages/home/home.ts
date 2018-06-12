@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { IonicPage, NavController } from "ionic-angular";
-import { WalletPage } from "../wallet/wallet";
+import { WalletPage, NAVIGATION_ORIGIN_KEY } from "../wallet/wallet";
 import { WalletOverviewPage } from "../wallet-overview/wallet-overview";
 import { AboutPage } from "../about/about";
 import { FaqPage } from "../faq/faq";
@@ -23,7 +23,10 @@ export class HomePage {
   }
 
   openNewWallet() {
-    this.navController.push(WalletPage);
+    let params = {};
+    params[NAVIGATION_ORIGIN_KEY] = "home";
+
+    this.navController.push(WalletPage, params);
   }
 
   openMyWallet() {

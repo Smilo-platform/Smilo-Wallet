@@ -47,7 +47,7 @@ describe("LandingPage", () => {
 
     comp.openNewWallet();
 
-    expect(navController.push).toHaveBeenCalledWith(WalletPage);
+    expect(navController.push).toHaveBeenCalledWith(WalletPage, {NAVIGATION_ORIGIN: "landing"});
   });
 
   it("should go to the restore backup page", () => {
@@ -55,6 +55,6 @@ describe("LandingPage", () => {
 
     comp.openRestoreBackup();
 
-    expect(navController.push).toHaveBeenCalledWith(RestoreBackupPage);
+    expect(navController.push).toHaveBeenCalledWith(RestoreBackupPage, {NAVIGATION_ORIGIN: "landing"});
   });
 });
