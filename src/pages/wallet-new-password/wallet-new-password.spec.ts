@@ -6,16 +6,20 @@ import { MockNavParams } from "../../../test-config/mocks/MockNavParams";
 import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
 import { MockTranslationLoader } from "../../../test-config/mocks/MockTranslationLoader";
 import { WalletNewDisclaimerPage } from "../wallet-new-disclaimer/wallet-new-disclaimer";
+import { IPasswordService, PasswordService } from "../../services/password-service/password-service";
+import { MockPasswordService } from "../../../test-config/mocks/MockPasswordService";
 
 describe("WalletNewPasswordPage", () => {
   let comp: WalletNewPasswordPage;
   let fixture: ComponentFixture<WalletNewPasswordPage>;
   let navController: NavController;
+  let passwordService: IPasswordService;
   let navParams: NavParams;
 
   beforeEach(async(() => {
     navController = new MockNavController();
     navParams = new MockNavParams();
+    passwordService = new MockPasswordService();
 
     TestBed.configureTestingModule({
       declarations: [WalletNewPasswordPage],
@@ -27,7 +31,8 @@ describe("WalletNewPasswordPage", () => {
       ],
       providers: [
         { provide: NavController, useValue: navController },
-        { provide: NavParams, useValue: navParams }
+        { provide: NavParams, useValue: navParams },
+        { provide: PasswordService, useValue: passwordService}
       ]
     }).compileComponents();
   }));
@@ -67,6 +72,18 @@ describe("WalletNewPasswordPage", () => {
       "one", "two", "three", "four", "five", "six",
       "seven", "eight", "nine", "ten", "eleven", "twelve"
     ]);
+  });
+
+  it("should validate the password when the password is changed", () => {
+    spyOn(passwordService, "validate").and.returnValue({type: "success"});
+
+    comp.enteredPassword = "password";
+    comp.validatedPassword = "passwordConfirm";
+
+    comp.onPasswordsChanged();
+
+    expect(passwordService.validate).toHaveBeenCalledWith("password", "passwordConfirm");
+    expect(comp.passwordStatus).toEqual({type: "success"});
   });
 
   it("should go to the disclaimer page correctly", () => {

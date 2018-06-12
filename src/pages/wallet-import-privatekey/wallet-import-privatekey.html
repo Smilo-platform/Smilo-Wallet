@@ -1,12 +1,54 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>wallet-import-privatekey</ion-title>
+    <ion-title></ion-title>
   </ion-navbar>
 
 </ion-header>
 
-
 <ion-content padding>
 
+  <div class="input-container">
+    <ion-item>
+      <ion-label stacked>
+        {{ 'import_privatekey.privatekey' | translate }}
+      </ion-label>
+      <ion-textarea class="private-key-input" [(ngModel)]="privateKey" rows="10" cols="50"></ion-textarea> 
+    </ion-item>
+
+    <ion-item>
+      <ion-label stacked>
+        {{ 'import_privatekey.name' | translate }}
+      </ion-label>
+      <ion-input class="name-input" [(ngModel)]="name"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label stacked>
+        {{ 'import_privatekey.password' | translate }}
+      </ion-label>
+      <ion-input class="password-input" type="password" [(ngModel)]="password" (ionChange)="onPasswordsChanged()"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label stacked>
+        {{ 'import_privatekey.validate_password' | translate }}
+      </ion-label>
+      <ion-input class="password-confirmation-input" type="password" [(ngModel)]="confirmedPassword" (ionChange)="onPasswordsChanged()"></ion-input>
+    </ion-item>
+  </div>
+
+  <div class="action-container">
+    <span *ngIf="!passwordsArePristine() && passwordStatus.type != 'success'" class="password-error">
+      {{ passwordStatus.message }}
+    </span>
+
+    <a class="password-explanation" (click)="showPasswordExplanation()">
+      {{ 'import_privatekey.password_why' | translate }}
+    </a>
+
+    <button *ngIf="dataIsValid()" class="smilo-button import-button" (click)="import()">
+      {{ 'import_privatekey.buttons.import' | translate }}
+    </button>
+  </div>
 </ion-content>

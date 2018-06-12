@@ -28,6 +28,40 @@ Next run the following command to run the project locally:
 ionic serve
 ```
 
+### Building and running on Android
+
+First make sure you have the following dependencies installed:
+- [Java SE 1.8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
+- Gradle (for Mac use brew: `brew install gradle`)
+
+Next build the project for Android using the following command:
+
+```
+ionic cordova build android
+```
+
+Or directly run the project using:
+
+```
+ionic cordova run android
+```
+
+### Building and running on iOS
+
+First make sure you have xCode installed.
+
+Next build the project for iOS using the following command:
+
+```
+ionic cordova build ios
+```
+
+Or directly run the project using:
+
+```
+ionic cordova run ios
+```
+
 ## Testing the project
 
 We use Jasmine and Karma to unit test this project. To unit test the project run the following command in the root of this project:
