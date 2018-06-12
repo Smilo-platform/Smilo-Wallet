@@ -7,6 +7,11 @@ describe("Creating a new wallet (happy path)", () => {
         browser.get("/");
     });
 
+    afterEach(() => {
+        // Because we actually create a wallet we must restart the browser to clear all locally stored data.
+        browser.restart();
+    });
+
     it("should work", () => {
         navigateToWalletPage();
 

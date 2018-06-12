@@ -18,6 +18,8 @@ import { MockModalController } from "../../../test-config/mocks/MockModalControl
 import { IKeyStoreService, KeyStoreService } from "../../services/key-store-service/key-store-service";
 import { MockKeyStoreService } from "../../../test-config/mocks/MockKeyStoreService";
 import { IKeyStore } from "../../models/IKeyStore";
+import { IPasswordService, PasswordService } from "../../services/password-service/password-service";
+import { MockPasswordService } from "../../../test-config/mocks/MockPasswordService";
 
 describe("WalletImportPrivatekeyPage", () => {
   let comp: WalletImportPrivatekeyPage;
@@ -29,6 +31,7 @@ describe("WalletImportPrivatekeyPage", () => {
   let navController: NavController;
   let navigationHelperService: NavigationHelperService;
   let keyStoreService: IKeyStoreService;
+  let passwordService: IPasswordService;
 
   beforeEach(async(() => {
     walletService = new MockWalletService();
@@ -38,6 +41,7 @@ describe("WalletImportPrivatekeyPage", () => {
     navigationHelperService = new NavigationHelperService();
     modalController = new MockModalController();
     keyStoreService = new MockKeyStoreService();
+    passwordService = new MockPasswordService();
 
     TestBed.configureTestingModule({
       declarations: [WalletImportPrivatekeyPage],
@@ -54,7 +58,8 @@ describe("WalletImportPrivatekeyPage", () => {
         { provide: CryptoKeyService, useValue: cryptoKeyService },
         { provide: WalletService, useValue: walletService },
         { provide: NavController, useValue: navController },
-        { provide: NavParams, useValue: navParams }
+        { provide: NavParams, useValue: navParams },
+        { provide: PasswordService, useValue: passwordService }
       ]
     }).compileComponents();
   }));
@@ -90,19 +95,16 @@ describe("WalletImportPrivatekeyPage", () => {
     expect(comp.passwordsArePristine()).toBeTruthy();
   });
 
-  it("should detect correctly when the passwords are valid", () => {
-    comp.password = "pass123";
-    comp.confirmedPassword = "pass";
+  it("should validate the password when the password is changed", () => {
+    spyOn(passwordService, "validate").and.returnValue({type: "success"});
 
-    expect(comp.passwordsAreValid()).toBeFalsy();
+    comp.password = "password";
+    comp.confirmedPassword = "passwordConfirm";
 
-    comp.confirmedPassword = "pass123";
+    comp.onPasswordsChanged();
 
-    expect(comp.passwordsAreValid()).toBeTruthy();
-
-    comp.password = "pass";
-
-    expect(comp.passwordsAreValid()).toBeFalsy();
+    expect(passwordService.validate).toHaveBeenCalledWith("password", "passwordConfirm");
+    expect(comp.passwordStatus).toEqual({type: "success"});
   });
 
   it("should detect correctly when the input data is valid", () => {
@@ -110,9 +112,9 @@ describe("WalletImportPrivatekeyPage", () => {
     let passwordsValid = false;
 
     spyOn(comp, "passwordsArePristine").and.callFake(() => passwordPristine);
-    spyOn(comp, "passwordsAreValid").and.callFake(() => passwordsValid);
     comp.privateKey = "";
     comp.name = "";
+    comp.passwordStatus = {type: "error"};
 
     expect(comp.dataIsValid()).toBeFalsy();
 
@@ -124,7 +126,7 @@ describe("WalletImportPrivatekeyPage", () => {
 
     expect(comp.dataIsValid()).toBeFalsy();
 
-    passwordsValid = true;
+    comp.passwordStatus.type = "success";
 
     expect(comp.dataIsValid()).toBeFalsy();
 
