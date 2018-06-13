@@ -22,6 +22,20 @@ Next run the following command to run the project locally:
 ionic serve
 ```
 
+## Testing the project
+
+We use Jasmine and Karma to unit test this project. To unit test the project run the following command in the root of this project:
+
+````
+npm run test
+````
+
+For end-to-end testing we use Protractor and Jasmine. To e2e test the project first ensure the project is running with `ionic serve`. Next run the following command in the root of this project:
+
+```
+npm run e2e
+```
+
 ### Building and running on Android
 
 First make sure you have the following dependencies installed:
@@ -40,6 +54,18 @@ Or directly run the project using:
 ionic cordova run android
 ```
 
+#### Building a release version
+
+Use the following command to build a release ready version for Android:
+
+```
+npm run release:android
+```
+
+The build APK can be found at `release/android.apk`.
+
+This command will use the script found at `scripts/build-android.sh` to build a release ready APK.
+
 ### Building and running on iOS
 
 First make sure you have xCode installed.
@@ -56,16 +82,16 @@ Or directly run the project using:
 ionic cordova run ios
 ```
 
-## Testing the project
+#### Building a release version
 
-We use Jasmine and Karma to unit test this project. To unit test the project run the following command in the root of this project:
+TODO
 
-````
-npm run test
-````
+### Uploading a test version to Hockey App
 
-For end-to-end testing we use Protractor and Jasmine. To e2e test the project first ensure the project is running with `ionic serve`. Next run the following command in the root of this project:
+We use [Hockey App](https://www.hockeyapp.net) for internal testing. To build a release version and upload to Hockey App use the following command:
 
 ```
-npm run e2e
+npm run upload:hockey-app
 ```
+
+For this to work the environment variable `HOCKEY_APP_TOKEN` is expected to be available.
