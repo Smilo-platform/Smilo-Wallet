@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 import { WalletOverviewPage } from "./wallet-overview";
-import { IonicModule, NavController, NavParams, ToastController, Toast, LoadingController, Loading} from "ionic-angular/index";
+import { IonicModule, NavController, NavParams, ToastController, Toast, LoadingController, Loading, AlertController} from "ionic-angular/index";
 import { MockNavController } from "../../../test-config/mocks/MockNavController";
 import { MockNavParams } from "../../../test-config/mocks/MockNavParams";
 import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
@@ -12,6 +12,8 @@ import { LandingPage } from "../landing/landing";
 import { MockToastController } from "../../../test-config/mocks/MockToastController";
 import { MockLoading } from "../../../test-config/mocks/MockLoading";
 import { MockLoadingController } from "../../../test-config/mocks/MockLoadingController";
+import { MockAlertController } from "../../../test-config/mocks/MockAlertController";
+import { MockAlert } from "../../../test-config/mocks/MockAlert";
 
 describe("WalletOverviewPage", () => {
   let comp: WalletOverviewPage;
@@ -20,14 +22,14 @@ describe("WalletOverviewPage", () => {
   let toastController: ToastController;
   let walletService: IWalletService;
   let loadingController: LoadingController;
+  let alertController: AlertController;
 
   beforeEach(async(() => {
     navController = new MockNavController();
     toastController = new MockToastController();
     walletService = new MockWalletService();
     loadingController = new MockLoadingController();
-    
-
+    alertController = new MockAlertController();
 
     TestBed.configureTestingModule({
       declarations: [WalletOverviewPage],
@@ -42,7 +44,8 @@ describe("WalletOverviewPage", () => {
         { provide: NavController, useValue: navController },
         { provide: NavParams, useValue: new MockNavParams() },
         { provide: ToastController, useValue: toastController },
-        { provide: LoadingController, useValue: loadingController }
+        { provide: LoadingController, useValue: loadingController },
+        { provide: AlertController, useValue: alertController }
       ]
     }).compileComponents();
   }));
@@ -102,63 +105,52 @@ describe("WalletOverviewPage", () => {
     expect(comp.walletFundsVisibility).toEqual("shown");
   })
 
-  it("should have visibility hidden after clicking the show funds switch", () => {
+  it("should have visibility hidden after switching visibility", () => {
     comp.fundsSwitch();
 
     expect(comp.walletFundsVisibility).toEqual("hidden");
   })
 
-  it("should have show funds boolean to be falsty after clicking the show funds switch", () => {
-    comp.fundsSwitch();
+  it("should present an alert when deleting a wallet", (done) => {
+    comp.initialize().then(data => {
+      let alert = new MockAlert();
 
-    expect(comp.showFundsStatus).toBeFalsy();
-  })
-
-  it("should show two factor authentication to be falsy after clicking the two factor switch", () => {
-    comp.twoFactorStatusSwitch();
-
-    expect(comp.twoFactorStatus).toBeTruthy();
-  })
-
-  it("should return null after clicking the delete wallet click without wallets", () => {
-    let result = comp.deleteWalletClick();
-
-    expect(result).toBeNull();
+      spyOn(alertController, "create").and.returnValue(alert)
+  
+      spyOn(alert, "present");
+  
+      comp.deleteWalletClick();
+  
+      expect(alert.present).toHaveBeenCalled();
+      done();
+    });
   })
 
   it("should return false after deleting a wallet that doesn't exist", () => {
-    let result = comp.deleteSelectedWallet("I DON'T EXIST");
+    let result = comp.deleteSelectedWallet(null);
 
     expect(result).toBeFalsy();
   })
 
-  it("should return false after getting all wallets because there are no wallets", () => {
-    comp.getAllWallets();
-
+  it("should return undefined because there is no current wallet", () => {
     expect(comp.currentWallet).toBeUndefined();
   })
 
-  it("should have no available currencies after getting them because there are none defined", () => {
-    comp.getAvailableCurrencies();
-
-    expect(comp.availableCurrencies.length).toEqual(0);
-  })
-
-  it("should return an empty array after getting the wallet currencies because the wallet does not exist", (done) => {
+  it("should return undefined data after getting the wallet currencies because the wallet does not exist", (done) => {
     comp.getWalletCurrency("I DON'T EXIST").then(data => {
-      expect(data).toEqual([]);
+      expect(data).toBeUndefined();
       done();
     });
   })
 
-  it("should return false after calculating the picked currency values because there is no picked currency", (done) => {
+  it("should return undefined data after calculating the picked currency values because there is no picked currency", (done) => {
     comp.setCalculatedCurrencyValue().then(data => {
-      expect(data).toEqual([]);
+      expect(data).toBeUndefined();
       done();
     });
   })
 
-  it("should open wallet overview page correctly", () => {
+  it("should open landing page correctly", () => {
     spyOn(navController, "push");
 
     comp.openLandingPage();
@@ -183,94 +175,87 @@ describe("WalletOverviewPage", () => {
 
   })
 
-  // it("should have three wallets after getting the wallets again with mocked data", (done) => {
-    // spyOn(walletService, "getAll").and.returnValue(
-    //   Promise.resolve([])
-    // );
+  it("should have three wallets after getting the wallets again with mocked data", (done) => {
+    comp.initialize().then(data => {
+      expect(comp.wallets.length).toEqual(3);
+      done();
+    });
+  })
 
-    // comp.getAllWallets().then(data => {
-    //   expect(data.length).toEqual(3);
-    //   done();
-    // });
-  // })
+  it("should have three correct datas after getting the wallets", (done) => {
+    comp.initialize().then(() => {
+      expect(comp.wallets[0].publicKey).toEqual("ETm9QUJLVdJkTqRojTNqswmeAQGaofojJJ");
+      expect(comp.wallets[0].id).toEqual("012d294e-cb11-439b-937a-12d47a52c305");
+      expect(comp.wallets[0].name).toEqual("Biosta");
+      expect(comp.wallets[0].type).toEqual("local");
+      expect(comp.wallets[0].encryptedPrivateKey).toEqual("E9873D79C6D87DC0FB6A5778633389F4453213303DA61F20BD67FC233AA33262");
 
-  // it("should have three correct datas after getting the wallets", (done) => {
-  //   comp.mockData = true;
-  //   comp.getAllWallets().then(data => {
-  //     expect(comp.wallets[0].publicKey).toEqual("ETm9QUJLVdJkTqRojTNqswmeAQGaofojJJ");
-  //     expect(comp.wallets[0].id).toEqual("id1");
-  //     expect(comp.wallets[0].name).toEqual("Cosmo");
-  //     expect(comp.wallets[0].type).toEqual("local");
+      expect(comp.wallets[1].publicKey).toEqual("ELsKCchf9rcGsufjRR62PG5Fn5dFinfgeN");
+      expect(comp.wallets[1].id).toEqual("9b5329ff-c683-42a5-9165-4093e4076166");
+      expect(comp.wallets[1].name).toEqual("Labilo");
+      expect(comp.wallets[1].type).toEqual("local");
+      expect(comp.wallets[1].encryptedPrivateKey).toEqual("E9873D79C6D87DC0FB6A5778633389F4453213303DA61F20BD67FC233AA33262");
 
-  //     expect(comp.wallets[1].publicKey).toEqual("EZ7tP3CBdBKrB9MaBgZNHyDcTg5TFRRpaY");
-  //     expect(comp.wallets[1].id).toEqual("id2");
-  //     expect(comp.wallets[1].name).toEqual("Bronislava");
-  //     expect(comp.wallets[1].type).toEqual("local");
+      expect(comp.wallets[2].publicKey).toEqual("EZ7tP3CBdBKrB9MaBgZNHyDcTg5TFRRpaY");
+      expect(comp.wallets[2].id).toEqual("a2e16167-fedb-47d2-8856-2b3f97389c35");
+      expect(comp.wallets[2].name).toEqual("Zalista");
+      expect(comp.wallets[2].type).toEqual("local");
+      expect(comp.wallets[1].encryptedPrivateKey).toEqual("E9873D79C6D87DC0FB6A5778633389F4453213303DA61F20BD67FC233AA33262");
+      done();
+    });
+  })
 
-  //     expect(comp.wallets[2].publicKey).toEqual("EZgjDAWDJ2Dj2j2FAGLGAGKL2dADkcASDE");
-  //     expect(comp.wallets[2].id).toEqual("id3");
-  //     expect(comp.wallets[2].name).toEqual("Celina");
-  //     expect(comp.wallets[2].type).toEqual("local");
-  //     done();
-  //   })
-  // })
+  it("should have three available currencies after getting the currencies data with mocked data", (done) => {
+    comp.initialize().then(() => {
+      expect(comp.availableCurrencies.length).toEqual(3);
+      done();
+    });
+  });
 
-  // it("should have three available currencies after getting the currencies data with mocked data", (done) => {
-  //   comp.mockData = true;
-  //   comp.getAvailableCurrencies().then(data => {
-  //     expect(comp.availableCurrencies.length).toEqual(3);
-  //     done();
-  //   });
-  // });
+  it("should have three specific currencies after getting the available currencies data with mocked data", (done) => {
+    comp.getAvailableCurrencies().then(data => {
+      expect(comp.availableCurrencies[0]).toEqual("$");
+      expect(comp.availableCurrencies[1]).toEqual("ETH");
+      expect(comp.availableCurrencies[2]).toEqual("BTC");
+      done();
+    })
+  })
 
-  // it("should have three specific currencies after getting the available currencies data with mocked data", (done) => {
-  //   comp.mockData = true;
-  //   comp.getAvailableCurrencies().then(data => {
-  //     expect(comp.availableCurrencies[0]).toEqual("$");
-  //     expect(comp.availableCurrencies[1]).toEqual("ETH");
-  //     expect(comp.availableCurrencies[2]).toEqual("BTC");
-  //     done();
-  //   })
-  // })
+  it("should get two wallet currencies back after getting it with mock data", (done) => {
+    comp.getAllWallets().then(data => {
+      comp.getWalletCurrency("I EXIST").then(data => {
+        expect(comp.currentWallet.currencies.length).toEqual(2);
+        done();
+      });
+    });
+  })
 
-  // it("should get two wallet currencies back after getting it with mock data", (done) => {
-  //   comp.mockData = true;
-  //   comp.getAllWallets().then(data => {
-  //     comp.getWalletCurrency("I EXIST").then(data => {
-  //       expect(comp.currentWallet.currencies.length).toEqual(2);
-  //       done();
-  //     });
-  //   });
-  // })
+  it("should get two specific currency types and amounts back after getting it with mock data", (done) => {
+    comp.getAllWallets().then(data => {
+      comp.getWalletCurrency("I EXIST").then(data => {
+        expect(comp.currentWallet.currencies[0].currency).toEqual("Smilo");
+        expect(comp.currentWallet.currencies[0].amount).toEqual(5712);
+        expect(comp.currentWallet.currencies[1].currency).toEqual("SmiloPay");
+        expect(comp.currentWallet.currencies[1].amount).toEqual(234);
+        done();
+      });
+    });
+  })
 
-  // it("should get two specific currency types and amounts back after getting it with mock data", (done) => {
-  //   comp.mockData = true;
-  //   comp.getAllWallets().then(data => {
-  //     comp.getWalletCurrency("I EXIST").then(data => {
-  //       expect(comp.currentWallet.currencies[0].currency).toEqual("Smilo");
-  //       expect(comp.currentWallet.currencies[0].amount).toEqual(5712);
-  //       expect(comp.currentWallet.currencies[1].currency).toEqual("SmiloPay");
-  //       expect(comp.currentWallet.currencies[1].amount).toEqual(234);
-  //       done();
-  //     });
-  //   });
-  // })
-
-  // it("should contain correct data for graph", (done) => {
-  //   comp.mockData = true;
-  //   comp.getAllWallets().then(data => {
-  //     comp.getWalletCurrency("I EXIST").then(data => {
-  //       comp.pickedCurrency = "$";
-  //       comp.setCalculatedCurrencyValue().then(data => {
-  //         expect(comp.currenciesForDoughnutCanvas.length).toEqual(2);
-  //         expect(comp.currenciesForDoughnutCanvas[0]).toEqual("96.06");
-  //         expect(comp.currenciesForDoughnutCanvas[1]).toEqual("3.94");
-  //         expect(comp.currenciesForDoughnutCanvasCurrencies.length).toEqual(2);
-  //         expect(comp.currenciesForDoughnutCanvasCurrencies[0]).toEqual("Smilo");
-  //         expect(comp.currenciesForDoughnutCanvasCurrencies[1]).toEqual("SmiloPay");
-  //         done();
-  //       });
-  //     });
-  //   });
-  // });
+  it("should contain correct data for graph", (done) => {
+    comp.getAllWallets().then(data => {
+      comp.getWalletCurrency("I EXIST").then(data => {
+        comp.pickedCurrency = "$";
+        comp.setCalculatedCurrencyValue().then(data => {
+          expect(comp.currenciesForDoughnutCanvas.length).toEqual(2);
+          expect(comp.currenciesForDoughnutCanvas[0]).toEqual(96.06);
+          expect(comp.currenciesForDoughnutCanvas[1]).toEqual(3.94);
+          expect(comp.currenciesForDoughnutCanvasCurrencies.length).toEqual(2);
+          expect(comp.currenciesForDoughnutCanvasCurrencies[0]).toEqual("Smilo");
+          expect(comp.currenciesForDoughnutCanvasCurrencies[1]).toEqual("SmiloPay");
+          done();
+        });
+      });
+    });
+  });
 });

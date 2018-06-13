@@ -1,4 +1,5 @@
 import { ToastController, ToastOptions, Toast } from "ionic-angular";
+import { MockToast } from "./MockToast";
 
 export class MockToastController extends ToastController {
 
@@ -6,8 +7,8 @@ export class MockToastController extends ToastController {
         super(null, null);
     }
 
-    create(opts?: ToastOptions) {
-        return null;
+    create(opts?: ToastOptions): Toast {
+        return new MockToast();
     }
 
     present(): Promise<void> {

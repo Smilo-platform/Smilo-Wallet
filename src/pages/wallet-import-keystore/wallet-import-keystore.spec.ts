@@ -190,7 +190,10 @@ describe("WalletImportKeystorePage", () => {
       publicKey: "SOME_PUBLIC_KEY",
       keyStore: comp.keyStore,
       transactions: [],
-      lastUpdateTime: null
+      lastUpdateTime: null,
+      currencies: [],
+      totalCurrentCurrencyValue: 0,
+      encryptedPrivateKey: ""
     });
 
     expect(keyStoreService.decryptKeyStore).toHaveBeenCalledWith(comp.keyStore, "pass123");

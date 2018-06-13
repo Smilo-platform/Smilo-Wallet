@@ -15,8 +15,6 @@ export interface IWalletService {
 
     generateId(): string;
 
-    getWallets(mockData);
-
     getCurrencyValue(mockData, currency: string);
 
     getAvailableCurrencies(mockData);
@@ -26,10 +24,16 @@ export interface IWalletService {
 
 @Injectable()
 export class WalletService implements IWalletService {
-    private wallets: IWallet[];
+    private wallets: IWallet[]; 
+    private baseUrl: string;
 
     constructor(private storage: Storage, private http: HttpClient) {
-
+        let _isDev: boolean = ((<any>window)['IonicDevServer'] != undefined);
+        if (_isDev) {
+            this.baseUrl = "http://localhost:3000";
+        } else {
+            this.baseUrl = "https://api.smilo";
+        }
     }
 
     /**
@@ -71,74 +75,38 @@ export class WalletService implements IWalletService {
         }
     }
 
-
-    getWallets() {
-        return new Promise(resolve => {
-            this.http.get('http://localhost:3000/wallets').subscribe(data => {
-                resolve(data);
-            }, err => {
-                console.log("Get Wallet Data error: " + err);
-            });
-        });
-    }
-
-    getCurrencyValue(currency: string) {
-        return new Promise((resolve, reject) => {
-            this.http.get('http://localhost:3000/currencyValue').subscribe(data => { // different exchanges support
-                var json = JSON.parse(JSON.stringify(data));
-                var foundCurrencies = [];
-                var found = false;
-                for (var i = 0; i < json.length; i++) {
-                    if (json[i].currencyTo === currency) {
-                        found = true;
-                        foundCurrencies.push(json[i]);
-                    }
+    getCurrencyValue(currency: string): Promise<string[]> {
+        return this.http.get(this.baseUrl + '/currencyValue').toPromise().then(data => {
+            var json = JSON.parse(JSON.stringify(data));
+            var foundCurrencies: string[] = [];
+            for (var i = 0; i < json.length; i++) {
+                if (json[i].currencyTo === currency) {
+                    foundCurrencies.push(json[i]);
                 }
-                if (found) {
-                    resolve(foundCurrencies);
-                } else {
-                    reject({});
-                }
-            });
-        }).catch(function(result) {
-            return result;
+            }
+            return foundCurrencies;
         });
     }
 
     getWalletCurrency(publicKey: string) {
-        return new Promise((resolve, reject) => {
-            this.http.get('http://localhost:3000/walletCurrency').subscribe(data => {
-                var json = JSON.parse(JSON.stringify(data));
-                var foundWallet = null;
-                var found = false;
-                for (var i = 0; i < json.length; i++) {
-                    if (json[i].publicKey === publicKey) {
-                        found = true;
-                        foundWallet = json[i];
-                        break;
-                    }
+        return this.http.get(this.baseUrl + '/walletCurrency').toPromise().then(data => {
+            var json = JSON.parse(JSON.stringify(data));
+            var foundWallet = null;
+            for (var i = 0; i < json.length; i++) {
+                if (json[i].publicKey === publicKey) {
+                    foundWallet = json[i];
+                    break;
                 }
-                if (found) {
-                    resolve(foundWallet);
-                } else {
-                    reject({});
-                }
-            });
-        }).catch(function(result) {
-            return result;
+            }
+            return foundWallet;
         });
     }
 
     getAvailableCurrencies() {
-        return new Promise((resolve, reject) => {
-            this.http.get('http://localhost:3000/availableCurrencies').subscribe(data => { // exchanges support
-                resolve(data);
-            }, err => {
-                console.log("Get Available Currencies error: " + err);
-                reject();
-            });
-        }).catch(function(result) {
-            return result;
+        return this.http.get(this.baseUrl + '/availableCurrencies').toPromise().then(data => {
+            return data;
+        }, err => {
+            console.log("Get Available Currencies error: " + err);
         });
     }
 

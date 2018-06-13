@@ -1,5 +1,5 @@
 import { Component, ViewChild } from "@angular/core";
-import { IonicPage, NavController, NavParams, LoadingController, Loading } from "ionic-angular";
+import { IonicPage, NavController, NavParams, LoadingController, Loading, Alert } from "ionic-angular";
 import { Chart } from 'chart.js';
 import { WalletService } from '../../services/wallet-service/wallet-service';
 import { AlertController } from 'ionic-angular';
@@ -7,6 +7,7 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 import { LandingPage } from "../landing/landing";
 import { ToastController } from 'ionic-angular';
 import { SettingsGeneralPage } from "../settings-general/settings-general";
+import { IWallet } from "../../models/IWallet";
 
 /**
  * Generated class for the WalletOverviewPage page.
@@ -14,6 +15,8 @@ import { SettingsGeneralPage } from "../settings-general/settings-general";
  * See https://ionicframework.com/docs/components/#navigation for more info on
  * Ionic pages and navigation.
  */
+
+export declare type VisibilityType = "shown" | "hidden"; 
 
 @IonicPage()
 @Component({
@@ -30,19 +33,19 @@ import { SettingsGeneralPage } from "../settings-general/settings-general";
 export class WalletOverviewPage {
   @ViewChild('doughnutCanvas') doughnutCanvas;
   pickedCurrency: string;
-  doughnutChart: any;
-  wallets: any = [];
-  currenciesForDoughnutCanvas: any = [];
-  currenciesForDoughnutCanvasCurrencies: any = [];
-  currentWallet: any;
-  currentWalletIndex = 0;
+  doughnutChart: Chart;
+  wallets: IWallet[] = [];
+  currenciesForDoughnutCanvas: number[] = [];
+  currenciesForDoughnutCanvasCurrencies: string[] = [];
+  currentWallet: IWallet;
+  currentWalletIndex: number = 0;
   legendList: string[] = [];
   availableCurrencies: string[] = [];
   showFundsStatus: boolean = true;
   twoFactorStatus: boolean = false;
-  walletFundsVisibility: string = 'shown';
+  walletFundsVisibility: VisibilityType = 'shown';
   loading: Loading;
-  loadingError: Loading;
+  loadingError: Alert;
 
 
   constructor(public navCtrl: NavController, 
@@ -51,40 +54,34 @@ export class WalletOverviewPage {
               public alertCtrl: AlertController,
               public toastCtrl: ToastController,
               public loadingCtrl: LoadingController) {
-    this.getAllWallets();
-    this.getAvailableCurrencies();
+
   }
 
-  ionViewDidLoad() {
+  initialize(): Promise<void> {
+    return Promise.all([this.getAllWallets(), this.getAvailableCurrencies()]).then<void>();
+  }
+
+  ionViewDidLoad(): void {
+    this.initialize();
+  }
+
+  fundsSwitch(): void {
+    if (this.walletFundsVisibility === "shown") {
+      this.walletFundsVisibility = "hidden";
+    } else if (this.walletFundsVisibility === "hidden") {
+      this.walletFundsVisibility = "shown";
+    }
+  }
+
+  twoFactorStatusSwitch(): void {
     
   }
 
-  fundsSwitch() {
-    if (this.walletFundsVisibility === "shown") {
-      this.walletFundsVisibility = "hidden";
-      this.showFundsStatus = false;
-    } else if (this.walletFundsVisibility === "hidden") {
-      this.walletFundsVisibility = "shown";
-      this.showFundsStatus = true;
-    }
-  }
-
-  twoFactorStatusSwitch() {
-    if (this.twoFactorStatus) {
-      this.twoFactorStatus = false;
-    } else {
-      this.twoFactorStatus = true;
-    }
-  }
-
-  backupWalletClick() {
+  backupWalletClick(): void {
 
   }
 
-  deleteWalletClick() {
-    if (this.currentWallet === null || this.currentWallet === undefined) {
-      return null;
-    }
+  deleteWalletClick(): void {
     const confirm = this.alertCtrl.create({
       title: 'Delete wallet',
       message: "Are you <b>sure</b> you want to delete this wallet ('" + this.currentWallet.publicKey + "')?",
@@ -99,26 +96,16 @@ export class WalletOverviewPage {
           text: 'Yes, delete',
           cssClass: 'deleteButtonCss',
           handler: () => {
-            this.deleteSelectedWallet(this.currentWallet.publicKey);
+            this.deleteSelectedWallet(this.currentWallet);
           }
         }
       ]
     });
-    if (confirm !== null) {
-      confirm.present();
-    } else {
-      return null;
-    }
+    confirm.present();
   }
 
-  deleteSelectedWallet(publicKey: string) {
-    let index = -1;
-    for (let i = 0; i < this.wallets.length; i++) {
-      if (publicKey === this.wallets[i].publicKey) {
-        index = i;
-        break;
-      }
-    }
+  deleteSelectedWallet(wallet: IWallet): boolean {
+    let index = this.wallets.indexOf(wallet);
     if (index !== -1) {
       this.wallets.splice(index, 1);
       this.setCurrentWallet(0);
@@ -128,20 +115,22 @@ export class WalletOverviewPage {
     }
   }
 
-  getAllWallets() {
-    this.walletService.getAll().then(data => {
+  getAllWallets(): Promise<void> {
+    return this.walletService.getAll().then(data => {
       this.wallets = data;
       this.setCurrentWallet(0);
     });
   }
 
-  getAvailableCurrencies(): Promise<any> {
-    return new Promise(resolve => {this.walletService.getAvailableCurrencies().then(data => {
+  getAvailableCurrencies(): Promise<void> {
+    return this.walletService.getAvailableCurrencies().then(data => {
       if (data === undefined) {
         if (this.loadingCtrl !== undefined) {
           this.loading.dismiss();
-          this.loadingError = this.loadingCtrl.create({
-            content: 'Error retrieving wallet data... API has issues. Please try again later.'
+          this.loadingError = this.alertCtrl.create({
+            title: 'Error',
+            subTitle: 'Error retrieving wallet data... API has issues. Please try again later.',
+            buttons: ['OK']
           });
           this.loadingError.present();
         }
@@ -154,22 +143,20 @@ export class WalletOverviewPage {
           this.pickedCurrency = this.availableCurrencies[0];
         }
       }
-      resolve(data);
-    })});
+    });
   }
 
-  getWalletCurrency(publicKey: string): Promise<any> {
-    return new Promise(resolve => { this.walletService.getWalletCurrency(publicKey).then(data => {
+  getWalletCurrency(publicKey: string): Promise<void> {
+    return this.walletService.getWalletCurrency(publicKey).then(data => {
       let json = JSON.parse(JSON.stringify(data));
       if (Object.keys(json).length === 0) {
         this.loading.dismiss();
-        this.loadingError = this.loadingCtrl.create({
-          content: 'Error retrieving wallet data... API has issues. Please try again later.'
+        this.loadingError = this.alertCtrl.create({
+          title: 'Error',
+          subTitle: 'Error retrieving wallet data... API has issues. Please try again later.',
+          buttons: ['OK']
         });
-        if (this.loadingError !== null) {
-          this.loadingError.present();
-        }
-        resolve(json);
+        this.loadingError.present();
       } else {
         let currencies = [];
         for (let i = 0; i < json.storedCoins.length; i++) {
@@ -177,20 +164,19 @@ export class WalletOverviewPage {
           let amount: number = json.storedCoins[i].amount;
           currencies.push({currency: currency, amount: amount});
         }
-        this.currentWallet.currencies = currencies;
-        this.setCalculatedCurrencyValue();
+        if (this.currentWallet !== undefined) {
+          this.currentWallet.currencies = currencies;
+          this.setCalculatedCurrencyValue();
+        }
       }
-      resolve(json);
-    })});
+    });
   }
 
-  setCalculatedCurrencyValue() {
-    if (this.pickedCurrency === undefined) {
-      return new Promise(resolve => {
-        resolve([]);
-      });
+  setCalculatedCurrencyValue(): Promise<void> {
+    if (this.pickedCurrency === undefined || this.currentWallet === undefined) {
+      return Promise.resolve();
     }
-    return new Promise(resolve => {this.walletService.getCurrencyValue(this.pickedCurrency).then(data => {
+    return this.walletService.getCurrencyValue(this.pickedCurrency).then(data => {
       let json = JSON.parse(JSON.stringify(data));
       let totalValue: number = 0;
       let totalCurrencies: number = 0;
@@ -203,8 +189,8 @@ export class WalletOverviewPage {
           if (currencyFromApi === this.currentWallet.currencies[y].currency) {
             totalValue += (this.currentWallet.currencies[y].amount * valueApi);
             if (this.currenciesForDoughnutCanvasCurrencies.indexOf(this.currentWallet.currencies[y].currency) === -1) {
-              this.currenciesForDoughnutCanvasCurrencies.push(this.currentWallet.currencies[y].currency);
-              this.currenciesForDoughnutCanvas.push(this.currentWallet.currencies[y].amount);
+              this.currenciesForDoughnutCanvasCurrencies.push(String(this.currentWallet.currencies[y].currency));
+              this.currenciesForDoughnutCanvas.push(Number(this.currentWallet.currencies[y].amount));
               totalCurrencies += this.currentWallet.currencies[y].amount;
             } 
             break;
@@ -212,14 +198,14 @@ export class WalletOverviewPage {
         }
       }
       for (let i = 0; i < this.currenciesForDoughnutCanvas.length; i++) {
-        let percentage = ((100 / totalCurrencies) * this.currenciesForDoughnutCanvas[i]).toFixed(2);
+        let percentage = Number(((100 / totalCurrencies) * this.currenciesForDoughnutCanvas[i]).toFixed(2));
         this.currenciesForDoughnutCanvas[i] = percentage;
       }
       let fixedNumbers = 7;
       if (this.pickedCurrency === "$") {
         fixedNumbers = 2;
       }
-      this.currentWallet.totalCurrentCurrencyValue = totalValue.toFixed(fixedNumbers);
+      this.currentWallet.totalCurrentCurrencyValue = Number(totalValue.toFixed(fixedNumbers));
       this.displayChart();
       if (this.doughnutChart !== undefined) {
         this.legendList = this.doughnutChart.generateLegend();
@@ -227,25 +213,23 @@ export class WalletOverviewPage {
       if (this.loadingCtrl !== undefined) {
         this.loading.dismiss();
       }
-      resolve(json);
-    })});
+    });
   }
 
-  openLandingPage() {
+  openLandingPage(): void {
     this.navCtrl.push(LandingPage);
   }
 
-  settingsClick() {
-    console.log("CLICK!");
+  settingsClick(): void {
     this.navCtrl.push(SettingsGeneralPage);
   }
 
-  setCurrentWallet(index) {
-    this.loading = this.loadingCtrl.create({
-      content: 'Loading wallet...'
-    });
-    this.loading.present();
+  setCurrentWallet(index): boolean {
     if (index < this.wallets.length) {
+      this.loading = this.loadingCtrl.create({
+        content: 'Loading wallet...'
+      });
+      this.loading.present();
       this.currentWalletIndex = index;
       this.currentWallet = this.wallets[this.currentWalletIndex];
       this.getWalletCurrency(this.currentWallet.publicKey);
@@ -257,14 +241,12 @@ export class WalletOverviewPage {
         duration: 5000,
         position: "Bottom"
       });
-      if (toast !== null) {
-        toast.present(toast);
-      }
+      toast.present();
       return false;
     }
   }
  
-  displayChart() {
+  displayChart(): boolean {
     if (this.currenciesForDoughnutCanvasCurrencies === undefined || 
         this.currenciesForDoughnutCanvasCurrencies === undefined || 
         this.doughnutCanvas === undefined) {
@@ -298,7 +280,8 @@ export class WalletOverviewPage {
         title: {
           display: false
         }
-      },
+      }
     });
+    return true;
   }
 }

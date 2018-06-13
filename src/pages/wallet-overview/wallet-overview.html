@@ -9,25 +9,25 @@
     <ion-grid>
          <ion-row justify-content-center>
             <ion-col col-12 col-xl-3>
-                <h4 class="walletHeader">{{ 'wallet_overview.wallets' | translate }}</h4>
+                <h4 class="wallet-header">{{ 'wallet_overview.wallets' | translate }}</h4>
                 <ion-list radio-group>
                     <ion-item *ngFor="let wallet of wallets; let i = index;">
-                        <ion-label class="walletAddress">{{ wallet.name }} ({{ wallet.publicKey }})</ion-label>
+                        <ion-label class="wallet-address">{{ wallet.name }} ({{ wallet.publicKey }})</ion-label>
                         <ion-radio *ngIf="i === 0" checked="true" (ionSelect)="setCurrentWallet(i)" value="{{ wallet.publicKey }}"></ion-radio>
                         <ion-radio *ngIf="i > 0" checked="false" (ionSelect)="setCurrentWallet(i)" value="{{ wallet.publicKey }}"></ion-radio>
                     </ion-item>
                 </ion-list>
             </ion-col>
             <ion-col *ngIf="currentWallet" [@visibilityChanged]="walletFundsVisibility" col-xl-3>
-                <h4 class="marginHeader">{{ 'wallet_overview.wallet_info' | translate }}</h4>
+                <h4 class="margin-header">{{ 'wallet_overview.wallet_info' | translate }}</h4>
                 <ion-card>
                     <ion-card-header *ngFor="let currency of currentWallet.currencies;">
-                        <p class="amountHeader">{{ currency.currency }}</p><p class="valueText">{{ currency.amount }}</p>
+                        <p class="amount-header">{{ currency.currency }}</p><p class="value-text">{{ currency.amount }}</p>
                     </ion-card-header>
                     <ion-card-header>
-                    <p id="totalValueText">{{ 'wallet_overview.total_value' | translate }}</p><p id="totalWalletValue">{{ currentWallet.totalCurrentCurrencyValue }}</p><p id="totalWalletValueCurrency">{{ pickedCurrency }}</p>
+                    <p id="total-value-text">{{ 'wallet_overview.total_value' | translate }}</p><p id="total-wallet-value">{{ currentWallet.totalCurrentCurrencyValue }}</p><p id="total-wallet-value-currency">{{ pickedCurrency }}</p>
                     </ion-card-header>
-                    <button class="transferButton" ion-button>Transfer</button>
+                    <button class="transfer-button" ion-button>Transfer</button>
                 </ion-card>
                 <ion-list>
                     <ion-item>
@@ -40,11 +40,11 @@
                 <ion-card>
                     <ion-card-header>
                         {{ 'wallet_overview.distribution' | translate }}
-                        <canvas #doughnutCanvas class="distributionDougnut"> </canvas>
-                        <div id="doughnutAgenda" class="legend__list" ref="legend">
-                            <ul class="legendList" *ngFor="let legendItem of legendList">
+                        <canvas #doughnutCanvas class="distribution-dougnut"> </canvas>
+                        <div id="doughnut-agenda" class="legend__list" ref="legend">
+                            <ul class="legend-list" *ngFor="let legendItem of legendList">
                                 <li>
-                                    <div class="legendColorBlock" [style.backgroundColor]="legendItem.backgroundColor"></div><p class="legendText">{{ legendItem.label }} {{ legendItem.data }}%</p>
+                                    <div class="legend-color-block" [style.backgroundColor]="legendItem.backgroundColor"></div><p class="legend-text">{{ legendItem.label }} {{ legendItem.data }}%</p>
                                 </li>
                             </ul>
                         </div>
@@ -52,17 +52,17 @@
                 </ion-card>
             </ion-col>
             <ion-col col-12 col-xl-3>
-                <h4 class="marginHeader">Settings</h4>
+                <h4 class="margin-header">Settings</h4>
                 <ion-card>
                     <ion-list>
                         <button ion-item>
                             <ion-label>Show funds</ion-label>
-                            <ion-toggle [(ngModel)]="showFundsStatus" (ionChange)="fundsSwitch()" color="secondary"></ion-toggle>
+                            <ion-toggle [(ngModel)]="showFundsStatus" (ngModelChange)="fundsSwitch()" color="secondary"></ion-toggle>
                         </button>
 
                         <button ion-item>
                             <ion-label>Two-Factor Authentication</ion-label>
-                            <ion-toggle [(ngModel)]="twoFactorStatus" (ionChange)="twoFactorStatusSwitch()" color="secondary"></ion-toggle>
+                            <ion-toggle [(ngModel)]="twoFactorStatus" (ngModelChange)="twoFactorStatusSwitch()" color="secondary"></ion-toggle>
                         </button>  
                     
                         <button ion-item (click)="backupWalletClick()">
