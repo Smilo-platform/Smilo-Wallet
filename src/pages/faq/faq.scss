@@ -1,14 +1,14 @@
 page-faq {
     .question {
-        padding: 10px;
-
         .question-header {
+            padding: 10px;
+            background-color: #4F586B;
+            color: white;
             font-weight: bold;
-            margin-bottom: 5px;
         }
 
         .question-answer {
-
+            padding: 10px;
         }
     }
 }
