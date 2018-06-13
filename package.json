@@ -1,6 +1,6 @@
 {
   "name": "smilo-wallet",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "Smilo Platform",
   "homepage": "http://smilo.io/",
   "private": true,
@@ -15,7 +15,9 @@
     "e2e-test": "protractor ./test-config/protractor.conf.js",
     "e2e-update": "webdriver-manager update --standalone false --gecko false",
     "ionic:build": "ionic-app-scripts build",
-    "ionic:serve": "ionic-app-scripts serve"
+    "ionic:serve": "ionic-app-scripts serve",
+    "release:android": "./scripts/build-android.sh",
+    "upload:hockey-app": "./scripts/release-to-hockey-app.sh"
   },
   "dependencies": {
     "@angular/animations": "5.2.10",
