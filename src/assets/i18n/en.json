@@ -151,5 +151,13 @@
         "errors": {
             "not_matching": "The passwords do not match."
         }
+    },
+    "about": {
+        "title": "ABOUT SMILO",
+        "paragraph1": "Since the release of Ethereum in 2015, there have been several projects which are able to host smart contracts and decentralized applications, however none of the platforms are able to host both public and private smart contracts.",
+        "paragraph2": "What is needed, is an open source, hybrid blockchain based computing platform. A platform featuring hybrid transactions, hybrid smart contracts and hybrid decentralized applications. This is where the Smilo Platform comes into play.",
+        "paragraph3": "Smilo combines the public and private features of the blockchain within its core. Not only can we provide options for public and private transactions, but we also provide public and private smart contracts and decentralized applications.",
+        "paragraph4_title": "Smilo's unique strength",
+        "paragraph4": "The combination of hybrid smart contracts, -transactions and -decentralized applications together with transparency, privacy and anonymity, and the connection to real life applications."
     }
 }
