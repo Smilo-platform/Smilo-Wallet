@@ -1,7 +1,7 @@
-import { IPassphraseService } from "../../src/services/passphrase-service/passphrase-service";
+import { IPassphraseService, IPassphraseResult } from "../../src/services/passphrase-service/passphrase-service";
 
 export class MockPassphraseService implements IPassphraseService {
-    generate(wordCount: number): string[] {
+    generate(entropyBits: number): Promise<IPassphraseResult> {
         throw new Error("Method not implemented.");
     }
     passphraseStringToWords(passphrase: string): string[] {

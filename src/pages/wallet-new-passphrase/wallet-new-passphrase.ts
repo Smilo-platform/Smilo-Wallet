@@ -23,7 +23,9 @@ export class WalletNewPassphrasePage {
   constructor(public navCtrl: NavController, 
               public navParams: NavParams,
               private passphraseService: PassphraseService) {
-    this.words = this.passphraseService.generate(12);
+    this.passphraseService.generate(128).then(
+      (phrase) => this.words = phrase.passphrase
+    )
   }
 
   /**
