@@ -113,8 +113,15 @@ describe("Creating a new wallet (happy path)", () => {
 
         expect(finishButton.isPresent()).toBeFalsy("the finish button should not be displayed (1)");
 
-        // Checking all four checkboxes should make the finish button show up
+        // Checking all four checkboxes should still not make the finish button show up
         element.all(by.tagName("ion-checkbox")).click();
+
+        browser.sleep(500);
+
+        expect(finishButton.isPresent()).toBeFalsy("the finish button should not be displayed (2)");
+
+        // Enter the wallet name should make the finish button show up
+        element(by.css(".wallet-name-input > input")).sendKeys("wallet name");
 
         browser.sleep(500);
 

@@ -57,8 +57,25 @@
     </div>
   </div>
 
+  <div class="top-container">
+    <div class="title">
+      {{ 'disclaimer.title_name' | translate }}
+    </div>
+  </div>
+
+  <div class="center-container">
+    <div class="center-container-content">
+      <ion-item>
+        <ion-label stacked>
+          {{ 'disclaimer.wallet_name' | translate }}
+        </ion-label>
+        <ion-input class="wallet-name-input" [(ngModel)]="walletName"></ion-input>
+      </ion-item>
+    </div>
+  </div>
+
   <div class="bottom-container">
-    <button (click)="finish()" *ngIf="userHasAgreed()" class="smilo-button finish-button">
+    <button (click)="finish()" *ngIf="canShowFinishButton()" class="smilo-button finish-button">
       {{ 'disclaimer.buttons.finish' | translate }}
     </button>
   </div>
