@@ -147,6 +147,11 @@ describe("WalletNewPassphrasePage", () => {
   });
 
   it("should validate the passphrase once 12 words have been picked", () => {
+    comp.words = [
+      "one", "two", "three", "four", "five", "six",
+      "seven", "eight", "nine", "ten", "eleven", "twelve"
+    ];
+
     spyOn(comp, "validatePassphrase");
 
     comp.pickWord("one");
