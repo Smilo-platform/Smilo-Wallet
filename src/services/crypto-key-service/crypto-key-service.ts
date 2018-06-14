@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { IKeyPair } from "../../models/IKeyPair";
 
 export interface ICryptoKeyService {
-    generateKeyPair(passphrase: string[]): IKeyPair;
+    generateKeyPair(mnemonic: string): IKeyPair;
     generatePublicKey(privateKey: string): string;
 }
 
@@ -10,9 +10,9 @@ export interface ICryptoKeyService {
 export class CryptoKeyService implements ICryptoKeyService {
     /**
      * Generates a key pair based on the given passphrase.
-     * @param passphrase
+     * @param mnemonic
      */
-    generateKeyPair(passphrase: string[]): IKeyPair {
+    generateKeyPair(mnemonic: string): IKeyPair {
         return {
             privateKey: "SOME_PRIVATE_KEY",
             publicKey: "SOME_PUBLIC_KEY"

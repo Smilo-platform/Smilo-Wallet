@@ -7,7 +7,6 @@ import { TranslateService } from "@ngx-translate/core";
 import { LandingPage } from "../pages/landing/landing";
 import { WalletService } from "../services/wallet-service/wallet-service";
 import { SettingsProvider } from './../providers/settings/settings';
-import { PassphraseService } from "../services/passphrase-service/passphrase-service";
 
 @Component({
   templateUrl: "app.html"
@@ -21,8 +20,7 @@ export class SmiloWallet {
               splashScreen: SplashScreen,
               translate: TranslateService,
               walletService: WalletService,
-              settings: SettingsProvider,
-              private passphraseService: PassphraseService) {
+              settings: SettingsProvider) {
     settings.getActiveTheme().subscribe(val => this.selectedTheme = val);
     platform.ready().then(() => {
       statusBar.styleDefault();
@@ -30,24 +28,6 @@ export class SmiloWallet {
 
       translate.setDefaultLang("en");
       translate.use("en");
-
-      this.passphraseService.generate(128).then(
-        (result) => {
-          console.log(`Entropy: ${ result.entropy }`);
-          console.log(`Phrase: ${ result.passphrase }`);
-          console.log(`Seed: ${ result.seed }`);
-          console.log(`Key: ${ result.key }`);
-
-          // this.passphraseService.isValidPassphrase(phrase).then(
-          //   (valid) => {
-          //     console.log(`Passphrase is ${ valid ? '' : 'not'} valid`);
-          //   }
-          // )
-        },
-        (error) => {
-          console.error(error);
-        }
-      )
 
       walletService.getAll().then(
         (wallets) => {

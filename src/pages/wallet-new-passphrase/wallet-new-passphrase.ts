@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 import { IonicPage, NavController, NavParams } from "ionic-angular";
-import { PassphraseService } from "../../services/passphrase-service/passphrase-service";
 import { WalletNewPasswordPage } from "../wallet-new-password/wallet-new-password";
+import { BIP39Service } from "../../services/bip39-service/bip39-service";
 
 declare type State = "showPassphrase" | "enterPassphrase";
 
@@ -22,10 +22,20 @@ export class WalletNewPassphrasePage {
 
   constructor(public navCtrl: NavController, 
               public navParams: NavParams,
-              private passphraseService: PassphraseService) {
-    this.passphraseService.generate(128).then(
-      (phrase) => this.words = phrase.passphrase
-    )
+              private bip39Service: BIP39Service) {
+    
+  }
+
+  ionViewDidLoad() {
+    this.initialize();
+  }
+
+  initialize(): Promise<void> {
+    return this.bip39Service.generate(256).then(
+      (phrase) => {
+        this.words = phrase.split(" ")
+      }
+    );
   }
 
   /**

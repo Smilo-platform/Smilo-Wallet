@@ -55,7 +55,7 @@ export class WalletNewDisclaimerPage {
    * Prepares and returns the wallet based on the current passphrase and password.
    */
   prepareWallet(): ILocalWallet {
-    let keyPair = this.cryptoKeyService.generateKeyPair(this.passphrase);
+    let keyPair = this.cryptoKeyService.generateKeyPair(this.passphrase.join(" "));
 
     let wallet: ILocalWallet = {
       id: this.walletService.generateId(),
