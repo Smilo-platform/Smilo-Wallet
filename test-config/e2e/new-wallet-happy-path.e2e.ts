@@ -48,7 +48,7 @@ describe("Creating a new wallet (happy path)", () => {
 
         // Ensure 12 passphrase words are shown
         let passphraseContent = element(by.className("passphrase-content"));
-        expect(passphraseContent.all(by.className("word")).count()).toBe(<any>12, "the passphrase box should contain 12 words");
+        expect(passphraseContent.all(by.className("word")).count()).toBe(<any>24, "the passphrase box should contain 24 words");
 
         // Ensure a next button is shown
         expect(element(by.className("next-button")).isDisplayed()).toBeTruthy("the passphrase next button should be shown");
