@@ -66,6 +66,9 @@ The build APK can be found at `release/android.apk`.
 
 This command will use the script found at `scripts/build-android.sh` to build a release ready APK.
 
+For this command to work the environment variable `SMILO_WALLET_KEYSTORE_LOCATION` is expected to be defined.
+This variable should point to the location where the keystore used to sign the app is located.
+
 ### Building and running on iOS
 
 First make sure you have xCode installed.
