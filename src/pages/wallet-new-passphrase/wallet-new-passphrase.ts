@@ -23,7 +23,7 @@ export class WalletNewPassphrasePage {
   constructor(public navCtrl: NavController, 
               public navParams: NavParams,
               private passphraseService: PassphraseService) {
-    this.words = this.passphraseService.generate(12);
+    this.words = this.passphraseService.generate(24);
   }
 
   /**
@@ -83,7 +83,7 @@ export class WalletNewPassphrasePage {
 
     this.enteredWords.push(word);
 
-    if(this.enteredWords.length == 12) {
+    if(this.enteredWords.length == this.words.length) {
       this.validatePassphrase();
     }
   }
