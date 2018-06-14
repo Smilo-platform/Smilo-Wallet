@@ -95,7 +95,7 @@ export class WalletNewPassphrasePage {
 
     this.enteredWords.push(word);
 
-    if(this.enteredWords.length == 12) {
+    if(this.enteredWords.length == this.words.length) {
       this.validatePassphrase();
     }
   }
