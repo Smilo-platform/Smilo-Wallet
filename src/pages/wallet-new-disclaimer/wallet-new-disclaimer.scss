@@ -17,6 +17,8 @@ page-wallet-new-disclaimer {
 
         .center-container-content {
             max-width: 500px;
+            flex-basis: auto;
+            flex-grow: 1;
 
             .term-container {
                 display: flex;

@@ -87,10 +87,11 @@ describe("WalletNewDisclaimerPage", () => {
   it("should create component", () => expect(comp).toBeDefined());
 
   it("should be initialized correctly", () => {
-    expect(comp.agreedToTerm1).toBe(false);
-    expect(comp.agreedToTerm2).toBe(false);
-    expect(comp.agreedToTerm3).toBe(false);
-    expect(comp.agreedToTerm4).toBe(false);
+    expect(comp.agreedToTerm1).toBe(false, "Term 1 should not be accepted initially");
+    expect(comp.agreedToTerm2).toBe(false, "Term 2 should not be accepted initially");
+    expect(comp.agreedToTerm3).toBe(false, "Term 3 should not be accepted initially");
+    expect(comp.agreedToTerm4).toBe(false, "Term 4 should not be accepted initially");
+    expect(comp.walletName).toBe("", "Wallet name should be empty initally");
   });
 
   it("should read the passphrase and password correctly from the nav params", () => {
@@ -104,36 +105,48 @@ describe("WalletNewDisclaimerPage", () => {
     expect(comp.password).toEqual("pass123");
   });
 
-  it("should detect correctly when the user has agreed to all terms", () => {
+  it("should detect correctly when the user has entered all information correctly", () => {
     comp.agreedToTerm1 = false;
     comp.agreedToTerm2 = false;
     comp.agreedToTerm3 = false;
     comp.agreedToTerm4 = false;
-    expect(comp.userHasAgreed()).toBe(false);
+    comp.walletName = "";
+    expect(comp.canShowFinishButton()).toBe(false);
 
     comp.agreedToTerm1 = true;
     comp.agreedToTerm2 = false;
     comp.agreedToTerm3 = false;
     comp.agreedToTerm4 = false;
-    expect(comp.userHasAgreed()).toBe(false);
+    comp.walletName = "";
+    expect(comp.canShowFinishButton()).toBe(false);
 
     comp.agreedToTerm1 = true;
     comp.agreedToTerm2 = true;
     comp.agreedToTerm3 = false;
     comp.agreedToTerm4 = false;
-    expect(comp.userHasAgreed()).toBe(false);
+    comp.walletName = "";
+    expect(comp.canShowFinishButton()).toBe(false);
 
     comp.agreedToTerm1 = true;
     comp.agreedToTerm2 = true;
     comp.agreedToTerm3 = true;
     comp.agreedToTerm4 = false;
-    expect(comp.userHasAgreed()).toBe(false);
+    comp.walletName = "";
+    expect(comp.canShowFinishButton()).toBe(false);
 
     comp.agreedToTerm1 = true;
     comp.agreedToTerm2 = true;
     comp.agreedToTerm3 = true;
     comp.agreedToTerm4 = true;
-    expect(comp.userHasAgreed()).toBe(true);
+    comp.walletName = "";
+    expect(comp.canShowFinishButton()).toBe(false);
+
+    comp.agreedToTerm1 = true;
+    comp.agreedToTerm2 = true;
+    comp.agreedToTerm3 = true;
+    comp.agreedToTerm4 = true;
+    comp.walletName = "name";
+    expect(comp.canShowFinishButton()).toBe(true);
   });
 
   it("should prepare the wallet correctly", () => {
@@ -152,6 +165,8 @@ describe("WalletNewDisclaimerPage", () => {
     };
     spyOn(keyStoreService, "createKeyStore").and.returnValue(dummyKeyStore);
 
+    comp.walletName = "name";
+
     let wallet = comp.prepareWallet();
 
     expect(wallet.lastUpdateTime).toBeDefined("wallet lastUpdateTime should be defined");
@@ -164,7 +179,7 @@ describe("WalletNewDisclaimerPage", () => {
       {
         id: "SOME_ID",
         type: "local",
-        name: "Some Wallet",
+        name: "name",
         publicKey: "PUBLIC_KEY",
         keyStore: dummyKeyStore,
         transactions: [],
@@ -178,7 +193,7 @@ describe("WalletNewDisclaimerPage", () => {
 
     spyOn(walletService, "store").and.returnValue(Promise.resolve());
     spyOn(comp, "prepareWallet").and.returnValue(dummyWallet);
-    spyOn(comp, "userHasAgreed").and.returnValue(true);
+    spyOn(comp, "canShowFinishButton").and.returnValue(true);
 
     comp.finish();
 
@@ -191,7 +206,7 @@ describe("WalletNewDisclaimerPage", () => {
 
     spyOn(walletService, "store").and.returnValue(Promise.resolve());
     spyOn(comp, "prepareWallet").and.returnValue(dummyWallet);
-    spyOn(comp, "userHasAgreed").and.returnValue(true);
+    spyOn(comp, "canShowFinishButton").and.returnValue(true);
     spyOn(navController, "setRoot");
 
     comp.finish().then(
@@ -208,7 +223,7 @@ describe("WalletNewDisclaimerPage", () => {
 
     spyOn(walletService, "store").and.returnValue(Promise.reject("ERROR_MESSAGE"));
     spyOn(comp, "prepareWallet").and.returnValue(dummyWallet);
-    spyOn(comp, "userHasAgreed").and.returnValue(true);
+    spyOn(comp, "canShowFinishButton").and.returnValue(true);
     spyOn(navController, "setRoot");
 
     comp.finish().then(

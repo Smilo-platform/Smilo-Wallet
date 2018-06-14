@@ -21,6 +21,8 @@ export class WalletNewDisclaimerPage {
   passphrase: string[];
   password: string;
 
+  walletName: string = "";
+
   constructor(public navCtrl: NavController, 
               public navParams: NavParams,
               private cryptoKeyService: CryptoKeyService,
@@ -31,7 +33,7 @@ export class WalletNewDisclaimerPage {
   }
 
   finish(): Promise<void> {
-    if(this.userHasAgreed()) {
+    if(this.canShowFinishButton()) {
       // Do final steps to create the wallet, then go to wallet overview page.
       let wallet = this.prepareWallet();
 
@@ -60,7 +62,7 @@ export class WalletNewDisclaimerPage {
     let wallet: ILocalWallet = {
       id: this.walletService.generateId(),
       type: "local",
-      name: "Some Wallet",
+      name: this.walletName,
       publicKey: keyPair.publicKey,
       keyStore: this.keyStoreService.createKeyStore(keyPair.privateKey, this.password),
       transactions: [],
@@ -70,11 +72,15 @@ export class WalletNewDisclaimerPage {
     return wallet;
   }
 
-  userHasAgreed(): boolean {
+  /**
+   * Returns true if the user accepted all terms and entered a wallet name.
+   */
+  canShowFinishButton(): boolean {
     return this.agreedToTerm1 &&
            this.agreedToTerm2 &&
            this.agreedToTerm3 &&
-           this.agreedToTerm4;
+           this.agreedToTerm4 &&
+           this.walletName.length > 0;
   }
 
 }
