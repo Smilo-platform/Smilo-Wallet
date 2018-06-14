@@ -3,6 +3,8 @@ import { FaqPage } from "./faq";
 import { IonicModule, NavController, NavParams} from "ionic-angular/index";
 import { MockNavController } from "../../../test-config/mocks/MockNavController";
 import { MockNavParams } from "../../../test-config/mocks/MockNavParams";
+import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
+import { MockTranslationLoader } from "../../../test-config/mocks/MockTranslationLoader";
 
 describe("FAQPage", () => {
   let comp: FaqPage;
@@ -12,7 +14,10 @@ describe("FAQPage", () => {
     TestBed.configureTestingModule({
       declarations: [FaqPage],
       imports: [
-        IonicModule.forRoot(FaqPage)
+        IonicModule.forRoot(FaqPage),
+        TranslateModule.forRoot({
+          loader: {provide: TranslateLoader, useClass: MockTranslationLoader},
+        })
       ],
       providers: [
         { provide: NavController, useClass: MockNavController },
