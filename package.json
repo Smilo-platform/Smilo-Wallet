@@ -62,6 +62,7 @@
     "null-loader": "^0.1.1",
     "protractor": "^5.1.1",
     "rxjs": "5.5.11",
+    "sjcl": "^1.0.7",
     "sw-toolbox": "3.6.0",
     "ts-loader": "^3.5.0",
     "ts-node": "^6.0.5",
