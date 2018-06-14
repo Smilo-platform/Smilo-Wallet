@@ -1,6 +1,8 @@
 import { browser, by, element, ExpectedConditions, WebElement } from "protractor";
 
 describe("Creating a new wallet (happy path)", () => {
+    let memorizedWordOrder: string[] = null;
+
     beforeEach(() => {
         browser.waitForAngularEnabled(false);
 
@@ -49,6 +51,13 @@ describe("Creating a new wallet (happy path)", () => {
         // Ensure 12 passphrase words are shown
         let passphraseContent = element(by.className("passphrase-content"));
         expect(passphraseContent.all(by.className("word")).count()).toBe(<any>24, "the passphrase box should contain 24 words");
+
+        // Memorize the word order
+        browser.wait(<any>readPassphraseBox("passphrase-box").then(
+            (words) => {
+                memorizedWordOrder = words;
+            }
+        ));
 
         // Ensure a next button is shown
         expect(element(by.className("next-button")).isDisplayed()).toBeTruthy("the passphrase next button should be shown");
@@ -145,6 +154,20 @@ describe("Creating a new wallet (happy path)", () => {
         browser.sleep(500);
     });
 
+    function readPassphraseBox(className: string): Promise<string[]> {
+        return <any>element.all(by.css(`.${ className } .word`)).then(
+            (elements) => {
+                let promises: Promise<string>[] = [];
+
+                for(let element of elements) {
+                    promises.push(<any>element.element(by.tagName("span")).getText());
+                }
+
+                return Promise.all(promises);
+            }
+        );
+    }
+
     /**
      * Tests the combination of two passphrase boxes.
      * @param inputElementClassName The classname of the element where words should be picked
@@ -172,48 +195,59 @@ describe("Creating a new wallet (happy path)", () => {
 
                 return <any>Promise.all(promises).then<any[]>(
                     (result) => {
-                        let indexedNames = [];
+                        // Sort the list of words
+                        result.sort((a, b) => {
+                            let originalIndexA = memorizedWordOrder.indexOf(a.text);
+                            let originalIndexB = memorizedWordOrder.indexOf(b.text);
 
-                        // For each element store some extra info
-                        for(let i = 0; i < result.length; i++) {
-                            let element = result[i].element;
-                            let name = result[i].text;
+                            return originalIndexA - originalIndexB;
+                        });
 
-                            indexedNames[i] = {
-                                index: i,
-                                element: element,
-                                number: Number(name.split(' ')[1]),
-                                name: name
-                            };
-                        }
+                        return result;
 
-                        // Sort the elements so they are in the correct order.
-                        // WARNING: this part will only work while we have a mocked passphrase.
-                        // As soon as we move to a real passphrase we must remember the passprhase shown
-                        // on the previous page.
-                        indexedNames.sort((a, b) => a.number - b.number);
+                        // let indexedNames = [];
 
-                        return indexedNames;
+                        // // For each element store some extra info
+                        // for(let i = 0; i < result.length; i++) {
+                        //     let element = result[i].element;
+                        //     let name = result[i].text;
+
+                        //     indexedNames[i] = {
+                        //         index: i,
+                        //         element: element,
+                        //         number: Number(name.split(' ')[1]),
+                        //         name: name
+                        //     };
+                        // }
+
+                        // // Sort the elements so they are in the correct order.
+                        // // WARNING: this part will only work while we have a mocked passphrase.
+                        // // As soon as we move to a real passphrase we must remember the passprhase shown
+                        // // on the previous page.
+                        // indexedNames.sort((a, b) => a.number - b.number);
+
+                        // return indexedNames;
                     }
                 );
             }
         ).then(
-            (indexedNames) => {
+            (sortedResult) => {
                 // Click all words in the correct order and then test if:
                 // - the word is correctly hidden in the input box
                 // - the word is shown on the correct location in the output box
-                for(let i = 0; i < indexedNames.length; i++) {
-                    let prop = indexedNames[i];
-                    prop.element.click();
+                for(let i = 0; i < sortedResult.length; i++) {
+                    let item = sortedResult[i];
+
+                    item.element.click();
 
                     browser.sleep(500);
 
                     // Expect the input element to be hidden
-                    expect(prop.element.element(by.className("is-picked")).isPresent()).toBeTruthy("picked word should be hidden");
+                    expect(item.element.element(by.className("is-picked")).isPresent()).toBeTruthy("picked word should be hidden");
 
                     // Expect the output element to be shown at the correct location
                     let text = element.all(by.css(`.${ outputElementClassName } .word`)).get(i).element(by.tagName("span")).getText();
-                    expect(text).toBe(prop.name, "picked word should appear in output box at correct location");
+                    expect(text).toBe(item.text, "picked word should appear in output box at correct location");
                 }
             }
         );
