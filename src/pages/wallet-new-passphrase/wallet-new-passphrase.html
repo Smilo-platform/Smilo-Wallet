@@ -65,7 +65,7 @@
 
       <div class="passphrase-box entered-box">
         <div class="passphrase-content">
-          <div class="word" *ngFor="let word of enteredWords">
+          <div class="word" *ngFor="let word of enteredWords" (click)="unpickWord(word)">
             <span>
               {{ word }}
             </span>
@@ -73,7 +73,7 @@
         </div>
 
         <div class="passphrase-footer">
-          <span class="passphrase-error" *ngIf="!passphraseIsValid && enteredWords.length == 12">
+          <span class="passphrase-error" *ngIf="!passphraseIsValid && enteredWords.length == words.length">
             {{ 'passphrase.enter.passphrase_error' | translate }}
           </span>
   

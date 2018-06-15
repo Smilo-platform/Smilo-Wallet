@@ -6,12 +6,10 @@ import { MockNavParams } from "../../../test-config/mocks/MockNavParams";
 import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
 import { MockTranslationLoader } from "../../../test-config/mocks/MockTranslationLoader";
 import { IKeyStoreService, KeyStoreService } from "../../services/key-store-service/key-store-service";
-import { IPassphraseService, PassphraseService } from "../../services/passphrase-service/passphrase-service";
 import { IPasswordService, PasswordService } from "../../services/password-service/password-service";
 import { ICryptoKeyService, CryptoKeyService } from "../../services/crypto-key-service/crypto-key-service";
 import { MockCryptoKeyService } from "../../../test-config/mocks/MockCryptoKeyService";
 import { MockKeyStoreService } from "../../../test-config/mocks/MockKeyStoreService";
-import { MockPassphraseService } from "../../../test-config/mocks/MockPassphraseService";
 import { MockPasswordService } from "../../../test-config/mocks/MockPasswordService";
 import { MockWalletService } from "../../../test-config/mocks/MockWalletService";
 import { IWalletService, WalletService } from "../../services/wallet-service/wallet-service";
@@ -20,28 +18,30 @@ import { IKeyPair } from "../../models/IKeyPair";
 import { IKeyStore } from "../../models/IKeyStore";
 import { HomePage } from "../home/home";
 import { ILocalWallet } from "../../models/ILocalWallet";
+import { IBIP39Service, BIP39Service, IPassphraseValidationResult } from "../../services/bip39-service/bip39-service";
+import { MockBIP39Service } from "../../../test-config/mocks/MockBIP39Service";
 
 describe("RestoreBackupPage", () => {
   let comp: RestoreBackupPage;
   let fixture: ComponentFixture<RestoreBackupPage>;
   let keyStoreService: IKeyStoreService;
-  let passphraseService: IPassphraseService;
   let passwordService: IPasswordService;
   let cryptoKeyService: ICryptoKeyService;
   let walletService: IWalletService;
   let navController: NavController;
   let navParams: NavParams;
   let navigationHelperService: INavigationHelperService;
+  let bip39Service: IBIP39Service;
 
   beforeEach(async(() => {
     keyStoreService = new MockKeyStoreService();
-    passphraseService = new MockPassphraseService();
     passwordService = new MockPasswordService();
     cryptoKeyService = new MockCryptoKeyService();
     walletService = new MockWalletService();
     navController = new MockNavController();
     navigationHelperService = new NavigationHelperService();
     navParams = new MockNavParams();
+    bip39Service = new MockBIP39Service();
 
     TestBed.configureTestingModule({
       declarations: [RestoreBackupPage],
@@ -55,11 +55,11 @@ describe("RestoreBackupPage", () => {
         { provide: NavController, useValue: navController },
         { provide: NavParams, useValue: navParams },
         { provide: PasswordService, useValue: passwordService },
-        { provide: PassphraseService, useValue: passphraseService },
         { provide: WalletService, useValue: walletService },
         { provide: CryptoKeyService, useValue: cryptoKeyService },
         { provide: KeyStoreService, useValue: keyStoreService },
-        { provide: NavigationHelperService, useValue: navigationHelperService }
+        { provide: NavigationHelperService, useValue: navigationHelperService },
+        { provide: BIP39Service, useValue: bip39Service}
       ]
     }).compileComponents();
   }));
@@ -77,7 +77,7 @@ describe("RestoreBackupPage", () => {
     expect(comp.passwordConfirm).toBe("");
     expect(comp.walletName).toBe("");
 
-    expect(comp.passphraseIsValid).toBeTruthy();
+    expect(comp.passphraseStatus).not.toBeDefined();
     expect(comp.passwordStatus).not.toBeDefined();
   });
 
@@ -93,15 +93,24 @@ describe("RestoreBackupPage", () => {
     expect(comp.passwordStatus).toEqual({type: "success"});
   });
 
-  it("should validate the passphrase when the passphrase is changed", () => {
-    spyOn(passphraseService, "isValid").and.returnValue(false);
+  it("should validate the passphrase when the passphrase is changed", (done) => {
+    let passphraseStatus: IPassphraseValidationResult = {isValid: true};
+    spyOn(bip39Service, "check").and.returnValue(Promise.resolve(passphraseStatus));
 
     comp.passphrase = "1 2 3 4 5 6";
 
-    comp.onPassphraseChanged();
+    comp.onPassphraseChanged().then(
+      () => {
+        expect(bip39Service.check).toHaveBeenCalledWith("1 2 3 4 5 6");
+        expect(comp.passphraseStatus).toEqual(passphraseStatus);
 
-    expect(passphraseService.isValid).toHaveBeenCalledWith("1 2 3 4 5 6", 12);
-    expect(comp.passphraseIsValid).toBeFalsy();
+        done();
+      },
+      (error) => {
+        expect(true).toBe(false, "Promise rejection should never be called");
+        done();
+      }
+    );
   });
 
   it("should prepare the wallet correctly", () => {
@@ -127,8 +136,6 @@ describe("RestoreBackupPage", () => {
     spyOn(keyStoreService, "createKeyStore").and.returnValue(keyStore);
 
     spyOn(walletService, "generateId").and.returnValue("WALLET_ID");
-
-    spyOn(passphraseService, "passphraseStringToWords").and.returnValue([]);
 
     comp.password = "pass123";
     comp.passphrase = "1 2 3 4 5 6 7 8 9 10 11 12";
@@ -175,7 +182,10 @@ describe("RestoreBackupPage", () => {
   })
 
   it("should detect correctly when the input data is valid", () => {
-    comp.passphraseIsValid = false;
+    comp.passphraseStatus = {
+      isValid: false,
+      isBlocking: true
+    };
 
     expect(comp.dataIsValid()).toBeFalsy();
 
@@ -195,7 +205,11 @@ describe("RestoreBackupPage", () => {
 
     expect(comp.dataIsValid()).toBeFalsy();
 
-    comp.passphraseIsValid = true;
+    comp.passphraseStatus.isBlocking = false;
+
+    expect(comp.dataIsValid()).toBeTruthy();
+
+    comp.passphraseStatus.isValid = true;
 
     expect(comp.dataIsValid()).toBeTruthy();
   });

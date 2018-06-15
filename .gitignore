@@ -35,3 +35,8 @@ Thumbs.db
 UserInterfaceState.xcuserstate
 
 .gradle
+release
+resources/android
+resources/ios
+resources/*.md5
+*.jks
