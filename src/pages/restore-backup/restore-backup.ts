@@ -1,7 +1,6 @@
 import { Component } from "@angular/core";
 import { IonicPage, NavController, NavParams } from "ionic-angular";
 import { PasswordService, IPasswordValidationResult } from "../../services/password-service/password-service";
-import { PassphraseService } from "../../services/passphrase-service/passphrase-service";
 import { ILocalWallet } from "../../models/ILocalWallet";
 import { WalletService } from "../../services/wallet-service/wallet-service";
 import { CryptoKeyService } from "../../services/crypto-key-service/crypto-key-service";
@@ -9,6 +8,7 @@ import { KeyStoreService } from "../../services/key-store-service/key-store-serv
 import { NavigationOrigin, NAVIGATION_ORIGIN_KEY } from "../wallet/wallet";
 import { HomePage } from "../home/home";
 import { NavigationHelperService } from "../../services/navigation-helper-service/navigation-helper-service";
+import { BIP39Service, IPassphraseValidationResult } from "../../services/bip39-service/bip39-service";
 
 @IonicPage()
 @Component({
@@ -22,25 +22,29 @@ export class RestoreBackupPage {
   passwordConfirm: string = "";
   walletName: string = "";
 
-  passphraseIsValid: boolean = true;
+  passphraseStatus: IPassphraseValidationResult;
   passwordStatus: IPasswordValidationResult;
 
   constructor(private navCtrl: NavController, 
               private navParams: NavParams,
               private passwordService: PasswordService,
-              private passphraseService: PassphraseService,
               private walletService: WalletService,
               private cryptoKeyService: CryptoKeyService,
               private keyStoreService: KeyStoreService,
-              private navigationHelperService: NavigationHelperService) {
+              private navigationHelperService: NavigationHelperService,
+              private bip39Service: BIP39Service) {
   }
 
   onPasswordChanged() {
     this.passwordStatus = this.passwordService.validate(this.password, this.passwordConfirm);
   }
 
-  onPassphraseChanged() {
-    this.passphraseIsValid = this.passphraseService.isValid(this.passphrase, 12);
+  onPassphraseChanged(): Promise<void> {
+    return this.bip39Service.check(this.passphrase).then(
+      (valid) => {
+        this.passphraseStatus = valid;
+      }
+    );
   }
 
   dataIsValid(): boolean {
@@ -49,7 +53,8 @@ export class RestoreBackupPage {
            this.walletName.length > 0 &&
            this.passwordStatus &&
            this.passwordStatus.type == "success" &&
-           this.passphraseIsValid;
+           this.passphraseStatus &&
+           (this.passphraseStatus.isValid || !this.passphraseStatus.isBlocking);
   }
   
   import(): Promise<void> {
@@ -81,9 +86,7 @@ export class RestoreBackupPage {
 
   prepareWallet(): ILocalWallet {
     // Generate key pair from passphrase
-    let keyPair = this.cryptoKeyService.generateKeyPair(
-      this.passphraseService.passphraseStringToWords(this.passphrase)
-    );
+    let keyPair = this.cryptoKeyService.generateKeyPair(this.passphrase);
 
     // Create key store for private key
     let keyStore = this.keyStoreService.createKeyStore(keyPair.privateKey, this.password);

@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 import { IonicPage, NavController, NavParams } from "ionic-angular";
-import { PassphraseService } from "../../services/passphrase-service/passphrase-service";
 import { WalletNewPasswordPage } from "../wallet-new-password/wallet-new-password";
+import { BIP39Service } from "../../services/bip39-service/bip39-service";
 
 declare type State = "showPassphrase" | "enterPassphrase";
 
@@ -22,8 +22,20 @@ export class WalletNewPassphrasePage {
 
   constructor(public navCtrl: NavController, 
               public navParams: NavParams,
-              private passphraseService: PassphraseService) {
-    this.words = this.passphraseService.generate(12);
+              private bip39Service: BIP39Service) {
+    
+  }
+
+  ionViewDidLoad() {
+    this.initialize();
+  }
+
+  initialize(): Promise<void> {
+    return this.bip39Service.generate(256).then(
+      (phrase) => {
+        this.words = phrase.split(" ")
+      }
+    );
   }
 
   /**
@@ -83,9 +95,23 @@ export class WalletNewPassphrasePage {
 
     this.enteredWords.push(word);
 
-    if(this.enteredWords.length == 12) {
+    if(this.enteredWords.length == this.words.length) {
       this.validatePassphrase();
     }
+  }
+
+  /**
+   * Undos a picked word.
+   * @param word 
+   */
+  unpickWord(word: string) {
+    // Make sure the word was actually picked
+    if(!this.isPickedWord(word))
+      return;
+
+    let index = this.enteredWords.indexOf(word);
+
+    this.enteredWords.splice(index, 1);
   }
 
   isPickedWord(word: string): boolean {

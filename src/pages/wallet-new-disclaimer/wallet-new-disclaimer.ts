@@ -3,8 +3,8 @@ import { IonicPage, NavController, NavParams } from "ionic-angular";
 import { CryptoKeyService } from "../../services/crypto-key-service/crypto-key-service";
 import { WalletService } from "../../services/wallet-service/wallet-service";
 import { ILocalWallet } from "../../models/ILocalWallet";
-import { WalletOverviewPage } from "../wallet-overview/wallet-overview";
 import { KeyStoreService } from "../../services/key-store-service/key-store-service";
+import { HomePage } from "../home/home";
 
 @IonicPage()
 @Component({
@@ -21,6 +21,8 @@ export class WalletNewDisclaimerPage {
   passphrase: string[];
   password: string;
 
+  walletName: string = "";
+
   constructor(public navCtrl: NavController, 
               public navParams: NavParams,
               private cryptoKeyService: CryptoKeyService,
@@ -31,14 +33,14 @@ export class WalletNewDisclaimerPage {
   }
 
   finish(): Promise<void> {
-    if(this.userHasAgreed()) {
+    if(this.canShowFinishButton()) {
       // Do final steps to create the wallet, then go to wallet overview page.
       let wallet = this.prepareWallet();
 
       return this.walletService.store(wallet).then(
         () => {
           // Wallet created! Now navigate to the wallet overview page.
-          this.navCtrl.setRoot(WalletOverviewPage);
+          this.navCtrl.setRoot(HomePage);
         },
         (error) => {
           // Something went wrong when creating the wallet...
@@ -55,12 +57,12 @@ export class WalletNewDisclaimerPage {
    * Prepares and returns the wallet based on the current passphrase and password.
    */
   prepareWallet(): ILocalWallet {
-    let keyPair = this.cryptoKeyService.generateKeyPair(this.passphrase);
+    let keyPair = this.cryptoKeyService.generateKeyPair(this.passphrase.join(" "));
 
     let wallet: ILocalWallet = {
       id: this.walletService.generateId(),
       type: "local",
-      name: "Some Wallet",
+      name: this.walletName,
       publicKey: keyPair.publicKey,
       keyStore: this.keyStoreService.createKeyStore(keyPair.privateKey, this.password),
       transactions: [],
@@ -73,11 +75,15 @@ export class WalletNewDisclaimerPage {
     return wallet;
   }
 
-  userHasAgreed(): boolean {
+  /**
+   * Returns true if the user accepted all terms and entered a wallet name.
+   */
+  canShowFinishButton(): boolean {
     return this.agreedToTerm1 &&
            this.agreedToTerm2 &&
            this.agreedToTerm3 &&
-           this.agreedToTerm4;
+           this.agreedToTerm4 &&
+           this.walletName.length > 0;
   }
 
 }

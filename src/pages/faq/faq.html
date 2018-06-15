@@ -1,12 +1,54 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>faq</ion-title>
+    <ion-title></ion-title>
   </ion-navbar>
 
 </ion-header>
 
+<ion-content>
+  <div class="question">
+    <div class="question-header">
+      {{ 'faq.question1' | translate }}
+    </div>
+    <div class="question-answer" [innerHTML]="'faq.answer1' | translate">
 
-<ion-content padding>
+    </div>
+  </div>
 
+  <div class="question">
+    <div class="question-header">
+      {{ 'faq.question2' | translate }}
+    </div>
+    <div class="question-answer" [innerHTML]="'faq.answer2' | translate">
+      
+    </div>
+  </div>
+
+  <div class="question">
+    <div class="question-header">
+      {{ 'faq.question3' | translate }}
+    </div>
+    <div class="question-answer" [innerHTML]="'faq.answer3' | translate">
+
+    </div>
+  </div>
+
+  <div class="question">
+    <div class="question-header">
+      {{ 'faq.question4' | translate }}
+    </div>
+    <div class="question-answer" [innerHTML]="'faq.answer4' | translate">
+
+    </div>
+  </div>
+
+  <div class="question">
+    <div class="question-header">
+      {{ 'faq.question5' | translate }}
+    </div>
+    <div class="question-answer" [innerHTML]="'faq.answer5' | translate">
+
+    </div>
+  </div>
 </ion-content>
