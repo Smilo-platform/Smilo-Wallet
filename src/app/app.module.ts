@@ -5,7 +5,6 @@ import { SplashScreen } from "@ionic-native/splash-screen";
 import { StatusBar } from "@ionic-native/status-bar";
 import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
-
 import { SmiloWallet } from "./app.component";
 import { HomePageModule } from "../pages/home/home.module";
 import { HttpClient, HttpClientModule } from "@angular/common/http";
@@ -35,6 +34,7 @@ import { PasswordExplanationPage } from "../pages/password-explanation/password-
 import { PasswordExplanationPageModule } from "../pages/password-explanation/password-explanation.module";
 import { KeyStoreService } from "../services/key-store-service/key-store-service";
 import { PasswordService } from "../services/password-service/password-service";
+import { BIP39Service } from "../services/bip39-service/bip39-service";
 import { HockeyApp } from "ionic-hockeyapp";
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -92,6 +92,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     NavigationHelperService,
     KeyStoreService,
     PasswordService,
+    BIP39Service,
     HockeyApp,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]

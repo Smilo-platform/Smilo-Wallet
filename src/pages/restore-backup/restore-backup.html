@@ -56,8 +56,10 @@
       {{ passwordStatus.message }}
     </span>
 
-    <span *ngIf="passphrase.length > 0 && passphraseIsValid == false" class="error-box passphrase-message-box">
-      {{ 'restore_backup.passphrase_error' | translate }}
+    <span *ngIf="passphraseStatus && !passphraseStatus.isValid"
+          [ngClass]="{'error-box': passphraseStatus.isBlocking, 'warning-box': !passphraseStatus.isBlocking}" 
+          class="error-box passphrase-message-box">
+      {{ passphraseStatus.errorMessage }}
     </span>
 
     <button *ngIf="dataIsValid()" class="smilo-button import-button" (click)="import()">

@@ -3,19 +3,24 @@ import { WalletNewPassphrasePage } from "./wallet-new-passphrase";
 import { IonicModule, NavController, NavParams} from "ionic-angular/index";
 import { MockNavController } from "../../../test-config/mocks/MockNavController";
 import { MockNavParams } from "../../../test-config/mocks/MockNavParams";
-import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
+import { TranslateModule, TranslateLoader, TranslateService } from "@ngx-translate/core";
 import { MockTranslationLoader } from "../../../test-config/mocks/MockTranslationLoader";
-import { PassphraseService } from "../../services/passphrase-service/passphrase-service";
+import { IBIP39Service, BIP39Service } from "../../services/bip39-service/bip39-service";
+import { MockBIP39Service } from "../../../test-config/mocks/MockBIP39Service";
+import { HttpClient } from "@angular/common/http";
+import { MockTranslateService } from "../../../test-config/mocks/MockTranslateService";
 
 describe("WalletNewPassphrasePage", () => {
   let comp: WalletNewPassphrasePage;
   let fixture: ComponentFixture<WalletNewPassphrasePage>;
   let navController: NavController;
-  let passphraseService: PassphraseService;
+  let bip39Service: IBIP39Service;
+  let httpClient: HttpClient;
+  let translateService: TranslateService;
 
   beforeEach(async(() => {
     navController = new MockNavController();
-    passphraseService = new PassphraseService();
+    bip39Service = new MockBIP39Service();
 
     TestBed.configureTestingModule({
       declarations: [WalletNewPassphrasePage],
@@ -26,22 +31,12 @@ describe("WalletNewPassphrasePage", () => {
         })
       ],
       providers: [
-        { provide: PassphraseService, useValue: passphraseService },
+        { provide: BIP39Service, useValue: bip39Service },
         { provide: NavController, useValue: navController },
         { provide: NavParams, useValue: new MockNavParams() }
       ]
     }).compileComponents();
   }));
-
-  beforeEach(() => {
-    // Mock generate passphrase
-    spyOn(passphraseService, "generate").and.returnValue(
-      [
-        "one", "two", "three", "four", "five", "six",
-        "seven", "eight", "nine", "ten", "eleven", "twelve"
-      ]
-    );
-  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(WalletNewPassphrasePage);
@@ -50,15 +45,34 @@ describe("WalletNewPassphrasePage", () => {
 
   it("should create component", () => expect(comp).toBeDefined());
 
-  it("should be initialized correctly", () => {
-    expect(comp.words).toEqual([
-      "one", "two", "three", "four", "five", "six",
-      "seven", "eight", "nine", "ten", "eleven", "twelve"
-    ]);
-
+  it("should be constructed correctly", () => {
+    expect(comp.words).toEqual([]);
+    expect(comp.shuffledWords).toEqual([]);
+    expect(comp.enteredWords).toEqual([]);
     expect(comp.passphraseIsValid).toBe(false);
 
     expect(comp.state).toBe("showPassphrase");
+  });
+
+  it("should initialize correctly", (done) => {
+    spyOn(bip39Service, "generate").and.returnValue(
+      Promise.resolve("one two three four five six seven eight nine ten eleven twelve")
+    );
+
+    comp.initialize().then(
+      () => {
+        expect(bip39Service.generate).toHaveBeenCalledWith(256);
+
+        expect(comp.words).toEqual(
+          [
+            "one", "two", "three", "four", "five", "six",
+            "seven", "eight", "nine", "ten", "eleven", "twelve"
+          ]
+        );
+
+        done();
+      }
+    );
   });
 
   it("should clear the entered words when reset is called", () => {
@@ -70,6 +84,11 @@ describe("WalletNewPassphrasePage", () => {
   });
 
   it("should validate a correctly entered passphrase correctly", () => {
+    comp.words = [
+      "one", "two", "three", "four", "five", "six",
+      "seven", "eight", "nine", "ten", "eleven", "twelve"
+    ];
+
     comp.enteredWords = [
       "one", "two", "three", "four", "five", "six",
       "seven", "eight", "nine", "ten", "eleven", "twelve"
@@ -81,6 +100,11 @@ describe("WalletNewPassphrasePage", () => {
   });
 
   it("should validate an incorrectly entered passphrase correctly", () => {
+    comp.words = [
+      "one", "two", "three", "four", "five", "six",
+      "seven", "eight", "nine", "ten", "eleven", "twelve"
+    ];
+
     comp.enteredWords = [
       "twelve", "two", "three", "four", "five", "six",
       "seven", "eight", "nine", "ten", "eleven", "one"
@@ -146,6 +170,11 @@ describe("WalletNewPassphrasePage", () => {
   });
 
   it("should validate the passphrase once 12 words have been picked", () => {
+    comp.words = [
+      "one", "two", "three", "four", "five", "six",
+      "seven", "eight", "nine", "ten", "eleven", "twelve"
+    ];
+
     spyOn(comp, "validatePassphrase");
 
     comp.pickWord("one");

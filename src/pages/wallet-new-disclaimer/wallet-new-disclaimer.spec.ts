@@ -186,13 +186,6 @@ describe("WalletNewDisclaimerPage", () => {
         lastUpdateTime: null
       }
     );
-
-    expect(cryptoKeyService.generateKeyPair).toHaveBeenCalledWith(
-      [
-        "one", "two", "three", "four", "five", "six",
-        "seven", "eight", "nine", "ten", "eleven", "twelve"
-      ]
-    );
   });
 
   it("should prepare and store the wallet correctly on finish", () => {

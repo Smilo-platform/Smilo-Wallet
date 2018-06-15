@@ -1,7 +1,7 @@
 import { browser, by, element, ExpectedConditions, WebElement, ElementFinder } from "protractor";
 import { clickElementByClassName } from "./helpers";
 
-describe("Importing a key store", () => {
+describe("Restoring a backup", () => {
     // Get elements
     let importButton: ElementFinder;
     let passphraseInput: ElementFinder;
@@ -56,7 +56,7 @@ describe("Importing a key store", () => {
 
     it("should trigger a passphrase error correctly", () => {
         // Send incomplete input
-        passphraseInput.sendKeys("one two three");
+        passphraseInput.sendKeys("one three two");
 
         // Blur the passphrase input by clicking somewhere
         browser.actions().mouseMove({x: 100, y: 100}).click().perform();
@@ -68,7 +68,7 @@ describe("Importing a key store", () => {
 
     it("should clear the passphrase error correctly", () => {
         // Send incomplete input
-        passphraseInput.sendKeys("one two three");
+        passphraseInput.sendKeys("borrow already floor");
 
         // Blur the passphrase input by clicking somewhere
         browser.actions().mouseMove({x: 100, y: 100}).click().perform();
@@ -76,7 +76,7 @@ describe("Importing a key store", () => {
         browser.sleep(500);
 
         // Send complete input
-        passphraseInput.sendKeys(" four five six seven eight nine ten eleven twelve");
+        passphraseInput.sendKeys(" egg shrimp visual pigeon gown drastic have orange end cinnamon misery warfare share security vintage sphere crawl lunar top struggle above");
 
         // Blur the passphrase input by clicking somewhere
         browser.actions().mouseMove({x: 100, y: 100}).click().perform();
@@ -110,7 +110,7 @@ describe("Importing a key store", () => {
     });
 
     it("should show the import button when all inputs are filled correctly", () => {
-        passphraseInput.sendKeys("one two three four five six seven eight nine ten eleven twelve");
+        passphraseInput.sendKeys("borrow already floor egg shrimp visual pigeon gown drastic have orange end cinnamon misery warfare share security vintage sphere crawl lunar top struggle above");
         passwordInput.sendKeys("pass123");
         passwordConfirmInput.sendKeys("pass123");
         nameInput.sendKeys("Wallet Name");
