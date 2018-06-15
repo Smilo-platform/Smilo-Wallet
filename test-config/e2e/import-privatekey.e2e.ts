@@ -2,6 +2,7 @@ import { browser, by, element, ExpectedConditions, WebElement } from "protractor
 import { clickElementByClassName } from "./helpers";
 
 describe("Importing a private key", () => {
+    if (browser.params.testFile !== undefined && browser.params.testFile !== "import-privatekey") return;
     beforeEach(() => {
         browser.waitForAngularEnabled(false);
 

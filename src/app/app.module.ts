@@ -29,6 +29,7 @@ import { WalletImportPageModule } from "../pages/wallet-import/wallet-import.mod
 import { WalletNewPassphrasePageModule } from "../pages/wallet-new-passphrase/wallet-new-passphrase.module";
 import { WalletNewPasswordPageModule } from "../pages/wallet-new-password/wallet-new-password.module";
 import { WalletNewDisclaimerPageModule } from "../pages/wallet-new-disclaimer/wallet-new-disclaimer.module";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NavigationHelperService } from "../services/navigation-helper-service/navigation-helper-service";
 import { PasswordExplanationPage } from "../pages/password-explanation/password-explanation";
 import { PasswordExplanationPageModule } from "../pages/password-explanation/password-explanation.module";
@@ -48,6 +49,7 @@ export function HttpLoaderFactory(http: HttpClient) {
   imports: [
     BrowserModule,
     HttpClientModule,
+    BrowserAnimationsModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

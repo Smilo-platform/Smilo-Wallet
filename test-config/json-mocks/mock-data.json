@@ -1,0 +1,52 @@
+{
+    "walletCurrency" : [
+      { "publicKey": "ETm9QUJLVdJkTqRojTNqswmeAQGaofojJJ", "storedCoins": [
+              { "currency": "Smilo", "amount": 5712 },
+              { "currency": "SmiloPay", "amount": 234}
+          ]
+      },
+      { "publicKey": "ELsKCchf9rcGsufjRR62PG5Fn5dFinfgeN", "storedCoins": [
+              { "currency": "Smilo", "amount": 8122 },
+              { "currency": "SmiloPay", "amount": 634}
+          ]
+      },
+      { "publicKey": "EZ7tP3CBdBKrB9MaBgZNHyDcTg5TFRRpaY", "storedCoins": [
+              { "currency": "Smilo", "amount": 168234 },
+              { "currency": "SmiloPay", "amount": 2993}
+          ]
+      }
+    ],
+    "currencyValue" : [
+      {"exchange": "Bitmex", "currencyTo": "$", "currencyFrom": "Smilo", "value": 0.25},
+      {"exchange": "Bitmex", "currencyTo": "$", "currencyFrom": "SmiloPay", "value": 0.025},
+      {"exchange": "Bitmex", "currencyTo": "ETH", "currencyFrom": "Smilo", "value": 0.0003},
+      {"exchange": "Bitmex", "currencyTo": "ETH", "currencyFrom": "SmiloPay", "value": 0.00003},
+      {"exchange": "Bitmex", "currencyTo": "BTC", "currencyFrom": "Smilo", "value": 0.00003},
+      {"exchange": "Bitmex", "currencyTo": "BTC", "currencyFrom": "SmiloPay", "value": 0.000003},
+
+      {"exchange": "GDAX", "currencyTo": "$", "currencyFrom": "Smilo", "value": 0.30},
+      {"exchange": "GDAX", "currencyTo": "$", "currencyFrom": "SmiloPay", "value": 0.030},
+      {"exchange": "GDAX", "currencyTo": "BTC", "currencyFrom": "Smilo", "value": 0.00004},
+      {"exchange": "GDAX", "currencyTo": "BTC", "currencyFrom": "SmiloPay", "value": 0.000004},
+
+      {"exchange": "CexIO", "currencyTo": "$", "currencyFrom": "Smilo", "value": 0.20},
+      {"exchange": "CexIO", "currencyTo": "$", "currencyFrom": "SmiloPay", "value": 0.020},
+
+      {"exchange": "Kraken", "currencyTo": "$", "currencyFrom": "Smilo", "value": 0.35},
+      {"exchange": "Kraken", "currencyTo": "$", "currencyFrom": "SmiloPay", "value": 0.035},
+
+      {"exchange": "Coinbase", "currencyTo": "$", "currencyFrom": "Smilo", "value": 0.22},
+      {"exchange": "Coinbase", "currencyTo": "$", "currencyFrom": "SmiloPay", "value": 0.022},
+      {"exchange": "Coinbase", "currencyTo": "ETH", "currencyFrom": "Smilo", "value": 0.0002},
+      {"exchange": "Coinbase", "currencyTo": "ETH", "currencyFrom": "SmiloPay", "value": 0.00002},
+      {"exchange": "Coinbase", "currencyTo": "BTC", "currencyFrom": "Smilo", "value": 0.00002},
+      {"exchange": "Coinbase", "currencyTo": "BTC", "currencyFrom": "SmiloPay", "value": 0.000002}
+    ],
+    "availableExchanges": [
+      {"exchangeName": "Bitmex", "availableCurrencies": ["$", "ETH", "BTC"]},
+      {"exchangeName": "GDAX", "availableCurrencies": ["$", "BTC"]},
+      {"exchangeName": "CexIO", "availableCurrencies": ["$"]},
+      {"exchangeName": "Kraken", "availableCurrencies": ["$"]},
+      {"exchangeName": "Coinbase", "availableCurrencies": ["$", "ETH", "BTC"]}
+    ]
+  }

@@ -14,14 +14,26 @@ export interface IWalletService {
     remove(wallet: IWallet): Promise<void>;
 
     generateId(): string;
+
+    getCurrencyValue(currency: string, exchange: string);
+
+    getWalletBalance(publicKey: string);
+
+    getAvailableExchanges();
 }
 
 @Injectable()
 export class WalletService implements IWalletService {
-    private wallets: IWallet[];
+    private wallets: IWallet[]; 
+    private baseUrl: string;
 
     constructor(private storage: Storage, private http: HttpClient) {
-
+        let _isDev: boolean = ((<any>window)['IonicDevServer'] != undefined);
+        if (_isDev) {
+            this.baseUrl = "http://localhost:3000";
+        } else {
+            this.baseUrl = "https://api.smilo";
+        }
     }
 
     /**
@@ -63,71 +75,38 @@ export class WalletService implements IWalletService {
         }
     }
 
-
-    getWallets() {
-        return new Promise(resolve => {
-            this.http.get('assets/data/walletData.json').subscribe(data => {
-                resolve(data);
-            }, err => {
-                console.log("Get Wallet Data error: " + err);
-            });
+    getCurrencyValue(currency: string, exchange: string): Promise<string[]> {
+        return this.http.get(this.baseUrl + '/currencyValue').toPromise().then(data => {
+            var json = JSON.parse(JSON.stringify(data));
+            var foundCurrencies: string[] = [];
+            for (var i = 0; i < json.length; i++) {
+                if (json[i].currencyTo === currency && json[i].exchange === exchange) {
+                    foundCurrencies.push(json[i]);
+                }
+            }
+            return foundCurrencies;
         });
     }
 
-    getCurrencyValue(currency: string) {
-        return new Promise((resolve, reject) => {
-            this.http.get('assets/data/currencyValues.json').subscribe(data => {
-                var json = JSON.parse(JSON.stringify(data));
-                var foundCurrencies = [];
-                var found = false;
-                for (var i = 0; i < json.length; i++) {
-                    if (json[i].currencyTo === currency) {
-                        found = true;
-                        foundCurrencies.push(json[i]);
-                    }
+    getWalletBalance(publicKey: string) {
+        return this.http.get(this.baseUrl + '/walletCurrency').toPromise().then(data => {
+            var json = JSON.parse(JSON.stringify(data));
+            var foundWallet = null;
+            for (var i = 0; i < json.length; i++) {
+                if (json[i].publicKey === publicKey) {
+                    foundWallet = json[i];
+                    break;
                 }
-                if (found) {
-                    resolve(foundCurrencies);
-                } else {
-                    reject({});
-                }
-            });
-        }).catch(function(result) {
-            return result;
+            }
+            return foundWallet;
         });
     }
 
-    getWalletCurrency(publicKey: string) {
-        return new Promise((resolve, reject) => {
-            this.http.get('assets/data/storedCoins.json').subscribe(data => {
-                var json = JSON.parse(JSON.stringify(data));
-                var foundWallet = null;
-                var found = false;
-                for (var i = 0; i < json.length; i++) {
-                    if (json[i].publicKey === publicKey) {
-                        found = true;
-                        foundWallet = json[i];
-                        break;
-                    }
-                }
-                if (found) {
-                    resolve(foundWallet);
-                } else {
-                    reject({});
-                }
-            });
-        }).catch(function(result) {
-            return result;
-        });
-    }
-
-    getAvailableCurrencies() {
-        return new Promise(resolve => {
-            this.http.get('assets/data/availableCurrencies.json').subscribe(data => {
-                resolve(data);
-            }, err => {
-                console.log("Get Available Currencies error: " + err);
-            });
+    getAvailableExchanges() {
+        return this.http.get(this.baseUrl + '/availableExchanges').toPromise().then(data => {
+            return data;
+        }, err => {
+            console.log("Get Available Exchanges error: " + err);
         });
     }
 

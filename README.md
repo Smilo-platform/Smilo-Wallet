@@ -16,6 +16,12 @@ First make sure you have all Node modules installed by running the following com
 npm install
 ```
 
+Make sure you start the mock API for data to retrieve 
+
+```
+json-server --watch ./test-config/json-mocks/mock-data.json
+```
+
 Next run the following command to run the project locally:
 
 ```
@@ -34,6 +40,18 @@ For end-to-end testing we use Protractor and Jasmine. To e2e test the project fi
 
 ```
 npm run e2e
+```
+
+For end-to-end testing we use Protractor and Jasmine. To e2e test the project first ensure the project is running with `ionic serve`. Next run the following command in the root of this project. Use the FILE_NAME as variable defined in the e2e script. 
+
+```
+npm run e2e -- --params.testFile=<FILE_NAME>
+```
+
+Example
+
+```
+npm run e2e -- --params.testFile="existing-wallet-overview-check"
 ```
 
 ### Building and running on Android

@@ -1,23 +1,24 @@
 page-wallet-overview {
-    #totalWalletValue {
+    #total-wallet-value {
         float: right;
         font-size: 30px;
     }
 
-    #totalValueText {
+    #total-value-text {
         float: left;
         font-weight: 100;
     }
 
-    #totalWalletValueCurrency {
+    #total-wallet-value-currency {
         float: right;
         font-size: 16px;
         margin-right: 8px;
         margin-top: 15px;
     }
 
-    #doughnutAgenda {
+    #doughnut-agenda {
         margin-top: 20px;
+        text-align: center;
     }
 
     .blue {
@@ -28,45 +29,79 @@ page-wallet-overview {
         background-color: #FFCD55;
     }
 
-    .marginTop {
-        margin-top: 10px;
-    }
-
-    .amountHeader {
+    .amount-header {
         font-size: 16px;
         font-weight: 100;
     }
 
-    .valueText {
+    .value-text {
         font-size: 26px;
+        float: left;
     }
 
-    #aboutWalletHeader{ 
+    .margin-header { 
         margin-top: 30px;
         margin-bottom: 20px;
     }
 
-    #walletHeader {
+    .wallet-header {
         margin-bottom: 15px;
     }
 
-    .walletAddress {
+    .wallet-address {
         font-size: 13px;
     }
 
-    .legendColorBlock {
+    .legend-color-block {
         display: inline-block;
         margin-right: 8px;
         width: 26px;
         height: 10px;
     }
 
-    .legendText {
+    .legend-text {
         display: inline-block;
     }
     
-    .legendList {
+    .legend-list {
         list-style-type: none;
         padding-left: 6px;
+    }
+
+    .distribution-dougnut {
+        margin: 0 auto;
+        max-height: 162px !important;
+        max-width: 327px !important;
+    }
+    
+    .transfer-button {
+        width: 100%;
+        margin: 0px;
+    }
+
+    .settings {
+        position: absolute;
+        right: 16px;
+        top: 15px;
+        font-size: 28px;
+        color: white;
+    }
+
+    .settings:hover {
+        opacity: 75%;
+        cursor: pointer;
+    }
+
+    .legend-list-item {
+        margin-top: 8px;
+    }
+
+    .hidden {
+        opacity: 0;
+    }
+
+    .currency-value-text {
+        float: right;
+        font-size: 16px;
     }
 }

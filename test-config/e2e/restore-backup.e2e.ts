@@ -2,6 +2,7 @@ import { browser, by, element, ExpectedConditions, WebElement, ElementFinder } f
 import { clickElementByClassName } from "./helpers";
 
 describe("Restoring a backup", () => {
+    if (browser.params.testFile !== undefined && browser.params.testFile !== "restore-backup") return;
     // Get elements
     let importButton: ElementFinder;
     let passphraseInput: ElementFinder;

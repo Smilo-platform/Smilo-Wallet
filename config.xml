@@ -85,5 +85,6 @@
     <allow-navigation href="http://192.168.3.70:8101" />
     <plugin name="cordova-plugin-hockeyapp" spec="^5.1.2" />
     <engine name="android" spec="7.0.0" />
-    <engine name="ios" spec="4.5.4" />
+    <engine name="ios" spec="~4.5.4" />
+    <engine name="browser" spec="~5.0.3" />
 </widget>

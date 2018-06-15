@@ -79,7 +79,14 @@
         "wallet_info": "Wallet info",
         "total_value": "Total value",
         "choose_value_currency": "Choose value currency",
-        "distribution": "Distribution"
+        "distribution": "Distribution",
+        "funds_hidden": "Your wallet funds are hidden.",
+        "transfer": "Transfer",
+        "settings": "Settings",
+        "show_funds": "Show funds",
+        "backup_wallet": "Backup wallet",
+        "delete_wallet": "Delete wallet",
+        "choose_exchange": "Choose exchange"
     },
     "password": {
         "title": "Keep your password a secret!",

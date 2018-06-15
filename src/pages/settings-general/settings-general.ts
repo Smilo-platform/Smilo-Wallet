@@ -16,7 +16,6 @@ import { SettingsProvider } from './../../providers/settings/settings';
   templateUrl: "settings-general.html",
 })
 export class SettingsGeneralPage {
-  private title: string = "Settings";
   private nightModeStatus: boolean = false;
   private twoFactorAuthStatus: boolean = false;
   selectedTheme: String;
