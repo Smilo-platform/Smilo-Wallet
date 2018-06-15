@@ -65,7 +65,7 @@
 
       <div class="passphrase-box entered-box">
         <div class="passphrase-content">
-          <div class="word" *ngFor="let word of enteredWords">
+          <div class="word" *ngFor="let word of enteredWords" (click)="unpickWord(word)">
             <span>
               {{ word }}
             </span>
