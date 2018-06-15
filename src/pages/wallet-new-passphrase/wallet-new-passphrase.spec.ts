@@ -51,7 +51,10 @@ describe("WalletNewPassphrasePage", () => {
   it("should create component", () => expect(comp).toBeDefined());
 
   it("should be initialized correctly", () => {
-    expect(comp.words.length).toBe(12);
+    expect(comp.words).toEqual([
+      "one", "two", "three", "four", "five", "six",
+      "seven", "eight", "nine", "ten", "eleven", "twelve"
+    ]);
 
     expect(comp.passphraseIsValid).toBe(false);
 

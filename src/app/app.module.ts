@@ -35,6 +35,7 @@ import { PasswordExplanationPage } from "../pages/password-explanation/password-
 import { PasswordExplanationPageModule } from "../pages/password-explanation/password-explanation.module";
 import { KeyStoreService } from "../services/key-store-service/key-store-service";
 import { PasswordService } from "../services/password-service/password-service";
+import { HockeyApp } from "ionic-hockeyapp";
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, "assets/i18n/");
@@ -91,6 +92,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     NavigationHelperService,
     KeyStoreService,
     PasswordService,
+    HockeyApp,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
