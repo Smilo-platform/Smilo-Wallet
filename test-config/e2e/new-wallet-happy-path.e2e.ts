@@ -1,7 +1,7 @@
 import { browser, by, element, ExpectedConditions, WebElement } from "protractor";
 
 describe("Creating a new wallet (happy path)", () => {
-    if (browser.params.testFile !== undefined &&browser.params.testFile !== "new-wallet-happy-path") return;
+    if (browser.params.testFile !== undefined && browser.params.testFile !== "new-wallet-happy-path") return;
 
     beforeEach(() => {
         browser.waitForAngularEnabled(false);

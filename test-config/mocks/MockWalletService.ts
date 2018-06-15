@@ -3,7 +3,16 @@ import { IWallet } from "../../src/models/IWallet";
 
 export class MockWalletService implements IWalletService {
 
-    getWalletCurrency(publicKey: string) {
+    getAvailableExchanges() {
+        return new Promise(resolve => { resolve([
+            {"exchange": "Bitmex", "availableCurrencies": ["$", "ETH", "BTC"]},
+            {"exchange": "GDAX", "availableCurrencies": ["$", "BTC"]},
+            {"exchange": "CexIO", "availableCurrencies": ["$"]},
+            {"exchange": "Kraken", "availableCurrencies": ["$"]},
+            {"exchange": "Coinbase", "availableCurrencies": ["$", "ETH", "BTC"]}
+        ])});
+    }
+    getWalletBalance(publicKey: string) {
         return new Promise(resolve => { resolve(
             { "publicKey": "ETm9QUJLVdJkTqRojTNqswmeAQGaofojJJ", "storedCoins": [
                 { "currency": "Smilo", "amount": 5712 },
@@ -37,19 +46,15 @@ export class MockWalletService implements IWalletService {
             {"currencyTo": "$", "currencyFrom": "SmiloPay", "value": 0.025}
         ])});
     }
-    getAvailableCurrencies() {
-        return new Promise(resolve => {resolve([
-            {"currency": "$"},
-            {"currency": "ETH"},
-            {"currency": "BTC"}
-        ])});
-    }
+
     generateId(): string {
         return "SOME_ID";
     }
+
     store(wallet: IWallet): Promise<void> {
         return Promise.resolve();
     }
+
     remove(wallet: IWallet): Promise<void> {
         return Promise.resolve();
     }

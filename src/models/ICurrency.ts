@@ -9,4 +9,8 @@ export interface ICurrency {
      * The amount of the currency
      */
     amount: number;
+    /**
+     * The value amount for the current currency and amount and exchange
+     */
+    valueAmount: number;
 }

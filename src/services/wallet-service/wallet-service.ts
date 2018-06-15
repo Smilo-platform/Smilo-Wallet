@@ -15,11 +15,11 @@ export interface IWalletService {
 
     generateId(): string;
 
-    getCurrencyValue(mockData, currency: string);
+    getCurrencyValue(currency: string, exchange: string);
 
-    getAvailableCurrencies(mockData);
+    getWalletBalance(publicKey: string);
 
-    getWalletCurrency(mockData, publicKey: string);
+    getAvailableExchanges();
 }
 
 @Injectable()
@@ -75,12 +75,12 @@ export class WalletService implements IWalletService {
         }
     }
 
-    getCurrencyValue(currency: string): Promise<string[]> {
+    getCurrencyValue(currency: string, exchange: string): Promise<string[]> {
         return this.http.get(this.baseUrl + '/currencyValue').toPromise().then(data => {
             var json = JSON.parse(JSON.stringify(data));
             var foundCurrencies: string[] = [];
             for (var i = 0; i < json.length; i++) {
-                if (json[i].currencyTo === currency) {
+                if (json[i].currencyTo === currency && json[i].exchange === exchange) {
                     foundCurrencies.push(json[i]);
                 }
             }
@@ -88,7 +88,7 @@ export class WalletService implements IWalletService {
         });
     }
 
-    getWalletCurrency(publicKey: string) {
+    getWalletBalance(publicKey: string) {
         return this.http.get(this.baseUrl + '/walletCurrency').toPromise().then(data => {
             var json = JSON.parse(JSON.stringify(data));
             var foundWallet = null;
@@ -102,11 +102,11 @@ export class WalletService implements IWalletService {
         });
     }
 
-    getAvailableCurrencies() {
-        return this.http.get(this.baseUrl + '/availableCurrencies').toPromise().then(data => {
+    getAvailableExchanges() {
+        return this.http.get(this.baseUrl + '/availableExchanges').toPromise().then(data => {
             return data;
         }, err => {
-            console.log("Get Available Currencies error: " + err);
+            console.log("Get Available Exchanges error: " + err);
         });
     }
 

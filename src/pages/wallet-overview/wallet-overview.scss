@@ -36,6 +36,7 @@ page-wallet-overview {
 
     .value-text {
         font-size: 26px;
+        float: left;
     }
 
     .margin-header { 
@@ -89,5 +90,18 @@ page-wallet-overview {
     .settings:hover {
         opacity: 75%;
         cursor: pointer;
+    }
+
+    .legend-list-item {
+        margin-top: 8px;
+    }
+
+    .hidden {
+        opacity: 0;
+    }
+
+    .currency-value-text {
+        float: right;
+        font-size: 16px;
     }
 }
