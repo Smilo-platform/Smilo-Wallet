@@ -33,12 +33,19 @@
             "2fa": "Twee-Factor Authenticatie"
         }
     },
-    "walletOverview": {
+    "wallet_overview": {
         "title": "Wallet overzicht",
         "wallets": "Wallets",
         "wallet_info": "Wallet informatie",
         "total_value": "Totaal waarde",
         "choose_value_currency": "Kies valuta waarde",
-        "distribution": "Verdeling"
+        "distribution": "Verdeling",
+        "funds_hidden": "Jouw fondsen zijn verborgen",
+        "transfer": "Overmaken",
+        "settings": "Instellingen",
+        "show_funds": "Laat fondsen zien",
+        "backup_wallet": "Backup",
+        "delete_wallet": "Delete wallet",
+        "choose_exchange": "Kies exchange"
     }
 }

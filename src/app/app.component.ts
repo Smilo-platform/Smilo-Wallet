@@ -7,6 +7,7 @@ import { TranslateService } from "@ngx-translate/core";
 import { LandingPage } from "../pages/landing/landing";
 import { WalletService } from "../services/wallet-service/wallet-service";
 import { SettingsProvider } from './../providers/settings/settings';
+import { SettingsService } from "../services/settings-service/settings-service";
 
 @Component({
   templateUrl: "app.html"
@@ -20,14 +21,25 @@ export class SmiloWallet {
               splashScreen: SplashScreen,
               translate: TranslateService,
               walletService: WalletService,
-              settings: SettingsProvider) {
+              settings: SettingsProvider,
+              settingsService: SettingsService) {
     settings.getActiveTheme().subscribe(val => this.selectedTheme = val);
     platform.ready().then(() => {
+      if (platform.is('ios')) {
+        window['plugins'].webviewcolor.change('#fff');
+      }
       statusBar.styleDefault();
       splashScreen.hide();
 
-      translate.setDefaultLang("en");
-      translate.use("en");
+      settingsService.getLanguageSettings().then(data => {
+        translate.setDefaultLang("en");
+
+        translate.use(data || "en");
+      });
+
+      settingsService.getNightModeSettings().then(data => {
+        settings.setActiveTheme(data || 'light-theme');
+      })
 
       walletService.getAll().then(
         (wallets) => {

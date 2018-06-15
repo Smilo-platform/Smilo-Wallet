@@ -87,6 +87,10 @@ page-wallet-overview {
         color: white;
     }
 
+    .ion-ios-settings {
+        top: 9px !important;
+    }
+
     .settings:hover {
         opacity: 75%;
         cursor: pointer;
@@ -103,5 +107,9 @@ page-wallet-overview {
     .currency-value-text {
         float: right;
         font-size: 16px;
+    }
+
+    .currencies-overview {
+        margin-top: 20px;
     }
 }

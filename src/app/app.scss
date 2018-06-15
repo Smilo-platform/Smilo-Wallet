@@ -41,6 +41,24 @@ $smilo-logo-max-height: 100px;
     color: white;
 }
 
-.deleteButtonCss {
+.delete-button {
     color: red !important;
+    .alert-wrapper {
+        background-color: red !important;
+    }
+}
+
+ion-title {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 0 90px 1px;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    pointer-events: none;
+}
+
+.back-button:hover { 
+    color: white !important;
 }

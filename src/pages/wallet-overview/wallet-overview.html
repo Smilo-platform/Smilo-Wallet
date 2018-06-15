@@ -52,7 +52,7 @@
                     </ion-list>
                 <ion-card class="distribution-overview" [@visibilityChanged]="walletFundsVisibility">
                     <ion-card-header>
-                        {{ 'wallet_overview.distribution' | translate }}
+                        <p>{{ 'wallet_overview.distribution' | translate }}</p>
                         <canvas #doughnutCanvas class="distribution-dougnut"> </canvas>
                         <div id="doughnut-agenda" class="legend-list" ref="legend">
                             <ul class="legend-list">

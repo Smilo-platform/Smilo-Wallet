@@ -121,7 +121,7 @@ export class WalletOverviewPage {
         },
         {
           text: 'Yes, delete',
-          cssClass: 'deleteButtonCss',
+          cssClass: 'delete-button',
           handler: () => {
             this.walletService.remove(this.currentWallet);
             this.deleteSelectedWallet(this.currentWallet);
