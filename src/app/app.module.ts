@@ -37,6 +37,7 @@ import { KeyStoreService } from "../services/key-store-service/key-store-service
 import { PasswordService } from "../services/password-service/password-service";
 import { BIP39Service } from "../services/bip39-service/bip39-service";
 import { HockeyApp } from "ionic-hockeyapp";
+import { BIP32Service } from "../services/bip32-service/bip32-service";
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, "assets/i18n/");
@@ -95,6 +96,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     KeyStoreService,
     PasswordService,
     BIP39Service,
+    BIP32Service,
     HockeyApp,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
