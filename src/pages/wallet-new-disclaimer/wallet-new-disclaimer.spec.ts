@@ -8,10 +8,10 @@ import { MockTranslationLoader } from "../../../test-config/mocks/MockTranslatio
 import { WalletService, IWalletService } from "../../services/wallet-service/wallet-service";
 import { CryptoKeyService } from "../../services/crypto-key-service/crypto-key-service";
 import { MockWalletService } from "../../../test-config/mocks/MockWalletService";
-import { WalletOverviewPage } from "../wallet-overview/wallet-overview";
 import { KeyStoreService, IKeyStoreService } from "../../services/key-store-service/key-store-service";
 import { MockKeyStoreService } from "../../../test-config/mocks/MockKeyStoreService";
 import { IKeyStore } from "../../models/IKeyStore";
+import { HomePage } from "../home/home";
 
 describe("WalletNewDisclaimerPage", () => {
   let comp: WalletNewDisclaimerPage;
@@ -208,7 +208,7 @@ describe("WalletNewDisclaimerPage", () => {
     expect(walletService.store).toHaveBeenCalledWith(dummyWallet);
   });
 
-  it("should set navigation root to WalletOverviewPage on succesfull finish", (done) => {
+  it("should set navigation root to HomePage on succesfull finish", (done) => {
     let dummyWallet = {};
 
     spyOn(walletService, "store").and.returnValue(Promise.resolve());
@@ -218,7 +218,7 @@ describe("WalletNewDisclaimerPage", () => {
 
     comp.finish().then(
       () => {
-        expect(navController.setRoot).toHaveBeenCalledWith(WalletOverviewPage);
+        expect(navController.setRoot).toHaveBeenCalledWith(HomePage);
 
         done();
       }
