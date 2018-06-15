@@ -49,7 +49,6 @@ describe("WalletNewPassphrasePage", () => {
     expect(comp.words).toEqual([]);
     expect(comp.shuffledWords).toEqual([]);
     expect(comp.enteredWords).toEqual([]);
-
     expect(comp.passphraseIsValid).toBe(false);
 
     expect(comp.state).toBe("showPassphrase");
