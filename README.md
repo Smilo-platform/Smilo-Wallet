@@ -16,10 +16,42 @@ First make sure you have all Node modules installed by running the following com
 npm install
 ```
 
+Make sure you start the mock API for data to retrieve 
+
+```
+json-server --watch ./test-config/json-mocks/mock-data.json
+```
+
 Next run the following command to run the project locally:
 
 ```
 ionic serve
+```
+
+## Testing the project
+
+We use Jasmine and Karma to unit test this project. To unit test the project run the following command in the root of this project:
+
+````
+npm run test
+````
+
+For end-to-end testing we use Protractor and Jasmine. To e2e test the project first ensure the project is running with `ionic serve`. Next run the following command in the root of this project:
+
+```
+npm run e2e
+```
+
+For end-to-end testing we use Protractor and Jasmine. To e2e test the project first ensure the project is running with `ionic serve`. Next run the following command in the root of this project. Use the FILE_NAME as variable defined in the e2e script. 
+
+```
+npm run e2e -- --params.testFile=<FILE_NAME>
+```
+
+Example
+
+```
+npm run e2e -- --params.testFile="existing-wallet-overview-check"
 ```
 
 ### Building and running on Android
@@ -40,6 +72,21 @@ Or directly run the project using:
 ionic cordova run android
 ```
 
+#### Building a release version
+
+Use the following command to build a release ready version for Android:
+
+```
+npm run release:android
+```
+
+The build APK can be found at `release/android.apk`.
+
+This command will use the script found at `scripts/build-android.sh` to build a release ready APK.
+
+For this command to work the environment variable `SMILO_WALLET_KEYSTORE_LOCATION` is expected to be defined.
+This variable should point to the location where the keystore used to sign the app is located.
+
 ### Building and running on iOS
 
 First make sure you have xCode installed.
@@ -56,16 +103,16 @@ Or directly run the project using:
 ionic cordova run ios
 ```
 
-## Testing the project
+#### Building a release version
 
-We use Jasmine and Karma to unit test this project. To unit test the project run the following command in the root of this project:
+TODO
 
-````
-npm run test
-````
+### Uploading a test version to Hockey App
 
-For end-to-end testing we use Protractor and Jasmine. To e2e test the project first ensure the project is running with `ionic serve`. Next run the following command in the root of this project:
+We use [Hockey App](https://www.hockeyapp.net) for internal testing. To build a release version and upload to Hockey App use the following command:
 
 ```
-npm run e2e
+npm run upload:hockey-app
 ```
+
+For this to work the environment variable `HOCKEY_APP_TOKEN` is expected to be available.

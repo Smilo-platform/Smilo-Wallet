@@ -3,8 +3,8 @@ import { IonicPage, NavController, NavParams } from "ionic-angular";
 import { CryptoKeyService } from "../../services/crypto-key-service/crypto-key-service";
 import { WalletService } from "../../services/wallet-service/wallet-service";
 import { ILocalWallet } from "../../models/ILocalWallet";
-import { WalletOverviewPage } from "../wallet-overview/wallet-overview";
 import { KeyStoreService } from "../../services/key-store-service/key-store-service";
+import { HomePage } from "../home/home";
 
 @IonicPage()
 @Component({
@@ -40,7 +40,7 @@ export class WalletNewDisclaimerPage {
       return this.walletService.store(wallet).then(
         () => {
           // Wallet created! Now navigate to the wallet overview page.
-          this.navCtrl.setRoot(WalletOverviewPage);
+          this.navCtrl.setRoot(HomePage);
         },
         (error) => {
           // Something went wrong when creating the wallet...
@@ -66,7 +66,10 @@ export class WalletNewDisclaimerPage {
       publicKey: keyPair.publicKey,
       keyStore: this.keyStoreService.createKeyStore(keyPair.privateKey, this.password),
       transactions: [],
-      lastUpdateTime: new Date()
+      lastUpdateTime: new Date(),
+      currencies: [],
+      totalCurrentCurrencyValue: 0,
+      encryptedPrivateKey: null
     };
 
     return wallet;

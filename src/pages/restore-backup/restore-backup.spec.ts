@@ -150,7 +150,10 @@ describe("RestoreBackupPage", () => {
       publicKey: "PUBLIC_KEY",
       keyStore: keyStore,
       transactions: [],
-      lastUpdateTime: null
+      lastUpdateTime: null,
+      currencies: [],
+      totalCurrentCurrencyValue: 0,
+      encryptedPrivateKey: ""
     });
   });
 

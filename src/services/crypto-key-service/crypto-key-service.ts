@@ -14,8 +14,8 @@ export class CryptoKeyService implements ICryptoKeyService {
      */
     generateKeyPair(mnemonic: string): IKeyPair {
         return {
-            privateKey: "SOME_PRIVATE_KEY",
-            publicKey: "SOME_PUBLIC_KEY"
+            privateKey: "PRIVATE_KEY",
+            publicKey: "PUBLIC_KEY"
         };
     }
 

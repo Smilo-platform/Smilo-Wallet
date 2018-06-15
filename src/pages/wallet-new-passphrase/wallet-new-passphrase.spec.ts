@@ -49,7 +49,6 @@ describe("WalletNewPassphrasePage", () => {
     expect(comp.words).toEqual([]);
     expect(comp.shuffledWords).toEqual([]);
     expect(comp.enteredWords).toEqual([]);
-
     expect(comp.passphraseIsValid).toBe(false);
 
     expect(comp.state).toBe("showPassphrase");
@@ -144,6 +143,30 @@ describe("WalletNewPassphrasePage", () => {
     comp.pickWord("three");
 
     expect(comp.enteredWords).toEqual(["one", "twelve", "three"]);
+  });
+
+  it("should unpick a picked word correctly", () => {
+    comp.enteredWords = ["one", "two", "three"];
+
+    comp.unpickWord("one");
+
+    expect(comp.enteredWords).toEqual(["two", "three"]);
+
+    comp.unpickWord("three");
+
+    expect(comp.enteredWords).toEqual(["two"]);
+  });
+
+  it("should not unpick a word which was never picked", () => {
+    comp.enteredWords = ["one", "two", "three"];
+
+    comp.unpickWord("twelve");
+
+    expect(comp.enteredWords).toEqual(["one", "two", "three"]);
+
+    comp.unpickWord("elevent");
+
+    expect(comp.enteredWords).toEqual(["one", "two", "three"]);
   });
 
   it("should validate the passphrase once 12 words have been picked", () => {

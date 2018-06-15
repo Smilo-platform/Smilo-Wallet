@@ -5,7 +5,6 @@ import { SplashScreen } from "@ionic-native/splash-screen";
 import { StatusBar } from "@ionic-native/status-bar";
 import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
-
 import { SmiloWallet } from "./app.component";
 import { HomePageModule } from "../pages/home/home.module";
 import { HttpClient, HttpClientModule } from "@angular/common/http";
@@ -30,12 +29,14 @@ import { WalletImportPageModule } from "../pages/wallet-import/wallet-import.mod
 import { WalletNewPassphrasePageModule } from "../pages/wallet-new-passphrase/wallet-new-passphrase.module";
 import { WalletNewPasswordPageModule } from "../pages/wallet-new-password/wallet-new-password.module";
 import { WalletNewDisclaimerPageModule } from "../pages/wallet-new-disclaimer/wallet-new-disclaimer.module";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NavigationHelperService } from "../services/navigation-helper-service/navigation-helper-service";
 import { PasswordExplanationPage } from "../pages/password-explanation/password-explanation";
 import { PasswordExplanationPageModule } from "../pages/password-explanation/password-explanation.module";
 import { KeyStoreService } from "../services/key-store-service/key-store-service";
 import { PasswordService } from "../services/password-service/password-service";
 import { BIP39Service } from "../services/bip39-service/bip39-service";
+import { HockeyApp } from "ionic-hockeyapp";
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, "assets/i18n/");
@@ -48,6 +49,7 @@ export function HttpLoaderFactory(http: HttpClient) {
   imports: [
     BrowserModule,
     HttpClientModule,
+    BrowserAnimationsModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -93,6 +95,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     KeyStoreService,
     PasswordService,
     BIP39Service,
+    HockeyApp,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

@@ -100,6 +100,20 @@ export class WalletNewPassphrasePage {
     }
   }
 
+  /**
+   * Undos a picked word.
+   * @param word 
+   */
+  unpickWord(word: string) {
+    // Make sure the word was actually picked
+    if(!this.isPickedWord(word))
+      return;
+
+    let index = this.enteredWords.indexOf(word);
+
+    this.enteredWords.splice(index, 1);
+  }
+
   isPickedWord(word: string): boolean {
     return this.enteredWords.indexOf(word) != -1;
   }

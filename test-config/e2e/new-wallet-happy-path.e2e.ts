@@ -1,12 +1,15 @@
 import { browser, by, element, ExpectedConditions, WebElement } from "protractor";
 
 describe("Creating a new wallet (happy path)", () => {
+    if (browser.params.testFile !== undefined && browser.params.testFile !== "new-wallet-happy-path") return;
     let memorizedWordOrder: string[] = null;
 
     beforeEach(() => {
         browser.waitForAngularEnabled(false);
 
         browser.get("/");
+
+        browser.sleep(3000);
     });
 
     afterEach(() => {
