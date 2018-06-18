@@ -83,4 +83,15 @@ page-wallet-new-passphrase {
         display: flex;
         justify-content: center;
     }
+
+}
+
+.dark-theme {
+    page-wallet-new-passphrase {
+        span {
+            &.is-picked {
+                color: #434343 !important;
+            }
+        }
+    }
 }

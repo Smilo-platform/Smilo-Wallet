@@ -14,7 +14,7 @@ import { MockLoading } from "../../../test-config/mocks/MockLoading";
 import { MockLoadingController } from "../../../test-config/mocks/MockLoadingController";
 import { MockAlertController } from "../../../test-config/mocks/MockAlertController";
 import { MockAlert } from "../../../test-config/mocks/MockAlert";
-import { ICurrency } from "../../models/ICurrency";
+import { IBalance } from "../../models/IBalance";
 
 describe("WalletOverviewPage", () => {
   let comp: WalletOverviewPage;
@@ -63,7 +63,7 @@ describe("WalletOverviewPage", () => {
     expect(comp.doughnutChart).toBeUndefined("dougnutChart should be undefined");
     expect(comp.wallets.length).toBe(0, "wallets length should be 0");
     expect(comp.currenciesForDoughnutCanvas.length).toBe(0, "currenciesForDougnutCanvas length should be 0");
-    expect(comp.currenciesForDoughnutCanvasCurrencies.length).toBe(0, "currenciesForDoughnutCanvasCurrencies length should be 0");
+    expect(comp.currenciesForDoughnutCanvasLabels.length).toBe(0, "currenciesForDoughnutCanvasCurrencies length should be 0");
     expect(comp.currentWallet).toBeUndefined("currentWallet should be undefined");
     expect(comp.currentWalletIndex).toBe(0, "currentWalletIndex should be 0");
     expect(comp.legendList.length).toBe(0, "legendList length should be 0");
@@ -171,11 +171,11 @@ describe("WalletOverviewPage", () => {
 
   it("should have five specific currency arrays after getting the available currencies data with mocked data", (done) => {
     comp.getAvailableExchanges().then(data => {
-      expect(comp.availableExchanges[0].availableCurrencies).toEqual(["$", "ETH", "BTC"]);
-      expect(comp.availableExchanges[1].availableCurrencies).toEqual(["$", "BTC"]);
-      expect(comp.availableExchanges[2].availableCurrencies).toEqual(["$"]);
-      expect(comp.availableExchanges[3].availableCurrencies).toEqual(["$"]);
-      expect(comp.availableExchanges[4].availableCurrencies).toEqual(["$", "ETH", "BTC"]);
+      expect(comp.availableExchanges[0].availableCurrencies).toEqual(["USD", "ETH", "BTC", "XSM"]);
+      expect(comp.availableExchanges[1].availableCurrencies).toEqual(["USD", "BTC", "XSM"]);
+      expect(comp.availableExchanges[2].availableCurrencies).toEqual(["USD", "XSM"]);
+      expect(comp.availableExchanges[3].availableCurrencies).toEqual(["USD", "XSM"]);
+      expect(comp.availableExchanges[4].availableCurrencies).toEqual(["USD", "ETH", "BTC", "XSM"]);
 
       done();
     })
@@ -184,10 +184,10 @@ describe("WalletOverviewPage", () => {
   it("should get two specific currency types and amounts back after getting it with mock data", (done) => {
     comp.getAllWallets().then(data => {
       comp.getWalletBalance("I EXIST").then(data => {
-        expect(comp.currentWallet.currencies[0].currency).toBe("Smilo");
-        expect(comp.currentWallet.currencies[0].amount).toBe(5712);
-        expect(comp.currentWallet.currencies[1].currency).toBe("SmiloPay");
-        expect(comp.currentWallet.currencies[1].amount).toBe(234);
+        expect(comp.currentWallet.balances[0].currency).toBe("XSM");
+        expect(comp.currentWallet.balances[0].amount).toBe(5712);
+        expect(comp.currentWallet.balances[1].currency).toBe("XSP");
+        expect(comp.currentWallet.balances[1].amount).toBe(234);
 
         done();
       });
@@ -197,14 +197,14 @@ describe("WalletOverviewPage", () => {
   it("should contain correct data for graph", (done) => {
     comp.getAllWallets().then(data => {
       comp.getWalletBalance("I EXIST").then(data => {
-        comp.pickedCurrency = "$";
+        comp.pickedCurrency = "USD";
         comp.setCalculatedCurrencyValue().then(data => {
           expect(comp.currenciesForDoughnutCanvas.length).toBe(2);
           expect(comp.currenciesForDoughnutCanvas[0]).toBe(96.06);
           expect(comp.currenciesForDoughnutCanvas[1]).toBe(3.94);
-          expect(comp.currenciesForDoughnutCanvasCurrencies.length).toBe(2);
-          expect(comp.currenciesForDoughnutCanvasCurrencies[0]).toBe("Smilo");
-          expect(comp.currenciesForDoughnutCanvasCurrencies[1]).toBe("SmiloPay");
+          expect(comp.currenciesForDoughnutCanvasLabels.length).toBe(2);
+          expect(comp.currenciesForDoughnutCanvasLabels[0]).toBe("XSM");
+          expect(comp.currenciesForDoughnutCanvasLabels[1]).toBe("XSP");
 
           done();
         });

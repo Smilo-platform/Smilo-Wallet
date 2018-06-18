@@ -1,5 +1,3 @@
-@import "theme.dark";
-@import "theme.light";
 // Ionic Variables and Theming. For more info, please see:
 // http://ionicframework.com/docs/theming/
 
@@ -72,7 +70,10 @@ $colors: (
 // so that the above variables are used and Ionic's
 // default are overridden.
 
+@import "theme.light";
+@import "theme.dark";
 @import "ionic.theme.default";
+
 
 
 // Ionicons

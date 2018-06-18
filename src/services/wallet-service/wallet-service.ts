@@ -3,6 +3,7 @@ import { IWallet } from "../../models/IWallet";
 import { Storage } from "@ionic/storage";
 import { HttpClient } from '@angular/common/http';
 import 'rxjs/add/operator/map';
+import { IAvailableExchange } from "../../models/IAvailableExchange";
 
 const WALLET_STORAGE_KEY = "wallets";
 
@@ -15,7 +16,7 @@ export interface IWalletService {
 
     generateId(): string;
 
-    getCurrencyValue(currency: string, exchange: string);
+    getPrices(currency: string, exchange: string);
 
     getWalletBalance(publicKey: string);
 
@@ -28,12 +29,7 @@ export class WalletService implements IWalletService {
     private baseUrl: string;
 
     constructor(private storage: Storage, private http: HttpClient) {
-        let _isDev: boolean = ((<any>window)['IonicDevServer'] != undefined);
-        if (_isDev) {
-            this.baseUrl = "http://localhost:3000";
-        } else {
-            this.baseUrl = "https://api.smilo";
-        }
+        this.baseUrl = "http://api.smilo.network:8080";
     }
 
     /**
@@ -75,12 +71,16 @@ export class WalletService implements IWalletService {
         }
     }
 
-    getCurrencyValue(currency: string, exchange: string): Promise<string[]> {
-        return this.http.get(this.baseUrl + '/currencyValue').toPromise().then(data => {
+    getPrices(currency: string, exchange: string): Promise<string[]> {
+        // this.baseUrl + '/price'
+        return this.http.get("assets/json/exchangeCurrencyValues.json").toPromise().then(data => {
             var json = JSON.parse(JSON.stringify(data));
             var foundCurrencies: string[] = [];
             for (var i = 0; i < json.length; i++) {
-                if (json[i].currencyTo === currency && json[i].exchange === exchange) {
+                if (
+                    // json[i].currencyTo === currency
+                    //  && 
+                    json[i].exchange === exchange) {
                     foundCurrencies.push(json[i]);
                 }
             }
@@ -89,24 +89,15 @@ export class WalletService implements IWalletService {
     }
 
     getWalletBalance(publicKey: string) {
-        return this.http.get(this.baseUrl + '/walletCurrency').toPromise().then(data => {
+        return this.http.get(this.baseUrl + '/balance/' + publicKey).toPromise().then(data => {
             var json = JSON.parse(JSON.stringify(data));
-            var foundWallet = null;
-            for (var i = 0; i < json.length; i++) {
-                if (json[i].publicKey === publicKey) {
-                    foundWallet = json[i];
-                    break;
-                }
-            }
-            return foundWallet;
+            return json;
         });
     }
 
-    getAvailableExchanges() {
-        return this.http.get(this.baseUrl + '/availableExchanges').toPromise().then(data => {
-            return data;
-        }, err => {
-            console.log("Get Available Exchanges error: " + err);
+    getAvailableExchanges(): Promise<{availableExchanges: IAvailableExchange[]}> {
+        return this.http.get('assets/json/availableExchanges.json').toPromise().then(data => {
+            return <any>data;
         });
     }
 

@@ -1,6 +1,6 @@
-export declare type SupportedCurrency = "Smilo" | "SmiloPay";
+export declare type SupportedCurrency = "XSM" | "XSP";
 
-export interface ICurrency {
+export interface IBalance {
     /**
      * The currency name
      */

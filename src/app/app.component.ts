@@ -7,6 +7,7 @@ import { TranslateService } from "@ngx-translate/core";
 import { LandingPage } from "../pages/landing/landing";
 import { WalletService } from "../services/wallet-service/wallet-service";
 import { SettingsProvider } from './../providers/settings/settings';
+import { SettingsService } from "../services/settings-service/settings-service";
 import { HockeyApp } from "ionic-hockeyapp";
 
 const HOCKEY_APP_ANDROID_ID = "7e9d4c16c2a44e25b73db158e064019b";
@@ -27,11 +28,40 @@ export class SmiloWallet {
               private translate: TranslateService,
               private walletService: WalletService,
               private settings: SettingsProvider,
-              private hockeyApp: HockeyApp) {
+              private hockeyApp: HockeyApp,
+              private settingsService: SettingsService) {
     settings.getActiveTheme().subscribe(val => this.selectedTheme = val);
     platform.ready().then(() => {
+      if (platform.is('ios')) {
+        window['plugins'].webviewcolor.change('#fff');
+      }
       statusBar.styleDefault();
 
+      settingsService.getLanguageSettings().then(data => {
+        translate.setDefaultLang("en");
+
+        translate.use(data || "en");
+      });
+
+      settingsService.getNightModeSettings().then(data => {
+        settings.setActiveTheme(data || 'light-theme');
+      })
+
+      walletService.getAll().then(
+        (wallets) => {
+          if(wallets.length == 0) {
+            this.rootPage = LandingPage;
+          }
+          else {
+            this.rootPage = HomePage;
+          }
+        },
+        (error) => {
+          // Something went wrong reading the crypto keys.
+          // How will we handle this? Generic error page maybe?
+          console.error(error);
+        }
+      );
       this.prepareTranslations();
 
       this.prepareHockeyAppIntegration();
