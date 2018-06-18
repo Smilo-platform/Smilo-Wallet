@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 
 declare var sjcl: any;
 declare var bitcoinjs: {
-    getAddressFromSeed(seed: string): string;
+    getPrivateKeyFromSeed(seed: string): string;
 }
 
 export interface IBIP32Account {
@@ -21,11 +21,11 @@ export interface IKeyPair {
 @Injectable()
 export class BIP32Service implements IBIP32Service {
     getKeyPair(seedHex: string): IKeyPair {
-        let key = bitcoinjs.getAddressFromSeed(seedHex);
+        let privateKey = bitcoinjs.getPrivateKeyFromSeed(seedHex);
 
         return {
-            privateKey: key,
-            publicKey: null
+            privateKey: privateKey,
+            publicKey: "SOME_PUBLIC_KEY"
         };
     }
 }
