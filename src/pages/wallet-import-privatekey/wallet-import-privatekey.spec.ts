@@ -190,8 +190,7 @@ describe("WalletImportPrivatekeyPage", () => {
         keyStore: dummyKeyStore,
         transactions: [],
         lastUpdateTime: null,
-        currencies: [],
-        totalCurrentCurrencyValue: 0,
+        balances: [],
         encryptedPrivateKey: null
       }
     );

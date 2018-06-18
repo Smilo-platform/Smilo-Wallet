@@ -151,8 +151,7 @@ describe("RestoreBackupPage", () => {
       keyStore: keyStore,
       transactions: [],
       lastUpdateTime: null,
-      currencies: [],
-      totalCurrentCurrencyValue: 0,
+      balances: [],
       encryptedPrivateKey: ""
     });
   });

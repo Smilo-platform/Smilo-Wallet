@@ -3,7 +3,6 @@ import { IonicPageModule } from 'ionic-angular';
 import { SettingsGeneralPage } from './settings-general';
 import { TranslateModule } from '@ngx-translate/core';
 import { SettingsProvider } from '../../providers/settings/settings';
-import { SettingsService } from '../../services/settings-service/settings-service';
 
 @NgModule({
   declarations: [
