@@ -36,7 +36,6 @@ export class SmiloWallet {
         window['plugins'].webviewcolor.change('#fff');
       }
       statusBar.styleDefault();
-      splashScreen.hide();
 
       settingsService.getLanguageSettings().then(data => {
         translate.setDefaultLang("en");

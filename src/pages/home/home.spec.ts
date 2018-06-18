@@ -10,15 +10,19 @@ import { WalletPage } from "../wallet/wallet";
 import { WalletOverviewPage } from "../wallet-overview/wallet-overview";
 import { AboutPage } from "../about/about";
 import { FaqPage } from "../faq/faq";
+import { SplashScreen } from "@ionic-native/splash-screen";
+import { MockSplashScreen } from "../../../test-config/mocks/MockSplashScreen";
 
 describe("HomePage", () => {
   let comp: HomePage;
   let fixture: ComponentFixture<HomePage>;
 
   let navController: MockNavController;
+  let splashScreen: SplashScreen;
 
   beforeEach(async(() => {
     navController = new MockNavController();
+    splashScreen = new MockSplashScreen();
 
     TestBed.configureTestingModule({
       declarations: [HomePage],
@@ -29,7 +33,8 @@ describe("HomePage", () => {
         })
       ],
       providers: [
-        { provide: NavController, useValue: navController }
+        { provide: NavController, useValue: navController },
+        { provide: SplashScreen, useValue: splashScreen }
       ]
     }).compileComponents();
   }));
@@ -40,6 +45,22 @@ describe("HomePage", () => {
   });
 
   it("should create component", () => expect(comp).toBeDefined());
+
+  it("should hide the splashscreen correctly", () => {
+    spyOn(window, "setTimeout").and.callFake(
+      (callback, time) => {
+
+        // just call callback immediately
+        callback();
+      }
+    );
+
+    spyOn(splashScreen, "hide");
+
+    comp.ionViewDidEnter();
+
+    expect(splashScreen.hide).toHaveBeenCalled();
+  });
 
   it("should open the my wallet page correctly", () => {
     spyOn(navController, "push");

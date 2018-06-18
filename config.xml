@@ -18,7 +18,9 @@
     <preference name="FadeSplashScreenDuration" value="300" />
     <preference name="SplashShowOnlyFirstTime" value="false" />
     <preference name="SplashScreen" value="screen" />
-    <preference name="SplashScreenDelay" value="3000" />
+    <preference name="SplashScreenDelay" value="0" />
+    <preference name="ShowSplashScreenSpinner" value="false" />
+    <preference name="AutoHideSplashScreen" value="false" />
     <platform name="android">
         <allow-intent href="market:*" />
         <icon density="ldpi" src="resources/android/icon/drawable-ldpi-icon.png" />
@@ -84,8 +86,7 @@
     <plugin name="cordova-sqlite-storage" spec="^2.3.2" />
     <allow-navigation href="http://192.168.3.70:8101" />
     <plugin name="cordova-plugin-hockeyapp" spec="^5.1.2" />
-    <engine name="android" spec="7.0.0" />
     <engine name="ios" spec="~4.5.4" />
     <engine name="browser" spec="~5.0.3" />
-    <plugin name="cordova-plugin-webviewcolor" spec="^2.0.0" />
+    <engine name="android" spec="~7.0.0" />
 </widget>

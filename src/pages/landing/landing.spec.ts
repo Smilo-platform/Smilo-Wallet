@@ -10,15 +10,19 @@ import { MockTranslateService } from "../../../test-config/mocks/MockTranslateSe
 import { MockTranslatePipe } from "../../../test-config/mocks/MockTranslatePipe";
 import { MockTranslationLoader } from "../../../test-config/mocks/MockTranslationLoader";
 import { Observable } from "rxjs/Observable";
+import { SplashScreen } from "@ionic-native/splash-screen";
+import { MockSplashScreen } from "../../../test-config/mocks/MockSplashScreen";
 
 describe("LandingPage", () => {
   let comp: LandingPage;
   let fixture: ComponentFixture<LandingPage>;
 
   let navController: MockNavController;
+  let splashScreen: SplashScreen;
 
   beforeEach(async(() => {
     navController = new MockNavController();
+    splashScreen = new MockSplashScreen();
 
     TestBed.configureTestingModule({
       declarations: [LandingPage],
@@ -30,7 +34,8 @@ describe("LandingPage", () => {
       ],
       providers: [
         { provide: NavController, useValue: navController },
-        { provide: NavParams, useValue: new MockNavParams() }
+        { provide: NavParams, useValue: new MockNavParams() },
+        { provide: SplashScreen, useValue: splashScreen }
       ]
     }).compileComponents();
   }));
@@ -41,6 +46,22 @@ describe("LandingPage", () => {
   });
 
   it("should create component", () => expect(comp).toBeDefined());
+
+  it("should hide the splashscreen correctly", () => {
+    spyOn(window, "setTimeout").and.callFake(
+      (callback, time) => {
+
+        // just call callback immediately
+        callback();
+      }
+    );
+
+    spyOn(splashScreen, "hide");
+
+    comp.ionViewDidEnter();
+
+    expect(splashScreen.hide).toHaveBeenCalled();
+  });
 
   it("should go to the import wallet page", () => {
     spyOn(navController, "push");
