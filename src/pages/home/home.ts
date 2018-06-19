@@ -4,6 +4,7 @@ import { WalletPage, NAVIGATION_ORIGIN_KEY } from "../wallet/wallet";
 import { WalletOverviewPage } from "../wallet-overview/wallet-overview";
 import { AboutPage } from "../about/about";
 import { FaqPage } from "../faq/faq";
+import { SplashScreen } from "@ionic-native/splash-screen";
 
 @IonicPage()
 @Component({
@@ -12,7 +13,16 @@ import { FaqPage } from "../faq/faq";
 })
 export class HomePage {
 
-  constructor(private navController: NavController) {
+  constructor(private navController: NavController,
+              private splashscreen: SplashScreen) {
+  }
+
+  ionViewDidEnter() {
+    // Wait 250ms before hiding the splashscreen.
+    // This allows the HTML to fully load and prevents a short white screen from showing.
+    setTimeout(() => {
+      this.splashscreen.hide();
+    }, 250);
   }
 
   openNewWallet() {

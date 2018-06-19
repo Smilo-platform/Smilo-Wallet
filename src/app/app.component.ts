@@ -31,7 +31,6 @@ export class SmiloWallet {
     settingsService.getActiveTheme().subscribe(val => this.selectedTheme = val);
     platform.ready().then(() => {
       statusBar.styleDefault();
-      splashScreen.hide();
 
       settingsService.getLanguageSettings().then(data => {
         translate.setDefaultLang("en");
