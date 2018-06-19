@@ -9,6 +9,7 @@ import { WalletService } from "../services/wallet-service/wallet-service";
 import { SettingsProvider } from './../providers/settings/settings';
 import { HockeyApp } from "ionic-hockeyapp";
 import { BIP32Service } from "../services/bip32-service/bip32-service";
+import { MerkleTree } from "../merkle/MerkleTree";
 
 const HOCKEY_APP_ANDROID_ID = "7e9d4c16c2a44e25b73db158e064019b";
 const HOCKEY_APP_IOS_ID = "";
@@ -36,11 +37,21 @@ export class SmiloWallet {
       splashScreen.hide();
 
       // Seed based on 256bits entropy with value of 0
-      let seed = "5eb00bbddcf069084889a8ab9155568165f5c453ccb85e70811aaed6f6da5fc19a5ac40b389cd370d086206dec8aa6c43daea6690f20ad3d8d48b2d2ce9e38e4";
+      // let seed = "5eb00bbddcf069084889a8ab9155568165f5c453ccb85e70811aaed6f6da5fc19a5ac40b389cd370d086206dec8aa6c43daea6690f20ad3d8d48b2d2ce9e38e4";
 
-      let pair = this.bip32Service.getKeyPair(seed);
+      // let pair = this.bip32Service.getKeyPair(seed);
 
-      console.log(pair.privateKey);
+      // console.log(pair.privateKey);
+
+      MerkleTree.generate("hello", 14).then(
+        (tree) => {
+          console.log(tree);
+        },
+        (error) => {
+          console.error(error);
+        }
+      );
+
       // this.prepareTranslations();
 
       // this.prepareHockeyAppIntegration();
