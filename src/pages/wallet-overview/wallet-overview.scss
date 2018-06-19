@@ -87,6 +87,24 @@ page-wallet-overview {
         color: white;
     }
 
+    .refresh {
+        font-size: 28px;
+        float: right;
+        margin-right: 24px;
+    }
+
+    .refresh:hover {
+        cursor: pointer;
+    }
+    
+    .wallet-overview-header {
+        float: left;
+    }
+
+    .funds-overview {
+        min-height: 313px;
+    }
+
     .ion-ios-settings {
         top: 9px !important;
     }

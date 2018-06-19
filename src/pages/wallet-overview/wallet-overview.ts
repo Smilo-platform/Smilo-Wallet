@@ -105,6 +105,10 @@ export class WalletOverviewPage {
     this.navCtrl.push(RestoreBackupPage);
   }
 
+  refreshWalletBalance(): void {
+    this.getWalletBalance(this.currentWallet.publicKey);
+  }
+
   /**
    * Open a modal to delete the wallet
    */
@@ -250,6 +254,9 @@ export class WalletOverviewPage {
       let totalCurrencies: number = 0;
       this.currenciesForDoughnutCanvasLabels = [];
       this.currenciesForDoughnutCanvas = [];
+      if (this.doughnutChart !== undefined) {
+        this.doughnutChart.destroy();
+      }
       // Loop all balances of current wallet
       for (let y = 0; y < this.currentWallet.balances.length; y++) {
         let walletCurrency = this.currentWallet.balances[y].currency;

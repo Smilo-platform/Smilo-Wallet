@@ -85,8 +85,12 @@
     border-color: #eeae15 !important;
   } 
 
-  .radio-inner {
+  .radio-md div div {
     background-color: #eeae15 !important;
+  }
+
+  .radio-ios div div {
+    border-color: #eeae15 !important;
   }
 
   .item-radio-checked {
@@ -106,49 +110,12 @@
   }
 
   ion-icon {
-    color: white !important;
-  }
-
-  .logo-container-title {
-    color: #fff;
-  }
-
-  .title {
-    color: #fff;
-  }
-
-  .warning-content {
-    color: #fff;
-  }
-
-  .warning-sub-container {
-    color: #fff;
-  }
-
-  .sub-title {
-    color: #fff;
-  }
-
-  .word {
-    color: #fff;
-  }
-
-  .description {
-    color: #fff;
-  }
-
-  .term-description-container {
-    color: #fff;
+    color: #DA9E10 !important;
   }
 
   .checkbox-checked {
     background-color: #DA9E10 !important;
     border-color: #DA9E10 !important;
   }
-
-  // .delete-button {
-  //   .alert-wrapper{
-  //     background-color: #242424 !important;
-  //   }
-  // }
+  
 }  

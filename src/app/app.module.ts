@@ -23,7 +23,6 @@ import { CryptoKeyService } from "../services/crypto-key-service/crypto-key-serv
 import { LandingPageModule } from "../pages/landing/landing.module";
 import { WalletService } from "../services/wallet-service/wallet-service";
 import { IonicStorageModule } from "@ionic/storage";
-import { SettingsProvider } from './../providers/settings/settings';
 import { WalletNewPageModule } from "../pages/wallet-new/wallet-new.module";
 import { WalletImportPageModule } from "../pages/wallet-import/wallet-import.module";
 import { WalletNewPassphrasePageModule } from "../pages/wallet-new-passphrase/wallet-new-passphrase.module";
@@ -90,7 +89,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     StatusBar,
     SplashScreen,
     CryptoKeyService,
-    SettingsProvider,
     WalletService,
     NavigationHelperService,
     KeyStoreService,

@@ -102,7 +102,7 @@
     "disclaimer": {
         "title": "Just to be sure",
         "term1": "I am fully responsible for my own funds.",
-        "term2": "My funds will be lost if I lose my 12-word passphrase.",
+        "term2": "My funds will be lost if I lose my 24-word passphrase.",
         "term3": "My funds will be lost if I use a malicious phising website",
         "term4": "I have read, understood and agreed to the Terms of Use.",
         "title_name": "And lastly...",
@@ -137,7 +137,7 @@
     },
     "password_explanation": {
         "title": "Why do I need an additional password?",
-        "content": "The password is nessecary for a user friendly environment!<p>A password in combination with your wallet file will be able to unlock your wallet.<p>If you lose your password, or want to access your wallet from a new device, you will need your 12-word recovery phrase.",
+        "content": "The password is nessecary for a user friendly environment!<p>A password in combination with your wallet file will be able to unlock your wallet.</p>If you lose your password, or want to access your wallet from a new device, you will need your 24-word recovery phrase.",
         "buttons": {
             "ok": "ok"
         }
@@ -184,6 +184,6 @@
         "question4": "How can I trust the SmiloWallet?",
         "answer4": "The SmiloWallet source code is available on Github for anyone to verify. We serve the wallet over SSL (https) which eliminates the possibility of tampering with the code between our servers and your browser. Still not sure? Download the latest standalone release on our Github releases page and run the SmiloWallet locally. Alternatively, you can build directly from the source.",
         "question5": "What if I lose my private key or forget my encrypted Keystore file’s password?",
-        "answer5": "You remain in full control of your keys and your funds. We cannot recover your funds or freeze your account if you visit a phishing site or lose your private key. <p /> We are not responsible for any loss. <p /> SmiloWallet.io is under active development. While we have thoroughly tested the wallet, there is always the possibility that something unexpected happens which causes your funds to be lost. Do not invest more than you are willing to lose."
+        "answer5": "You remain in full control of your keys and your funds. We cannot recover your funds or freeze your account if you visit a phishing site or lose your private key. <p> We are not responsible for any loss. </p> SmiloWallet.io is under active development. While we have thoroughly tested the wallet, there is always the possibility that something unexpected happens which causes your funds to be lost. Do not invest more than you are willing to lose."
     }
 }

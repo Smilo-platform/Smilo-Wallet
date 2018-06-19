@@ -18,7 +18,10 @@
                 </ion-list>
             </ion-col>
             <ion-col class="wallet-info-col" *ngIf="currentWallet" col-xl-3>
-                <h4 class="margin-header">{{ 'wallet_overview.wallet_info' | translate }}</h4>
+                <div>
+                    <h4 class="wallet-overview-header margin-header">{{ 'wallet_overview.wallet_info' | translate }}</h4>
+                    <ion-icon (click)="refreshWalletBalance()" class="refresh" name="refresh-circle"></ion-icon>
+                </div>
                 <ion-card class="funds-overview" [@visibilityChanged]="walletFundsVisibility">
                     <ion-card-header class="wallet-currency" *ngFor="let currency of currentWallet.balances;">
                         <p class="amount-header">{{ currency.currency }}</p>
@@ -66,7 +69,7 @@
                 </ion-card>
                 <ion-card class="hidden" [@visibilityChanged]="walletFundsVisibilityTransferButton">
                     <ion-card-header>
-                        {{ 'wallet_overview.funds_hidden' | translate }}
+                        <p>{{ 'wallet_overview.funds_hidden' | translate }}</p>
                     </ion-card-header>
                     <ion-card-content>
                             <button (click)="transfer()" ion-button full>{{ 'wallet_overview.transfer' | translate }}</button>

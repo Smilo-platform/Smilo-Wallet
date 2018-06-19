@@ -6,7 +6,6 @@ import { HomePage } from "../pages/home/home";
 import { TranslateService } from "@ngx-translate/core";
 import { LandingPage } from "../pages/landing/landing";
 import { WalletService } from "../services/wallet-service/wallet-service";
-import { SettingsProvider } from './../providers/settings/settings';
 import { SettingsService } from "../services/settings-service/settings-service";
 import { HockeyApp } from "ionic-hockeyapp";
 
@@ -27,14 +26,10 @@ export class SmiloWallet {
               private splashScreen: SplashScreen,
               private translate: TranslateService,
               private walletService: WalletService,
-              private settings: SettingsProvider,
               private hockeyApp: HockeyApp,
               private settingsService: SettingsService) {
-    settings.getActiveTheme().subscribe(val => this.selectedTheme = val);
+    settingsService.getActiveTheme().subscribe(val => this.selectedTheme = val);
     platform.ready().then(() => {
-      if (platform.is('ios')) {
-        window['plugins'].webviewcolor.change('#fff');
-      }
       statusBar.styleDefault();
       splashScreen.hide();
 
@@ -45,7 +40,7 @@ export class SmiloWallet {
       });
 
       settingsService.getNightModeSettings().then(data => {
-        settings.setActiveTheme(data || 'light-theme');
+        settingsService.setActiveTheme(data || 'light-theme');
       })
 
       walletService.getAll().then(
