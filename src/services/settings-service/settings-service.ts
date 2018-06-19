@@ -1,12 +1,16 @@
 import { Injectable } from "@angular/core";
 import { Storage } from "@ionic/storage";
-import { BehaviorSubject, Subject } from 'rxjs/Rx';
+import { BehaviorSubject } from 'rxjs/Rx';
 import { Observable } from "rxjs/Observable";
 
 export declare type ThemeType = "dark-theme" | "light-theme"; 
 export declare type LanguageType = "Engels" | "Nederlands"; 
 
 export interface ISettingsService {
+    setActiveTheme(val): void
+
+    getActiveTheme(): Observable<string> 
+    
     saveNightModeSettings(theme: ThemeType): Promise<void>
 
     saveLanguageSettings(language: LanguageType): Promise<void> 
