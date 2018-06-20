@@ -56,13 +56,14 @@ module.exports = function(config) {
     logLevel: config.LOG_INFO,
     autoWatch: true,
     browsers: ['HeadlessChrome'],
+    captureTimeout: 210000,
+    browserDisconnectTolerance: 3, 
+    browserDisconnectTimeout : 210000,
+    browserNoActivityTimeout : 210000,
 
     customLaunchers: {
       HeadlessChrome: {
         base: 'ChromeHeadless',
-        browserDisconnectTimeout: 50000,
-        browserDisconnectTolerance: 5,
-        browserNoActivityTimeout: 90000,
         flags: [
           '--no-sandbox',
           '--disable-gpu',
