@@ -1,27 +1,6 @@
 .dark-theme {
-  .select-text {
-    color: #fff;
-  }
-
-  .toolbar-title {
-    color: #fff;
-  }
-
-  .label {
-    color: #fff !important;
-  }
-
-  h4 {
-    color: #fff;
-  }
-
-  .card p {
-    color: #DADFE1;
-  }
-
-
   .toolbar-background {
-    background-color: #064C70;
+    background-color: #434343;
   }
 
   .scroll-content {
@@ -32,8 +11,19 @@
     background-color: #434343;
   }
 
-  .item-input {
-    background-color: #434343;
+  .toolbar-title {
+    color: #fff;
+  }
+
+  .item-select {
+    color: #999;
+  }
+
+  .label {
+    color: #999;
+  }
+
+  h4 {
     color: #fff;
   }
 
@@ -45,90 +35,120 @@
     background-color: #242424;
   }
 
+  .card p {
+    color: #DADFE1;
+  }
+
   .item {
     background-color: #242424;
+  }
+
+  .item-input {
+    background-color: #434343;
+    color: #fff;
+  }
+
+  .label {
+    color: #fff !important;
   }
 
   .item:active {
     background-color: #393939;
   }
 
-  .item-select {
-    color: #999;
-  }
-
-  .label {
-    color: #999;
-  }
-
-  .select-icon-inner {
-    color: #1B79A9 !important;
-  }
-
-  .radio-checked { 
-    border-color: #1B79A9 !important;
-  } 
-
-  .radio-md div div {
-    background-color: #1B79A9 !important;
-  }
-
-  .radio-ios div div {
-    border-color: #1B79A9 !important;
-  }
-
-  .item-radio-checked {
-    color: #1B79A9 !important;
-  }
-
-  .item-radio-checked div div ion-label {
-    color: #1B79A9 !important;
-  }
-
-  .toggle-icon {
-    background-color: #5ea1e5 !important;
-  }
-
-  .toggle-inner {
-    background-color: #1B79A9 !important;
-  }
-
-  ion-icon {
-    color: #1B79A9 !important;
-  }
-
-  .checkbox-checked {
-    background-color: #1B79A9 !important;
-    border-color: #1B79A9 !important;
-  }
-
   .button {
-    background-color: #1B79A9;
+    background-color: #eeae15;
   }
 
   .button:hover {
-    background-color: #1B79A9 !important;
+    background-color: #eeae15 !important;
     opacity: 0.8;
   }
 
   .item-radio-checked.item {
-    color: #1B79A9;
+    color: #eeae15;
   }
 
   ion-label {
-    color: #1B79A9;
+    color: #eeae15;
   }
 
-  .back-button-icon {
-    color: #fff !important;
+  .select-text {
+    color: #fff;
   }
 
-  .settings-nav-bar {
-    color: #fff !important;
+  .select-icon-inner {
+    color: #eeae15 !important;
   }
 
-  .smilo-button {
-    background-color: #1B79A9;
+  .radio-checked { 
+    border-color: #eeae15 !important;
+  } 
+
+  .radio-inner {
+    background-color: #eeae15 !important;
   }
-  
+
+  .item-radio-checked {
+    color: #eeae15 !important;
+  }
+
+  .item-radio-checked div div ion-label {
+    color: #eeae15 !important;
+  }
+
+  .toggle-icon {
+    background-color: #eeae15 !important;
+  }
+
+  .toggle-inner {
+    background-color: #DA9E10 !important;
+  }
+
+  ion-icon {
+    color: white !important;
+  }
+
+  .logo-container-title {
+    color: #fff;
+  }
+
+  .title {
+    color: #fff;
+  }
+
+  .warning-content {
+    color: #fff;
+  }
+
+  .warning-sub-container {
+    color: #fff;
+  }
+
+  .sub-title {
+    color: #fff;
+  }
+
+  .word {
+    color: #fff;
+  }
+
+  .description {
+    color: #fff;
+  }
+
+  .term-description-container {
+    color: #fff;
+  }
+
+  .checkbox-checked {
+    background-color: #DA9E10 !important;
+    border-color: #DA9E10 !important;
+  }
+
+  // .delete-button {
+  //   .alert-wrapper{
+  //     background-color: #242424 !important;
+  //   }
+  // }
 }  

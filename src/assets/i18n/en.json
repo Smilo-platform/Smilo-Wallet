@@ -1,12 +1,10 @@
 {
     "slogan": "The latest generation hybrid blockchain platform",
     "landing": {
-        "nav-bar-title": "Smilo Wallet",
         "get_started": "Get started",
         "restore_from_backup": "Restore from backup"
     },
     "home": {
-        "nav-bar-title": "Main menu",
         "buttons": {
             "new_wallet": "New wallet",
             "my_wallet": "My wallet",
@@ -15,7 +13,6 @@
         }
     },
     "create_wallet": {
-        "nav-bar-title": "Wallet choice",
         "title": "What would you like to do?",
         "buttons": {
             "new": "Create a new wallet",
@@ -23,7 +20,6 @@
         }
     },
     "import_wallet": {
-        "nav-bar-title": "Import wallet",
         "title": "How would you like to import your wallet?",
         "buttons": {
             "keystore": "From a keystore file",
@@ -33,7 +29,7 @@
         }
     },
     "settings_page": {
-        "nav-bar-title": "Settings",
+        "title": "Settings",
         "headers": {
             "visual": "Visual",
             "security": "Security",
@@ -45,7 +41,6 @@
         }
     },
     "new_wallet": {
-        "nav-bar-title": "New wallet",
         "warning1": "Smilo's wallet is a free, open-source, client-side interface.",
         "warning2": "You remain in full control of your keys & your funds.",
         "warning3": "We cannot recover your funds or freeze your account if you visit a phishing site or lose your private key.",
@@ -61,7 +56,6 @@
         }
     },
     "passphrase": {
-        "nav-bar-title": "Passphrase",
         "show": {
             "title": "Do NOT share your password phrase!",
             "sub_title": "Please write down the following phrase in the correct word order",
@@ -79,14 +73,8 @@
             }
         }
     },
-    "transfer": {
-        "nav-bar-title": "Transfer"
-    },
-    "wallet_import_ledger": {
-        "nav-bar-title": "Wallet Import Ledger"
-    },
     "wallet_overview": {
-        "nav-bar-title": "Wallet Overview",
+        "title": "Wallet Overview",
         "wallets": "Wallets",
         "wallet_info": "Wallet info",
         "total_value": "Total value",
@@ -98,12 +86,9 @@
         "show_funds": "Show funds",
         "backup_wallet": "Backup wallet",
         "delete_wallet": "Delete wallet",
-        "choose_exchange": "Choose exchange",
-        "transactions_history": "Transactions history",
-        "no_transactions_history": "No transactions on this wallet"
+        "choose_exchange": "Choose exchange"
     },
     "password": {
-        "nav-bar-title": "Password",
         "title": "Keep your password a secret!",
         "sub_title": "Set a password",
         "password_title": "Enter your password",
@@ -115,10 +100,9 @@
         }
     },
     "disclaimer": {
-        "nav-bar-title": "Disclaimer",
         "title": "Just to be sure",
         "term1": "I am fully responsible for my own funds.",
-        "term2": "My funds will be lost if I lose my 24-word passphrase.",
+        "term2": "My funds will be lost if I lose my 12-word passphrase.",
         "term3": "My funds will be lost if I use a malicious phising website",
         "term4": "I have read, understood and agreed to the Terms of Use.",
         "title_name": "And lastly...",
@@ -128,7 +112,6 @@
         }
     },
     "import_privatekey": {
-        "nav-bar-title": "Import privatekey",
         "privatekey": "Paste your private key below",
         "name": "Wallet name",
         "password": "Enter password",
@@ -140,7 +123,6 @@
         }
     },
     "import_keystore": {
-        "nav-bar-title": "Import keystore",
         "keystore": "Paste your key store below",
         "name": "Wallet name",
         "password": "Keystore password",
@@ -154,15 +136,13 @@
         }
     },
     "password_explanation": {
-        "nav-bar-title": "Password explanation",
         "title": "Why do I need an additional password?",
-        "content": "The password is nessecary for a user friendly environment!<p>A password in combination with your wallet file will be able to unlock your wallet.</p>If you lose your password, or want to access your wallet from a new device, you will need your 24-word recovery phrase.",
+        "content": "The password is nessecary for a user friendly environment!<p>A password in combination with your wallet file will be able to unlock your wallet.<p>If you lose your password, or want to access your wallet from a new device, you will need your 12-word recovery phrase.",
         "buttons": {
             "ok": "ok"
         }
     },
     "restore_backup": {
-        "nav-bar-title": "Restore backup",
         "instruction": "Enter your 24-word recovery phrase",
         "passphrase_hint": "Add spaces between each word",
         "password_instruction": "Set password",
@@ -174,7 +154,6 @@
         }
     },
     "password_messages": {
-        "nav-bar-title": "Password",
         "warnings": {
             "weak": "Your password is very weak. Consider using a stronger password."
         },
@@ -183,13 +162,11 @@
         }
     },
     "passphrase_messages": {
-        "nav-bar-title": "Passphrase",
         "invalid_size": "The passphrase has an invalid length.",
         "invalid_word": "The passphrase contains unrecognized words.",
         "invalid_checksum": "It looks like this passphrase was not generated by this wallet. You can still use it at your own risk though."
     },
     "about": {
-        "nav-bar-title": "About",
         "title": "ABOUT SMILO",
         "paragraph1": "Since the release of Ethereum in 2015, there have been several projects which are able to host smart contracts and decentralized applications, however none of the platforms are able to host both public and private smart contracts.",
         "paragraph2": "What is needed, is an open source, hybrid blockchain based computing platform. A platform featuring hybrid transactions, hybrid smart contracts and hybrid decentralized applications. This is where the Smilo Platform comes into play.",
@@ -198,7 +175,6 @@
         "paragraph4": "The combination of hybrid smart contracts, -transactions and -decentralized applications together with transparency, privacy and anonymity, and the connection to real life applications."
     },
     "faq": {
-        "nav-bar-title": "FAQ",
         "question1": "What is a SmiloWallet?",
         "answer1": "Smilo's web wallet is a free, open-source, client-side interface. You remain in full control of your keys and your funds. We cannot recover your funds or freeze your account if you visit a phishing site or lose your private key.",
         "question2": "Is the SmiloWallet a bank?",
@@ -208,6 +184,6 @@
         "question4": "How can I trust the SmiloWallet?",
         "answer4": "The SmiloWallet source code is available on Github for anyone to verify. We serve the wallet over SSL (https) which eliminates the possibility of tampering with the code between our servers and your browser. Still not sure? Download the latest standalone release on our Github releases page and run the SmiloWallet locally. Alternatively, you can build directly from the source.",
         "question5": "What if I lose my private key or forget my encrypted Keystore file’s password?",
-        "answer5": "You remain in full control of your keys and your funds. We cannot recover your funds or freeze your account if you visit a phishing site or lose your private key. <p> We are not responsible for any loss. </p> SmiloWallet.io is under active development. While we have thoroughly tested the wallet, there is always the possibility that something unexpected happens which causes your funds to be lost. Do not invest more than you are willing to lose."
+        "answer5": "You remain in full control of your keys and your funds. We cannot recover your funds or freeze your account if you visit a phishing site or lose your private key. <p /> We are not responsible for any loss. <p /> SmiloWallet.io is under active development. While we have thoroughly tested the wallet, there is always the possibility that something unexpected happens which causes your funds to be lost. Do not invest more than you are willing to lose."
     }
 }

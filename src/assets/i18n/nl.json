@@ -1,39 +1,28 @@
 {
-    "slogan": "Het nieuwste generatie hybride blockchain-platform",
+    "slogan": "The latest generation hybrid blockchain platform",
     "landing": {
-        "nav-bar-title": "Smilo Wallet",
-        "get_started": "Begin",
-        "restore_from_backup": "Herstellen van backup"
+        "get_started": "Get started",
+        "restore_from_backup": "Restore from backup"
     },
     "home": {
-        "nav-bar-title": "Hoofdmenu",
         "buttons": {
-            "new_wallet": "Nieuwe wallet",
-            "my_wallet": "Mijn wallet",
-            "about": "Wat is het Smilo platform?",
+            "new_wallet": "New wallet",
+            "my_wallet": "My wallet",
+            "about": "What is Smilo platform?",
             "faq": "FAQ"
         }
     },
     "create_wallet": {
-        "nav-bar-title": "Wallet keuze",
-        "title": "Wat zou je willen doen?",
+        "title": "How would you like to access your wallet?",
         "buttons": {
-            "new": "Maak een nieuwe wallet",
-            "load": "Laad een bestaande wallet"
-        }
-    },
-    "import_wallet": {
-        "nav-bar-title": "Importeer wallet",
-        "title": "Hoe wil je jouw wallet importeren?",
-        "buttons": {
-            "keystore": "Van een keystore bestand",
-            "private_key": "Van een privé sleutel",
-            "ledger": "Een ledger wallet gebruiken",
-            "restore_backup": "Herstel backup"
+            "keystore": "Keystore file",
+            "private_key": "Private key",
+            "ledger": "Ledger wallet",
+            "restore_backup": "Restore backup"
         }
     },
     "settings_page": {
-        "nav-bar-title": "Instellingen",
+        "title": "Instellingen",
         "headers": {
             "visual": "Visueel",
             "security": "Beveiliging",
@@ -44,43 +33,8 @@
             "2fa": "Twee-Factor Authenticatie"
         }
     },
-    "new_wallet": {
-        "nav-bar-title": "Nieuwe wallet",
-        "warning1": "Smilo's wallet is een gratis, open-source interface aan de clientzijde.",
-        "warning2": "Je behoudt de volledige controle over jouw sleutels en jouw tegoeden.",
-        "warning3": "We kunnen jouw geld niet terugkrijgen of jouw account niet blokkeren als je een phishing-site bezoekt of jouw privésleutel kwijtraakt.",
-        "warning4": "Verlies geen toegang tot jouw wallet!",
-        "warning5": "Maak veilige back-ups van jouw wallet bestand en privésleutel!",
-        "warning6": "Deel NOOIT je wallet bestand of persoonlijke sleutel met iemand!",
-        "warning7": "Jouw geld wordt gestolen als je deze gegevens deelt of ze invoert op een schadelijke phishingsite.",
-        "warning8": "Een ezelsbruggetje is een woordenlijst met alle informatie die nodig is om je Smilo-wallet te herstellen.",
-        "warning9": "Het is belangrijk om een ​​veilige back-up te maken van de woorden in de juiste volgorde!",
-        "buttons": {
-            "download_backup": "Download backup",
-            "show_passphrase": "Toon wachtwoordzin"
-        }
-    },
-    "passphrase": {
-        "nav-bar-title": "Wachtwoordzin",
-        "show": {
-            "title": "Deel jouw wachtwoordzin NIET!",
-            "sub_title": "Noteer de volgende zin in de juiste woordvolgorde",
-            "buttons": {
-                "next": "Volgende"
-            }
-        },
-        "enter": {
-            "title": "Verlies jouw wachtwoordzin NIET!",
-            "sub_title": "Bevestig jouw wachtwoordzin in de juiste woordvolgorde.",
-            "passphrase_error": "De wachtwoordvolgorde is onjuist",
-            "buttons": {
-                "reset": "Herstel",
-                "next": "Volgende"
-            }
-        }
-    },
     "wallet_overview": {
-        "nav-bar-title": "Wallet overzicht",
+        "title": "Wallet overzicht",
         "wallets": "Wallets",
         "wallet_info": "Wallet informatie",
         "total_value": "Totaal waarde",
@@ -92,116 +46,6 @@
         "show_funds": "Laat fondsen zien",
         "backup_wallet": "Backup",
         "delete_wallet": "Delete wallet",
-        "choose_exchange": "Kies exchange",
-        "transactions_history": "Transacties historie",
-        "no_transactions_history": "Geen transacties op deze wallet"
-    },
-    "password": {
-        "nav-bar-title": "Wachtwoord",
-        "title": "Houd je wachtwoord geheim!",
-        "sub_title": "Stel een wachtwoord in",
-        "password_title": "Voer jouw wachtwoord in",
-        "password_hint": "Vul een wachtwoord in",
-        "password_check_hint": "Bevestig wachtwoord",
-        "password_not_matching": "De door jouw ingevoerde wachtwoorden komen niet overeen",
-        "buttons": {
-            "next": "Volgende"
-        }
-    },
-    "disclaimer": {
-        "nav-bar-title": "Disclaimer",
-        "title": "Voor de zekerheid",
-        "term1": "Ik ben volledig verantwoordelijk voor mijn eigen vermogen.",
-        "term2": "Mijn geld gaat verloren als ik mijn wachtwoordzin van 24 woorden verlies.",
-        "term3": "Mijn geld gaat verloren als ik een kwaadwillende phising-website gebruik",
-        "term4": "Ik heb de gebruiksvoorwaarden gelezen, begrepen en ermee ingestemd.",
-        "title_name": "En tenslotte...",
-        "wallet_name": "Jouw wallet naam",
-        "buttons": {
-            "finish": "Klaar"
-        }
-    },
-    "import_privatekey": {
-        "nav-bar-title": "Importeer privatekey",
-        "privatekey": "Plak hieronder je privésleutel",
-        "name": "Wallet naam",
-        "password": "Voer wachtwoord in",
-        "password_why": "Waarom heb ik een wachtwoord nodig?",
-        "password_error": "De door jou ingevoerde wachtwoorden komen niet overeen",
-        "validate_password": "Bevestig wachtwoord",
-        "buttons": {
-            "import": "Importeren"
-        }
-    },
-    "import_keystore": {
-        "nav-bar-title": "Importeer keystore",
-        "keystore": "Plak hieronder je key store",
-        "name": "Wallet naam",
-        "password": "Keystore wachtwoord",
-        "error_format": "De key store lijkt een ongeldig formaat te hebben. Zorg ervoor dat de key store een geldige Smilo key store is!",
-        "error_password": "Het ingevoerde wachtwoord is ongeldig",
-        "buttons": {
-            "import": "Importeren"
-        },
-        "toast": {
-            "success": "Wallet geïmporteerd!"
-        }
-    },
-    "password_explanation": {
-        "nav-bar-title": "Wachtwoord uitleg",
-        "title": "Waarom heb ik een extra wachtwoord nodig?",
-        "content": "Het wachtwoord is noodzakelijk voor een gebruikersvriendelijke omgeving!<p>Een wachtwoord in combinatie met je wallet bestand kan je portemonnee ontgrendelen.</p>Als je je wachtwoord kwijtraakt of als je je wallet wilt openen vanaf een nieuw apparaat, heb je je 24-woorden herstelzin nodig.",
-        "buttons": {
-            "ok": "ok"
-        }
-    },
-    "restore_backup": {
-        "nav-bar-title": "Herstel backup",
-        "instruction": "Voer jouw 24-woorden herstelzin in",
-        "passphrase_hint": "Voeg spaties toe tussen elk woord",
-        "password_instruction": "Stel een wachtwoord in",
-        "wallet_name": "Wallet naam",
-        "password_confirm_instruction": "Bevestig wachtwoord",
-        "passphrase_error": "De wachtwoordzin die je hebt ingevoerd is onjuist. Zorg ervoor dat je het juiste aantal woorden invoert",
-        "buttons": {
-            "import": "Importeren"
-        }
-    },
-    "password_messages": {
-        "nav-bar-title": "Wachtwoord",
-        "warnings": {
-            "weak": "Je wachtwoord is erg zwak. Overweeg een sterker wachtwoord te gebruiken."
-        },
-        "errors": {
-            "not_matching": "De wachtwoorden komen niet overeen."
-        }
-    },
-    "passphrase_messages": {
-        "nav-bar-title": "Wachtwoordzin",
-        "invalid_size": "De wachtwoordzin heeft een ongeldige lengte.",
-        "invalid_word": "De wachtwoordzin bevat niet herkende woorden.",
-        "invalid_checksum": "Het lijkt erop dat deze wachtwoordzin niet door deze wallet is gegenereerd. Je kunt het echter nog steeds op eigen risico gebruiken."
-    },
-    "about": {
-        "nav-bar-title": "Over Smilo",
-        "title": "OVER SMILO",
-        "paragraph1": "Sinds de release van Ethereum in 2015 zijn er verschillende projecten geweest die in staat zijn om slimme contracten en gedecentraliseerde applicaties te hosten, maar geen van de platforms kan zowel publieke als private smart contracts hosten.",
-        "paragraph2": "Wat nodig is, is een open source, hybride op blockchain gebaseerde gegevensverwerkingsplatform. Een platform met hybride transacties, hybride smart contracts en hybride gedecentraliseerde applicaties. Hier komt het Smilo-platform om de hoek kijken.",
-        "paragraph3": "Smilo combineert de publieke en private functies van de blockchain in zijn kern. We kunnen niet alleen opties bieden voor publieke en private transacties, maar we bieden ook openbare en private smart contracts en gedecentraliseerde applicaties.",
-        "paragraph4_title": "Smilo's unieke kracht",
-        "paragraph4": "De combinatie van hybride smart contracts, -transacties en -gedecentraliseerde applicaties, samen met transparantie, privacy en anonimiteit, en de verbinding met real-life applicaties."
-    },
-    "faq": {
-        "nav-bar-title": "FAQ",
-        "question1": "Wat is een SmiloWallet?",
-        "answer1": "Smilo's web wallet is een gratis, open-source interface aan de clientzijde. Je behoudt de volledige controle over jouw sleutels en jouw tegoeden. We kunnen jouw geld niet terugkrijgen of jouw account niet blokkeren als je een phishing-site bezoekt of jouw privésleutel kwijtraakt.",
-        "question2": "Is de SmiloWallet een bank?",
-        "answer2": "Nee, de SmiloWallet is geen bank. De SmiloWallet is slechts een interface waarmee je kunt communiceren met het blockchain-netwerk van Smilo. Wanneer je een account maakt op SmiloWallet, genereer je een cryptografische reeks cijfers: jouw privésleutel en jouw openbare sleutel (adres). De bediening van jouw sleutels gebeurt volledig op jouw computer, in jouw browser. We zullen nooit jouw persoonlijke sleutel, wachtwoord of andere accountinformatie verzenden, ontvangen of opslaan.",
-        "question3": "Hoe veilig is het?",
-        "answer3": "",
-        "question4": "Hoe kan ik de SmiloWallet vertrouwen?",
-        "answer4": "De SmiloWallet-broncode is beschikbaar op Github en kan door iedereen worden geverifieerd. We serveren de wallet via SSL (https), waardoor er geen mogelijkheid meer is om de code tussen onze servers en jouw browser te wijzigen. Nog steeds niet zeker? Download de nieuwste stand-alone versie op onze Github-pagina's en voer de SmiloWallet lokaal uit. Je kunt ook rechtstreeks vanuit de bron bouwen.",
-        "question5": "Wat als ik mijn privésleutel verlies of het wachtwoord van mijn gecodeerde Keystore-bestand vergeet?",
-        "answer5": "Je behoudt de volledige controle over jouw sleutels en jouw tegoeden. We kunnen jouw geld niet terugkrijgen of jouw account niet blokkeren als je een phishing-site bezoekt of jouw privésleutel kwijtraakt. <p>Wij zijn niet verantwoordelijk voor enig verlies.</p> SmiloWallet.io wordt momenteel actief ontwikkeld. Hoewel we de portefeuille grondig hebben getest, is er altijd de mogelijkheid dat er iets onverwachts gebeurt waardoor jouw geld verloren gaat. Investeer niet meer dan je bereid bent te verliezen."
+        "choose_exchange": "Kies exchange"
     }
 }

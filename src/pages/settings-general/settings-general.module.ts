@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { IonicPageModule } from 'ionic-angular';
 import { SettingsGeneralPage } from './settings-general';
 import { TranslateModule } from '@ngx-translate/core';
-import { ComponentsModule } from '../../components/components.module';
+import { SettingsProvider } from '../../providers/settings/settings';
 
 @NgModule({
   declarations: [
@@ -11,7 +11,6 @@ import { ComponentsModule } from '../../components/components.module';
   imports: [
     IonicPageModule.forChild(SettingsGeneralPage),
     TranslateModule,
-    ComponentsModule
   ]
 })
 export class SettingsGeneralPageModule {}

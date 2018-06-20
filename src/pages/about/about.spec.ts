@@ -5,7 +5,6 @@ import { MockNavController } from "../../../test-config/mocks/MockNavController"
 import { MockNavParams } from "../../../test-config/mocks/MockNavParams";
 import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
 import { MockTranslationLoader } from "../../../test-config/mocks/MockTranslationLoader";
-import { ComponentsModule } from "../../components/components.module";
 
 describe("AboutPage", () => {
   let comp: AboutPage;
@@ -18,8 +17,7 @@ describe("AboutPage", () => {
         IonicModule.forRoot(AboutPage),
         TranslateModule.forRoot({
           loader: {provide: TranslateLoader, useClass: MockTranslationLoader},
-        }),
-        ComponentsModule
+        })
       ],
       providers: [
         { provide: NavController, useClass: MockNavController },

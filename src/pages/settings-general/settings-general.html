@@ -1,4 +1,8 @@
-<smilo-nav-header title="settings_page.nav-bar-title"></smilo-nav-header>
+<ion-header>
+  <ion-navbar>
+    <ion-title>{{ 'settings_page.title' | translate }}</ion-title>
+  </ion-navbar>
+</ion-header>
 
 <ion-content padding>
     <ion-grid>
@@ -9,20 +13,20 @@
               <ion-list radio-group>
                  <ion-item>
                         <ion-label>{{ 'settings_page.text.night_mode' | translate }}</ion-label>
-                        <ion-toggle class="nightModeToggle" [(ngModel)]="nightModeStatus" (ionChange)="nightModeSwitch()" color="secondary"></ion-toggle>
+                        <ion-toggle [(ngModel)]="nightModeStatus" (ionChange)="nightModeSwitch()" checked="false" color="secondary"></ion-toggle>
                     </ion-item>
               </ion-list>
 
               <h4 class="margin-top">{{ 'settings_page.headers.language' | translate }}</h4>
-              <ion-list [(ngModel)]="activeLanguage" radio-group>
-                  <ion-item class="language-item">
+              <ion-list radio-group>
+                  <ion-item>
                     <ion-label>English</ion-label>
-                    <ion-radio (ionSelect)="changeLanguage('en')" value="en"></ion-radio>
+                    <ion-radio checked="true" (ionSelect)="changeLanguage('en')" value="en"></ion-radio>
                   </ion-item>
                 
-                  <ion-item class="language-item">
+                  <ion-item>
                     <ion-label>Nederlands</ion-label>
-                    <ion-radio (ionSelect)="changeLanguage('nl')" value="nl"></ion-radio>
+                    <ion-radio checked="false" (ionSelect)="changeLanguage('nl')" value="nl"></ion-radio>
                   </ion-item>
               </ion-list>
           </ion-col>

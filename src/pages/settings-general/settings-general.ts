@@ -1,6 +1,7 @@
 import { Component } from "@angular/core";
 import { IonicPage, NavController, NavParams } from "ionic-angular";
 import { TranslateService } from "@ngx-translate/core";
+import { SettingsProvider } from './../../providers/settings/settings';
 import { SettingsService, ThemeType } from "../../services/settings-service/settings-service";
 
 /**
@@ -16,41 +17,38 @@ import { SettingsService, ThemeType } from "../../services/settings-service/sett
   templateUrl: "settings-general.html",
 })
 export class SettingsGeneralPage {
-  nightModeStatus: boolean = false;
-  activeLanguage: string;
+  private nightModeStatus: boolean = false;
+  private twoFactorAuthStatus: boolean = false;
   selectedTheme: ThemeType;
 
   constructor(public navCtrl: NavController, 
               public navParams: NavParams, 
-              public translate: TranslateService,
+              public translate: TranslateService, 
+              public settings: SettingsProvider,
               public settingsService: SettingsService) {
-    this.settingsService.getActiveTheme().subscribe(val => this.selectedTheme = <ThemeType>val);
-    if (this.selectedTheme === "dark-theme") {
-      this.nightModeStatus = true;
-    }
-    this.settingsService.getLanguageSettings().then(data => {
-      if (data === null) {
-        this.activeLanguage = "en";
-      } else {
-        this.activeLanguage = data;
-      }
-    });
+    this.settings.getActiveTheme().subscribe(val => this.selectedTheme = <ThemeType>val);
   }
 
   ionViewDidLoad() {
-    
+    console.log("ionViewDidLoad SettingsGeneralPage");
   }
 
-  nightModeSwitch(): void {
+  nightModeSwitch() {
+    console.log("SettingsPage: nightmodeSwitch enabled " + this.nightModeStatus);
     if (this.selectedTheme === 'dark-theme') {
-      this.settingsService.setActiveTheme('light-theme');
+      this.settings.setActiveTheme('light-theme');
     } else {
-      this.settingsService.setActiveTheme('dark-theme');
+      this.settings.setActiveTheme('dark-theme');
     }
     this.settingsService.saveNightModeSettings(this.selectedTheme);
   }
 
-  changeLanguage(language): void {
+  twoFactorAuthSwitch() {
+    console.log("SettingsPage: twoFactorAuthSwitch enabled " + this.twoFactorAuthStatus);
+  }
+
+  changeLanguage(language) {
+    console.log("SettingsPage: changeLanguage: " + language);
     this.translate.use(language);
     this.settingsService.saveLanguageSettings(language);
   }

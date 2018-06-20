@@ -27,6 +27,7 @@ $smilo-logo-max-height: 100px;
     align-items: center;
     border-radius: 2px;
     color: white;
+    background-color: #4F586B;
     font-size: 14px;
     font-weight: bold;
 
@@ -45,22 +46,6 @@ $smilo-logo-max-height: 100px;
     .alert-wrapper {
         background-color: red !important;
     }
-}
-
-.settings-nav-bar {
-    position: absolute;
-    right: 16px;
-    top: 15px;
-    font-size: 28px;
-    color: white;
-}
-
-.scroll-content {
-    margin-top: 5.7rem;
-}
-
-.settings-nav-bar:hover {
-    cursor: pointer;
 }
 
 ion-title {

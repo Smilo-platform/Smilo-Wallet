@@ -1,23 +1,18 @@
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
-import { FaqPage } from "./faq";
+import { SettingsWalletPage } from "./settings-wallet";
 import { IonicModule, NavController, NavParams} from "ionic-angular/index";
 import { MockNavController } from "../../../test-config/mocks/MockNavController";
 import { MockNavParams } from "../../../test-config/mocks/MockNavParams";
-import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
-import { MockTranslationLoader } from "../../../test-config/mocks/MockTranslationLoader";
 
-describe("FAQPage", () => {
-  let comp: FaqPage;
-  let fixture: ComponentFixture<FaqPage>;
+describe("SettingsWalletPage", () => {
+  let comp: SettingsWalletPage;
+  let fixture: ComponentFixture<SettingsWalletPage>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [FaqPage],
+      declarations: [SettingsWalletPage],
       imports: [
-        IonicModule.forRoot(FaqPage),
-        TranslateModule.forRoot({
-          loader: {provide: TranslateLoader, useClass: MockTranslationLoader},
-        })
+        IonicModule.forRoot(SettingsWalletPage)
       ],
       providers: [
         { provide: NavController, useClass: MockNavController },
@@ -27,7 +22,7 @@ describe("FAQPage", () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(FaqPage);
+    fixture = TestBed.createComponent(SettingsWalletPage);
     comp = fixture.componentInstance;
   });
 

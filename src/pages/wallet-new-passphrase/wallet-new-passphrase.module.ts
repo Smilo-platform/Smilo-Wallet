@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { IonicPageModule } from 'ionic-angular';
 import { WalletNewPassphrasePage } from './wallet-new-passphrase';
 import { TranslateModule } from '@ngx-translate/core';
-import { ComponentsModule } from '../../components/components.module';
 
 @NgModule({
   declarations: [
@@ -10,8 +9,7 @@ import { ComponentsModule } from '../../components/components.module';
   ],
   imports: [
     IonicPageModule.forChild(WalletNewPassphrasePage),
-    TranslateModule,
-    ComponentsModule
+    TranslateModule
   ],
   providers: [
     

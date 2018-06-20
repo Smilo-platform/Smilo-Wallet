@@ -18,7 +18,6 @@ import { IKeyStore } from "../../models/IKeyStore";
 import { HomePage } from "../home/home";
 import { ILocalWallet } from "../../models/ILocalWallet";
 import { MockToast } from "../../../test-config/mocks/MockToast";
-import { ComponentsModule } from "../../components/components.module";
 
 describe("WalletImportKeystorePage", () => {
   let comp: WalletImportKeystorePage;
@@ -48,8 +47,7 @@ describe("WalletImportKeystorePage", () => {
         IonicModule.forRoot(WalletImportKeystorePage),
         TranslateModule.forRoot({
           loader: {provide: TranslateLoader, useClass: MockTranslationLoader},
-        }),
-        ComponentsModule
+        })
       ],
       providers: [
         { provide: WalletService, useValue: walletService },
