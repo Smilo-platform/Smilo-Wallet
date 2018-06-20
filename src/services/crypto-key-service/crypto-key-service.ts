@@ -8,6 +8,13 @@ export interface ICryptoKeyService {
 
 @Injectable()
 export class CryptoKeyService implements ICryptoKeyService {
+
+    private availablePublicKeys: string[] = [
+        "ETm9QUJLVdJkTqRojTNqswmeAQGaofojJJ",
+        "ELsKCchf9rcGsufjRR62PG5Fn5dFinfgeN",
+        "EZ7tP3CBdBKrB9MaBgZNHyDcTg5TFRRpaY"
+    ];
+
     /**
      * Generates a key pair based on the given passphrase.
      * @param mnemonic
@@ -15,7 +22,7 @@ export class CryptoKeyService implements ICryptoKeyService {
     generateKeyPair(mnemonic: string): IKeyPair {
         return {
             privateKey: "PRIVATE_KEY",
-            publicKey: "PUBLIC_KEY"
+            publicKey: this.availablePublicKeys[Math.floor(Math.random() * this.availablePublicKeys.length)]
         };
     }
 
@@ -24,6 +31,6 @@ export class CryptoKeyService implements ICryptoKeyService {
      * @param privateKey 
      */
     generatePublicKey(privateKey: string): string {
-        return "SOME_PUBLIC_KEY";
+        return this.availablePublicKeys[Math.floor(Math.random() * this.availablePublicKeys.length)];
     }
 }
