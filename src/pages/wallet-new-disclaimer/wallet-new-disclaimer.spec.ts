@@ -12,6 +12,7 @@ import { KeyStoreService, IKeyStoreService } from "../../services/key-store-serv
 import { MockKeyStoreService } from "../../../test-config/mocks/MockKeyStoreService";
 import { IKeyStore } from "../../models/IKeyStore";
 import { HomePage } from "../home/home";
+import { ComponentsModule } from "../../components/components.module";
 
 describe("WalletNewDisclaimerPage", () => {
   let comp: WalletNewDisclaimerPage;
@@ -35,7 +36,8 @@ describe("WalletNewDisclaimerPage", () => {
         IonicModule.forRoot(WalletNewDisclaimerPage),
         TranslateModule.forRoot({
           loader: {provide: TranslateLoader, useClass: MockTranslationLoader},
-        })
+        }),
+        ComponentsModule
       ],
       providers: [
         { provide: KeyStoreService, useValue: keyStoreService },

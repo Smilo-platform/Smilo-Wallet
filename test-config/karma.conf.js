@@ -60,6 +60,9 @@ module.exports = function(config) {
     customLaunchers: {
       HeadlessChrome: {
         base: 'ChromeHeadless',
+        browserDisconnectTimeout: 50000,
+        browserDisconnectTolerance: 5,
+        browserNoActivityTimeout: 90000,
         flags: [
           '--no-sandbox',
           '--disable-gpu',
