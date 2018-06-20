@@ -298,7 +298,6 @@ export class WalletOverviewPage {
               alternatePrice = 1;
               currentCurrencyValue = alternatePrice * walletCurrencyAmount;
             } else if (alternatePrice === undefined) {
-              alternatePrice = 0;
               if (y === 0) {
                 const alert = this.alertCtrl.create({
                   title: 'Error',

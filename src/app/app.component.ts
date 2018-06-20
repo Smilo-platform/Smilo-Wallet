@@ -19,7 +19,7 @@ const HOCKEY_APP_IGNORE_ERROR_HEADER = true;
 })
 export class SmiloWallet {
   rootPage: any;
-  selectedTheme: String;
+  selectedTheme: string;
 
   constructor(private platform: Platform, 
               private statusBar: StatusBar, 
@@ -41,22 +41,7 @@ export class SmiloWallet {
       settingsService.getNightModeSettings().then(data => {
         settingsService.setActiveTheme(data || 'light-theme');
       })
-
-      walletService.getAll().then(
-        (wallets) => {
-          if(wallets.length == 0) {
-            this.rootPage = LandingPage;
-          }
-          else {
-            this.rootPage = HomePage;
-          }
-        },
-        (error) => {
-          // Something went wrong reading the crypto keys.
-          // How will we handle this? Generic error page maybe?
-          console.error(error);
-        }
-      );
+      
       this.prepareTranslations();
 
       this.prepareHockeyAppIntegration();
