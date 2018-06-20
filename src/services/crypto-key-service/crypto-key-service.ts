@@ -2,14 +2,15 @@ import { Injectable } from "@angular/core";
 import { IKeyPair } from "../../models/IKeyPair";
 
 export interface ICryptoKeyService {
+    availablePublicKeys: string[];
     generateKeyPair(mnemonic: string): IKeyPair;
     generatePublicKey(privateKey: string): string;
 }
 
 @Injectable()
 export class CryptoKeyService implements ICryptoKeyService {
-
-    private availablePublicKeys: string[] = [
+    
+    availablePublicKeys: string[] = [
         "ETm9QUJLVdJkTqRojTNqswmeAQGaofojJJ",
         "ELsKCchf9rcGsufjRR62PG5Fn5dFinfgeN",
         "EZ7tP3CBdBKrB9MaBgZNHyDcTg5TFRRpaY"
