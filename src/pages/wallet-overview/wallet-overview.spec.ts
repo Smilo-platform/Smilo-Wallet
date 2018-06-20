@@ -15,6 +15,7 @@ import { MockLoadingController } from "../../../test-config/mocks/MockLoadingCon
 import { MockAlertController } from "../../../test-config/mocks/MockAlertController";
 import { MockAlert } from "../../../test-config/mocks/MockAlert";
 import { IBalance } from "../../models/IBalance";
+import { ComponentsModule } from "../../components/components.module";
 
 describe("WalletOverviewPage", () => {
   let comp: WalletOverviewPage;
@@ -38,7 +39,8 @@ describe("WalletOverviewPage", () => {
         IonicModule.forRoot(WalletOverviewPage),
         TranslateModule.forRoot({
           loader: {provide: TranslateLoader, useClass: MockTranslationLoader},
-        })
+        }),
+        ComponentsModule
       ],
       providers: [
         { provide: WalletService, useValue: walletService },
@@ -211,4 +213,20 @@ describe("WalletOverviewPage", () => {
       });
     });
   });
+
+  it("should have five transaction histories for the wallet", (done) => {
+    comp.getAllWallets().then(data => {
+      comp.getTransactionHistory("ETm9QUJLVdJkTqRojTNqswmeAQGaofojJJ").then(data => {
+        expect(comp.transactionsHistory.length).toBe(5);
+        expect(comp.transactionsHistory).toEqual([
+          { "date": "Jun 14, 2018 18:01:44 PM", "input": "ETm9QUJLVdJkTqRojTNqswmeAQGaofojJJ", "output": "17srYd7sVwKgE5ha7ZXSBxUACjm2hMVQeH", "amount": "55", "currency": "XSM"},
+          { "date": "Jun 13, 2018 19:14:34 PM", "input": "1KkPiyNvRHsWC67KgK6AFHMWoxmcGm5d1H", "output": "ETm9QUJLVdJkTqRojTNqswmeAQGaofojJJ", "amount": "292", "currency": "XSP"},
+          { "date": "Jun 08, 2018 15:44:36 PM", "input": "1LtqTERxw4QFLCbfLgB43P1XGAWUNmk6DA", "output": "ETm9QUJLVdJkTqRojTNqswmeAQGaofojJJ", "amount": "122", "currency": "XSM"},
+          { "date": "May 28, 2018 17:22:53 PM", "input": "ETm9QUJLVdJkTqRojTNqswmeAQGaofojJJ", "output": "1AvAvNh6PjzN9jjhUNhT5DuzMPgnhM6R2u", "amount": "254", "currency": "XSM"},
+          { "date": "May 26, 2018 23:44:51 PM", "input": "ETm9QUJLVdJkTqRojTNqswmeAQGaofojJJ", "output": "13QMZULQGBodKzsAF462Dh2opf8PQawYBt", "amount": "5192", "currency": "XSP"},
+        ]);
+        done();
+      });
+    });
+  })
 });

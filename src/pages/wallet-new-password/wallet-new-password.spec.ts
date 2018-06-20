@@ -8,6 +8,7 @@ import { MockTranslationLoader } from "../../../test-config/mocks/MockTranslatio
 import { WalletNewDisclaimerPage } from "../wallet-new-disclaimer/wallet-new-disclaimer";
 import { IPasswordService, PasswordService } from "../../services/password-service/password-service";
 import { MockPasswordService } from "../../../test-config/mocks/MockPasswordService";
+import { ComponentsModule } from "../../components/components.module";
 
 describe("WalletNewPasswordPage", () => {
   let comp: WalletNewPasswordPage;
@@ -27,7 +28,8 @@ describe("WalletNewPasswordPage", () => {
         IonicModule.forRoot(WalletNewPasswordPage),
         TranslateModule.forRoot({
           loader: {provide: TranslateLoader, useClass: MockTranslationLoader},
-        })
+        }),
+        ComponentsModule
       ],
       providers: [
         { provide: NavController, useValue: navController },

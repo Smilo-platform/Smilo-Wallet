@@ -9,6 +9,7 @@ import { WalletImportKeystorePage } from "../wallet-import-keystore/wallet-impor
 import { WalletImportPrivatekeyPage } from "../wallet-import-privatekey/wallet-import-privatekey";
 import { WalletImportLedgerPage } from "../wallet-import-ledger/wallet-import-ledger";
 import { RestoreBackupPage } from "../restore-backup/restore-backup";
+import { ComponentsModule } from "../../components/components.module";
 
 describe("WalletImportPage", () => {
   let comp: WalletImportPage;
@@ -26,7 +27,8 @@ describe("WalletImportPage", () => {
         IonicModule.forRoot(WalletImportPage),
         TranslateModule.forRoot({
           loader: {provide: TranslateLoader, useClass: MockTranslationLoader},
-        })
+        }),
+        ComponentsModule
       ],
       providers: [
         { provide: NavController, useValue: navController },
