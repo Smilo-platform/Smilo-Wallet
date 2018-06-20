@@ -13,7 +13,6 @@ import { WalletOverviewPageModule } from "../pages/wallet-overview/wallet-overvi
 import { WalletPageModule } from "../pages/wallet/wallet.module";
 import { FaqPageModule } from "../pages/faq/faq.module";
 import { SettingsGeneralPageModule } from "../pages/settings-general/settings-general.module";
-import { SettingsWalletPageModule } from "../pages/settings-wallet/settings-wallet.module";
 import { TransferPageModule } from "../pages/transfer/transfer.module";
 import { WalletImportKeystorePageModule } from "../pages/wallet-import-keystore/wallet-import-keystore.module";
 import { WalletImportLedgerPageModule } from "../pages/wallet-import-ledger/wallet-import-ledger.module";
@@ -37,6 +36,7 @@ import { PasswordService } from "../services/password-service/password-service";
 import { SettingsService } from "../services/settings-service/settings-service";
 import { BIP39Service } from "../services/bip39-service/bip39-service";
 import { HockeyApp } from "ionic-hockeyapp";
+import { ComponentsModule } from "../components/components.module";
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, "assets/i18n/");
@@ -64,13 +64,13 @@ export function HttpLoaderFactory(http: HttpClient) {
     WalletPageModule,
     FaqPageModule,
     SettingsGeneralPageModule,
-    SettingsWalletPageModule,
     TransferPageModule,
     WalletImportKeystorePageModule,
     WalletImportLedgerPageModule,
     WalletImportPrivatekeyPageModule,
     RestoreBackupPageModule,
     LandingPageModule,
+    ComponentsModule,
     WalletNewPageModule,
     WalletNewPassphrasePageModule,
     WalletNewPasswordPageModule,

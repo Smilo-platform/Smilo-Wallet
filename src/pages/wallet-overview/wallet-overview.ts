@@ -6,11 +6,11 @@ import { AlertController } from 'ionic-angular';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { LandingPage } from "../landing/landing";
 import { ToastController } from 'ionic-angular';
-import { SettingsGeneralPage } from "../settings-general/settings-general";
 import { IWallet } from "../../models/IWallet";
 import { TransferPage } from "../transfer/transfer";
 import { RestoreBackupPage } from "../restore-backup/restore-backup";
 import { IAvailableExchange } from "../../models/IAvailableExchange";
+import { ITransaction } from "../../models/ITransaction";
 
 /**
  * Generated class for the WalletOverviewPage page.
@@ -46,10 +46,13 @@ export class WalletOverviewPage {
   legendList: string[] = [];
   availableExchanges: IAvailableExchange[] = [];
   currentExchangeCurrencies: string[] = [];
+  transactionsHistory: ITransaction[] = [];
   showFundsStatus: boolean = true;
   twoFactorStatus: boolean = false;
   walletFundsVisibility: VisibilityType = 'shown';
   walletFundsVisibilityTransferButton: VisibilityType = "hidden";
+  noTransactionHistoryVisibility: VisibilityType = "shown";
+  transactionHistoryVisibility: VisibilityType = "hidden";
   loading: Loading;
   loadingError: Alert;
   totalCurrentCurrencyValue: number;
@@ -107,6 +110,7 @@ export class WalletOverviewPage {
 
   refreshWalletBalance(): void {
     this.getWalletBalance(this.currentWallet.publicKey);
+    this.getTransactionHistory(this.currentWallet.publicKey);
   }
 
   /**
@@ -160,6 +164,19 @@ export class WalletOverviewPage {
     } else {
       return false;
     }
+  }
+
+  getTransactionHistory(publicKey: string): Promise<void> {
+    return this.walletService.getTransactionHistory(this.currentWallet.publicKey).then(data => {
+      this.transactionsHistory = data;
+      if (this.transactionsHistory.length > 0) {
+        this.noTransactionHistoryVisibility = "hidden";
+        this.transactionHistoryVisibility = "shown";
+      } else {
+        this.noTransactionHistoryVisibility = "shown";
+        this.transactionHistoryVisibility = "hidden";
+      }
+    });
   }
 
   /**
@@ -342,17 +359,11 @@ export class WalletOverviewPage {
   }
 
   /**
-   * Open the settings page
-   */
-  settingsClick(): void {
-    this.navCtrl.push(SettingsGeneralPage);
-  }
-
-  /**
    * Whenever the current wallet is changed
    */
   onWalletChanged() {
     this.getWalletBalance(this.currentWallet.publicKey);
+    this.getTransactionHistory(this.currentWallet.publicKey);
   }
   
   /**
@@ -369,8 +380,8 @@ export class WalletOverviewPage {
         datasets: [{
           data: this.currenciesForDoughnutCanvas,
           backgroundColor: [
-            '#FFCD55',
-            '#36A1EB'
+            '#064C70',
+            '#1B79A9'
           ]
         }],
         labels: this.currenciesForDoughnutCanvasLabels

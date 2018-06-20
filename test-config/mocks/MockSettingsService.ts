@@ -7,7 +7,7 @@ export class MockSettingService implements ISettingsService {
 
     }
     getActiveTheme(): Observable<string> {
-        return Observable.of();
+        return Observable.of("light-theme");
     }
     saveNightModeSettings(theme: "dark-theme" | "light-theme"): Promise<void> {
         return Promise.resolve();

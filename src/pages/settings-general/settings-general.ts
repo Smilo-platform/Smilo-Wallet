@@ -16,9 +16,9 @@ import { SettingsService, ThemeType } from "../../services/settings-service/sett
   templateUrl: "settings-general.html",
 })
 export class SettingsGeneralPage {
-  private nightModeStatus: boolean = false;
-  private activeLanguage: string;
-  private selectedTheme: ThemeType;
+  nightModeStatus: boolean = false;
+  activeLanguage: string;
+  selectedTheme: ThemeType;
 
   constructor(public navCtrl: NavController, 
               public navParams: NavParams, 
@@ -29,16 +29,19 @@ export class SettingsGeneralPage {
       this.nightModeStatus = true;
     }
     this.settingsService.getLanguageSettings().then(data => {
-      this.activeLanguage = data;
+      if (data === null) {
+        this.activeLanguage = "en";
+      } else {
+        this.activeLanguage = data;
+      }
     });
   }
 
   ionViewDidLoad() {
-    console.log("ionViewDidLoad SettingsGeneralPage");
+    
   }
 
   nightModeSwitch(): void {
-    console.log("SettingsPage: nightmodeSwitch enabled " + this.nightModeStatus);
     if (this.selectedTheme === 'dark-theme') {
       this.settingsService.setActiveTheme('light-theme');
     } else {
@@ -48,7 +51,6 @@ export class SettingsGeneralPage {
   }
 
   changeLanguage(language): void {
-    console.log("SettingsPage: changeLanguage: " + language);
     this.translate.use(language);
     this.settingsService.saveLanguageSettings(language);
   }
