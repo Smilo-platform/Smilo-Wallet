@@ -9,6 +9,7 @@ import { NavigationHelperService } from "../../services/navigation-helper-servic
 import { PasswordExplanationPage } from "../password-explanation/password-explanation";
 import { KeyStoreService } from "../../services/key-store-service/key-store-service";
 import { IPasswordValidationResult, PasswordService } from "../../services/password-service/password-service";
+import { PrepareWalletPage } from "../prepare-wallet/prepare-wallet";
 
 @IonicPage()
 @Component({
@@ -37,19 +38,21 @@ export class WalletImportPrivatekeyPage {
     if(this.dataIsValid()) {
       let wallet = this.prepareWallet();
 
-      return this.walletService.store(wallet).then(
-        () => {
-          // Go back to home page. This is not perfect.
-          return this.goBackToOriginPage();
-        },
-        (error) => {
-          // Storing wallet failed, how will we handle this?
-        }
-      );
+      return this.goToPrepareWalletPage(wallet, this.password);
     }
     else {
       return Promise.resolve();
     }
+  }
+
+  goToPrepareWalletPage(wallet: ILocalWallet, password: string) {
+    let params = {
+      wallet: wallet,
+      password: password
+    };
+    params[NAVIGATION_ORIGIN_KEY] = this.navParams.get(NAVIGATION_ORIGIN_KEY);
+
+    return this.navCtrl.push(PrepareWalletPage, params);
   }
 
   goBackToOriginPage() {
@@ -79,8 +82,7 @@ export class WalletImportPrivatekeyPage {
       transactions: [],
       lastUpdateTime: null,
       currencies: [],
-      totalCurrentCurrencyValue: 0,
-      encryptedPrivateKey: null
+      totalCurrentCurrencyValue: 0
     };
 
     return wallet;

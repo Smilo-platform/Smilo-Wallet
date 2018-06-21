@@ -54,30 +54,30 @@ export class SmiloWallet {
       // )
 
       // MerkleTree.fromDisk("wallet", this.storage, keyStoreService, "pass123").then( 
-      MerkleTree.generate("hello", 18).then(
-        (tree) => {
-          console.log(tree);
-          console.log(tree.getPublicKey());
+      // MerkleTree.generate("hello", 18).then(
+      //   (tree) => {
+      //     console.log(tree);
+      //     console.log(tree.getPublicKey());
 
-          tree.serialize("wallet", this.storage, this.keyStoreService, "pass123").then(
-            () => {
-              console.log("Serialized!");
-            },
-            (error) => {
-              console.error(error);
-            }
-          )
-        },
-        (error) => {
-          console.error(error);
-        }
-      );
+      //     tree.serialize("wallet", this.storage, this.keyStoreService, "pass123").then(
+      //       () => {
+      //         console.log("Serialized!");
+      //       },
+      //       (error) => {
+      //         console.error(error);
+      //       }
+      //     )
+      //   },
+      //   (error) => {
+      //     console.error(error);
+      //   }
+      // );
 
-      // this.prepareTranslations();
+      this.prepareTranslations();
 
-      // this.prepareHockeyAppIntegration();
+      this.prepareHockeyAppIntegration();
 
-      // this.prepareFirstPage();
+      this.prepareFirstPage();
     });
   }
 

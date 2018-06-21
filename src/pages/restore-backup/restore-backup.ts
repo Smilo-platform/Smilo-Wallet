@@ -101,8 +101,7 @@ export class RestoreBackupPage {
       transactions: [],
       lastUpdateTime: null,
       currencies: [],
-      totalCurrentCurrencyValue: 0,
-      encryptedPrivateKey: ""
+      totalCurrentCurrencyValue: 0
     };
 
     return wallet;

@@ -68,8 +68,7 @@ export class WalletNewDisclaimerPage {
       transactions: [],
       lastUpdateTime: new Date(),
       currencies: [],
-      totalCurrentCurrencyValue: 0,
-      encryptedPrivateKey: null
+      totalCurrentCurrencyValue: 0
     };
 
     return wallet;

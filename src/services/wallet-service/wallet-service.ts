@@ -3,6 +3,10 @@ import { IWallet } from "../../models/IWallet";
 import { Storage } from "@ionic/storage";
 import { HttpClient } from '@angular/common/http';
 import 'rxjs/add/operator/map';
+import { MerkleTree, IMerkleTreeConfig } from "../../merkle/MerkleTree";
+import { KeyStoreService } from "../key-store-service/key-store-service";
+import { ILocalWallet } from "../../models/ILocalWallet";
+import { MerkleTreeService } from "../merkle-tree-service/merkle-tree-service";
 
 const WALLET_STORAGE_KEY = "wallets";
 
@@ -27,7 +31,9 @@ export class WalletService implements IWalletService {
     private wallets: IWallet[]; 
     private baseUrl: string;
 
-    constructor(private storage: Storage, private http: HttpClient) {
+    constructor(private storage: Storage, 
+                private http: HttpClient,
+                private merkleTreeService: MerkleTreeService) {
         let _isDev: boolean = ((<any>window)['IonicDevServer'] != undefined);
         if (_isDev) {
             this.baseUrl = "http://localhost:3000";
@@ -47,22 +53,9 @@ export class WalletService implements IWalletService {
         }
         else {
             return this.storage.get(WALLET_STORAGE_KEY).then(
-                (walletsJson) => {
+                (wallets) => {
                     // If no wallets are found we fall back to an empty json array.
-                    walletsJson = walletsJson || "[]";
-    
-                    let wallets: IWallet[] = null;
-    
-                    // Try and parse the json. We use a try catch to prevent the app from crashing should
-                    // the json be malformed.
-                    try {
-                        wallets = JSON.parse(walletsJson);
-                    }
-                    catch(ex) {
-                        return <any>Promise.reject(`Wallet data appears to be malformed: ${ ex }`);
-                    }
-    
-                    return wallets;
+                    return wallets || [];
                 }
             ).then(
                 (wallets) => {
@@ -143,8 +136,11 @@ export class WalletService implements IWalletService {
         if(index != -1) {
             this.wallets.splice(index, 1);
 
-            // Write back to disk
-            return this.writeWalletsToDisk();
+            // Write wallets back to disk and remove the wallet Merkle Tree.
+            return Promise.all([
+                this.writeWalletsToDisk(),
+                this.merkleTreeService.remove(wallet)
+            ]).then<void>();
         }
         else {
             // Wallet does not exist
@@ -163,7 +159,7 @@ export class WalletService implements IWalletService {
     }
 
     private writeWalletsToDisk(): Promise<void> {
-        return this.storage.set(WALLET_STORAGE_KEY, JSON.stringify(this.wallets));
+        return this.storage.set(WALLET_STORAGE_KEY, this.wallets);
     }
 
     /**

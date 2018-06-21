@@ -5,6 +5,12 @@ import { LamportGeneratorThread, ILamportGeneratorThreadInput, ILamportGenerator
 import { spawn, Pool } from "threads";
 import { Storage } from "@ionic/storage";
 import { KeyStoreService } from "../services/key-store-service/key-store-service";
+import { IWallet } from "../models/IWallet";
+import { IKeyStore } from "../models/IKeyStore";
+
+export interface IMerkleTreeConfig {
+    layerCount: number;
+}
 
 export class MerkleTree {
     private static readonly KEYS_PER_THREAD = 100;
@@ -74,18 +80,20 @@ export class MerkleTree {
         }
     }
 
-    static generate(privateKey: string, layerCount: number): Promise<MerkleTree> {
-        return MerkleTree.generateLeafKeys(privateKey, layerCount).then(
+    static generate(privateKey: string, layerCount: number, progressUpdate?: (progress: number) => void): Promise<MerkleTree> {
+        return MerkleTree.generateLeafKeys(privateKey, layerCount, progressUpdate).then(
             (publicKeys) => {
                 return new MerkleTree(MerkleTree.generateLayers(publicKeys, layerCount));
             }
         );
     }
 
-    static fromDisk(storagePrefix: string, storage: Storage, keyStoreService: KeyStoreService, password: string): Promise<MerkleTree> {
+    static fromDisk(wallet: IWallet, storage: Storage, keyStoreService: KeyStoreService, password: string): Promise<MerkleTree> {
         // Retrieve the config
-        return storage.get(`${ storagePrefix }-config`).then(
-            (config) => {
+        return storage.get(
+            MerkleTree.getConfigStorageKey(wallet)
+        ).then(
+            (config: IMerkleTreeConfig) => {
                 if(!config)
                     return Promise.reject("MerkleTree not found on disk");
 
@@ -93,12 +101,13 @@ export class MerkleTree {
 
                 let readLayerPromise = Promise.resolve();
                 let layers: string[][] = [];
+                let layerKeys: string[] = MerkleTree.getLayerStorageKeys(wallet, layerCount);
                 for(let i = 0; i < layerCount; i++) {
                     readLayerPromise = readLayerPromise.then(
                         () => {
-                            let key = `${ storagePrefix }-layer-${ i }`;
+                            let key = layerKeys[i];
                             return storage.get(key).then(
-                                (encryptedLayer) => {
+                                (encryptedLayer: IKeyStore) => {
                                     if(!encryptedLayer)
                                         return Promise.reject("Missing layer: " + i);
 
@@ -118,6 +127,26 @@ export class MerkleTree {
                 );
             }
         );
+    }
+
+    /**
+     * Gets the storage key for the config of the given wallet.
+     * @param wallet 
+     */
+    static getConfigStorageKey(wallet: IWallet): string {
+        return `${ wallet.id }-config`;
+    }
+    /**
+     * Returns a list of storage keys for all layer of the given wallet and for the given layer count.
+     */
+    static getLayerStorageKeys(wallet: IWallet, layerCount: number): string[] {
+        let layerKeys: string[] = [];
+
+        for(let i = 0; i < layerCount; i++) {
+            layerKeys.push(`${ wallet.id }-layer-${ i }`);
+        }
+        
+        return layerKeys;
     }
 
     private static generateLayers(publicKeys: string[], layerCount: number): string[][] {
@@ -144,7 +173,7 @@ export class MerkleTree {
         return layers;
     }
 
-    private static generateLeafKeys(privateKey: string, layerCount: number): Promise<string[]> {
+    private static generateLeafKeys(privateKey: string, layerCount: number, progressUpdate?: (progress: number) => void): Promise<string[]> {
         return new Promise((resolve, reject) => {
             let prng = new (<any>Math).seedrandom(privateKey);
 
@@ -191,7 +220,9 @@ export class MerkleTree {
                 processedJobOutputs.push(message);
 
                 totalJobsDone++;
-                console.log(`${ Math.round(totalJobsDone / totalJobs * 100)}%`);
+
+                if(progressUpdate)  
+                    progressUpdate(totalJobsDone / totalJobs);
             });
 
             pool.on("error", (job, error) => {

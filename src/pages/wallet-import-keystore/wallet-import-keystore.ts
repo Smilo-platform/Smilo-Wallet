@@ -106,8 +106,7 @@ export class WalletImportKeystorePage {
       transactions: [],
       lastUpdateTime: null,
       currencies: [],
-      totalCurrentCurrencyValue: 0,
-      encryptedPrivateKey: ""
+      totalCurrentCurrencyValue: 0
     };
 
     return wallet;
