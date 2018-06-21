@@ -23,6 +23,38 @@ export class MerkleTree {
         console.log("Start generating public keys");
         let publicKeyStartTime = new Date();
 
+        // let testPool = new Pool();
+        // testPool.run(((input: any, done: (result: number) => void) => {
+        //     setTimeout(() => {
+        //         done(input.value * 2);
+        //     }, 10);
+        // }));
+
+        // for(let i = 0; i < 10000; i++) {
+        //     let dummyData: Uint8Array[] = [];
+        //     for(let j = 0; j < 100; j++) {
+        //         dummyData.push(MerkleTree.getRandomBytes(prng, 100));
+        //     }
+        //     testPool.send({
+        //         some: "object",
+        //         arr: dummyData,
+        //         value: i
+        //     });
+        // }
+
+        // testPool.on("done", (job, output: number) => {
+        //     console.log("Done: ", output);
+        // });
+
+        // testPool.on("error", (error) => {
+        //     console.error(error);
+        // });
+
+        // testPool.on("finished", () => {
+        //     console.log("finished");
+        //     testPool.killAll();
+        // });
+
         // Create a thread pool
         let pool = new Pool();
         pool.run(LamportGeneratorThread);
@@ -47,29 +79,35 @@ export class MerkleTree {
             };
 
             // Send to job queue
-            pool.send(jobInput);
+            pool.queueJob(pool.send(jobInput));
         }
 
+        // Store job output here. Later we will concatenate it.
         let processedJobOutputs: ILamportGeneratorThreadOutput[] = [];
 
         pool.on("done", (job, message: ILamportGeneratorThreadOutput) => {
+            // Store job output without processing it any further at this point
             processedJobOutputs.push(message);
         });
 
         pool.on("error", (job, error) => {
+            // A job failed, this means the entire Merkle Tree is worthless.
+            // Abort and notify calling function about the failure...
             console.error(job);
             console.error(error);
+
+            pool.killAll();
         });
 
         pool.on("finished", () => {
             console.log("All jobs finished");
             pool.killAll();
 
-            // Sort
+            // Sort job outputs so public keys are in order
             processedJobOutputs.sort((a, b) => a.startIndex - b.startIndex);
 
             // Concatenate
-            let publicKeys = processedJobOutputs.reduce(
+            let publicKeys = processedJobOutputs.reduce<string[]>(
                 (previous, current) => previous.concat(current.publicKeys),
                 []
             );
@@ -78,27 +116,7 @@ export class MerkleTree {
             console.log(publicKeys);
             let publicKeyEndTime = new Date();
             console.log(`Took ${ (publicKeyEndTime.getTime() - publicKeyStartTime.getTime()) / 1000 / 60}m`);
-        })
-
-        // let thread = spawn(LamportGeneratorThread);
-        // thread.send(threadInput)
-        //       .on("message", (publicKeys) => {
-        //         console.log("Received message from thread!");
-
-        //         console.log("Public keys");
-        //         console.log(publicKeys);
-
-        //         thread.kill();
-
-        //         let publicKeyEndTime = new Date();
-        //         console.log(`Took ${ (publicKeyEndTime.getTime() - publicKeyStartTime.getTime()) / 1000 / 60}m`);
-        //       })
-        //       .on("error", (error) => {
-        //         console.error(error);
-        //       })
-        //       .on("exit", () => {
-        //         console.log("Thread exited");
-        //       });
+        });
 
         return Promise.resolve(new MerkleTree());
     }
