@@ -10,6 +10,8 @@ import { SettingsProvider } from './../providers/settings/settings';
 import { HockeyApp } from "ionic-hockeyapp";
 import { BIP32Service } from "../services/bip32-service/bip32-service";
 import { MerkleTree } from "../merkle/MerkleTree";
+import { Storage } from "@ionic/storage";
+import { KeyStoreService } from "../services/key-store-service/key-store-service";
 
 const HOCKEY_APP_ANDROID_ID = "7e9d4c16c2a44e25b73db158e064019b";
 const HOCKEY_APP_IOS_ID = "";
@@ -30,7 +32,9 @@ export class SmiloWallet {
               private walletService: WalletService,
               private settings: SettingsProvider,
               private hockeyApp: HockeyApp,
-              private bip32Service: BIP32Service) {
+              private bip32Service: BIP32Service,
+              private storage: Storage,
+              private keyStoreService: KeyStoreService) {
     settings.getActiveTheme().subscribe(val => this.selectedTheme = val);
     platform.ready().then(() => {
       statusBar.styleDefault();
@@ -43,9 +47,26 @@ export class SmiloWallet {
 
       // console.log(pair.privateKey);
 
-      MerkleTree.generate("hello", 14).then(
+      // MerkleTree.fromDisk("wallet", this.storage).then(
+      //   (tree) => {
+          
+      //   }
+      // )
+
+      // MerkleTree.fromDisk("wallet", this.storage, keyStoreService, "pass123").then( 
+      MerkleTree.generate("hello", 18).then(
         (tree) => {
           console.log(tree);
+          console.log(tree.getPublicKey());
+
+          tree.serialize("wallet", this.storage, this.keyStoreService, "pass123").then(
+            () => {
+              console.log("Serialized!");
+            },
+            (error) => {
+              console.error(error);
+            }
+          )
         },
         (error) => {
           console.error(error);

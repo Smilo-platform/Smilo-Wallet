@@ -43,8 +43,4 @@ export interface IWallet {
      * This value is being used for the dougnut chart to express the distribution of the currencies
      */
     totalCurrentCurrencyValue: number;
-    /**
-     * The encrypted private key of the wallet
-     */
-    encryptedPrivateKey: string;
 }
