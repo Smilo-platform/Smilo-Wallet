@@ -247,7 +247,6 @@ export class BIP39Service implements IBIP39Service {
 
                 // Return true if the check sums match
                 if(checksumBinaryString == checksum) {
-                    console.log(checksumBinaryString, checksum);
                     let result: IPassphraseValidationResult = {
                         isValid: true
                     };
