@@ -28,16 +28,20 @@ export class MerkleTree {
     getPublicKey(): string {
         let preAddress = MerkleTree.sha256Base32(
             this.layers[this.layers.length - 1][0]
-        );
+        ).substr(0, 32);
 
         let addressPrefix = this.getPublicKeyPrefix();
 
-        return addressPrefix +
-               preAddress +
-               MerkleTree.sha256Base32(
-                   addressPrefix +
-                   preAddress
-               ).substr(0, 4);
+        let checksum = MerkleTree.sha256Base32(
+            addressPrefix +
+            preAddress
+        );
+
+        let publicKey =  addressPrefix +
+                         preAddress +
+                         checksum.substr(0, 4);
+
+        return publicKey;
     }
 
     serialize(storagePrefix: string, storage: Storage, keyStoreService: KeyStoreService, password: string): Promise<void> {
@@ -259,7 +263,7 @@ export class MerkleTree {
         if(!this.md256)
             this.md256 = new sjcl.hash.sha256();
 
-        this.md256.update(data);
+        this.md256.update(data, "utf8");
 
         let hash = this.md256.finalize();
 
@@ -272,7 +276,7 @@ export class MerkleTree {
         if(!this.md256)
             this.md256 = new sjcl.hash.sha256();
 
-        this.md256.update(data);
+        this.md256.update(data, "utf8");
 
         let hash = this.md256.finalize();
 
