@@ -79,21 +79,26 @@ page-wallet-overview {
         margin: 0px;
     }
 
-    .settings {
-        position: absolute;
-        right: 16px;
-        top: 15px;
+    .refresh {
         font-size: 28px;
-        color: white;
+        float: right;
+        margin-right: 24px;
+    }
+
+    .refresh:hover {
+        cursor: pointer;
+    }
+    
+    .wallet-overview-header {
+        float: left;
+    }
+
+    .funds-overview {
+        min-height: 313px;
     }
 
     .ion-ios-settings {
         top: 9px !important;
-    }
-
-    .settings:hover {
-        opacity: 75%;
-        cursor: pointer;
     }
 
     .legend-list-item {
@@ -111,5 +116,74 @@ page-wallet-overview {
 
     .currencies-overview {
         margin-top: 20px;
+    }
+
+    .wallet-list {
+        margin-top: 20px;
+    }
+
+    .transaction-arrow {
+        margin-top: 10px;
+        margin-bottom: 16px;
+        font-size: 24px;
+    }
+
+    .transaction-swap {
+        font-size: 35px;
+        margin-top: 16px;
+    }
+
+    .transaction-date {
+        font-style: italic;
+    }
+
+    .currencies-overview {
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+
+    .exchanges-overview {
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+
+    .settings-card {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .no-transactions-card {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .transaction-from {
+        margin-top: 8px;
+    }
+
+    .transaction-list-amount {
+        margin-top: 13px;
+        margin-left: 8px;
+        font-weight: 100;
+        font-size: 16px;
+    }
+
+    .transaction-list-div-amount {
+        display: flex;
+    }
+
+    .transaction-list {
+        margin-top: 1px;
+        max-height: 418px;
+        overflow: scroll;
+        border: 1px #000026 solid;
+    }
+
+    .greenColor {
+        color: green !important;
+    }
+
+    .redColor {
+        color: red !important;
     }
 }

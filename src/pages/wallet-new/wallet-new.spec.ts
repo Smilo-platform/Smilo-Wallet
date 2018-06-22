@@ -6,6 +6,7 @@ import { MockNavParams } from "../../../test-config/mocks/MockNavParams";
 import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
 import { MockTranslationLoader } from "../../../test-config/mocks/MockTranslationLoader";
 import { WalletNewPassphrasePage } from "../wallet-new-passphrase/wallet-new-passphrase";
+import { ComponentsModule } from "../../components/components.module";
 
 describe("WalletNewPage", () => {
   let comp: WalletNewPage;
@@ -21,7 +22,8 @@ describe("WalletNewPage", () => {
         IonicModule.forRoot(WalletNewPage),
         TranslateModule.forRoot({
           loader: {provide: TranslateLoader, useClass: MockTranslationLoader},
-        })
+        }),
+        ComponentsModule
       ],
       providers: [
         { provide: NavController, useValue: navController },

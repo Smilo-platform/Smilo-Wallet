@@ -20,6 +20,7 @@ import { MockKeyStoreService } from "../../../test-config/mocks/MockKeyStoreServ
 import { IKeyStore } from "../../models/IKeyStore";
 import { IPasswordService, PasswordService } from "../../services/password-service/password-service";
 import { MockPasswordService } from "../../../test-config/mocks/MockPasswordService";
+import { ComponentsModule } from "../../components/components.module";
 
 describe("WalletImportPrivatekeyPage", () => {
   let comp: WalletImportPrivatekeyPage;
@@ -49,7 +50,8 @@ describe("WalletImportPrivatekeyPage", () => {
         IonicModule.forRoot(WalletImportPrivatekeyPage),
         TranslateModule.forRoot({
           loader: {provide: TranslateLoader, useClass: MockTranslationLoader},
-        })
+        }),
+        ComponentsModule
       ],
       providers: [
         { provide: KeyStoreService, useValue: keyStoreService },

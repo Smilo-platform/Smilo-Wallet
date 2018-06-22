@@ -11,6 +11,7 @@ import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
 import { MockTranslationLoader } from "../../../test-config/mocks/MockTranslationLoader";
 import { WalletNewPage } from "../wallet-new/wallet-new";
 import { WalletImportPage } from "../wallet-import/wallet-import";
+import { ComponentsModule } from "../../components/components.module";
 
 describe("WalletPage", () => {
   let comp: WalletPage;
@@ -28,7 +29,8 @@ describe("WalletPage", () => {
         IonicModule.forRoot(WalletPage),
         TranslateModule.forRoot({
           loader: {provide: TranslateLoader, useClass: MockTranslationLoader},
-        })
+        }),
+        ComponentsModule
       ],
       providers: [
         { provide: NavController, useValue: navController },

@@ -1,27 +1,131 @@
 .light-theme {
-    ion-content {
-      background-color: #fff;
-    }
-   
-    .toolbar-background {
-      background-color: #fff;
-    }
-
-    .toolbar-background {
-        background-color: #488aff;
+    .select-text {
+        color: #000;
     }
 
     .toolbar-title {
         color: #fff;
-        text-align: center;
     }
 
-    .toolbar-title md {
-        color: #fff;
-        text-align: center;
+    .label {
+        color: #000 !important;
     }
-    
+
     h4 {
-        color: #488aff;
+        color: #000;
+    }
+
+    .card p {
+        color: #000;
+    }
+
+    .toolbar-background {
+        background-color: #064C70;
+    }
+
+    .scroll-content {
+        background-color: #fff;
+    }
+
+    .fixed-content {
+        background-color: #fff;
+    }
+
+    .item-input {
+        background-color: #fff;
+        color: #fff;
+    }
+
+    ion-app {
+        background-color: #363232 !important;
+    }
+
+    .card {
+        background-color: #fff;
+    }
+
+    .item:active {
+        background-color: #DADFE1;
+    }
+
+    .item-select {
+        color: #000;
+    }
+
+    .label {
+        color: #000;
+    }
+
+    .smilo-button {
+        background-color: #1B79A9;
+    }
+
+    .button {
+        background-color: #1B79A9;
+    }
+
+    .select-icon-inner {
+        color: #1B79A9 !important;
+    }
+
+    .radio-checked { 
+        border-color: #1B79A9 !important;
+    } 
+
+    .radio-md div div {
+        background-color: #1B79A9 !important;
+    }
+
+    .radio-ios div div {
+        border-color: #1B79A9 !important;
+    }
+
+    .item-radio-checked {
+        color: #1B79A9 !important;
+    }
+
+    .item-radio-checked div div ion-label {
+        color: #1B79A9 !important;
+    }
+
+    .toggle-icon {
+        background-color: #5ea1e5 !important;
+    }
+
+    .toggle-inner {
+        background-color: #1B79A9 !important;
+    }
+
+    ion-icon {
+        color: #1B79A9 !important;
+    }
+
+    .checkbox-checked {
+        background-color: #1B79A9 !important;
+        border-color: #1B79A9 !important;
+    }
+
+    .button {
+        background-color: #1B79A9;
+
+        &:hover {
+            opacity: 0.8;
+        }
+    }
+
+    .item-radio-checked.item {
+        color: #1B79A9;
+    }
+
+    ion-label {
+        color: #1B79A9;
+    }
+
+    .back-button-icon {
+        color: #fff !important;
+    }
+
+    .settings-nav-bar {
+        color: #fff !important;
     }
 }
