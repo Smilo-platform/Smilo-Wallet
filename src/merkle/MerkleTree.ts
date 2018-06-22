@@ -252,7 +252,7 @@ export class MerkleTree {
 
     private static sha256Base32(data: string): string {
         if(!this.md256)
-            this.md256 = new sjcl.hash.md256();
+            this.md256 = new sjcl.hash.sha256();
 
         this.md256.update(data);
 
@@ -265,7 +265,7 @@ export class MerkleTree {
 
     private static sha256(data: string): string {
         if(!this.md256)
-            this.md256 = new sjcl.hash.md256();
+            this.md256 = new sjcl.hash.sha256();
 
         this.md256.update(data);
 
