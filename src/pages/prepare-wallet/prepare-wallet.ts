@@ -20,6 +20,15 @@ export class PrepareWalletPage {
 
   progress: number = 0;
 
+  statusMessages: string[] = [
+    "prepare_wallet.status1",
+    "prepare_wallet.status2",
+    "prepare_wallet.status3",
+    "prepare_wallet.status4",
+    "prepare_wallet.status5",
+    "prepare_wallet.status6",
+    "prepare_wallet.status7"
+  ];
   activeStatusMessageIndex: number = 0;
 
   constructor(private navCtrl: NavController, 
@@ -46,11 +55,13 @@ export class PrepareWalletPage {
   }
 
   onProgressUpdate = (progress: number) => {
+    let progressPerUpdate = 1 / this.statusMessages.length;
+
     this.progress = Math.round(progress * 100);
 
-    this.activeStatusMessageIndex = Math.floor(progress / 0.25);
-    if(this.activeStatusMessageIndex > 3)
-      this.activeStatusMessageIndex = 3;
+    this.activeStatusMessageIndex = Math.floor(progress / progressPerUpdate);
+    if(this.activeStatusMessageIndex >= this.statusMessages.length)
+      this.activeStatusMessageIndex = this.statusMessages.length - 1;
   }
 
   onMerkleTreeGenerated = () => {

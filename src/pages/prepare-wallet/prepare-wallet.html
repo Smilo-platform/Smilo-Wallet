@@ -5,7 +5,7 @@
     </div>
   
     <div class="status">
-      {{ ('prepare_wallet.status' + (activeStatusMessageIndex + 1)) | translate }}
+      {{ statusMessages[activeStatusMessageIndex] | translate }}
     </div>
   
     <div class="progress">

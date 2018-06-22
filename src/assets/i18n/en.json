@@ -191,6 +191,9 @@
         "status1": "Generating awesomeness...",
         "status2": "Torturing your CPU...",
         "status3": "Making your wallet quantum proof...",
-        "status4": "Just wrapping up now..."
+        "status4": "Downloading more RAM...",
+        "status5": "Entering the ventilation shaft...",
+        "status6": "Computing Pi...",
+        "status7": "Just wrapping up now..."
     }
 }
