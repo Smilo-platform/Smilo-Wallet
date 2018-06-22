@@ -38,6 +38,7 @@
     "@ngx-translate/http-loader": "^2.0.1",
     "@types/jasmine": "^2.8.8",
     "angular2-template-loader": "^0.6.2",
+    "awesome-typescript-loader": "^3.5.0",
     "bip32": "^0.1.0",
     "bitcoinjs-lib": "^3.3.2",
     "chart.js": "^2.7.2",
@@ -74,7 +75,6 @@
     "sjcl": "^1.0.7",
     "sw-toolbox": "3.6.0",
     "threads": "^0.11.0",
-    "ts-loader": "^3.5.0",
     "ts-node": "^6.0.5",
     "zone.js": "0.8.26"
   },
