@@ -48,7 +48,10 @@ export class WalletService implements IWalletService {
             return this.storage.get(WALLET_STORAGE_KEY).then(
                 (wallets) => {
                     // If no wallets are found we fall back to an empty json array.
-                    return wallets || [];
+                    if(Array.isArray(wallets))
+                        return wallets;
+                    else
+                        return [];
                 }
             ).then(
                 (wallets) => {
