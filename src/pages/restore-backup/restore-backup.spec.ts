@@ -28,7 +28,7 @@ describe("RestoreBackupPage", () => {
   let passwordService: IPasswordService;
   let cryptoKeyService: ICryptoKeyService;
   let walletService: IWalletService;
-  let navController: NavController;
+  let navController: MockNavController;
   let navParams: NavParams;
   let navigationHelperService: INavigationHelperService;
   let bip39Service: IBIP39Service;
@@ -152,8 +152,7 @@ describe("RestoreBackupPage", () => {
       transactions: [],
       lastUpdateTime: null,
       currencies: [],
-      totalCurrentCurrencyValue: 0,
-      encryptedPrivateKey: ""
+      totalCurrentCurrencyValue: 0
     });
   });
 

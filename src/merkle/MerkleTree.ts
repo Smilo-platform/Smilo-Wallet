@@ -19,7 +19,7 @@ export class MerkleTree {
     layers: string[][];
     
     // Constructor hidden to force the user to construct this object using static functions.
-    private constructor(layers: string[][]) {
+    protected constructor(layers: string[][]) {
         this.layers = layers;
     }
 

@@ -26,9 +26,9 @@ describe("WalletImportPrivatekeyPage", () => {
   let fixture: ComponentFixture<WalletImportPrivatekeyPage>;
   let walletService: IWalletService;
   let cryptoKeyService: CryptoKeyService;
-  let modalController: ModalController;
+  let modalController: MockModalController;
   let navParams: NavParams;
-  let navController: NavController;
+  let navController: MockNavController;
   let navigationHelperService: NavigationHelperService;
   let keyStoreService: IKeyStoreService;
   let passwordService: IPasswordService;
@@ -191,8 +191,7 @@ describe("WalletImportPrivatekeyPage", () => {
         transactions: [],
         lastUpdateTime: null,
         currencies: [],
-        totalCurrentCurrencyValue: 0,
-        encryptedPrivateKey: null
+        totalCurrentCurrencyValue: 0
       }
     );
 

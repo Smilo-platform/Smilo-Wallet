@@ -16,7 +16,7 @@ import { HomePage } from "../home/home";
 describe("WalletNewDisclaimerPage", () => {
   let comp: WalletNewDisclaimerPage;
   let fixture: ComponentFixture<WalletNewDisclaimerPage>;
-  let navController: NavController;
+  let navController: MockNavController;
   let navParams: NavParams;
   let walletService: IWalletService;
   let cryptoKeyService: CryptoKeyService;
@@ -185,8 +185,7 @@ describe("WalletNewDisclaimerPage", () => {
         transactions: [],
         lastUpdateTime: null,
         currencies: [],
-        totalCurrentCurrencyValue: 0,
-        encryptedPrivateKey: null
+        totalCurrentCurrencyValue: 0
       }
     );
   });

@@ -22,14 +22,14 @@ import { MockToast } from "../../../test-config/mocks/MockToast";
 describe("WalletImportKeystorePage", () => {
   let comp: WalletImportKeystorePage;
   let fixture: ComponentFixture<WalletImportKeystorePage>;
-  let navController: NavController;
+  let navController: MockNavController;
   let navParams: NavParams;
   let walletService: IWalletService;
   let keyStoreService: IKeyStoreService;
   let cryptoKeyService: ICryptoKeyService;
   let navigationHelperService: NavigationHelperService;
   let translateService: TranslateService;
-  let toastController: ToastController;
+  let toastController: MockToastController;
 
   beforeEach(async(() => {
     navController = new MockNavController();
@@ -73,7 +73,6 @@ describe("WalletImportKeystorePage", () => {
     expect(comp.name).toBe("");
     expect(comp.keyStoreString).toBe("");
     expect(comp.password).toBe("");
-    expect(comp.successMessage).toBe("import_keystore.toast.success");
   });
 
   it("should detect when a property is a number correctly", () => {
@@ -192,8 +191,7 @@ describe("WalletImportKeystorePage", () => {
       transactions: [],
       lastUpdateTime: null,
       currencies: [],
-      totalCurrentCurrencyValue: 0,
-      encryptedPrivateKey: ""
+      totalCurrentCurrencyValue: 0
     });
 
     expect(keyStoreService.decryptKeyStore).toHaveBeenCalledWith(comp.keyStore, "pass123");
