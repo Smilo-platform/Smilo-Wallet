@@ -159,16 +159,13 @@ describe("RestoreBackupPage", () => {
   it("should import the wallet correctly", (done) => {
     let dummyWallet: ILocalWallet = <ILocalWallet>{};
 
-    spyOn(walletService, "store").and.returnValue(Promise.resolve());
-
     spyOn(comp, "prepareWallet").and.returnValue(dummyWallet);
 
-    spyOn(comp, "goBackToOriginPage");
+    spyOn(comp, "goToPrepareWalletPage").and.returnValue(Promise.resolve());
 
     comp.import().then(
       () => {
-        expect(walletService.store).toHaveBeenCalledWith(dummyWallet);
-        expect(comp.goBackToOriginPage).toHaveBeenCalled();
+        expect(comp.goToPrepareWalletPage).toHaveBeenCalled();
 
         done();
       },
@@ -211,38 +208,5 @@ describe("RestoreBackupPage", () => {
     comp.passphraseStatus.isValid = true;
 
     expect(comp.dataIsValid()).toBeTruthy();
-  });
-
-  it("should navigate back correctly when the origin page is 'landing'", () => {
-    // Mock navParams.get
-    spyOn(navParams, "get").and.callFake((key) => "landing");
-
-    spyOn(navController, "setRoot");
-    
-    comp.goBackToOriginPage();
-
-    expect(navController.setRoot).toHaveBeenCalledWith(HomePage);
-  });
-
-  it("should navigate back correctly when the origin page is 'home'", () => {
-    // Mock navParams.get
-    spyOn(navParams, "get").and.callFake((key) => "home");
-
-    spyOn(navigationHelperService, "navigateBack");
-    
-    comp.goBackToOriginPage();
-
-    expect(navigationHelperService.navigateBack).toHaveBeenCalledWith(navController, 3);
-  });
-
-  it("should navigate back correctly when the origin page is 'wallet_overview'", () => {
-    // Mock navParams.get
-    spyOn(navParams, "get").and.callFake((key) => "wallet_overview");
-
-    spyOn(navigationHelperService, "navigateBack");
-    
-    comp.goBackToOriginPage();
-
-    expect(navigationHelperService.navigateBack).toHaveBeenCalledWith(navController, 3);
   });
 });

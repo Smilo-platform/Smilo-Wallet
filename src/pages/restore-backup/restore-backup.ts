@@ -9,6 +9,7 @@ import { NavigationOrigin, NAVIGATION_ORIGIN_KEY } from "../wallet/wallet";
 import { HomePage } from "../home/home";
 import { NavigationHelperService } from "../../services/navigation-helper-service/navigation-helper-service";
 import { BIP39Service, IPassphraseValidationResult } from "../../services/bip39-service/bip39-service";
+import { PrepareWalletPage } from "../prepare-wallet/prepare-wallet";
 
 @IonicPage()
 @Component({
@@ -60,28 +61,17 @@ export class RestoreBackupPage {
   import(): Promise<void> {
     let wallet = this.prepareWallet();
 
-    return this.walletService.store(wallet).then(
-      () => {
-        this.goBackToOriginPage();
-      },
-      (error) => {
-        // TODO: Handle errors here
-      }
-    );
+    return this.goToPrepareWalletPage(wallet, this.password);
   }
 
-  goBackToOriginPage() {
-    switch(<NavigationOrigin>this.navParams.get(NAVIGATION_ORIGIN_KEY) || "landing") {
-      case("landing"):
-        this.navCtrl.setRoot(HomePage);
-        break;
-      case("home"):
-        this.navigationHelperService.navigateBack(this.navCtrl, 3);
-        break;
-      case("wallet_overview"):
-        this.navigationHelperService.navigateBack(this.navCtrl, 3);
-        break;
-    }
+  goToPrepareWalletPage(wallet: ILocalWallet, password: string): Promise<void> {
+    let params = {
+      wallet: wallet,
+      password: password
+    };
+    params[NAVIGATION_ORIGIN_KEY] = this.navParams.get(NAVIGATION_ORIGIN_KEY);
+
+    return this.navCtrl.push(PrepareWalletPage, params);
   }
 
   prepareWallet(): ILocalWallet {
