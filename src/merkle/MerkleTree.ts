@@ -9,11 +9,13 @@ import { IWallet } from "../models/IWallet";
 import { IKeyStore } from "../models/IKeyStore";
 
 export interface IMerkleTreeConfig {
+    version: number;
     layerCount: number;
 }
 
 export class MerkleTree {
     private static readonly KEYS_PER_THREAD = 100;
+    private static readonly VERSION = 1;
     private static md256;
 
     layers: string[][];
@@ -41,10 +43,13 @@ export class MerkleTree {
     serialize(storagePrefix: string, storage: Storage, keyStoreService: KeyStoreService, password: string): Promise<void> {
         let promises: Promise<void>[] = [];
 
+        let config: IMerkleTreeConfig = {
+            layerCount: this.layers.length,
+            version: MerkleTree.VERSION
+        };
+
         promises.push(
-            storage.set(`${ storagePrefix }-config`, {
-                layerCount: this.layers.length
-            })
+            storage.set(`${ storagePrefix }-config`, config)
         );
 
         for(let i = 0; i < this.layers.length; i++) {
