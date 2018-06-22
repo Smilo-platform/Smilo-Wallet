@@ -9,7 +9,7 @@ import { SettingsProvider } from './../providers/settings/settings';
 import { SettingsService } from "../services/settings-service/settings-service";
 import { HockeyApp } from "ionic-hockeyapp";
 
-const HOCKEY_APP_ANDROID_ID = "7e9d4c16c2a44e25b73db158e064019b";
+const HOCKEY_APP_ANDROID_ID = "551bfde014ca4620996d78a376671a01";
 const HOCKEY_APP_IOS_ID = "";
 const HOCKEY_APP_AUTO_SEND_AUTO_UPDATES = true;
 const HOCKEY_APP_IGNORE_ERROR_HEADER = true;
