@@ -130,9 +130,6 @@
         "error_password": "The entered password is invalid",
         "buttons": {
             "import": "Import"
-        },
-        "toast": {
-            "success": "Wallet imported!"
         }
     },
     "password_explanation": {
@@ -194,6 +191,9 @@
         "status4": "Downloading more RAM...",
         "status5": "Entering the ventilation shaft...",
         "status6": "Computing Pi...",
-        "status7": "Just wrapping up now..."
+        "status7": "Just wrapping up now...",
+        "toast": {
+            "success": "Wallet created!"
+        }
     }
 }

@@ -9,6 +9,7 @@ import { NavigationHelperService } from "../../services/navigation-helper-servic
 import { NavigationOrigin, NAVIGATION_ORIGIN_KEY } from "../wallet/wallet";
 import { HomePage } from "../home/home";
 import { TranslateService } from "@ngx-translate/core";
+import { PrepareWalletPage } from "../prepare-wallet/prepare-wallet";
 
 @IonicPage()
 @Component({
@@ -35,24 +36,13 @@ export class WalletImportKeystorePage {
    */
   passwordIsInvalid: boolean = false;
 
-  /**
-   * The translated message to shown when the importing succeeded.
-   */
-  successMessage: string;
-
   constructor(private navCtrl: NavController,
               private navParams: NavParams,
               private walletService: WalletService,
               private keyStoreService: KeyStoreService,
               private cryptoKeyService: CryptoKeyService,
-              private navigationHelperService: NavigationHelperService,
-              private toastController: ToastController,
-              private translateService: TranslateService) {
-    this.translateService.get("import_keystore.toast.success").subscribe(
-      (message) => {
-        this.successMessage = message;
-      }
-    );
+              private navigationHelperService: NavigationHelperService) {
+
   }
 
   /**
@@ -68,24 +58,21 @@ export class WalletImportKeystorePage {
         return Promise.resolve();
       }
 
-      return this.walletService.store(wallet).then(
-        () => {
-          this.toastController.create({
-            message: this.successMessage,
-            duration: 1500,
-            position: "top"
-          }).present();
-
-          this.goBackToOriginPage();
-        },
-        (error) => {
-          // Could not store wallet, what do?
-        }
-      );
+      return this.goToPrepareWalletPage(wallet, this.password);
     }
     else {
       return Promise.resolve();
     }
+  }
+
+  goToPrepareWalletPage(wallet: ILocalWallet, password: string) {
+    let params = {
+      wallet: wallet,
+      password: password
+    };
+    params[NAVIGATION_ORIGIN_KEY] = this.navParams.get(NAVIGATION_ORIGIN_KEY);
+
+    return this.navCtrl.push(PrepareWalletPage, params);
   }
 
   /**

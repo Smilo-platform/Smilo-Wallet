@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { IonicPage, NavController, NavParams } from "ionic-angular";
+import { IonicPage, NavController, NavParams, ToastController } from "ionic-angular";
 import { ILocalWallet } from "../../models/ILocalWallet";
 import { MerkleTree } from "../../merkle/MerkleTree";
 import { MerkleTreeService } from "../../services/merkle-tree-service/merkle-tree-service";
@@ -31,13 +31,26 @@ export class PrepareWalletPage {
   ];
   activeStatusMessageIndex: number = 0;
 
+  /**
+   * The translated message to shown when the importing succeeded.
+   */
+  successMessage: string;
+
   constructor(private navCtrl: NavController, 
               private navParams: NavParams,
               private merkleTreeService: MerkleTreeService,
               private navigationHelperService: NavigationHelperService,
-              private walletService: WalletService) {
+              private walletService: WalletService,
+              private translateService: TranslateService,
+              private toastController: ToastController) {
     this.wallet = navParams.get("wallet");
     this.password = navParams.get("password");
+
+    this.translateService.get("prepare_wallet.toast.success").subscribe(
+      (message) => {
+        this.successMessage = message;
+      }
+    );
   }
 
   ionViewDidLoad() {
@@ -67,6 +80,12 @@ export class PrepareWalletPage {
   onMerkleTreeGenerated = () => {
     return this.walletService.store(this.wallet).then(
       () => {
+        this.toastController.create({
+          message: this.successMessage,
+          duration: 1500,
+          position: "top"
+        }).present();
+
         return this.goBackToOriginPage();
       },
       (error) => {

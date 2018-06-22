@@ -5,6 +5,8 @@ import { WalletService } from "../../services/wallet-service/wallet-service";
 import { ILocalWallet } from "../../models/ILocalWallet";
 import { KeyStoreService } from "../../services/key-store-service/key-store-service";
 import { HomePage } from "../home/home";
+import { NAVIGATION_ORIGIN_KEY } from "../wallet/wallet";
+import { PrepareWalletPage } from "../prepare-wallet/prepare-wallet";
 
 @IonicPage()
 @Component({
@@ -37,20 +39,21 @@ export class WalletNewDisclaimerPage {
       // Do final steps to create the wallet, then go to wallet overview page.
       let wallet = this.prepareWallet();
 
-      return this.walletService.store(wallet).then(
-        () => {
-          // Wallet created! Now navigate to the wallet overview page.
-          this.navCtrl.setRoot(HomePage);
-        },
-        (error) => {
-          // Something went wrong when creating the wallet...
-          // We need to do some proper error handling here...
-        }
-      );
+      return this.goToPrepareWalletPage(wallet, this.password);
     }
     else {
       return Promise.resolve();
     }
+  }
+
+  goToPrepareWalletPage(wallet: ILocalWallet, password: string) {
+    let params = {
+      wallet: wallet,
+      password: password
+    };
+    params[NAVIGATION_ORIGIN_KEY] = this.navParams.get(NAVIGATION_ORIGIN_KEY);
+
+    return this.navCtrl.push(PrepareWalletPage, params);
   }
 
   /**
