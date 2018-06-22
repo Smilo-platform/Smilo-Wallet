@@ -34,16 +34,19 @@ export class WalletImportPrivatekeyPage {
   }
 
   import(): Promise<void> {
+    console.log("Import!!");
     if(this.dataIsValid()) {
       let wallet = this.prepareWallet();
 
       return this.walletService.store(wallet).then(
         () => {
           // Go back to home page. This is not perfect.
+          console.log("Store succeed!");
           return this.goBackToOriginPage();
         },
         (error) => {
           // Storing wallet failed, how will we handle this?
+          console.log("Store failed: " + error);
         }
       );
     }
@@ -85,6 +88,7 @@ export class WalletImportPrivatekeyPage {
   }
 
   onPasswordsChanged() {
+    console.log("Password change");
     this.passwordStatus = this.passwordService.validate(this.password, this.confirmedPassword);
   }
   

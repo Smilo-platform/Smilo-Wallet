@@ -59,7 +59,7 @@ export function HttpLoaderFactory(http: HttpClient) {
         deps: [HttpClient]
       }
     }),
-    IonicStorageModule.forRoot(),
+    IonicStorageModule.forRoot({ name: '__mydb', driverOrder: ['sqlite', 'websql', 'indexeddb'] }),
     HomePageModule,
     AboutPageModule,
     WalletOverviewPageModule,
