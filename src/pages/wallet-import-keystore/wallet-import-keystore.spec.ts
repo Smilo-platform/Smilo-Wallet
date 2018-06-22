@@ -9,15 +9,11 @@ import { WalletService, IWalletService } from "../../services/wallet-service/wal
 import { MockWalletService } from "../../../test-config/mocks/MockWalletService";
 import { IKeyStoreService, KeyStoreService } from "../../services/key-store-service/key-store-service";
 import { MockKeyStoreService } from "../../../test-config/mocks/MockKeyStoreService";
-import { MockCryptoKeyService } from "../../../test-config/mocks/MockCryptoKeyService";
-import { ICryptoKeyService, CryptoKeyService } from "../../services/crypto-key-service/crypto-key-service";
 import { NavigationHelperService } from "../../services/navigation-helper-service/navigation-helper-service";
 import { MockTranslateService } from "../../../test-config/mocks/MockTranslateService";
 import { MockToastController } from "../../../test-config/mocks/MockToastController";
 import { IKeyStore } from "../../models/IKeyStore";
-import { HomePage } from "../home/home";
 import { ILocalWallet } from "../../models/ILocalWallet";
-import { MockToast } from "../../../test-config/mocks/MockToast";
 import { NAVIGATION_ORIGIN_KEY } from "../wallet/wallet";
 import { PrepareWalletPage } from "../prepare-wallet/prepare-wallet";
 
@@ -28,7 +24,6 @@ describe("WalletImportKeystorePage", () => {
   let navParams: NavParams;
   let walletService: IWalletService;
   let keyStoreService: IKeyStoreService;
-  let cryptoKeyService: ICryptoKeyService;
   let navigationHelperService: NavigationHelperService;
   let translateService: TranslateService;
   let toastController: MockToastController;
@@ -38,7 +33,6 @@ describe("WalletImportKeystorePage", () => {
     navParams = new MockNavParams();
     walletService = new MockWalletService();
     keyStoreService = new MockKeyStoreService();
-    cryptoKeyService = new MockCryptoKeyService();
     navigationHelperService = new NavigationHelperService();
     translateService = new MockTranslateService();
     toastController = new MockToastController();
@@ -56,10 +50,9 @@ describe("WalletImportKeystorePage", () => {
         { provide: NavController, useValue: navController },
         { provide: NavParams, useValue: navParams },
         { provide: KeyStoreService, useValue: keyStoreService },
-        { provide: CryptoKeyService, useValue: cryptoKeyService },
         { provide: NavigationHelperService, useValue: navigationHelperService },
         { provide: ToastController, useValue: toastController },
-        { provide: TranslateService, useValue: translateService },
+        { provide: TranslateService, useValue: translateService }
       ]
     }).compileComponents();
   }));
@@ -191,7 +184,6 @@ describe("WalletImportKeystorePage", () => {
   it("should prepare the wallet correctly", () => {
     spyOn(keyStoreService, "decryptKeyStore").and.returnValue("SOME_PRIVATE_KEY");
     spyOn(walletService, "generateId").and.returnValue("WALLET_ID");
-    spyOn(cryptoKeyService, "generatePublicKey").and.returnValue("SOME_PUBLIC_KEY");
 
     comp.name = "name";
     comp.keyStore = <any>{};
@@ -203,7 +195,7 @@ describe("WalletImportKeystorePage", () => {
       id: "WALLET_ID",
       type: "local",
       name: "name",
-      publicKey: "SOME_PUBLIC_KEY",
+      publicKey: null,
       keyStore: comp.keyStore,
       transactions: [],
       lastUpdateTime: null,
@@ -211,7 +203,6 @@ describe("WalletImportKeystorePage", () => {
     });
 
     expect(keyStoreService.decryptKeyStore).toHaveBeenCalledWith(comp.keyStore, "pass123");
-    expect(cryptoKeyService.generatePublicKey).toHaveBeenCalledWith("SOME_PRIVATE_KEY");
   });
 
   it("should perform the import correctly when all data is entered correctly", (done) => {

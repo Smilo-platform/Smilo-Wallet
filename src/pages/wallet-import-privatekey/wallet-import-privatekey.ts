@@ -2,9 +2,7 @@ import { Component } from "@angular/core";
 import { IonicPage, NavController, NavParams, ModalController } from "ionic-angular";
 import { WalletService } from "../../services/wallet-service/wallet-service";
 import { ILocalWallet } from "../../models/ILocalWallet";
-import { CryptoKeyService } from "../../services/crypto-key-service/crypto-key-service";
-import { HomePage } from "../home/home";
-import { NavigationOrigin, NAVIGATION_ORIGIN_KEY } from "../wallet/wallet";
+import { NAVIGATION_ORIGIN_KEY } from "../wallet/wallet";
 import { NavigationHelperService } from "../../services/navigation-helper-service/navigation-helper-service";
 import { PasswordExplanationPage } from "../password-explanation/password-explanation";
 import { KeyStoreService } from "../../services/key-store-service/key-store-service";
@@ -27,8 +25,6 @@ export class WalletImportPrivatekeyPage {
   constructor(private navCtrl: NavController,
               private navParams: NavParams,
               private walletService: WalletService,
-              private cryptoKeyService: CryptoKeyService,
-              private navigationHelperService: NavigationHelperService,
               private modalController: ModalController,
               private keyStoreService: KeyStoreService,
               private passwordService: PasswordService) {
@@ -63,7 +59,7 @@ export class WalletImportPrivatekeyPage {
       id: this.walletService.generateId(),
       name: this.name,
       type: "local",
-      publicKey: this.cryptoKeyService.generatePublicKey(this.privateKey),
+      publicKey: null,
       keyStore: this.keyStoreService.createKeyStore(this.privateKey, this.password),
       transactions: [],
       lastUpdateTime: null,

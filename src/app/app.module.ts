@@ -19,7 +19,6 @@ import { WalletImportKeystorePageModule } from "../pages/wallet-import-keystore/
 import { WalletImportLedgerPageModule } from "../pages/wallet-import-ledger/wallet-import-ledger.module";
 import { WalletImportPrivatekeyPageModule } from "../pages/wallet-import-privatekey/wallet-import-privatekey.module";
 import { RestoreBackupPageModule } from "../pages/restore-backup/restore-backup.module";
-import { CryptoKeyService } from "../services/crypto-key-service/crypto-key-service";
 import { LandingPageModule } from "../pages/landing/landing.module";
 import { WalletService } from "../services/wallet-service/wallet-service";
 import { IonicStorageModule } from "@ionic/storage";
@@ -93,7 +92,6 @@ export function HttpLoaderFactory(http: HttpClient) {
   providers: [
     StatusBar,
     SplashScreen,
-    CryptoKeyService,
     SettingsProvider,
     WalletService,
     NavigationHelperService,

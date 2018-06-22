@@ -6,12 +6,10 @@ import { MockNavParams } from "../../../test-config/mocks/MockNavParams";
 import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
 import { MockTranslationLoader } from "../../../test-config/mocks/MockTranslationLoader";
 import { IWalletService, WalletService } from "../../services/wallet-service/wallet-service";
-import { CryptoKeyService } from "../../services/crypto-key-service/crypto-key-service";
 import { MockWalletService } from "../../../test-config/mocks/MockWalletService";
 import { NavigationHelperService } from "../../services/navigation-helper-service/navigation-helper-service";
 import { PasswordExplanationPage } from "../password-explanation/password-explanation";
 import { ILocalWallet } from "../../models/ILocalWallet";
-import { MockCryptoKeyService } from "../../../test-config/mocks/MockCryptoKeyService";
 import { NavigationOrigin, NAVIGATION_ORIGIN_KEY } from "../wallet/wallet";
 import { HomePage } from "../home/home";
 import { MockModalController } from "../../../test-config/mocks/MockModalController";
@@ -26,7 +24,6 @@ describe("WalletImportPrivatekeyPage", () => {
   let comp: WalletImportPrivatekeyPage;
   let fixture: ComponentFixture<WalletImportPrivatekeyPage>;
   let walletService: IWalletService;
-  let cryptoKeyService: MockCryptoKeyService;
   let modalController: MockModalController;
   let navParams: NavParams;
   let navController: MockNavController;
@@ -36,7 +33,6 @@ describe("WalletImportPrivatekeyPage", () => {
 
   beforeEach(async(() => {
     walletService = new MockWalletService();
-    cryptoKeyService = new MockCryptoKeyService();
     navParams = new MockNavParams();
     navController = new MockNavController();
     navigationHelperService = new NavigationHelperService();
@@ -56,7 +52,6 @@ describe("WalletImportPrivatekeyPage", () => {
         { provide: KeyStoreService, useValue: keyStoreService },
         { provide: ModalController, useValue: modalController },
         { provide: NavigationHelperService, useValue: navigationHelperService },
-        { provide: CryptoKeyService, useValue: cryptoKeyService },
         { provide: WalletService, useValue: walletService },
         { provide: NavController, useValue: navController },
         { provide: NavParams, useValue: navParams },
@@ -182,7 +177,6 @@ describe("WalletImportPrivatekeyPage", () => {
       controlHash: "controlHash"
     };
     spyOn(keyStoreService, "createKeyStore").and.returnValue(dummyKeyStore);
-    spyOn(cryptoKeyService, "generatePublicKey").and.returnValue("SOME_PUBLIC_KEY");
     spyOn(walletService, "generateId").and.returnValue("WALLET_ID");
 
     comp.name = "Wallet #1";
@@ -202,15 +196,13 @@ describe("WalletImportPrivatekeyPage", () => {
         id: "WALLET_ID",
         name: "Wallet #1",
         type: "local",
-        publicKey: "SOME_PUBLIC_KEY",
+        publicKey: null,
         keyStore: dummyKeyStore,
         transactions: [],
         lastUpdateTime: null,
         balances: []
       }
     );
-
-    expect(cryptoKeyService.generatePublicKey).toHaveBeenCalledWith("SOME_PRIVATE_KEY");
   });
 
   it("should handle the import correctly", (done) => {

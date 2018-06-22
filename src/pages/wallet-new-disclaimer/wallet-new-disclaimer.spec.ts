@@ -6,15 +6,17 @@ import { MockNavParams } from "../../../test-config/mocks/MockNavParams";
 import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
 import { MockTranslationLoader } from "../../../test-config/mocks/MockTranslationLoader";
 import { WalletService, IWalletService } from "../../services/wallet-service/wallet-service";
-import { CryptoKeyService } from "../../services/crypto-key-service/crypto-key-service";
 import { MockWalletService } from "../../../test-config/mocks/MockWalletService";
 import { KeyStoreService, IKeyStoreService } from "../../services/key-store-service/key-store-service";
 import { MockKeyStoreService } from "../../../test-config/mocks/MockKeyStoreService";
 import { IKeyStore } from "../../models/IKeyStore";
-import { HomePage } from "../home/home";
 import { PrepareWalletPage } from "../prepare-wallet/prepare-wallet";
 import { NAVIGATION_ORIGIN_KEY } from "../wallet/wallet";
 import { ILocalWallet } from "../../models/ILocalWallet";
+import { IBIP32Service, BIP32Service } from "../../services/bip32-service/bip32-service";
+import { IBIP39Service, BIP39Service } from "../../services/bip39-service/bip39-service";
+import { MockBIP32Service } from "../../../test-config/mocks/MockBIP32Service";
+import { MockBIP39Service } from "../../../test-config/mocks/MockBIP39Service";
 
 describe("WalletNewDisclaimerPage", () => {
   let comp: WalletNewDisclaimerPage;
@@ -22,15 +24,17 @@ describe("WalletNewDisclaimerPage", () => {
   let navController: MockNavController;
   let navParams: NavParams;
   let walletService: IWalletService;
-  let cryptoKeyService: CryptoKeyService;
   let keyStoreService: IKeyStoreService;
+  let bip32Service: IBIP32Service;
+  let bip39Service: IBIP39Service;
 
   beforeEach(async(() => {
     navController = new MockNavController();
     navParams = new MockNavParams();
     walletService = new MockWalletService();
-    cryptoKeyService = new CryptoKeyService();
     keyStoreService = new MockKeyStoreService();
+    bip32Service = new MockBIP32Service();
+    bip39Service = new MockBIP39Service();
 
     TestBed.configureTestingModule({
       declarations: [WalletNewDisclaimerPage],
@@ -43,9 +47,10 @@ describe("WalletNewDisclaimerPage", () => {
       providers: [
         { provide: KeyStoreService, useValue: keyStoreService },
         { provide: WalletService, useValue: walletService },
-        { provide: CryptoKeyService, useValue: cryptoKeyService },
         { provide: NavController, useValue: navController },
-        { provide: NavParams, useValue: navParams }
+        { provide: NavParams, useValue: navParams },
+        { provide: BIP32Service, useValue: bip32Service },
+        { provide: BIP39Service, useValue: bip39Service }
       ]
     }).compileComponents();
   }));
@@ -74,15 +79,6 @@ describe("WalletNewDisclaimerPage", () => {
         realGetFunction.call(navParams);
       }
     });
-  });
-
-  beforeEach(() => {
-    spyOn(cryptoKeyService, "generateKeyPair").and.returnValue(
-      {
-        privateKey: "PRIVATE_KEY",
-        publicKey: "PUBLIC_KEY"
-      }
-    );
   });
 
   beforeEach(() => {
@@ -156,6 +152,9 @@ describe("WalletNewDisclaimerPage", () => {
   });
 
   it("should prepare the wallet correctly", () => {
+    spyOn(bip39Service, "toSeed").and.returnValue("SEED");
+    spyOn(bip32Service, "getPrivateKey").and.returnValue("PRIVATE_KEY");
+
     let dummyKeyStore: IKeyStore = {
       cipher: "AES-CTR",
       cipherParams: {
@@ -186,7 +185,7 @@ describe("WalletNewDisclaimerPage", () => {
         id: "SOME_ID",
         type: "local",
         name: "name",
-        publicKey: "PUBLIC_KEY",
+        publicKey: null,
         keyStore: dummyKeyStore,
         transactions: [],
         lastUpdateTime: null,

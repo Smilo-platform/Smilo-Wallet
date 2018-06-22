@@ -4,11 +4,8 @@ import { IKeyStore } from "../../models/IKeyStore";
 import { WalletService } from "../../services/wallet-service/wallet-service";
 import { ILocalWallet } from "../../models/ILocalWallet";
 import { KeyStoreService } from "../../services/key-store-service/key-store-service";
-import { CryptoKeyService } from "../../services/crypto-key-service/crypto-key-service";
 import { NavigationHelperService } from "../../services/navigation-helper-service/navigation-helper-service";
 import { NavigationOrigin, NAVIGATION_ORIGIN_KEY } from "../wallet/wallet";
-import { HomePage } from "../home/home";
-import { TranslateService } from "@ngx-translate/core";
 import { PrepareWalletPage } from "../prepare-wallet/prepare-wallet";
 
 @IonicPage()
@@ -39,9 +36,7 @@ export class WalletImportKeystorePage {
   constructor(private navCtrl: NavController,
               private navParams: NavParams,
               private walletService: WalletService,
-              private keyStoreService: KeyStoreService,
-              private cryptoKeyService: CryptoKeyService,
-              private navigationHelperService: NavigationHelperService) {
+              private keyStoreService: KeyStoreService) {
 
   }
 
@@ -88,7 +83,7 @@ export class WalletImportKeystorePage {
       id: this.walletService.generateId(),
       type: "local",
       name: this.name,
-      publicKey: this.cryptoKeyService.generatePublicKey(privateKey),
+      publicKey: null,
       keyStore: this.keyStore,
       transactions: [],
       lastUpdateTime: null,

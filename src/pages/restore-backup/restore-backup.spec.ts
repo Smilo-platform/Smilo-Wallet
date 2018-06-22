@@ -7,8 +7,6 @@ import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
 import { MockTranslationLoader } from "../../../test-config/mocks/MockTranslationLoader";
 import { IKeyStoreService, KeyStoreService } from "../../services/key-store-service/key-store-service";
 import { IPasswordService, PasswordService } from "../../services/password-service/password-service";
-import { ICryptoKeyService, CryptoKeyService } from "../../services/crypto-key-service/crypto-key-service";
-import { MockCryptoKeyService } from "../../../test-config/mocks/MockCryptoKeyService";
 import { MockKeyStoreService } from "../../../test-config/mocks/MockKeyStoreService";
 import { MockPasswordService } from "../../../test-config/mocks/MockPasswordService";
 import { MockWalletService } from "../../../test-config/mocks/MockWalletService";
@@ -20,28 +18,30 @@ import { HomePage } from "../home/home";
 import { ILocalWallet } from "../../models/ILocalWallet";
 import { IBIP39Service, BIP39Service, IPassphraseValidationResult } from "../../services/bip39-service/bip39-service";
 import { MockBIP39Service } from "../../../test-config/mocks/MockBIP39Service";
+import { IBIP32Service, BIP32Service } from "../../services/bip32-service/bip32-service";
+import { MockBIP32Service } from "../../../test-config/mocks/MockBIP32Service";
 
 describe("RestoreBackupPage", () => {
   let comp: RestoreBackupPage;
   let fixture: ComponentFixture<RestoreBackupPage>;
   let keyStoreService: IKeyStoreService;
   let passwordService: IPasswordService;
-  let cryptoKeyService: ICryptoKeyService;
   let walletService: IWalletService;
   let navController: MockNavController;
   let navParams: NavParams;
   let navigationHelperService: INavigationHelperService;
   let bip39Service: IBIP39Service;
+  let bip32Service: IBIP32Service;
 
   beforeEach(async(() => {
     keyStoreService = new MockKeyStoreService();
     passwordService = new MockPasswordService();
-    cryptoKeyService = new MockCryptoKeyService();
     walletService = new MockWalletService();
     navController = new MockNavController();
     navigationHelperService = new NavigationHelperService();
     navParams = new MockNavParams();
     bip39Service = new MockBIP39Service();
+    bip32Service = new MockBIP32Service();
 
     TestBed.configureTestingModule({
       declarations: [RestoreBackupPage],
@@ -56,10 +56,10 @@ describe("RestoreBackupPage", () => {
         { provide: NavParams, useValue: navParams },
         { provide: PasswordService, useValue: passwordService },
         { provide: WalletService, useValue: walletService },
-        { provide: CryptoKeyService, useValue: cryptoKeyService },
         { provide: KeyStoreService, useValue: keyStoreService },
         { provide: NavigationHelperService, useValue: navigationHelperService },
-        { provide: BIP39Service, useValue: bip39Service}
+        { provide: BIP39Service, useValue: bip39Service},
+        { provide: BIP32Service, useValue: bip32Service}
       ]
     }).compileComponents();
   }));
@@ -118,7 +118,8 @@ describe("RestoreBackupPage", () => {
       privateKey: "PRIVATE_KEY", 
       publicKey: "PUBLIC_KEY"
     };
-    spyOn(cryptoKeyService, "generateKeyPair").and.returnValue(keyPair);
+    spyOn(bip32Service, "getPrivateKey").and.returnValue("PRIVATE_KEY");
+    spyOn(bip39Service, "toSeed").and.returnValue("SEED");
 
     let keyStore: IKeyStore = {
       cipher: "AES-CTR",
@@ -147,7 +148,7 @@ describe("RestoreBackupPage", () => {
       id: "WALLET_ID",
       name: "name",
       type: "local",
-      publicKey: "PUBLIC_KEY",
+      publicKey: null,
       keyStore: keyStore,
       transactions: [],
       lastUpdateTime: null,
