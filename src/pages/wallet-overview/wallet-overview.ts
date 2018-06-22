@@ -71,7 +71,22 @@ export class WalletOverviewPage {
    */
   initialize(): Promise<void> {
     return Promise.all([this.getAllWallets(), 
-                        this.getAvailableExchanges()]).then<void>();
+                        this.getAvailableExchanges()]).then<void>().catch(data => {
+                          console.log("Initialize: ERROR: " + data);
+                          const confirm = this.alertCtrl.create({
+                            title: 'Error',
+                            message: 'Could not retrieve data',
+                            buttons: [
+                              {
+                                text: 'Click here to retry',
+                                handler: () => {
+                                  this.initialize();
+                                }
+                              }
+                            ]
+                          });
+                          confirm.present();
+                        });
   }
 
   /**
@@ -176,6 +191,21 @@ export class WalletOverviewPage {
         this.noTransactionHistoryVisibility = "shown";
         this.transactionHistoryVisibility = "hidden";
       }
+    }).catch(error => {
+      console.log("getTransactionHistory. Error: " + error);
+      const confirm = this.alertCtrl.create({
+        title: 'Error',
+        message: 'Could not retrieve data',
+        buttons: [
+          {
+            text: 'Click here to retry',
+            handler: () => {
+              this.getTransactionHistory(publicKey);
+            }
+          }
+        ]
+      });
+      confirm.present();
     });
   }
 
@@ -186,6 +216,21 @@ export class WalletOverviewPage {
     return this.walletService.getAll().then(data => {
       this.wallets = data;
       this.currentWallet = this.wallets[0];
+    }).catch(error => {
+      console.log("getAllWallets. Error: " + error);
+      const confirm = this.alertCtrl.create({
+        title: 'Error',
+        message: 'Could not retrieve data',
+        buttons: [
+          {
+            text: 'Click here to retry',
+            handler: () => {
+              this.getAllWallets();
+            }
+          }
+        ]
+      });
+      confirm.present();
     });
   }
 
@@ -202,6 +247,21 @@ export class WalletOverviewPage {
         this.pickedCurrency = this.availableExchanges[0].availableCurrencies[0];
         this.currentExchangeCurrencies = this.availableExchanges[0].availableCurrencies;
       }
+    }).catch(error => {
+      console.log("getAvailableExchanges. Error: " + error);
+      const confirm = this.alertCtrl.create({
+        title: 'Error',
+        message: 'Could not retrieve data',
+        buttons: [
+          {
+            text: 'Click here to retry',
+            handler: () => {
+              this.getAvailableExchanges();
+            }
+          }
+        ]
+      });
+      confirm.present();
     });
   }
   
@@ -231,6 +291,21 @@ export class WalletOverviewPage {
         this.currentWallet.balances = balances;
         this.setCalculatedCurrencyValue();
       }
+    }).catch(data => {
+      console.log("getWalletBalance - Error: " + data);
+      const confirm = this.alertCtrl.create({
+        title: 'Error',
+        message: 'Could not retrieve data',
+        buttons: [
+          {
+            text: 'Click here to retry',
+            handler: () => {
+              this.getWalletBalance(publicKey);
+            }
+          }
+        ]
+      });
+      confirm.present();
     });
   }
 
@@ -263,6 +338,9 @@ export class WalletOverviewPage {
    */
   setCalculatedCurrencyValue(): Promise<void> {
     if (this.pickedCurrency === undefined || this.currentWallet === undefined) {
+      if (this.loading !== undefined) {
+        this.loading.dismiss();
+      }
       return Promise.resolve();
     }
     return this.walletService.getPrices(this.pickedCurrency, this.pickedExchange).then(data => {
@@ -346,7 +424,24 @@ export class WalletOverviewPage {
       if (this.doughnutChart !== undefined) {
         this.legendList = this.doughnutChart.generateLegend();
       }
-      this.loading.dismiss();
+      if (this.loading !== undefined) {
+        this.loading.dismiss();
+      }
+    }).catch(error => {
+      console.log("setCalculatedCurrencyValue: Error: " + error);
+      const confirm = this.alertCtrl.create({
+        title: 'Error',
+        message: 'Could not retrieve data',
+        buttons: [
+          {
+            text: 'Click here to retry',
+            handler: () => {
+              this.setCalculatedCurrencyValue();
+            }
+          }
+        ]
+      });
+      confirm.present();
     });
   }
 
@@ -362,7 +457,7 @@ export class WalletOverviewPage {
    */
   onWalletChanged() {
     this.getWalletBalance(this.currentWallet.publicKey);
-    this.getTransactionHistory(this.currentWallet.publicKey);
+    this.getTransactionHistory(this.currentWallet.publicKey); 
   }
   
   /**

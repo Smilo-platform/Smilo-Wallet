@@ -13,7 +13,7 @@ import { SettingsGeneralPage } from '../../pages/settings-general/settings-gener
   templateUrl: 'nav-header.html'
 })
 export class NavHeaderComponent {
-  @Input() title: string;
+  @Input() titleTranslationKey: string;
 
   constructor(public navCtrl: NavController) {
 

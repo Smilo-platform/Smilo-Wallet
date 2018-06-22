@@ -75,7 +75,6 @@ export class WalletService implements IWalletService {
     }
 
     getPrices(currency: string, exchange: string): Promise<string[]> {
-        // this.baseUrl + '/price'
         return this.http.get("assets/json/exchangeCurrencyValues.json").toPromise().then(data => {
             var json = JSON.parse(JSON.stringify(data));
             var foundCurrencies: string[] = [];
