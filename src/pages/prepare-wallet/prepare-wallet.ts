@@ -89,24 +89,34 @@ export class PrepareWalletPage {
   }
 
   onMerkleTreeGenerated = () => {
-    return this.walletService.store(this.wallet).then(
-      () => {
-        this.toastController.create({
-          message: this.successMessage,
-          duration: 1500,
-          position: "top"
-        }).present();
+    return this.merkleTreeService.get(this.wallet, this.password).then(
+      (merkleTree) => {
+        // Store the public key
+        this.wallet.publicKey = merkleTree.getPublicKey();
 
-        return this.goBackToOriginPage();
-      },
-      (error) => {
-        // Failed to store wallet...what do?
+        // Store the wallet
+        return this.walletService.store(this.wallet).then(
+          () => {
+            this.toastController.create({
+              message: this.successMessage,
+              duration: 1500,
+              position: "top"
+            }).present();
+    
+            return this.goBackToOriginPage();
+          },
+          (error) => {
+            // Failed to store wallet...what do?
+            console.error(error);
+          }
+        );
       }
     );
   }
 
   onMerkleTreeFailed = (error) => {
     // Display error, after user goes back to origin page.
+    console.error("Failed to generate Merkle Tree", error);
   }
 
   goBackToOriginPage() {

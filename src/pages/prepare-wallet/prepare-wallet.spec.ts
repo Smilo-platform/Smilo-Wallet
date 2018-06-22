@@ -14,6 +14,7 @@ import { MerkleTreeService } from "../../services/merkle-tree-service/merkle-tre
 import { HomePage } from "../home/home";
 import { MockTranslateService } from "../../../test-config/mocks/MockTranslateService";
 import { MockToast } from "../../../test-config/mocks/MockToast";
+import { MockMerkleTree } from "../../../test-config/mocks/MockMerkleTree";
 
 describe("PrepareWalletPage", () => {
   let comp: PrepareWalletPage;
@@ -167,17 +168,26 @@ describe("PrepareWalletPage", () => {
 
   it("should handle the merkle tree generated event correctly", (done) => {
     let dummyToast = new MockToast();
-    let dummyWallet = {};
+    let dummyWallet: any = {};
+    let merkleTree = new MockMerkleTree();
 
-    comp.wallet = <any>dummyWallet;
+    comp.wallet = dummyWallet;
+    comp.password = "pass123";
 
     spyOn(walletService, "store").and.returnValue(Promise.resolve());
     spyOn(toastController, "create").and.returnValue(dummyToast);
     spyOn(comp, "goBackToOriginPage").and.returnValue(Promise.resolve());
+    spyOn(merkleTree, "getPublicKey").and.returnValue("PUBLIC_KEY");
+    spyOn(merkleTreeService, "get").and.returnValue(Promise.resolve(merkleTree));
+    
     spyOn(dummyToast, "present");
 
     comp.onMerkleTreeGenerated().then(
       () => {
+        expect(merkleTreeService.get).toHaveBeenCalledWith(dummyWallet, "pass123");
+
+        expect(dummyWallet.publicKey).toBe("PUBLIC_KEY");
+
         expect(walletService.store).toHaveBeenCalledWith(dummyWallet);
 
         expect(toastController.create).toHaveBeenCalledWith({
