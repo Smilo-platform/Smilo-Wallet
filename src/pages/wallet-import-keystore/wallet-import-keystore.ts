@@ -65,7 +65,7 @@ export class WalletImportKeystorePage {
     }
   }
 
-  goToPrepareWalletPage(wallet: ILocalWallet, password: string) {
+  goToPrepareWalletPage(wallet: ILocalWallet, password: string): Promise<void> {
     let params = {
       wallet: wallet,
       password: password
@@ -97,23 +97,6 @@ export class WalletImportKeystorePage {
     };
 
     return wallet;
-  }
-
-  /**
-   * Navigates back to the page the user originally came from.
-   */
-  goBackToOriginPage() {
-    switch(<NavigationOrigin>this.navParams.get(NAVIGATION_ORIGIN_KEY) || "landing") {
-      case("landing"):
-        this.navCtrl.setRoot(HomePage);
-        break;
-      case("home"):
-        this.navigationHelperService.navigateBack(this.navCtrl, 3);
-        break;
-      case("wallet_overview"):
-        this.navigationHelperService.navigateBack(this.navCtrl, 3);
-        break;
-    }
   }
 
   /**

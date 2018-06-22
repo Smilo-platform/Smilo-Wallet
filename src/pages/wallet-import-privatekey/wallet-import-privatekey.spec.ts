@@ -20,6 +20,7 @@ import { MockKeyStoreService } from "../../../test-config/mocks/MockKeyStoreServ
 import { IKeyStore } from "../../models/IKeyStore";
 import { IPasswordService, PasswordService } from "../../services/password-service/password-service";
 import { MockPasswordService } from "../../../test-config/mocks/MockPasswordService";
+import { PrepareWalletPage } from "../prepare-wallet/prepare-wallet";
 
 describe("WalletImportPrivatekeyPage", () => {
   let comp: WalletImportPrivatekeyPage;
@@ -63,6 +64,21 @@ describe("WalletImportPrivatekeyPage", () => {
       ]
     }).compileComponents();
   }));
+
+  // Mock NavParams parameters
+  beforeEach(() => {
+    let realGetFunction = navParams.get;
+
+    spyOn(navParams, "get").and.callFake((key) => {
+      if(key == NAVIGATION_ORIGIN_KEY) {
+        return "home";
+      }
+      else {
+        // Call real function
+        realGetFunction.call(navParams);
+      }
+    });
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(WalletImportPrivatekeyPage);
@@ -200,52 +216,43 @@ describe("WalletImportPrivatekeyPage", () => {
 
   it("should handle the import correctly", (done) => {
     let dummyWallet = {};
+    comp.password = "pass123";
 
     spyOn(comp, "dataIsValid").and.returnValue(true);
     spyOn(comp, "prepareWallet").and.returnValue(dummyWallet);
     spyOn(walletService, "store").and.returnValue(Promise.resolve());
-    spyOn(comp, "goBackToOriginPage").and.returnValue(Promise.resolve());
+    spyOn(comp, "goToPrepareWalletPage").and.returnValue(Promise.resolve());
 
     comp.import().then(
       () => {
-        expect(walletService.store).toHaveBeenCalledWith(dummyWallet);
-        expect(comp.goBackToOriginPage).toHaveBeenCalled();
+        expect(comp.goToPrepareWalletPage).toHaveBeenCalledWith(dummyWallet, "pass123");
 
         done();
       }
     );
   });
 
-  it("should navigate back correctly when the origin page is 'landing'", () => {
-    // Mock navParams.get
-    spyOn(navParams, "get").and.callFake((key) => "landing");
+  it("should move to the prepare wallet page correctly", (done) => {
+    let dummyWallet = {};
+    let params = {
+      wallet: dummyWallet,
+      password: "pass123"
+    };
+    params[NAVIGATION_ORIGIN_KEY] = "home";
 
-    spyOn(navController, "setRoot");
-    
-    comp.goBackToOriginPage();
+    spyOn(navController, "push").and.returnValue(Promise.resolve());
 
-    expect(navController.setRoot).toHaveBeenCalledWith(HomePage);
-  });
+    comp.goToPrepareWalletPage(<ILocalWallet><any>dummyWallet, "pass123").then(
+      () => {
+        expect(navController.push).toHaveBeenCalledWith(PrepareWalletPage, params);
 
-  it("should navigate back correctly when the origin page is 'home'", () => {
-    // Mock navParams.get
-    spyOn(navParams, "get").and.callFake((key) => "home");
+        done();
+      },
+      (error) => {
+        expect(true).toBe(false, "Promise reject should never be called");
 
-    spyOn(navigationHelperService, "navigateBack");
-    
-    comp.goBackToOriginPage();
-
-    expect(navigationHelperService.navigateBack).toHaveBeenCalledWith(navController, 3);
-  });
-
-  it("should navigate back correctly when the origin page is 'wallet_overview'", () => {
-    // Mock navParams.get
-    spyOn(navParams, "get").and.callFake((key) => "wallet_overview");
-
-    spyOn(navigationHelperService, "navigateBack");
-    
-    comp.goBackToOriginPage();
-
-    expect(navigationHelperService.navigateBack).toHaveBeenCalledWith(navController, 3);
+        done();
+      }
+    );
   });
 });

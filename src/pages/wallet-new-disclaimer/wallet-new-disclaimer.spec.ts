@@ -12,6 +12,9 @@ import { KeyStoreService, IKeyStoreService } from "../../services/key-store-serv
 import { MockKeyStoreService } from "../../../test-config/mocks/MockKeyStoreService";
 import { IKeyStore } from "../../models/IKeyStore";
 import { HomePage } from "../home/home";
+import { PrepareWalletPage } from "../prepare-wallet/prepare-wallet";
+import { NAVIGATION_ORIGIN_KEY } from "../wallet/wallet";
+import { ILocalWallet } from "../../models/ILocalWallet";
 
 describe("WalletNewDisclaimerPage", () => {
   let comp: WalletNewDisclaimerPage;
@@ -62,6 +65,9 @@ describe("WalletNewDisclaimerPage", () => {
       else if(key == "password") {
         // Return mocked password
         return "pass123";
+      }
+      else if(key == NAVIGATION_ORIGIN_KEY) {
+        return "home";
       }
       else {
         // Call real function
@@ -190,47 +196,41 @@ describe("WalletNewDisclaimerPage", () => {
     );
   });
 
-  it("should prepare and store the wallet correctly on finish", () => {
+  it("should move to the prepare wallet page correctly", (done) => {
     let dummyWallet = {};
+    let params = {
+      wallet: dummyWallet,
+      password: "pass123"
+    };
+    params[NAVIGATION_ORIGIN_KEY] = "home";
 
-    spyOn(walletService, "store").and.returnValue(Promise.resolve());
-    spyOn(comp, "prepareWallet").and.returnValue(dummyWallet);
-    spyOn(comp, "canShowFinishButton").and.returnValue(true);
+    spyOn(navController, "push").and.returnValue(Promise.resolve());
 
-    comp.finish();
-
-    expect(comp.prepareWallet).toHaveBeenCalled();
-    expect(walletService.store).toHaveBeenCalledWith(dummyWallet);
-  });
-
-  it("should set navigation root to HomePage on succesfull finish", (done) => {
-    let dummyWallet = {};
-
-    spyOn(walletService, "store").and.returnValue(Promise.resolve());
-    spyOn(comp, "prepareWallet").and.returnValue(dummyWallet);
-    spyOn(comp, "canShowFinishButton").and.returnValue(true);
-    spyOn(navController, "setRoot");
-
-    comp.finish().then(
+    comp.goToPrepareWalletPage(<ILocalWallet><any>dummyWallet, "pass123").then(
       () => {
-        expect(navController.setRoot).toHaveBeenCalledWith(HomePage);
+        expect(navController.push).toHaveBeenCalledWith(PrepareWalletPage, params);
+
+        done();
+      },
+      (error) => {
+        expect(true).toBe(false, "Promise reject should never be called");
 
         done();
       }
     );
   });
 
-  it("should not go to the wallet overview page if storing the wallet failed", (done) => {
+  it("should handle finish correctly when all data is correct", (done) => {
     let dummyWallet = {};
+    comp.password = "pass123";
 
-    spyOn(walletService, "store").and.returnValue(Promise.reject("ERROR_MESSAGE"));
     spyOn(comp, "prepareWallet").and.returnValue(dummyWallet);
     spyOn(comp, "canShowFinishButton").and.returnValue(true);
-    spyOn(navController, "setRoot");
+    spyOn(comp, "goToPrepareWalletPage").and.returnValue(Promise.resolve());
 
     comp.finish().then(
       () => {
-        expect(navController.setRoot).not.toHaveBeenCalled();
+        expect(comp.goToPrepareWalletPage).toHaveBeenCalledWith(dummyWallet, "pass123");
 
         done();
       }

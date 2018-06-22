@@ -11,6 +11,7 @@ import { INavigationHelperService, NavigationHelperService } from "../../service
 import { MockMerkleTreeService } from "../../../test-config/mocks/MockMerkleTreeService";
 import { MockToastController } from "../../../test-config/mocks/MockToastController";
 import { MerkleTreeService } from "../../services/merkle-tree-service/merkle-tree-service";
+import { HomePage } from "../home/home";
 
 describe("PrepareWalletPage", () => {
   let comp: PrepareWalletPage;
@@ -55,4 +56,37 @@ describe("PrepareWalletPage", () => {
   });
 
   it("should create component", () => expect(comp).toBeDefined());
+
+  it("should navigate back correctly when the origin page is 'landing'", () => {
+    // Mock navParams.get
+    spyOn(navParams, "get").and.callFake((key) => "landing");
+
+    spyOn(navController, "setRoot");
+    
+    comp.goBackToOriginPage();
+
+    expect(navController.setRoot).toHaveBeenCalledWith(HomePage);
+  });
+
+  it("should navigate back correctly when the origin page is 'home'", () => {
+    // Mock navParams.get
+    spyOn(navParams, "get").and.callFake((key) => "home");
+
+    spyOn(navigationHelperService, "navigateBack");
+    
+    comp.goBackToOriginPage();
+
+    expect(navigationHelperService.navigateBack).toHaveBeenCalledWith(navController, 4);
+  });
+
+  it("should navigate back correctly when the origin page is 'wallet_overview'", () => {
+    // Mock navParams.get
+    spyOn(navParams, "get").and.callFake((key) => "wallet_overview");
+
+    spyOn(navigationHelperService, "navigateBack");
+    
+    comp.goBackToOriginPage();
+
+    expect(navigationHelperService.navigateBack).toHaveBeenCalledWith(navController, 4);
+  });
 });

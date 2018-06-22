@@ -55,20 +55,6 @@ export class WalletImportPrivatekeyPage {
     return this.navCtrl.push(PrepareWalletPage, params);
   }
 
-  goBackToOriginPage() {
-    switch(<NavigationOrigin>this.navParams.get(NAVIGATION_ORIGIN_KEY) || "landing") {
-      case("landing"):
-        this.navCtrl.setRoot(HomePage);
-        break;
-      case("home"):
-        this.navigationHelperService.navigateBack(this.navCtrl, 3);
-        break;
-      case("wallet_overview"):
-        this.navigationHelperService.navigateBack(this.navCtrl, 3);
-        break;
-    }
-  }
-
   /**
    * Prepares the wallet based on the currently entered data.
    */

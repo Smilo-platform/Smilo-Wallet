@@ -14,7 +14,7 @@ export interface IMerkleTreeConfig {
 
 export class MerkleTree {
     private static readonly KEYS_PER_THREAD = 100;
-    private static md256 = new sjcl.hash.sha256();
+    private static md256;
 
     layers: string[][];
     
@@ -251,6 +251,9 @@ export class MerkleTree {
     }
 
     private static sha256Base32(data: string): string {
+        if(!this.md256)
+            this.md256 = new sjcl.hash.md256();
+
         this.md256.update(data);
 
         let hash = this.md256.finalize();
@@ -261,6 +264,9 @@ export class MerkleTree {
     }
 
     private static sha256(data: string): string {
+        if(!this.md256)
+            this.md256 = new sjcl.hash.md256();
+
         this.md256.update(data);
 
         let hash = this.md256.finalize();
