@@ -5,7 +5,6 @@ import { HomePage } from "../pages/home/home";
 import { TranslateService } from "@ngx-translate/core";
 import { LandingPage } from "../pages/landing/landing";
 import { WalletService } from "../services/wallet-service/wallet-service";
-import { SettingsProvider } from './../providers/settings/settings';
 import { SettingsService } from "../services/settings-service/settings-service";
 import { HockeyApp } from "ionic-hockeyapp";
 
@@ -19,13 +18,12 @@ const HOCKEY_APP_IGNORE_ERROR_HEADER = true;
 })
 export class SmiloWallet {
   rootPage: any;
-  selectedTheme: String;
+  selectedTheme: string;
 
   constructor(private platform: Platform, 
               private statusBar: StatusBar, 
               private translate: TranslateService,
               private walletService: WalletService,
-              private settings: SettingsProvider,
               private hockeyApp: HockeyApp,
               private settingsService: SettingsService) {
     this.platform.ready().then(() => {
@@ -42,7 +40,7 @@ export class SmiloWallet {
   }
 
   prepareSettings() {
-    this.settings.getActiveTheme().subscribe(val => this.selectedTheme = val);
+    this.settingsService.getActiveTheme().subscribe(val => this.selectedTheme = val);
     
     if (this.platform.is('ios')) {
       window['plugins'].webviewcolor.change('#fff');
@@ -55,7 +53,7 @@ export class SmiloWallet {
     });
 
     this.settingsService.getNightModeSettings().then(data => {
-      this.settings.setActiveTheme(data || 'light-theme');
+      this.settingsService.setActiveTheme(data || 'light-theme');
     });
   }
 

@@ -20,6 +20,7 @@ import { IBIP39Service, BIP39Service, IPassphraseValidationResult } from "../../
 import { MockBIP39Service } from "../../../test-config/mocks/MockBIP39Service";
 import { IBIP32Service, BIP32Service } from "../../services/bip32-service/bip32-service";
 import { MockBIP32Service } from "../../../test-config/mocks/MockBIP32Service";
+import { ComponentsModule } from "../../components/components.module";
 
 describe("RestoreBackupPage", () => {
   let comp: RestoreBackupPage;
@@ -49,7 +50,8 @@ describe("RestoreBackupPage", () => {
         IonicModule.forRoot(RestoreBackupPage),
         TranslateModule.forRoot({
           loader: {provide: TranslateLoader, useClass: MockTranslationLoader},
-        })
+        }),
+        ComponentsModule
       ],
       providers: [
         { provide: NavController, useValue: navController },

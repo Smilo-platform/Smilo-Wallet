@@ -1,9 +1,4 @@
-<ion-header>
-    <ion-navbar>
-        <ion-title>{{ 'wallet_overview.title' | translate }}</ion-title>
-        <ion-icon class="settings" name="settings" (click)="settingsClick()"></ion-icon>
-    </ion-navbar>
-</ion-header>
+<smilo-nav-header titleTranslationKey="wallet_overview.nav-bar-title"></smilo-nav-header>
 
 <ion-content padding>
     <ion-grid>
@@ -18,7 +13,10 @@
                 </ion-list>
             </ion-col>
             <ion-col class="wallet-info-col" *ngIf="currentWallet" col-xl-3>
-                <h4 class="margin-header">{{ 'wallet_overview.wallet_info' | translate }}</h4>
+                <div>
+                    <h4 class="wallet-overview-header margin-header">{{ 'wallet_overview.wallet_info' | translate }}</h4>
+                    <ion-icon (click)="refreshWalletBalance()" class="refresh" name="refresh-circle"></ion-icon>
+                </div>
                 <ion-card class="funds-overview" [@visibilityChanged]="walletFundsVisibility">
                     <ion-card-header class="wallet-currency" *ngFor="let currency of currentWallet.balances;">
                         <p class="amount-header">{{ currency.currency }}</p>
@@ -66,7 +64,7 @@
                 </ion-card>
                 <ion-card class="hidden" [@visibilityChanged]="walletFundsVisibilityTransferButton">
                     <ion-card-header>
-                        {{ 'wallet_overview.funds_hidden' | translate }}
+                        <p>{{ 'wallet_overview.funds_hidden' | translate }}</p>
                     </ion-card-header>
                     <ion-card-content>
                             <button (click)="transfer()" ion-button full>{{ 'wallet_overview.transfer' | translate }}</button>
@@ -74,8 +72,32 @@
                 </ion-card>
             </ion-col>
             <ion-col col-12 col-xl-3>
+                <h4 class="margin-header">{{ 'wallet_overview.transactions_history' | translate }}</h4>
+                    <ion-list class="transaction-list hidden" [@visibilityChanged]="transactionHistoryVisibility">
+                        <ion-item *ngFor="let transaction of transactionsHistory">
+                            <ion-avatar item-start>
+                                <ion-icon class="transaction-swap" name="swap"></ion-icon>
+                            </ion-avatar>
+                            <p class="transaction-date">{{ transaction.date }}</p>
+                            <h2 class="transaction-from">{{ transaction.input }}</h2>
+                            <div class="transaction-list-div-amount">
+                                <ion-icon [ngClass]="{'greenColor': transaction.input !== currentWallet.publicKey, 
+                                                     'redColor': transaction.input === currentWallet.publicKey }"
+                                          class="transaction-arrow" 
+                                          [name]="transaction.input !== currentWallet.publicKey ? 'arrow-forward' :'arrow-back'">
+                                </ion-icon>
+                                <h3 class="transaction-list-amount">{{ transaction.amount }} {{ transaction.currency }}</h3>
+                            </div>
+                            <p class="transaction-to">{{ transaction.output }}</p>
+                        </ion-item>
+                    </ion-list>
+                    <ion-card class="no-transactions-card" [@visibilityChanged]="noTransactionHistoryVisibility">
+                        <ion-card-header>
+                            <p>{{ 'wallet_overview.no_transactions_history' | translate }}</p>
+                        </ion-card-header>
+                    </ion-card>
                 <h4 class="margin-header">{{ 'wallet_overview.settings' | translate }}</h4>
-                <ion-card>
+                <ion-card class="settings-card">
                     <ion-list>
                         <button ion-item>
                             <ion-label>{{ 'wallet_overview.show_funds' | translate }}</ion-label>
@@ -83,12 +105,12 @@
                         </button>
                     
                         <button ion-item (click)="backupWallet()">
-                            <ion-icon class="backup-wallet" style="color: blue;" name="archive" item-end></ion-icon>
+                            <ion-icon class="backup-wallet" name="archive" item-end></ion-icon>
                             <ion-label>{{ 'wallet_overview.backup_wallet' | translate }}</ion-label>
                         </button>
                     
                         <button ion-item (click)="deleteWallet()">
-                            <ion-icon class="delete-wallet" style="color: red;" name="trash" item-end></ion-icon>
+                            <ion-icon class="delete-wallet" name="trash" item-end></ion-icon>
                             <ion-label>{{ 'wallet_overview.delete_wallet' | translate }}</ion-label>
                         </button>  
                     </ion-list>

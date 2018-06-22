@@ -12,6 +12,7 @@ import { MockTranslationLoader } from "../../../test-config/mocks/MockTranslatio
 import { Observable } from "rxjs/Observable";
 import { SplashScreen } from "@ionic-native/splash-screen";
 import { MockSplashScreen } from "../../../test-config/mocks/MockSplashScreen";
+import { ComponentsModule } from "../../components/components.module";
 
 describe("LandingPage", () => {
   let comp: LandingPage;
@@ -30,7 +31,8 @@ describe("LandingPage", () => {
         IonicModule.forRoot(LandingPage),
         TranslateModule.forRoot({
           loader: {provide: TranslateLoader, useClass: MockTranslationLoader},
-        })
+        }),
+        ComponentsModule
       ],
       providers: [
         { provide: NavController, useValue: navController },
