@@ -9,35 +9,31 @@ import { WalletService, IWalletService } from "../../services/wallet-service/wal
 import { MockWalletService } from "../../../test-config/mocks/MockWalletService";
 import { IKeyStoreService, KeyStoreService } from "../../services/key-store-service/key-store-service";
 import { MockKeyStoreService } from "../../../test-config/mocks/MockKeyStoreService";
-import { MockCryptoKeyService } from "../../../test-config/mocks/MockCryptoKeyService";
-import { ICryptoKeyService, CryptoKeyService } from "../../services/crypto-key-service/crypto-key-service";
 import { NavigationHelperService } from "../../services/navigation-helper-service/navigation-helper-service";
 import { MockTranslateService } from "../../../test-config/mocks/MockTranslateService";
 import { MockToastController } from "../../../test-config/mocks/MockToastController";
 import { IKeyStore } from "../../models/IKeyStore";
-import { HomePage } from "../home/home";
 import { ILocalWallet } from "../../models/ILocalWallet";
-import { MockToast } from "../../../test-config/mocks/MockToast";
+import { NAVIGATION_ORIGIN_KEY } from "../wallet/wallet";
+import { PrepareWalletPage } from "../prepare-wallet/prepare-wallet";
 import { ComponentsModule } from "../../components/components.module";
 
 describe("WalletImportKeystorePage", () => {
   let comp: WalletImportKeystorePage;
   let fixture: ComponentFixture<WalletImportKeystorePage>;
-  let navController: NavController;
+  let navController: MockNavController;
   let navParams: NavParams;
   let walletService: IWalletService;
   let keyStoreService: IKeyStoreService;
-  let cryptoKeyService: ICryptoKeyService;
   let navigationHelperService: NavigationHelperService;
   let translateService: TranslateService;
-  let toastController: ToastController;
+  let toastController: MockToastController;
 
   beforeEach(async(() => {
     navController = new MockNavController();
     navParams = new MockNavParams();
     walletService = new MockWalletService();
     keyStoreService = new MockKeyStoreService();
-    cryptoKeyService = new MockCryptoKeyService();
     navigationHelperService = new NavigationHelperService();
     translateService = new MockTranslateService();
     toastController = new MockToastController();
@@ -56,13 +52,27 @@ describe("WalletImportKeystorePage", () => {
         { provide: NavController, useValue: navController },
         { provide: NavParams, useValue: navParams },
         { provide: KeyStoreService, useValue: keyStoreService },
-        { provide: CryptoKeyService, useValue: cryptoKeyService },
         { provide: NavigationHelperService, useValue: navigationHelperService },
         { provide: ToastController, useValue: toastController },
-        { provide: TranslateService, useValue: translateService },
+        { provide: TranslateService, useValue: translateService }
       ]
     }).compileComponents();
   }));
+
+  // Mock NavParams parameters
+  beforeEach(() => {
+    let realGetFunction = navParams.get;
+
+    spyOn(navParams, "get").and.callFake((key) => {
+      if(key == NAVIGATION_ORIGIN_KEY) {
+        return "home";
+      }
+      else {
+        // Call real function
+        realGetFunction.call(navParams);
+      }
+    });
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(WalletImportKeystorePage);
@@ -75,7 +85,6 @@ describe("WalletImportKeystorePage", () => {
     expect(comp.name).toBe("");
     expect(comp.keyStoreString).toBe("");
     expect(comp.password).toBe("");
-    expect(comp.successMessage).toBe("import_keystore.toast.success");
   });
 
   it("should detect when a property is a number correctly", () => {
@@ -177,7 +186,6 @@ describe("WalletImportKeystorePage", () => {
   it("should prepare the wallet correctly", () => {
     spyOn(keyStoreService, "decryptKeyStore").and.returnValue("SOME_PRIVATE_KEY");
     spyOn(walletService, "generateId").and.returnValue("WALLET_ID");
-    spyOn(cryptoKeyService, "generatePublicKey").and.returnValue("SOME_PUBLIC_KEY");
 
     comp.name = "name";
     comp.keyStore = <any>{};
@@ -189,68 +197,33 @@ describe("WalletImportKeystorePage", () => {
       id: "WALLET_ID",
       type: "local",
       name: "name",
-      publicKey: "SOME_PUBLIC_KEY",
+      publicKey: null,
       keyStore: comp.keyStore,
       transactions: [],
       lastUpdateTime: null,
-      balances: [],
-      encryptedPrivateKey: ""
+      balances: []
     });
 
     expect(keyStoreService.decryptKeyStore).toHaveBeenCalledWith(comp.keyStore, "pass123");
-    expect(cryptoKeyService.generatePublicKey).toHaveBeenCalledWith("SOME_PRIVATE_KEY");
-  });
-
-  it("should navigate back correctly when the origin page is 'landing'", () => {
-    // Mock navParams.get
-    spyOn(navParams, "get").and.callFake((key) => "landing");
-
-    spyOn(navController, "setRoot");
-    
-    comp.goBackToOriginPage();
-
-    expect(navController.setRoot).toHaveBeenCalledWith(HomePage);
-  });
-
-  it("should navigate back correctly when the origin page is 'home'", () => {
-    // Mock navParams.get
-    spyOn(navParams, "get").and.callFake((key) => "home");
-
-    spyOn(navigationHelperService, "navigateBack");
-    
-    comp.goBackToOriginPage();
-
-    expect(navigationHelperService.navigateBack).toHaveBeenCalledWith(navController, 3);
-  });
-
-  it("should navigate back correctly when the origin page is 'wallet_overview'", () => {
-    // Mock navParams.get
-    spyOn(navParams, "get").and.callFake((key) => "wallet_overview");
-
-    spyOn(navigationHelperService, "navigateBack");
-    
-    comp.goBackToOriginPage();
-
-    expect(navigationHelperService.navigateBack).toHaveBeenCalledWith(navController, 3);
   });
 
   it("should perform the import correctly when all data is entered correctly", (done) => {
     let dummyWallet: ILocalWallet = <any>{};
-    let mockToast = new MockToast();
+    comp.password = "pass123";
     
     spyOn(comp, "dataIsValid").and.returnValue(true);
     spyOn(comp, "prepareWallet").and.returnValue(dummyWallet);
-    spyOn(walletService, "store").and.returnValue(Promise.resolve());
-    spyOn(toastController, "create").and.returnValue(mockToast);
-    spyOn(mockToast, "present");
-    spyOn(comp, "goBackToOriginPage");
+    spyOn(comp, "goToPrepareWalletPage").and.returnValue(Promise.resolve());
 
     comp.import().then(
       () => {
-        expect(walletService.store).toHaveBeenCalledWith(dummyWallet);
-        expect(toastController.create).toHaveBeenCalled();
-        expect(mockToast.present).toHaveBeenCalled();
-        expect(comp.goBackToOriginPage).toHaveBeenCalled();
+        expect(comp.goToPrepareWalletPage).toHaveBeenCalledWith(dummyWallet, "pass123");
+
+        done();
+      },
+      (error) => {
+        // This path should never be reached!
+        expect(true).toBeFalsy("Promise reject should not be called");
 
         done();
       }
@@ -265,13 +238,11 @@ describe("WalletImportKeystorePage", () => {
       () => {
         expect(comp.passwordIsInvalid).toBeTruthy("Password should be marked as invalid");
 
-        
-
         done();
       },
       (error) => {
         // This path should never be reached!
-        expect(true).toBeFalsy("Promise resolve should not be called");
+        expect(true).toBeFalsy("Promise reject should not be called");
 
         done();
       }
@@ -291,5 +262,29 @@ describe("WalletImportKeystorePage", () => {
         done();
       }
     )
+  });
+
+  it("should move to the prepare wallet page correctly", (done) => {
+    let dummyWallet = {};
+    let params = {
+      wallet: dummyWallet,
+      password: "pass123"
+    };
+    params[NAVIGATION_ORIGIN_KEY] = "home";
+
+    spyOn(navController, "push").and.returnValue(Promise.resolve());
+
+    comp.goToPrepareWalletPage(<ILocalWallet><any>dummyWallet, "pass123").then(
+      () => {
+        expect(navController.push).toHaveBeenCalledWith(PrepareWalletPage, params);
+
+        done();
+      },
+      (error) => {
+        expect(true).toBe(false, "Promise reject should never be called");
+
+        done();
+      }
+    );
   });
 });

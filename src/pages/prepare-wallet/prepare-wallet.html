@@ -1,0 +1,19 @@
+<ion-content padding>
+  <div class="wrapper">
+    <div class="description">
+      {{ 'prepare_wallet.description' | translate }}
+    </div>
+  
+    <div class="status">
+      {{ statusMessages[activeStatusMessageIndex] | translate }}
+    </div>
+  
+    <div class="progress">
+      <div class="progress-bar" [ngStyle]="{'width.%': progress}"></div>
+
+      <div class="progress-bar-status">
+        {{ progress }}%
+      </div>
+    </div>
+  </div>
+</ion-content>

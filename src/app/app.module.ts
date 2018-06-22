@@ -18,7 +18,6 @@ import { WalletImportKeystorePageModule } from "../pages/wallet-import-keystore/
 import { WalletImportLedgerPageModule } from "../pages/wallet-import-ledger/wallet-import-ledger.module";
 import { WalletImportPrivatekeyPageModule } from "../pages/wallet-import-privatekey/wallet-import-privatekey.module";
 import { RestoreBackupPageModule } from "../pages/restore-backup/restore-backup.module";
-import { CryptoKeyService } from "../services/crypto-key-service/crypto-key-service";
 import { LandingPageModule } from "../pages/landing/landing.module";
 import { WalletService } from "../services/wallet-service/wallet-service";
 import { IonicStorageModule } from "@ionic/storage";
@@ -36,6 +35,9 @@ import { PasswordService } from "../services/password-service/password-service";
 import { SettingsService } from "../services/settings-service/settings-service";
 import { BIP39Service } from "../services/bip39-service/bip39-service";
 import { HockeyApp } from "ionic-hockeyapp";
+import { BIP32Service } from "../services/bip32-service/bip32-service";
+import { MerkleTreeService } from "../services/merkle-tree-service/merkle-tree-service";
+import { PrepareWalletPageModule } from "../pages/prepare-wallet/prepare-wallet.module";
 import { ComponentsModule } from "../components/components.module";
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -78,6 +80,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     WalletImportPageModule,
     WalletNewPasswordPageModule,
     PasswordExplanationPageModule,
+    PrepareWalletPageModule,
     IonicModule.forRoot(SmiloWallet)
   ],
   bootstrap: [IonicApp],
@@ -88,14 +91,15 @@ export function HttpLoaderFactory(http: HttpClient) {
   providers: [
     StatusBar,
     SplashScreen,
-    CryptoKeyService,
     WalletService,
     NavigationHelperService,
     KeyStoreService,
     PasswordService,
     SettingsService,
     BIP39Service,
+    BIP32Service,
     HockeyApp,
+    MerkleTreeService,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

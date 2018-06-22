@@ -37,8 +37,4 @@ export interface IWallet {
      * This value contains an amount and name of the currency
      */
     balances: IBalance[];
-    /**
-     * The encrypted private key of the wallet
-     */
-    encryptedPrivateKey: string;
 }

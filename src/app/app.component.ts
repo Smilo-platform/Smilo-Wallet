@@ -1,7 +1,6 @@
 import { Component } from "@angular/core";
 import { Platform } from "ionic-angular";
 import { StatusBar } from "@ionic-native/status-bar";
-import { SplashScreen } from "@ionic-native/splash-screen";
 import { HomePage } from "../pages/home/home";
 import { TranslateService } from "@ngx-translate/core";
 import { LandingPage } from "../pages/landing/landing";
@@ -9,7 +8,7 @@ import { WalletService } from "../services/wallet-service/wallet-service";
 import { SettingsService } from "../services/settings-service/settings-service";
 import { HockeyApp } from "ionic-hockeyapp";
 
-const HOCKEY_APP_ANDROID_ID = "7e9d4c16c2a44e25b73db158e064019b";
+const HOCKEY_APP_ANDROID_ID = "551bfde014ca4620996d78a376671a01";
 const HOCKEY_APP_IOS_ID = "";
 const HOCKEY_APP_AUTO_SEND_AUTO_UPDATES = true;
 const HOCKEY_APP_IGNORE_ERROR_HEADER = true;
@@ -23,30 +22,38 @@ export class SmiloWallet {
 
   constructor(private platform: Platform, 
               private statusBar: StatusBar, 
-              private splashScreen: SplashScreen,
               private translate: TranslateService,
               private walletService: WalletService,
               private hockeyApp: HockeyApp,
               private settingsService: SettingsService) {
-    settingsService.getActiveTheme().subscribe(val => this.selectedTheme = val);
-    platform.ready().then(() => {
-      statusBar.styleDefault();
+    this.platform.ready().then(() => {
+      this.statusBar.styleDefault();
 
-      settingsService.getLanguageSettings().then(data => {
-        translate.setDefaultLang("en");
-
-        translate.use(data || "en");
-      });
-
-      settingsService.getNightModeSettings().then(data => {
-        settingsService.setActiveTheme(data || 'light-theme');
-      })
+      this.prepareSettings();
       
       this.prepareTranslations();
 
       this.prepareHockeyAppIntegration();
 
       this.prepareFirstPage();
+    });
+  }
+
+  prepareSettings() {
+    this.settingsService.getActiveTheme().subscribe(val => this.selectedTheme = val);
+    
+    if (this.platform.is('ios')) {
+      window['plugins'].webviewcolor.change('#fff');
+    }
+
+    this.settingsService.getLanguageSettings().then(data => {
+      this.translate.setDefaultLang("en");
+
+      this.translate.use(data || "en");
+    });
+
+    this.settingsService.getNightModeSettings().then(data => {
+      this.settingsService.setActiveTheme(data || 'light-theme');
     });
   }
 

@@ -7,6 +7,11 @@ module.exports = function(config) {
 
     frameworks: ['jasmine'],
 
+    captureTimeout: 210000,
+    browserDisconnectTolerance: 3,
+    browserDisconnectTimeout : 210000,
+    browserNoActivityTimeout : 210000,
+
     files: [
       {
         pattern: './test-config/karma-test-shim.js',

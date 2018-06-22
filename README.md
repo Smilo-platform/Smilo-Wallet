@@ -7,6 +7,7 @@ This project relies on the following dependencies:
 - NPM @ 5.6.0
 - Ionic @ 3.20.0
 - Cordova @ 8.0.0
+- Browserify @16.2.2
 
 ## Building and running the project
 
@@ -15,6 +16,8 @@ First make sure you have all Node modules installed by running the following com
 ```
 npm install
 ```
+
+As part of the installation the bitcoinjs-lib will also be build. For more information see the chapter `Generating private and public keys`.
 
 Make sure you start the mock API for data to retrieve 
 
@@ -116,3 +119,21 @@ npm run upload:hockey-app
 ```
 
 For this to work the environment variable `HOCKEY_APP_TOKEN` is expected to be available.
+
+## Generating private and public keys
+
+Private keys are generated based on a 24 word mnemonic sentence. We use [BIP39](https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki) to generate a mnemonic sentence and extract a seed from this sentence.
+
+Next we use [BIP32](https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki) (using the hierarchical structure defined by the [BIP44](https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki) standard) to generate a private key.
+
+Lastly we use a Merkle Signature Scheme to generate private keys which can be used to sign transactions.
+
+For BIP32 we have used code written by Ian Coleman which itself is a port of a Python implementation by Pavol Rusnak. We have adjusted this code to work as an Angular service.
+
+For BIP32/BIP44 we use the [bitcoinjs-lib](https://github.com/bitcoinjs/bitcoinjs-lib). We have used [Browserify](http://browserify.org/) to make this library available for web.
+
+To generate the Browserified version of the bitcoinjs-lib library use the following command in the root of this project:
+
+```
+browserify ./bitcoin-js-wrapper/wrapper.js --standalone bitcoinjs > ./src/assets/scripts/bitcoinjs-lib.js
+```

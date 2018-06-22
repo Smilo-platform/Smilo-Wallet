@@ -6,29 +6,36 @@ import { MockNavParams } from "../../../test-config/mocks/MockNavParams";
 import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
 import { MockTranslationLoader } from "../../../test-config/mocks/MockTranslationLoader";
 import { WalletService, IWalletService } from "../../services/wallet-service/wallet-service";
-import { CryptoKeyService } from "../../services/crypto-key-service/crypto-key-service";
 import { MockWalletService } from "../../../test-config/mocks/MockWalletService";
 import { KeyStoreService, IKeyStoreService } from "../../services/key-store-service/key-store-service";
 import { MockKeyStoreService } from "../../../test-config/mocks/MockKeyStoreService";
 import { IKeyStore } from "../../models/IKeyStore";
-import { HomePage } from "../home/home";
+import { PrepareWalletPage } from "../prepare-wallet/prepare-wallet";
+import { NAVIGATION_ORIGIN_KEY } from "../wallet/wallet";
+import { ILocalWallet } from "../../models/ILocalWallet";
+import { IBIP32Service, BIP32Service } from "../../services/bip32-service/bip32-service";
+import { IBIP39Service, BIP39Service } from "../../services/bip39-service/bip39-service";
+import { MockBIP32Service } from "../../../test-config/mocks/MockBIP32Service";
+import { MockBIP39Service } from "../../../test-config/mocks/MockBIP39Service";
 import { ComponentsModule } from "../../components/components.module";
 
 describe("WalletNewDisclaimerPage", () => {
   let comp: WalletNewDisclaimerPage;
   let fixture: ComponentFixture<WalletNewDisclaimerPage>;
-  let navController: NavController;
+  let navController: MockNavController;
   let navParams: NavParams;
   let walletService: IWalletService;
-  let cryptoKeyService: CryptoKeyService;
   let keyStoreService: IKeyStoreService;
+  let bip32Service: IBIP32Service;
+  let bip39Service: IBIP39Service;
 
   beforeEach(async(() => {
     navController = new MockNavController();
     navParams = new MockNavParams();
     walletService = new MockWalletService();
-    cryptoKeyService = new CryptoKeyService();
     keyStoreService = new MockKeyStoreService();
+    bip32Service = new MockBIP32Service();
+    bip39Service = new MockBIP39Service();
 
     TestBed.configureTestingModule({
       declarations: [WalletNewDisclaimerPage],
@@ -42,9 +49,10 @@ describe("WalletNewDisclaimerPage", () => {
       providers: [
         { provide: KeyStoreService, useValue: keyStoreService },
         { provide: WalletService, useValue: walletService },
-        { provide: CryptoKeyService, useValue: cryptoKeyService },
         { provide: NavController, useValue: navController },
-        { provide: NavParams, useValue: navParams }
+        { provide: NavParams, useValue: navParams },
+        { provide: BIP32Service, useValue: bip32Service },
+        { provide: BIP39Service, useValue: bip39Service }
       ]
     }).compileComponents();
   }));
@@ -65,20 +73,14 @@ describe("WalletNewDisclaimerPage", () => {
         // Return mocked password
         return "pass123";
       }
+      else if(key == NAVIGATION_ORIGIN_KEY) {
+        return "home";
+      }
       else {
         // Call real function
         realGetFunction.call(navParams);
       }
     });
-  });
-
-  beforeEach(() => {
-    spyOn(cryptoKeyService, "generateKeyPair").and.returnValue(
-      {
-        privateKey: "PRIVATE_KEY",
-        publicKey: "PUBLIC_KEY"
-      }
-    );
   });
 
   beforeEach(() => {
@@ -152,6 +154,9 @@ describe("WalletNewDisclaimerPage", () => {
   });
 
   it("should prepare the wallet correctly", () => {
+    spyOn(bip39Service, "toSeed").and.returnValue("SEED");
+    spyOn(bip32Service, "getPrivateKey").and.returnValue("PRIVATE_KEY");
+
     let dummyKeyStore: IKeyStore = {
       cipher: "AES-CTR",
       cipherParams: {
@@ -182,57 +187,50 @@ describe("WalletNewDisclaimerPage", () => {
         id: "SOME_ID",
         type: "local",
         name: "name",
-        publicKey: "PUBLIC_KEY",
+        publicKey: null,
         keyStore: dummyKeyStore,
         transactions: [],
         lastUpdateTime: null,
-        balances: [],
-        encryptedPrivateKey: null
+        balances: []
       }
     );
   });
 
-  it("should prepare and store the wallet correctly on finish", () => {
+  it("should move to the prepare wallet page correctly", (done) => {
     let dummyWallet = {};
+    let params = {
+      wallet: dummyWallet,
+      password: "pass123"
+    };
+    params[NAVIGATION_ORIGIN_KEY] = "home";
 
-    spyOn(walletService, "store").and.returnValue(Promise.resolve());
-    spyOn(comp, "prepareWallet").and.returnValue(dummyWallet);
-    spyOn(comp, "canShowFinishButton").and.returnValue(true);
+    spyOn(navController, "push").and.returnValue(Promise.resolve());
 
-    comp.finish();
-
-    expect(comp.prepareWallet).toHaveBeenCalled();
-    expect(walletService.store).toHaveBeenCalledWith(dummyWallet);
-  });
-
-  it("should set navigation root to HomePage on succesfull finish", (done) => {
-    let dummyWallet = {};
-
-    spyOn(walletService, "store").and.returnValue(Promise.resolve());
-    spyOn(comp, "prepareWallet").and.returnValue(dummyWallet);
-    spyOn(comp, "canShowFinishButton").and.returnValue(true);
-    spyOn(navController, "setRoot");
-
-    comp.finish().then(
+    comp.goToPrepareWalletPage(<ILocalWallet><any>dummyWallet, "pass123").then(
       () => {
-        expect(navController.setRoot).toHaveBeenCalledWith(HomePage);
+        expect(navController.push).toHaveBeenCalledWith(PrepareWalletPage, params);
+
+        done();
+      },
+      (error) => {
+        expect(true).toBe(false, "Promise reject should never be called");
 
         done();
       }
     );
   });
 
-  it("should not go to the wallet overview page if storing the wallet failed", (done) => {
+  it("should handle finish correctly when all data is correct", (done) => {
     let dummyWallet = {};
+    comp.password = "pass123";
 
-    spyOn(walletService, "store").and.returnValue(Promise.reject("ERROR_MESSAGE"));
     spyOn(comp, "prepareWallet").and.returnValue(dummyWallet);
     spyOn(comp, "canShowFinishButton").and.returnValue(true);
-    spyOn(navController, "setRoot");
+    spyOn(comp, "goToPrepareWalletPage").and.returnValue(Promise.resolve());
 
     comp.finish().then(
       () => {
-        expect(navController.setRoot).not.toHaveBeenCalled();
+        expect(comp.goToPrepareWalletPage).toHaveBeenCalledWith(dummyWallet, "pass123");
 
         done();
       }

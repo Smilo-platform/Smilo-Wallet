@@ -4,11 +4,9 @@ import { IKeyStore } from "../../models/IKeyStore";
 import { WalletService } from "../../services/wallet-service/wallet-service";
 import { ILocalWallet } from "../../models/ILocalWallet";
 import { KeyStoreService } from "../../services/key-store-service/key-store-service";
-import { CryptoKeyService } from "../../services/crypto-key-service/crypto-key-service";
 import { NavigationHelperService } from "../../services/navigation-helper-service/navigation-helper-service";
 import { NavigationOrigin, NAVIGATION_ORIGIN_KEY } from "../wallet/wallet";
-import { HomePage } from "../home/home";
-import { TranslateService } from "@ngx-translate/core";
+import { PrepareWalletPage } from "../prepare-wallet/prepare-wallet";
 
 @IonicPage()
 @Component({
@@ -35,24 +33,11 @@ export class WalletImportKeystorePage {
    */
   passwordIsInvalid: boolean = false;
 
-  /**
-   * The translated message to shown when the importing succeeded.
-   */
-  successMessage: string;
-
   constructor(private navCtrl: NavController,
               private navParams: NavParams,
               private walletService: WalletService,
-              private keyStoreService: KeyStoreService,
-              private cryptoKeyService: CryptoKeyService,
-              private navigationHelperService: NavigationHelperService,
-              private toastController: ToastController,
-              private translateService: TranslateService) {
-    this.translateService.get("import_keystore.toast.success").subscribe(
-      (message) => {
-        this.successMessage = message;
-      }
-    );
+              private keyStoreService: KeyStoreService) {
+
   }
 
   /**
@@ -68,24 +53,21 @@ export class WalletImportKeystorePage {
         return Promise.resolve();
       }
 
-      return this.walletService.store(wallet).then(
-        () => {
-          this.toastController.create({
-            message: this.successMessage,
-            duration: 1500,
-            position: "top"
-          }).present();
-
-          this.goBackToOriginPage();
-        },
-        (error) => {
-          // Could not store wallet, what do?
-        }
-      );
+      return this.goToPrepareWalletPage(wallet, this.password);
     }
     else {
       return Promise.resolve();
     }
+  }
+
+  goToPrepareWalletPage(wallet: ILocalWallet, password: string): Promise<void> {
+    let params = {
+      wallet: wallet,
+      password: password
+    };
+    params[NAVIGATION_ORIGIN_KEY] = this.navParams.get(NAVIGATION_ORIGIN_KEY);
+
+    return this.navCtrl.push(PrepareWalletPage, params);
   }
 
   /**
@@ -101,32 +83,14 @@ export class WalletImportKeystorePage {
       id: this.walletService.generateId(),
       type: "local",
       name: this.name,
-      publicKey: this.cryptoKeyService.generatePublicKey(privateKey),
+      publicKey: null,
       keyStore: this.keyStore,
       transactions: [],
       lastUpdateTime: null,
-      balances: [],
-      encryptedPrivateKey: ""
+      balances: []
     };
 
     return wallet;
-  }
-
-  /**
-   * Navigates back to the page the user originally came from.
-   */
-  goBackToOriginPage() {
-    switch(<NavigationOrigin>this.navParams.get(NAVIGATION_ORIGIN_KEY) || "landing") {
-      case("landing"):
-        this.navCtrl.setRoot(HomePage);
-        break;
-      case("home"):
-        this.navigationHelperService.navigateBack(this.navCtrl, 3);
-        break;
-      case("wallet_overview"):
-        this.navigationHelperService.navigateBack(this.navCtrl, 3);
-        break;
-    }
   }
 
   /**

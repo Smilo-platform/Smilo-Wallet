@@ -148,9 +148,6 @@
         "error_password": "The entered password is invalid",
         "buttons": {
             "import": "Import"
-        },
-        "toast": {
-            "success": "Wallet imported!"
         }
     },
     "password_explanation": {
@@ -208,6 +205,20 @@
         "question4": "How can I trust the SmiloWallet?",
         "answer4": "The SmiloWallet source code is available on Github for anyone to verify. We serve the wallet over SSL (https) which eliminates the possibility of tampering with the code between our servers and your browser. Still not sure? Download the latest standalone release on our Github releases page and run the SmiloWallet locally. Alternatively, you can build directly from the source.",
         "question5": "What if I lose my private key or forget my encrypted Keystore file’s password?",
+
         "answer5": "You remain in full control of your keys and your funds. We cannot recover your funds or freeze your account if you visit a phishing site or lose your private key. <p> We are not responsible for any loss. </p> SmiloWallet.io is under active development. While we have thoroughly tested the wallet, there is always the possibility that something unexpected happens which causes your funds to be lost. Do not invest more than you are willing to lose."
-    }
+  },
+  "prepare_wallet": {
+      "description": "Your wallet is being prepared for first time use",
+      "status1": "Generating awesomeness...",
+      "status2": "Torturing your CPU...",
+      "status3": "Making your wallet quantum proof...",
+      "status4": "Downloading more RAM...",
+      "status5": "Entering the ventilation shaft...",
+      "status6": "Computing Pi...",
+      "status7": "Just wrapping up now...",
+      "toast": {
+          "success": "Wallet created!"
+      }
+  }
 }
