@@ -23,7 +23,7 @@ export interface IWalletService {
 
     getAvailableExchanges();
 
-    getTransactionHistory(publicKey: string): Promise<ITransaction[]>
+    getTransactionHistory(publicKey: string): Promise<ITransaction[]>;
 }
 
 @Injectable()

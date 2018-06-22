@@ -1,5 +1,6 @@
 import { ITransaction } from "./ITransaction";
 import { IBalance } from "./IBalance";
+import { IKeyStore } from "./IKeyStore";
 
 export declare type WalletType = "local" | "ledger";
 
@@ -37,8 +38,4 @@ export interface IWallet {
      * This value contains an amount and name of the currency
      */
     balances: IBalance[];
-    /**
-     * The encrypted private key of the wallet
-     */
-    encryptedPrivateKey: string;
 }

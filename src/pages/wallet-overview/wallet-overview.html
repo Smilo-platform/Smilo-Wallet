@@ -104,9 +104,14 @@
                             <ion-toggle class="show-funds" [(ngModel)]="showFundsStatus" (ngModelChange)="fundsSwitch()" color="secondary"></ion-toggle>
                         </button>
                     
-                        <button ion-item (click)="backupWallet()">
-                            <ion-icon class="backup-wallet" name="archive" item-end></ion-icon>
-                            <ion-label>{{ 'wallet_overview.backup_wallet' | translate }}</ion-label>
+                        <button ion-item (click)="exportKeystore()">
+                            <ion-icon class="export-keystore-wallet" name="filing" item-end></ion-icon>
+                            <ion-label>Export Keystore</ion-label>
+                        </button>
+
+                        <button ion-item (click)="exportPrivatekey()">
+                            <ion-icon class="export-privatekey-wallet" name="key" item-end></ion-icon>
+                            <ion-label>Export Privatekey</ion-label>
                         </button>
                     
                         <button ion-item (click)="deleteWallet()">

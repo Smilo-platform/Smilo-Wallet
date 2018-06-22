@@ -37,6 +37,8 @@ import { SettingsService } from "../services/settings-service/settings-service";
 import { BIP39Service } from "../services/bip39-service/bip39-service";
 import { HockeyApp } from "ionic-hockeyapp";
 import { ComponentsModule } from "../components/components.module";
+import { FileChooser } from '@ionic-native/file-chooser';
+import { IOSFilePicker } from "@ionic-native/file-picker";
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, "assets/i18n/");
@@ -88,6 +90,8 @@ export function HttpLoaderFactory(http: HttpClient) {
   providers: [
     StatusBar,
     SplashScreen,
+    FileChooser,
+    IOSFilePicker,
     CryptoKeyService,
     WalletService,
     NavigationHelperService,

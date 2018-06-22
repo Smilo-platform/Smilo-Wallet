@@ -11,6 +11,7 @@ import { TransferPage } from "../transfer/transfer";
 import { RestoreBackupPage } from "../restore-backup/restore-backup";
 import { IAvailableExchange } from "../../models/IAvailableExchange";
 import { ITransaction } from "../../models/ITransaction";
+import { ILocalWallet } from "../../models/ILocalWallet";
 
 /**
  * Generated class for the WalletOverviewPage page.
@@ -101,16 +102,69 @@ export class WalletOverviewPage {
     this.navCtrl.push(TransferPage);
   }
 
-  /**
-   * Open the backup wallet page
-   */
-  backupWallet(): void {
-    this.navCtrl.push(RestoreBackupPage);
-  }
-
   refreshWalletBalance(): void {
     this.getWalletBalance(this.currentWallet.publicKey);
     this.getTransactionHistory(this.currentWallet.publicKey);
+  }
+
+  exportPrivatekey(): boolean {
+    console.log("Export privatekey!");
+    return false;
+  }
+
+  exportKeystore(): boolean {
+    if (this.currentWallet.type !== "local") {
+      return false;
+    }
+    console.log("Export keystore!");
+    let alert = this.alertCtrl.create();
+    alert.setTitle('Export keystore');
+
+    alert.addInput({
+      type: 'radio',
+      label: 'Download file',
+      value: 'file',
+      checked: true
+    });
+
+    alert.addInput({
+      type: 'radio',
+      label: 'Copy to clipboard',
+      value: 'clipboard',
+      checked: false
+    });
+
+    alert.addButton('Cancel');
+    alert.addButton({
+      text: 'OK',
+      handler: data => {
+        if (data === "clipboard") {
+          var dummyElementToCopyText = document.createElement("input");
+          document.body.appendChild(dummyElementToCopyText);
+          dummyElementToCopyText.setAttribute('value', JSON.stringify((this.currentWallet as ILocalWallet).keyStore));
+          dummyElementToCopyText.select();
+          document.execCommand("copy");
+          document.body.removeChild(dummyElementToCopyText);
+          let toast = this.toastCtrl.create({
+            message: 'Copied keystore to clipboard!',
+            duration: 2000,
+            position: "middle"
+          });
+          toast.present(toast);
+        } else if (data === "file") {
+          var dummyElementToDownload = document.createElement('a');
+          dummyElementToDownload.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify((this.currentWallet as ILocalWallet).keyStore)));
+          var filename = ("UTC--" + new Date().toISOString() + "--" + this.currentWallet.publicKey).replace(/:/g, "-");
+          dummyElementToDownload.setAttribute('download', filename);
+          dummyElementToDownload.style.display = 'none';
+          document.body.appendChild(dummyElementToDownload);
+          dummyElementToDownload.click();
+          document.body.removeChild(dummyElementToDownload);
+        }
+      }
+    });
+    alert.present();
+    return true;
   }
 
   /**

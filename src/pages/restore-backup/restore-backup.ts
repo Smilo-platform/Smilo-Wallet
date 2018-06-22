@@ -100,8 +100,7 @@ export class RestoreBackupPage {
       keyStore: keyStore,
       transactions: [],
       lastUpdateTime: null,
-      balances: [],
-      encryptedPrivateKey: ""
+      balances: []
     };
 
     return wallet;

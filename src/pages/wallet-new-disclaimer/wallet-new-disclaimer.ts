@@ -67,8 +67,7 @@ export class WalletNewDisclaimerPage {
       keyStore: this.keyStoreService.createKeyStore(keyPair.privateKey, this.password),
       transactions: [],
       lastUpdateTime: new Date(),
-      balances: [],
-      encryptedPrivateKey: null
+      balances: []
     };
 
     return wallet;
