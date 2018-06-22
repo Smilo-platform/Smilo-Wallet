@@ -10,8 +10,7 @@ import { MockWalletService } from "../../../test-config/mocks/MockWalletService"
 import { NavigationHelperService } from "../../services/navigation-helper-service/navigation-helper-service";
 import { PasswordExplanationPage } from "../password-explanation/password-explanation";
 import { ILocalWallet } from "../../models/ILocalWallet";
-import { NavigationOrigin, NAVIGATION_ORIGIN_KEY } from "../wallet/wallet";
-import { HomePage } from "../home/home";
+import { NAVIGATION_ORIGIN_KEY } from "../wallet/wallet";
 import { MockModalController } from "../../../test-config/mocks/MockModalController";
 import { IKeyStoreService, KeyStoreService } from "../../services/key-store-service/key-store-service";
 import { MockKeyStoreService } from "../../../test-config/mocks/MockKeyStoreService";
@@ -19,6 +18,7 @@ import { IKeyStore } from "../../models/IKeyStore";
 import { IPasswordService, PasswordService } from "../../services/password-service/password-service";
 import { MockPasswordService } from "../../../test-config/mocks/MockPasswordService";
 import { PrepareWalletPage } from "../prepare-wallet/prepare-wallet";
+import { ComponentsModule } from "../../components/components.module";
 
 describe("WalletImportPrivatekeyPage", () => {
   let comp: WalletImportPrivatekeyPage;
@@ -46,7 +46,8 @@ describe("WalletImportPrivatekeyPage", () => {
         IonicModule.forRoot(WalletImportPrivatekeyPage),
         TranslateModule.forRoot({
           loader: {provide: TranslateLoader, useClass: MockTranslationLoader},
-        })
+        }),
+        ComponentsModule
       ],
       providers: [
         { provide: KeyStoreService, useValue: keyStoreService },

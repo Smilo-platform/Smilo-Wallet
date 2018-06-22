@@ -9,6 +9,7 @@ import { IBIP39Service, BIP39Service } from "../../services/bip39-service/bip39-
 import { MockBIP39Service } from "../../../test-config/mocks/MockBIP39Service";
 import { HttpClient } from "@angular/common/http";
 import { MockTranslateService } from "../../../test-config/mocks/MockTranslateService";
+import { ComponentsModule } from "../../components/components.module";
 
 describe("WalletNewPassphrasePage", () => {
   let comp: WalletNewPassphrasePage;
@@ -28,7 +29,8 @@ describe("WalletNewPassphrasePage", () => {
         IonicModule.forRoot(WalletNewPassphrasePage),
         TranslateModule.forRoot({
           loader: {provide: TranslateLoader, useClass: MockTranslationLoader},
-        })
+        }),
+        ComponentsModule
       ],
       providers: [
         { provide: BIP39Service, useValue: bip39Service },

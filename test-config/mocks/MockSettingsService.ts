@@ -1,6 +1,14 @@
 import { ISettingsService } from "../../src/services/settings-service/settings-service";
+import { Observable } from "rxjs/Observable";
+import { Subscriber } from "rxjs";
 
 export class MockSettingService implements ISettingsService {
+    setActiveTheme(val: any): void {
+
+    }
+    getActiveTheme(): Observable<string> {
+        return Observable.of("light-theme");
+    }
     saveNightModeSettings(theme: "dark-theme" | "light-theme"): Promise<void> {
         return Promise.resolve();
     }

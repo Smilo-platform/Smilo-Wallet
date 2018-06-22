@@ -12,6 +12,7 @@ import { AboutPage } from "../about/about";
 import { FaqPage } from "../faq/faq";
 import { SplashScreen } from "@ionic-native/splash-screen";
 import { MockSplashScreen } from "../../../test-config/mocks/MockSplashScreen";
+import { ComponentsModule } from "../../components/components.module";
 
 describe("HomePage", () => {
   let comp: HomePage;
@@ -30,7 +31,8 @@ describe("HomePage", () => {
         IonicModule.forRoot(HomePage),
         TranslateModule.forRoot({
           loader: {provide: TranslateLoader, useClass: MockTranslationLoader},
-        })
+        }),
+        ComponentsModule
       ],
       providers: [
         { provide: NavController, useValue: navController },

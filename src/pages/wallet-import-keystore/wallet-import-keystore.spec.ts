@@ -16,6 +16,7 @@ import { IKeyStore } from "../../models/IKeyStore";
 import { ILocalWallet } from "../../models/ILocalWallet";
 import { NAVIGATION_ORIGIN_KEY } from "../wallet/wallet";
 import { PrepareWalletPage } from "../prepare-wallet/prepare-wallet";
+import { ComponentsModule } from "../../components/components.module";
 
 describe("WalletImportKeystorePage", () => {
   let comp: WalletImportKeystorePage;
@@ -43,7 +44,8 @@ describe("WalletImportKeystorePage", () => {
         IonicModule.forRoot(WalletImportKeystorePage),
         TranslateModule.forRoot({
           loader: {provide: TranslateLoader, useClass: MockTranslationLoader},
-        })
+        }),
+        ComponentsModule
       ],
       providers: [
         { provide: WalletService, useValue: walletService },

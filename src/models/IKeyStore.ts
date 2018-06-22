@@ -39,4 +39,4 @@ export interface IKeyStore {
      * Effectively this is a SHA256 hash of the password+cipherText
      */
     controlHash: string;
-};
+}

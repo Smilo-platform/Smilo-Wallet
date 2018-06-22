@@ -17,6 +17,7 @@ import { IBIP32Service, BIP32Service } from "../../services/bip32-service/bip32-
 import { IBIP39Service, BIP39Service } from "../../services/bip39-service/bip39-service";
 import { MockBIP32Service } from "../../../test-config/mocks/MockBIP32Service";
 import { MockBIP39Service } from "../../../test-config/mocks/MockBIP39Service";
+import { ComponentsModule } from "../../components/components.module";
 
 describe("WalletNewDisclaimerPage", () => {
   let comp: WalletNewDisclaimerPage;
@@ -42,7 +43,8 @@ describe("WalletNewDisclaimerPage", () => {
         IonicModule.forRoot(WalletNewDisclaimerPage),
         TranslateModule.forRoot({
           loader: {provide: TranslateLoader, useClass: MockTranslationLoader},
-        })
+        }),
+        ComponentsModule
       ],
       providers: [
         { provide: KeyStoreService, useValue: keyStoreService },

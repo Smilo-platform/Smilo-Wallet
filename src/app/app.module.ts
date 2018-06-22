@@ -13,7 +13,6 @@ import { WalletOverviewPageModule } from "../pages/wallet-overview/wallet-overvi
 import { WalletPageModule } from "../pages/wallet/wallet.module";
 import { FaqPageModule } from "../pages/faq/faq.module";
 import { SettingsGeneralPageModule } from "../pages/settings-general/settings-general.module";
-import { SettingsWalletPageModule } from "../pages/settings-wallet/settings-wallet.module";
 import { TransferPageModule } from "../pages/transfer/transfer.module";
 import { WalletImportKeystorePageModule } from "../pages/wallet-import-keystore/wallet-import-keystore.module";
 import { WalletImportLedgerPageModule } from "../pages/wallet-import-ledger/wallet-import-ledger.module";
@@ -22,7 +21,6 @@ import { RestoreBackupPageModule } from "../pages/restore-backup/restore-backup.
 import { LandingPageModule } from "../pages/landing/landing.module";
 import { WalletService } from "../services/wallet-service/wallet-service";
 import { IonicStorageModule } from "@ionic/storage";
-import { SettingsProvider } from './../providers/settings/settings';
 import { WalletNewPageModule } from "../pages/wallet-new/wallet-new.module";
 import { WalletImportPageModule } from "../pages/wallet-import/wallet-import.module";
 import { WalletNewPassphrasePageModule } from "../pages/wallet-new-passphrase/wallet-new-passphrase.module";
@@ -40,6 +38,7 @@ import { HockeyApp } from "ionic-hockeyapp";
 import { BIP32Service } from "../services/bip32-service/bip32-service";
 import { MerkleTreeService } from "../services/merkle-tree-service/merkle-tree-service";
 import { PrepareWalletPageModule } from "../pages/prepare-wallet/prepare-wallet.module";
+import { ComponentsModule } from "../components/components.module";
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, "assets/i18n/");
@@ -67,13 +66,13 @@ export function HttpLoaderFactory(http: HttpClient) {
     WalletPageModule,
     FaqPageModule,
     SettingsGeneralPageModule,
-    SettingsWalletPageModule,
     TransferPageModule,
     WalletImportKeystorePageModule,
     WalletImportLedgerPageModule,
     WalletImportPrivatekeyPageModule,
     RestoreBackupPageModule,
     LandingPageModule,
+    ComponentsModule,
     WalletNewPageModule,
     WalletNewPassphrasePageModule,
     WalletNewPasswordPageModule,
@@ -92,7 +91,6 @@ export function HttpLoaderFactory(http: HttpClient) {
   providers: [
     StatusBar,
     SplashScreen,
-    SettingsProvider,
     WalletService,
     NavigationHelperService,
     KeyStoreService,
