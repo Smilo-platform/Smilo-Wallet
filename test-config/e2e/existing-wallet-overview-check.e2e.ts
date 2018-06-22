@@ -43,7 +43,7 @@ describe("Creating a new wallet (happy path)", () => {
         // Refresh the browser so that the data is retrieved from the database on startup
         browser.refresh();
 
-        deleteWalletButtonConfirm = element(by.className("deleteButtonCss"));
+        deleteWalletButtonConfirm = element(by.className("delete-button"));
         deleteWalletButton = element(by.className("delete-wallet"));
         allLegendListItems = element.all(by.className("legend-list-item"));
         allWalletCurrencies = element.all(by.className("wallet-currency"));
@@ -95,7 +95,7 @@ describe("Creating a new wallet (happy path)", () => {
 
         allActionSheetButtons.get(1).click();
 
-        expect(walletTotalValue.getText()).toEqual(<any>"1.72062");
+        expect(walletTotalValue.getText()).toEqual(<any>"1.72764");
 
         browser.sleep(500);
 
@@ -107,7 +107,7 @@ describe("Creating a new wallet (happy path)", () => {
 
         browser.sleep(500);
 
-        expect(walletTotalValue.getText()).toEqual(<any>"0.172062");
+        expect(walletTotalValue.getText()).toEqual(<any>"0.172764");
 
         browser.sleep(500);
 
@@ -127,7 +127,7 @@ describe("Creating a new wallet (happy path)", () => {
 
         browser.sleep(1000);
 
-        expect(walletTotalValue.getText()).toEqual(<any>"1720.62", "wallet 1 total value not correct");
+        expect(walletTotalValue.getText()).toEqual(<any>"1736.77", "wallet 1 total value not correct");
 
         exchangesOverviewButton.click();
 
@@ -137,7 +137,7 @@ describe("Creating a new wallet (happy path)", () => {
 
         browser.sleep(1000);
 
-        expect(walletTotalValue.getText()).toEqual(<any>"1147.08", "wallet 1 total value not correct");
+        expect(walletTotalValue.getText()).toEqual(<any>"1161.12", "wallet 1 total value not correct");
 
         exchangesOverviewButton.click();
 
@@ -148,13 +148,13 @@ describe("Creating a new wallet (happy path)", () => {
         browser.sleep(1000);
 
         expect(allWalletItems.get(0).getText()).toEqual(<any>"Biosta (ETm9QUJLVdJkTqRojTNqswmeAQGaofojJJ)", "wallet 1 name not correct");
-        expect(allWalletCurrencies.get(0).element(by.className("amount-header")).getText()).toEqual(<any>"Smilo", "wallet 1 currency header 1 not correct");
+        expect(allWalletCurrencies.get(0).element(by.className("amount-header")).getText()).toEqual(<any>"XSM", "wallet 1 currency header 1 not correct");
         expect(allWalletCurrencies.get(0).element(by.className("value-text")).getText()).toEqual(<any>'5712', "wallet 1 currency 1 not correct");
-        expect(allWalletCurrencies.get(1).element(by.className("amount-header")).getText()).toEqual(<any>"SmiloPay", "wallet 1 currency header 2 not correct");
+        expect(allWalletCurrencies.get(1).element(by.className("amount-header")).getText()).toEqual(<any>"XSP", "wallet 1 currency header 2 not correct");
         expect(allWalletCurrencies.get(1).element(by.className("value-text")).getText()).toEqual(<any>'234', "wallet 1 currency 2 not correct");
-        expect(walletTotalValue.getText()).toEqual(<any>"1433.85", "wallet 1 total value not correct");
-        expect(allLegendListItems.get(0).element(by.className("legend-text")).getText()).toEqual(<any>"Smilo 96.06%", "wallet 1 currency 1 percentage not correct");
-        expect(allLegendListItems.get(1).element(by.className("legend-text")).getText()).toEqual(<any>"SmiloPay 3.94%", "wallet 1 currency 2 not correct");
+        expect(walletTotalValue.getText()).toEqual(<any>"1439.7", "wallet 1 total value not correct");
+        expect(allLegendListItems.get(0).element(by.className("legend-text")).getText()).toEqual(<any>"XSM 96.06%", "wallet 1 currency 1 percentage not correct");
+        expect(allLegendListItems.get(1).element(by.className("legend-text")).getText()).toEqual(<any>"XSP 3.94%", "wallet 1 currency 2 not correct");
 
         allWalletItems.get(1).click();
 
@@ -163,13 +163,13 @@ describe("Creating a new wallet (happy path)", () => {
         expect(allWalletItems.get(1).getAttribute("class")).toMatch("item-radio-checked");
 
         expect(allWalletItems.get(1).getText()).toEqual(<any>"Labilo (ELsKCchf9rcGsufjRR62PG5Fn5dFinfgeN)", "wallet 2 name not correct");
-        expect(allWalletCurrencies.get(0).element(by.className("amount-header")).getText()).toEqual(<any>"Smilo", "wallet 2 currency header 1 not correct");
+        expect(allWalletCurrencies.get(0).element(by.className("amount-header")).getText()).toEqual(<any>"XSM", "wallet 2 currency header 1 not correct");
         expect(allWalletCurrencies.get(0).element(by.className("value-text")).getText()).toEqual(<any>'8122', "wallet 2 currency 1 not correct");
-        expect(allWalletCurrencies.get(1).element(by.className("amount-header")).getText()).toEqual(<any>"SmiloPay", "wallet 2 currency header 2 not correct");
+        expect(allWalletCurrencies.get(1).element(by.className("amount-header")).getText()).toEqual(<any>"XSP", "wallet 2 currency header 2 not correct");
         expect(allWalletCurrencies.get(1).element(by.className("value-text")).getText()).toEqual(<any>"634", "wallet 2 currency 2 not correct");
-        expect(walletTotalValue.getText()).toEqual(<any>"2046.35", "wallet 2 total value not correct");
-        expect(allLegendListItems.get(0).element(by.className("legend-text")).getText()).toEqual(<any>"Smilo 92.76%", "wallet 2 currency 1 percentage not correct");
-        expect(allLegendListItems.get(1).element(by.className("legend-text")).getText()).toEqual(<any>"SmiloPay 7.24%", "wallet 2 currency 2 not correct");
+        expect(walletTotalValue.getText()).toEqual(<any>"2062.2", "wallet 2 total value not correct");
+        expect(allLegendListItems.get(0).element(by.className("legend-text")).getText()).toEqual(<any>"XSM 92.76%", "wallet 2 currency 1 percentage not correct");
+        expect(allLegendListItems.get(1).element(by.className("legend-text")).getText()).toEqual(<any>"XSP 7.24%", "wallet 2 currency 2 not correct");
 
         allWalletItems.get(2).click();
 
@@ -178,13 +178,13 @@ describe("Creating a new wallet (happy path)", () => {
         expect(allWalletItems.get(2).getAttribute("class")).toMatch("item-radio-checked");
 
         expect(allWalletItems.get(2).getText()).toEqual(<any>"Zalista (EZ7tP3CBdBKrB9MaBgZNHyDcTg5TFRRpaY)", "wallet 3 name not correct");
-        expect(allWalletCurrencies.get(0).element(by.className("amount-header")).getText()).toEqual(<any>"Smilo", "wallet 3 currency header 1 not correct");
+        expect(allWalletCurrencies.get(0).element(by.className("amount-header")).getText()).toEqual(<any>"XSM", "wallet 3 currency header 1 not correct");
         expect(allWalletCurrencies.get(0).element(by.className("value-text")).getText()).toEqual(<any>"168234", "wallet 3 currency 1 not correct");
-        expect(allWalletCurrencies.get(1).element(by.className("amount-header")).getText()).toEqual(<any>"SmiloPay", "wallet 3 currency header 2 not correct");
+        expect(allWalletCurrencies.get(1).element(by.className("amount-header")).getText()).toEqual(<any>"XSP", "wallet 3 currency header 2 not correct");
         expect(allWalletCurrencies.get(1).element(by.className("value-text")).getText()).toEqual(<any>"2993", "wallet 3 currency 2 not correct");
-        expect(walletTotalValue.getText()).toEqual(<any>"42133.32", "wallet 3 total value not correct");
-        expect(allLegendListItems.get(0).element(by.className("legend-text")).getText()).toEqual(<any>"Smilo 98.25%", "wallet 3 currency 1 percentage not correct");
-        expect(allLegendListItems.get(1).element(by.className("legend-text")).getText()).toEqual(<any>"SmiloPay 1.75%", "wallet 3 currency 2 not correct");
+        expect(walletTotalValue.getText()).toEqual(<any>"42208.15", "wallet 3 total value not correct");
+        expect(allLegendListItems.get(0).element(by.className("legend-text")).getText()).toEqual(<any>"XSM 98.25%", "wallet 3 currency 1 percentage not correct");
+        expect(allLegendListItems.get(1).element(by.className("legend-text")).getText()).toEqual(<any>"XSP 1.75%", "wallet 3 currency 2 not correct");
 
         deleteWalletButton.click();
 

@@ -20,7 +20,7 @@
             <ion-col class="wallet-info-col" *ngIf="currentWallet" col-xl-3>
                 <h4 class="margin-header">{{ 'wallet_overview.wallet_info' | translate }}</h4>
                 <ion-card class="funds-overview" [@visibilityChanged]="walletFundsVisibility">
-                    <ion-card-header class="wallet-currency" *ngFor="let currency of currentWallet.currencies;">
+                    <ion-card-header class="wallet-currency" *ngFor="let currency of currentWallet.balances;">
                         <p class="amount-header">{{ currency.currency }}</p>
                         <div>
                             <p class="value-text">{{ currency.amount }}</p>
@@ -29,7 +29,7 @@
                     </ion-card-header>
                     <ion-card-header>
                         <p id="total-value-text">{{ 'wallet_overview.total_value' | translate }}</p>
-                        <p id="total-wallet-value">{{ currentWallet.totalCurrentCurrencyValue }}</p>
+                        <p id="total-wallet-value">{{ totalCurrentCurrencyValue }}</p>
                         <p id="total-wallet-value-currency">{{ pickedCurrency }}</p>
                     </ion-card-header>
                     <button (click)="transfer()" class="transfer-button" ion-button>{{ 'wallet_overview.transfer' | translate }}</button>
@@ -52,7 +52,7 @@
                     </ion-list>
                 <ion-card class="distribution-overview" [@visibilityChanged]="walletFundsVisibility">
                     <ion-card-header>
-                        {{ 'wallet_overview.distribution' | translate }}
+                        <p>{{ 'wallet_overview.distribution' | translate }}</p>
                         <canvas #doughnutCanvas class="distribution-dougnut"> </canvas>
                         <div id="doughnut-agenda" class="legend-list" ref="legend">
                             <ul class="legend-list">

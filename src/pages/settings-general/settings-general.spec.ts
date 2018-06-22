@@ -6,12 +6,17 @@ import { MockNavParams } from "../../../test-config/mocks/MockNavParams";
 import { TranslateModule, TranslateLoader, TranslateService } from "@ngx-translate/core";
 import { MockTranslationLoader } from "../../../test-config/mocks/MockTranslationLoader";
 import { SettingsProvider } from "../../providers/settings/settings";
+import { SettingsService } from "../../services/settings-service/settings-service";
+import { MockSettingService } from "../../../test-config/mocks/MockSettingsService";
 
 describe("SettingsGeneralPage", () => {
   let comp: SettingsGeneralPage;
   let fixture: ComponentFixture<SettingsGeneralPage>;
+  let settingsService: MockSettingService;
 
   beforeEach(async(() => {
+    settingsService = new MockSettingService();
+
     TestBed.configureTestingModule({
       declarations: [SettingsGeneralPage],
       imports: [
@@ -24,6 +29,7 @@ describe("SettingsGeneralPage", () => {
         SettingsProvider,
         TranslateService,
         { provide: NavController, useClass: MockNavController },
+        { provide: SettingsService, useValue: settingsService },
         { provide: NavParams, useValue: new MockNavParams() }
       ]
     }).compileComponents();

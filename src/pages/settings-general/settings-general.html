@@ -5,33 +5,31 @@
 </ion-header>
 
 <ion-content padding>
-    <h4 class="margin-top">{{ 'settings_page.headers.visual' | translate }}</h4>
-    <ion-card>
-          <ion-item>
-              <ion-label>{{ 'settings_page.text.night_mode' | translate }}</ion-label>
-              <ion-toggle [(ngModel)]="nightModeStatus" (ionChange)="nightModeSwitch()" checked="false" color="secondary"></ion-toggle>
-          </ion-item>
-    </ion-card>
+    <ion-grid>
+        <ion-row justify-content-center>
+           <ion-col col-12 col-xl-5>
+              <h4 class="margin-top">{{ 'settings_page.headers.visual' | translate }}</h4>
 
-    <h4 class="margin-top">{{ 'settings_page.headers.security' | translate }}</h4>
-    <ion-card>
-          <ion-item>
-              <ion-label>{{ 'settings_page.text.2fa' | translate }}</ion-label>
-              <ion-toggle [(ngModel)]="twoFactorAuthStatus" (ionChange)="twoFactorAuthSwitch()" checked="false" color="secondary"></ion-toggle>
-          </ion-item>
-    </ion-card>
+              <ion-list radio-group>
+                 <ion-item>
+                        <ion-label>{{ 'settings_page.text.night_mode' | translate }}</ion-label>
+                        <ion-toggle [(ngModel)]="nightModeStatus" (ionChange)="nightModeSwitch()" checked="false" color="secondary"></ion-toggle>
+                    </ion-item>
+              </ion-list>
 
-    <h4 class="margin-top">{{ 'settings_page.headers.language' | translate }}</h4>
-    <ion-list radio-group>
-        <ion-item>
-          <ion-label>English</ion-label>
-          <ion-radio checked="true" (ionSelect)="changeLanguage('en')" value="en"></ion-radio>
-        </ion-item>
-      
-        <ion-item>
-          <ion-label>Nederlands</ion-label>
-          <ion-radio checked="false" (ionSelect)="changeLanguage('nl')" value="nl"></ion-radio>
-        </ion-item>
-    </ion-list>
-
+              <h4 class="margin-top">{{ 'settings_page.headers.language' | translate }}</h4>
+              <ion-list radio-group>
+                  <ion-item>
+                    <ion-label>English</ion-label>
+                    <ion-radio checked="true" (ionSelect)="changeLanguage('en')" value="en"></ion-radio>
+                  </ion-item>
+                
+                  <ion-item>
+                    <ion-label>Nederlands</ion-label>
+                    <ion-radio checked="false" (ionSelect)="changeLanguage('nl')" value="nl"></ion-radio>
+                  </ion-item>
+              </ion-list>
+          </ion-col>
+      </ion-row>
+    </ion-grid>
 </ion-content>

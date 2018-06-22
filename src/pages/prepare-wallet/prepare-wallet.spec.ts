@@ -94,6 +94,7 @@ describe("PrepareWalletPage", () => {
     comp.password = "pass123";
 
     spyOn(merkleTreeService, "generate").and.returnValue(Promise.resolve());
+    spyOn(comp, "onMerkleTreeGenerated");
 
     comp.generateMerkleTree();
 
@@ -207,7 +208,7 @@ describe("PrepareWalletPage", () => {
 
         done();
       }
-    )
+    );
   });
 
   it("should navigate back correctly when the origin page is 'landing'", () => {

@@ -26,7 +26,7 @@ describe("WalletImportPrivatekeyPage", () => {
   let comp: WalletImportPrivatekeyPage;
   let fixture: ComponentFixture<WalletImportPrivatekeyPage>;
   let walletService: IWalletService;
-  let cryptoKeyService: CryptoKeyService;
+  let cryptoKeyService: MockCryptoKeyService;
   let modalController: MockModalController;
   let navParams: NavParams;
   let navController: MockNavController;
@@ -206,8 +206,7 @@ describe("WalletImportPrivatekeyPage", () => {
         keyStore: dummyKeyStore,
         transactions: [],
         lastUpdateTime: null,
-        currencies: [],
-        totalCurrentCurrencyValue: 0
+        balances: []
       }
     );
 

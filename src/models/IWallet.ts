@@ -1,5 +1,5 @@
 import { ITransaction } from "./ITransaction";
-import { ICurrency } from "./ICurrency";
+import { IBalance } from "./IBalance";
 
 export declare type WalletType = "local" | "ledger";
 
@@ -36,11 +36,5 @@ export interface IWallet {
      * 
      * This value contains an amount and name of the currency
      */
-    currencies: ICurrency[];
-    /**
-     * The total amount of currencies on the wallet
-     * 
-     * This value is being used for the dougnut chart to express the distribution of the currencies
-     */
-    totalCurrentCurrencyValue: number;
+    balances: IBalance[];
 }

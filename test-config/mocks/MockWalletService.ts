@@ -2,21 +2,24 @@ import { WalletService, IWalletService } from "../../src/services/wallet-service
 import { IWallet } from "../../src/models/IWallet";
 
 export class MockWalletService implements IWalletService {
+    getCurrencyValue(currency: string, exchange: string) {
+        throw new Error("Method not implemented.");
+    }
 
     getAvailableExchanges() {
-        return new Promise(resolve => { resolve([
-            {"exchange": "Bitmex", "availableCurrencies": ["$", "ETH", "BTC"]},
-            {"exchange": "GDAX", "availableCurrencies": ["$", "BTC"]},
-            {"exchange": "CexIO", "availableCurrencies": ["$"]},
-            {"exchange": "Kraken", "availableCurrencies": ["$"]},
-            {"exchange": "Coinbase", "availableCurrencies": ["$", "ETH", "BTC"]}
-        ])});
+        return new Promise(resolve => { resolve({"availableExchanges": [
+            {"exchange": "Bitmex", "availableCurrencies": ["USD", "ETH", "BTC", "XSM"]},
+            {"exchange": "GDAX", "availableCurrencies": ["USD", "BTC", "XSM"]},
+            {"exchange": "CexIO", "availableCurrencies": ["USD", "XSM"]},
+            {"exchange": "Kraken", "availableCurrencies": ["USD", "XSM"]},
+            {"exchange": "Coinbase", "availableCurrencies": ["USD", "ETH", "BTC", "XSM"]}
+        ]})});
     }
     getWalletBalance(publicKey: string) {
         return new Promise(resolve => { resolve(
             { "publicKey": "ETm9QUJLVdJkTqRojTNqswmeAQGaofojJJ", "storedCoins": [
-                { "currency": "Smilo", "amount": 5712 },
-                { "currency": "SmiloPay", "amount": 234}
+                { "currency": "XSM", "amount": 5712 },
+                { "currency": "XSP", "amount": 234}
             ]
         })});
     }
@@ -40,10 +43,10 @@ export class MockWalletService implements IWalletService {
                 "encryptedPrivateKey":"E9873D79C6D87DC0FB6A5778633389F4453213303DA61F20BD67FC233AA33262"}]
         )});
     }
-    getCurrencyValue(currency: string) {
+    getPrices(currency: string) {
         return new Promise(resolve => {resolve([
-            {"currencyTo": "$", "currencyFrom": "Smilo", "value": 0.25},
-            {"currencyTo": "$", "currencyFrom": "SmiloPay", "value": 0.025}
+            {"currencyTo": "USD", "currencyFrom": "XSM", "value": 0.25},
+            {"currencyTo": "USD", "currencyFrom": "XSP", "value": 0.025}
         ])});
     }
 

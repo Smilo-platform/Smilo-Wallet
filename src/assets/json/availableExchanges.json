@@ -1,0 +1,9 @@
+{   
+    "availableExchanges": [
+      {"exchangeName": "Bitmex", "availableCurrencies": ["USD", "ETH", "BTC", "XSM"]},
+      {"exchangeName": "GDAX", "availableCurrencies": ["USD", "BTC", "XSM"]},
+      {"exchangeName": "CexIO", "availableCurrencies": ["USD", "XSM"]},
+      {"exchangeName": "Kraken", "availableCurrencies": ["USD", "XSM"]},
+      {"exchangeName": "Coinbase", "availableCurrencies": ["USD", "ETH", "BTC", "XSM"]}
+    ]
+}

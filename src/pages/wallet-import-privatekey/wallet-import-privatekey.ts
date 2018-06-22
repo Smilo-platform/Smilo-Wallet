@@ -67,8 +67,7 @@ export class WalletImportPrivatekeyPage {
       keyStore: this.keyStoreService.createKeyStore(this.privateKey, this.password),
       transactions: [],
       lastUpdateTime: null,
-      currencies: [],
-      totalCurrentCurrencyValue: 0
+      balances: []
     };
 
     return wallet;

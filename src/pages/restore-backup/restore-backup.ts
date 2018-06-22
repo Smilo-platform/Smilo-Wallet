@@ -90,8 +90,7 @@ export class RestoreBackupPage {
       keyStore: keyStore,
       transactions: [],
       lastUpdateTime: null,
-      currencies: [],
-      totalCurrentCurrencyValue: 0
+      balances: []
     };
 
     return wallet;

@@ -190,8 +190,7 @@ describe("WalletNewDisclaimerPage", () => {
         keyStore: dummyKeyStore,
         transactions: [],
         lastUpdateTime: null,
-        currencies: [],
-        totalCurrentCurrencyValue: 0
+        balances: []
       }
     );
   });
