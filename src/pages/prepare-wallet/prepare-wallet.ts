@@ -43,31 +43,42 @@ export class PrepareWalletPage {
               private walletService: WalletService,
               private translateService: TranslateService,
               private toastController: ToastController) {
-    this.wallet = navParams.get("wallet");
-    this.password = navParams.get("password");
+    
+  }
+
+  ionViewDidLoad() {
+    this.initialize();
+  }
+
+  initialize() {
+    this.wallet = this.navParams.get("wallet");
+    this.password = this.navParams.get("password");
 
     this.translateService.get("prepare_wallet.toast.success").subscribe(
       (message) => {
         this.successMessage = message;
       }
     );
-  }
 
-  ionViewDidLoad() {
     // Wait 500ms to allow the view to properly animate.
     setTimeout(() => {
       this.generateMerkleTree();
     }, 500);
   }
 
-  generateMerkleTree() {
-    this.merkleTreeService.generate(this.wallet, this.password, this.onProgressUpdate).then(
+  generateMerkleTree(): Promise<void> {
+    return this.merkleTreeService.generate(this.wallet, this.password, this.onProgressUpdate).then(
       this.onMerkleTreeGenerated,
       this.onMerkleTreeFailed
     );
   }
 
   onProgressUpdate = (progress: number) => {
+    if(progress < 0)
+      progress = 0;
+    else if(progress > 1)
+      progress = 1;
+
     let progressPerUpdate = 1 / this.statusMessages.length;
 
     this.progress = Math.round(progress * 100);
