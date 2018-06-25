@@ -1,7 +1,17 @@
 page-about {
-    .title {
-        font-weight: bold;
-        margin-bottom: -10px;
+    .scroll-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .about-container {
+            max-width: 600px;
+
+            .title {
+                font-weight: bold;
+                margin-bottom: -10px;
+            }
+        }
     }
 }
 

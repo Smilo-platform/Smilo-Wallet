@@ -58,7 +58,7 @@
       {{ passphraseStatus.errorMessage }}
     </span>
 
-    <button *ngIf="dataIsValid()" class="smilo-button import-button" (click)="import()">
+    <button ion-button *ngIf="dataIsValid()" class="smilo-button import-button" (click)="import()">
       {{ 'restore_backup.buttons.import' | translate }}
     </button>
   </div>
