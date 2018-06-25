@@ -4,6 +4,23 @@ page-landing {
 
         display: flex;
         flex-direction: column;
+        
+        .settings-button {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            color: white !important;
+            font-size: 32px;
+
+            &:hover {
+                cursor: pointer;
+            }
+
+            @media screen and (max-width: 500px) {
+                top: initial;
+                bottom: 16px;
+            }
+        }
 
         .logo-container {
             display: flex;

@@ -1,4 +1,6 @@
-<smilo-nav-header titleTranslationKey="import_privatekey.nav-bar-title"></smilo-nav-header>
+<ion-header>
+  <smilo-nav-header titleTranslationKey="import_privatekey.nav-bar-title"></smilo-nav-header>
+</ion-header>
 
 <ion-content padding>
 
@@ -41,7 +43,7 @@
       {{ 'import_privatekey.password_why' | translate }}
     </a>
 
-    <button *ngIf="dataIsValid()" class="smilo-button import-button" (click)="import()">
+    <button ion-button *ngIf="dataIsValid()" class="smilo-button import-button" (click)="import()">
       {{ 'import_privatekey.buttons.import' | translate }}
     </button>
   </div>

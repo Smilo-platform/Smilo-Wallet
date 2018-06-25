@@ -1,4 +1,6 @@
-<smilo-nav-header titleTranslationKey="home.nav-bar-title"></smilo-nav-header>
+<ion-header>
+    <smilo-nav-header titleTranslationKey="home.nav-bar-title"></smilo-nav-header>
+</ion-header>
 
 <ion-content padding>
 
@@ -10,19 +12,19 @@
   </div>
 
   <div class="button-container">
-    <button (click)="openNewWallet()" class="smilo-button">
+    <button ion-button (click)="openNewWallet()" class="smilo-button">
       {{ 'home.buttons.new_wallet' | translate }}
     </button>
 
-    <button (click)="openMyWallet()" class="smilo-button wallet-overview-page">
+    <button ion-button (click)="openMyWallet()" class="smilo-button wallet-overview-page">
         {{ 'home.buttons.my_wallet' | translate }}
     </button>
 
-    <button (click)="openAbout()" class="smilo-button">
+    <button ion-button (click)="openAbout()" class="smilo-button">
         {{ 'home.buttons.about' | translate }}
     </button>
 
-    <button (click)="openFaq()" class="smilo-button">
+    <button ion-button (click)="openFaq()" class="smilo-button">
         {{ 'home.buttons.faq' | translate }}
     </button>
   </div>

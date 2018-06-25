@@ -18,11 +18,11 @@ page-wallet-import {
         }
 
         .action-container {
+            margin-top: 30px;
             flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
 
             .restore-backup-button {
                 color: gray;
