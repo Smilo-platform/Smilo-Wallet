@@ -8,6 +8,7 @@ import { HomePage } from "../home/home";
 import { NavigationHelperService } from "../../services/navigation-helper-service/navigation-helper-service";
 import { WalletService } from "../../services/wallet-service/wallet-service";
 import { TranslateService } from "@ngx-translate/core";
+import { Platform } from "ionic-angular/platform/platform";
 
 @IonicPage()
 @Component({
@@ -36,18 +37,34 @@ export class PrepareWalletPage {
    */
   successMessage: string;
 
+  unregisterBackButtonAction: Function;
+
   constructor(private navCtrl: NavController, 
               private navParams: NavParams,
               private merkleTreeService: MerkleTreeService,
               private navigationHelperService: NavigationHelperService,
               private walletService: WalletService,
               private translateService: TranslateService,
-              private toastController: ToastController) {
+              private toastController: ToastController,
+              private platform: Platform) {
     
   }
 
   ionViewDidLoad() {
     this.initialize();
+
+    // Register for the back button action. On iOS this will simply never get called.
+    // The returned value is a function we can call to unregister for the back button.
+    this.unregisterBackButtonAction = this.platform.registerBackButtonAction(this.onBackButtonClicked, 101);
+  }
+
+  ionViewDidLeave() {
+    // Unregister the back button action to allow the use of the back button again.
+    this.unregisterBackButtonAction();
+  }
+
+  onBackButtonClicked = () => {
+    // We simply do nothing!
   }
 
   initialize() {
