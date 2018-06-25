@@ -47,7 +47,7 @@ export class PrepareWalletPage {
               private walletService: WalletService,
               private translateService: TranslateService,
               private toastController: ToastController,
-              private modalController: ModalController) {
+              private modalController: ModalController,
               private platform: Platform) {
     
   }
