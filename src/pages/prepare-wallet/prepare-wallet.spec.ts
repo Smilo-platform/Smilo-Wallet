@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 import { PrepareWalletPage } from "./prepare-wallet";
-import { IonicModule, NavController, NavParams, ToastController} from "ionic-angular/index";
+import { IonicModule, NavController, NavParams, ToastController, ModalController} from "ionic-angular/index";
 import { MockNavController } from "../../../test-config/mocks/MockNavController";
 import { MockNavParams } from "../../../test-config/mocks/MockNavParams";
 import { TranslateModule, TranslateLoader, TranslateService } from "@ngx-translate/core";
@@ -15,6 +15,9 @@ import { HomePage } from "../home/home";
 import { MockTranslateService } from "../../../test-config/mocks/MockTranslateService";
 import { MockToast } from "../../../test-config/mocks/MockToast";
 import { MockMerkleTree } from "../../../test-config/mocks/MockMerkleTree";
+import { MockModalController } from "../../../test-config/mocks/MockModalController";
+import { MockModal } from "../../../test-config/mocks/MockModal";
+import { WalletErrorPage } from "../wallet-error/wallet-error";
 
 describe("PrepareWalletPage", () => {
   let comp: PrepareWalletPage;
@@ -26,6 +29,7 @@ describe("PrepareWalletPage", () => {
   let merkleTreeService: MockMerkleTreeService;
   let toastController: MockToastController;
   let translateService: MockTranslateService;
+  let modalController: MockModalController;
 
   beforeEach(async(() => {
     walletService = new MockWalletService();
@@ -35,6 +39,7 @@ describe("PrepareWalletPage", () => {
     merkleTreeService = new MockMerkleTreeService();
     toastController = new MockToastController();
     translateService = new MockTranslateService();
+    modalController = new MockModalController();
 
     TestBed.configureTestingModule({
       declarations: [PrepareWalletPage],
@@ -51,7 +56,8 @@ describe("PrepareWalletPage", () => {
         { provide: NavigationHelperService, useValue: navigationHelperService },
         { provide: ToastController, useValue: toastController },
         { provide: MerkleTreeService, useValue: merkleTreeService },
-        { provide: TranslateService, useValue: translateService }
+        { provide: TranslateService, useValue: translateService },
+        { provide: ModalController, useValue: modalController }
       ]
     }).compileComponents();
   }));
@@ -209,6 +215,19 @@ describe("PrepareWalletPage", () => {
         done();
       }
     );
+  });
+
+  it("should handle the merkle tree failed event correctly", () => {
+    let modal: MockModal = new MockModal();
+
+    spyOn(modalController, "create").and.returnValue(modal);
+
+    spyOn(modal, "present");
+
+    comp.onMerkleTreeFailed("Some Error");
+
+    expect(modalController.create).toHaveBeenCalledWith(WalletErrorPage, {error: "Some Error"}, {enableBackdropDismiss: false});
+    expect(modal.present).toHaveBeenCalled();
   });
 
   it("should navigate back correctly when the origin page is 'landing'", () => {

@@ -1,0 +1,23 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>{{ 'wallet_error.title' | translate }}</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content padding>
+  <div class="message">
+    {{ 'wallet_error.message' | translate }}
+  </div>
+
+  <div class="error">
+    {{ error }}
+  </div>
+
+  <div class="button-container">
+    <button ion-button (click)="goBack()">
+      {{ 'wallet_error.buttons.go_back' | translate }}
+    </button>
+  </div>
+</ion-content>

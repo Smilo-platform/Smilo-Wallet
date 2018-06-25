@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { IonicPage, NavController, NavParams, ToastController } from "ionic-angular";
+import { IonicPage, NavController, NavParams, ToastController, ModalController } from "ionic-angular";
 import { ILocalWallet } from "../../models/ILocalWallet";
 import { MerkleTree } from "../../merkle/MerkleTree";
 import { MerkleTreeService } from "../../services/merkle-tree-service/merkle-tree-service";
@@ -8,6 +8,7 @@ import { HomePage } from "../home/home";
 import { NavigationHelperService } from "../../services/navigation-helper-service/navigation-helper-service";
 import { WalletService } from "../../services/wallet-service/wallet-service";
 import { TranslateService } from "@ngx-translate/core";
+import { WalletErrorPage } from "../wallet-error/wallet-error";
 
 @IonicPage()
 @Component({
@@ -42,7 +43,8 @@ export class PrepareWalletPage {
               private navigationHelperService: NavigationHelperService,
               private walletService: WalletService,
               private translateService: TranslateService,
-              private toastController: ToastController) {
+              private toastController: ToastController,
+              private modalController: ModalController) {
     
   }
 
@@ -115,8 +117,17 @@ export class PrepareWalletPage {
   }
 
   onMerkleTreeFailed = (error) => {
-    // Display error, after user goes back to origin page.
-    console.error("Failed to generate Merkle Tree", error);
+    let modal = this.modalController.create(WalletErrorPage, {
+      error: error.toString()
+    }, {
+      enableBackdropDismiss: false
+    });
+
+    modal.present();
+
+    modal.onDidDismiss(() => {
+      this.goBackToOriginPage();
+    });
   }
 
   goBackToOriginPage() {
