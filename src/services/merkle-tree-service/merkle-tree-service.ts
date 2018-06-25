@@ -4,6 +4,7 @@ import { MerkleTree, IMerkleTreeConfig } from "../../merkle/MerkleTree";
 import { KeyStoreService } from "../key-store-service/key-store-service";
 import { Storage } from "@ionic/storage";
 import { ILocalWallet } from "../../models/ILocalWallet";
+import { Platform } from "ionic-angular/platform/platform";
 
 export interface IMerkleTreeService {
     generate(wallet: IWallet, password: string, progressUpdate: (progress: number) => void): Promise<void>;
@@ -18,7 +19,8 @@ export class MerkleTreeService implements IMerkleTreeService {
     private cache: {[index: string]: MerkleTree} = {};
 
     constructor(private keyStoreService: KeyStoreService,
-                private storage: Storage) {
+                private storage: Storage,
+                private platform: Platform) {
         
     }
 
@@ -27,7 +29,7 @@ export class MerkleTreeService implements IMerkleTreeService {
         let privateKey = this.keyStoreService.decryptKeyStore(wallet.keyStore, password);
 
         // Start generating the Merkle Tree
-        return MerkleTree.generate(privateKey, 18, progressUpdate).then(
+        return MerkleTree.generate(privateKey, 18, this.platform, progressUpdate).then(
             (merkleTree) => {
                 // Cache Merkle Tree
                 this.cache[wallet.id] = merkleTree;
@@ -36,7 +38,7 @@ export class MerkleTreeService implements IMerkleTreeService {
                 return merkleTree.serialize(wallet.id, this.storage, this.keyStoreService, password);
             }
         );
-    }    
+    }
     
     get(wallet: IWallet, password: string): Promise<MerkleTree> {
         // In cache?
