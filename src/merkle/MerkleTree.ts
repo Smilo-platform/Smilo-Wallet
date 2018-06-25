@@ -7,6 +7,7 @@ import { Storage } from "@ionic/storage";
 import { KeyStoreService } from "../services/key-store-service/key-store-service";
 import { IWallet } from "../models/IWallet";
 import { IKeyStore } from "../models/IKeyStore";
+import { Platform } from "ionic-angular/platform/platform";
 
 export interface IMerkleTreeConfig {
     version: number;
@@ -14,7 +15,7 @@ export interface IMerkleTreeConfig {
 }
 
 export class MerkleTree {
-    private static readonly KEYS_PER_THREAD = 100;
+    private static readonly KEYS_PER_JOB = 100;
     private static readonly VERSION = 1;
     private static md256;
 
@@ -89,8 +90,8 @@ export class MerkleTree {
         }
     }
 
-    static generate(privateKey: string, layerCount: number, progressUpdate?: (progress: number) => void): Promise<MerkleTree> {
-        return MerkleTree.generateLeafKeys(privateKey, layerCount, progressUpdate).then(
+    static generate(privateKey: string, layerCount: number, platform: Platform, progressUpdate?: (progress: number) => void): Promise<MerkleTree> {
+        return MerkleTree.generateLeafKeys(privateKey, layerCount, platform, progressUpdate).then(
             (publicKeys) => {
                 return new MerkleTree(MerkleTree.generateLayers(publicKeys, layerCount));
             }
@@ -182,27 +183,53 @@ export class MerkleTree {
         return layers;
     }
 
-    private static generateLeafKeys(privateKey: string, layerCount: number, progressUpdate?: (progress: number) => void): Promise<string[]> {
+    private static generateLeafKeys(privateKey: string, layerCount: number, platform: Platform, progressUpdate?: (progress: number) => void): Promise<string[]> {
         return new Promise((resolve, reject) => {
             let prng = new (<any>Math).seedrandom(privateKey);
 
             let totalKeys = Math.pow(2, layerCount - 1);
 
+            console.log("protocol", window.location.protocol);
+            console.log("host", window.location.host);
+
+            let scripts: string[];
+
+            if(platform.is("android")) {
+                // Android requires the scripts to be loaded as shown below.
+                scripts = [
+                    `file:///android_asset/www/assets/scripts/forge.min.js`,
+                    `file:///android_asset/www/assets/scripts/sjcl.js`,
+                    `file:///android_asset/www/assets/scripts/seedrandom.min.js`
+                ];
+            }
+            else if(platform.is("ios")) {
+                // Do we need to do anything special for iOS?
+                scripts = [
+                    `${ window.location.protocol }//${ window.location.host }/assets/scripts/forge.min.js`,
+                    `${ window.location.protocol }//${ window.location.host }/assets/scripts/sjcl.js`,
+                    `${ window.location.protocol }//${ window.location.host }/assets/scripts/seedrandom.min.js`,
+                ];
+            }
+            else {
+                // Web is easy.
+                scripts = [
+                    `${ window.location.protocol }//${ window.location.host }/assets/scripts/forge.min.js`,
+                    `${ window.location.protocol }//${ window.location.host }/assets/scripts/sjcl.js`,
+                    `${ window.location.protocol }//${ window.location.host }/assets/scripts/seedrandom.min.js`,
+                ];
+            }
+
             // Create a thread pool
             let pool = new Pool();
-            pool.run(LamportGeneratorThread, [
-                `${ window.location.protocol }//${ window.location.host }/assets/scripts/forge.min.js`,
-                `${ window.location.protocol }//${ window.location.host }/assets/scripts/sjcl.js`,
-                `${ window.location.protocol }//${ window.location.host }/assets/scripts/seedrandom.min.js`
-            ]);
+            pool.run(LamportGeneratorThread, scripts);
 
-            let totalJobs = Math.ceil(totalKeys / MerkleTree.KEYS_PER_THREAD);
+            let totalJobs = Math.ceil(totalKeys / MerkleTree.KEYS_PER_JOB);
             let totalJobsDone = 0;
 
             // Enqueue jobs for the thread pool
-            for(let i = 0; i < totalKeys; i += MerkleTree.KEYS_PER_THREAD) {
+            for(let i = 0; i < totalKeys; i += MerkleTree.KEYS_PER_JOB) {
                 // Determine how many keys are still left to be generated
-                let keysThisIteration = Math.min(MerkleTree.KEYS_PER_THREAD, totalKeys - i);
+                let keysThisIteration = Math.min(MerkleTree.KEYS_PER_JOB, totalKeys - i);
 
                 // Generate seeds
                 let seeds: Uint8Array[] = [];
@@ -230,8 +257,11 @@ export class MerkleTree {
 
                 totalJobsDone++;
 
-                if(progressUpdate)  
-                    progressUpdate(totalJobsDone / totalJobs);
+                if(progressUpdate) {
+                    // We only count to 99% because the last 1% is used
+                    // to serialize the Merkle Tree.
+                    progressUpdate((totalJobsDone / totalJobs) * 0.99);
+                }
             });
 
             pool.on("error", (job, error) => {
