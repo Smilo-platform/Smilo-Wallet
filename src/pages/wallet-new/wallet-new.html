@@ -55,7 +55,7 @@
       <div class="action-container">
         <ion-icon class="button-icon" name="download"></ion-icon>
     
-        <button class="smilo-button download-backup-button" (click)="warningState = 'second'">
+        <button ion-button class="smilo-button download-backup-button" (click)="warningState = 'second'">
           {{ 'new_wallet.buttons.download_backup' | translate }}
         </button>
       </div>
@@ -108,7 +108,7 @@
       <div class="action-container">
         <ion-icon class="button-icon" name="unlock"></ion-icon>
     
-        <button class="smilo-button show-passphrase-button" (click)="goToPassphrasePage()">
+        <button ion-button class="smilo-button show-passphrase-button" (click)="goToPassphrasePage()">
           {{ 'new_wallet.buttons.show_passphrase' | translate }}
         </button>
       </div>
