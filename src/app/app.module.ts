@@ -39,6 +39,8 @@ import { BIP32Service } from "../services/bip32-service/bip32-service";
 import { MerkleTreeService } from "../services/merkle-tree-service/merkle-tree-service";
 import { PrepareWalletPageModule } from "../pages/prepare-wallet/prepare-wallet.module";
 import { ComponentsModule } from "../components/components.module";
+import { WalletErrorPage } from "../pages/wallet-error/wallet-error";
+import { WalletErrorPageModule } from "../pages/wallet-error/wallet-error.module";
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, "assets/i18n/");
@@ -81,12 +83,14 @@ export function HttpLoaderFactory(http: HttpClient) {
     WalletNewPasswordPageModule,
     PasswordExplanationPageModule,
     PrepareWalletPageModule,
+    WalletErrorPageModule,
     IonicModule.forRoot(SmiloWallet)
   ],
   bootstrap: [IonicApp],
   entryComponents: [
     SmiloWallet,
-    PasswordExplanationPage
+    PasswordExplanationPage,
+    WalletErrorPage
   ],
   providers: [
     StatusBar,
