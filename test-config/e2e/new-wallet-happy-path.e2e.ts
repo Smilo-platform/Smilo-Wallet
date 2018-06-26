@@ -22,22 +22,6 @@ describe("Creating a new wallet (happy path)", () => {
 
         // -------- Test the general warnings page --------
 
-        // Ensure if the first warning is shown and the second is hidden
-        expect(element(by.className("warning-1")).isPresent()).toBeTruthy("first warning page should be shown");
-        expect(element(by.className("warning-2")).isPresent()).toBeFalsy("second warning page should be hidden");
-
-        // Ensure a download backup button is shown
-        expect(element(by.className("download-backup-button")).isDisplayed()).toBeTruthy("download backup button should be visible");
-    
-        // Click the download backup button and wait a while
-        element(by.className("download-backup-button")).click();
-
-        browser.sleep(500);
-
-        // Ensure the second warning is shown and the first is hidden
-        expect(element(by.className("warning-1")).isPresent()).toBeFalsy("first warning page should be hidden");
-        expect(element(by.className("warning-2")).isPresent()).toBeTruthy("second warning page should be shown");
-
         // Ensure a show passphrase button is shown
         expect(element(by.className("show-passphrase-button")).isDisplayed()).toBeTruthy("show passphrase button should be shown");
     
@@ -270,7 +254,7 @@ describe("Creating a new wallet (happy path)", () => {
 
         element(by.className("new-wallet-button")).click();
 
-        browser.wait(ExpectedConditions.presenceOf(element(by.className("container"))));
+        browser.wait(ExpectedConditions.presenceOf(element(by.tagName("page-wallet-new"))));
 
         browser.sleep(500);
     }
