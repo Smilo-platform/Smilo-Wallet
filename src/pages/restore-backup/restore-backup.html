@@ -3,63 +3,87 @@
 </ion-header>
 
 <ion-content padding>
-  <div class="center-container">
-    <div class="input-container">
-      <ion-item>
-        <ion-label stacked>
-          {{ 'restore_backup.instruction' | translate }}
-        </ion-label>
-        <ion-textarea rows="3"
-                   [(ngModel)]="passphrase" 
-                   (blur)="onPassphraseChanged()"
-                   class="passphrase-input"
-                   [placeholder]="'restore_backup.passphrase_hint' | translate"></ion-textarea>
-      </ion-item>
-  
-      <ion-item>
-        <ion-label stacked>
-          {{ 'restore_backup.password_instruction' | translate }}
-        </ion-label>
-        <ion-input type="password" 
-                   class="password-input"
-                   [(ngModel)]="password" 
-                   (ionChange)="onPasswordChanged()"></ion-input>
-      </ion-item>
-  
-      <ion-item>
-        <ion-label stacked>
-          {{ 'restore_backup.password_confirm_instruction' | translate }}
-        </ion-label>
-        <ion-input type="password" 
-                   class="password-confirm-input"
-                   [(ngModel)]="passwordConfirm" 
-                   (ionChange)="onPasswordChanged()"></ion-input>
-      </ion-item>
+  <ion-grid>
+    <ion-row justify-content-center>
+      <ion-col col-xs-12 col-md-9 col-lg-5>
+        <ion-item>
+          <ion-label stacked>
+            {{ 'restore_backup.instruction' | translate }}
+          </ion-label>
+          <ion-textarea rows="3"
+                      [(ngModel)]="passphrase" 
+                      (ionBlur)="onPassphraseChanged()"
+                      class="passphrase-input"
+                      [placeholder]="'restore_backup.passphrase_hint' | translate"></ion-textarea>
+        </ion-item>
+      </ion-col>
+    </ion-row>
 
-      <ion-item>
+    <ion-row justify-content-center>
+      <ion-col col-xs-12 col-md-9 col-lg-5>
+        <ion-item>
+          <ion-label stacked>
+            {{ 'restore_backup.password_instruction' | translate }}
+          </ion-label>
+          <ion-input type="password" 
+                      class="password-input"
+                      [(ngModel)]="password" 
+                      (ionChange)="onPasswordChanged()"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row justify-content-center>
+      <ion-col col-xs-12 col-md-9 col-lg-5>
+        <ion-item>
+          <ion-label stacked>
+            {{ 'restore_backup.password_confirm_instruction' | translate }}
+          </ion-label>
+          <ion-input type="password" 
+                      class="password-confirm-input"
+                      [(ngModel)]="passwordConfirm" 
+                      (ionChange)="onPasswordChanged()"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row justify-content-center>
+      <ion-col col-xs-12 col-md-9 col-lg-5>
+        <ion-item>
           <ion-label stacked>
             {{ 'restore_backup.wallet_name' | translate }}
           </ion-label>
           <ion-input class="name-input" [(ngModel)]="walletName"></ion-input>
         </ion-item>
-    </div>
-  </div>
-  
-  <div class="action-container">
-    <span *ngIf="passwordStatus && passwordStatus.type != 'success'" 
-          [ngClass]="{'error-box': passwordStatus.type == 'error', 'warning-box': passwordStatus.type == 'warning'}" 
-          class="password-message-box">
-      {{ passwordStatus.message }}
-    </span>
+      </ion-col>
+    </ion-row>
 
-    <span *ngIf="passphraseStatus && !passphraseStatus.isValid"
-          [ngClass]="{'error-box': passphraseStatus.isBlocking, 'warning-box': !passphraseStatus.isBlocking}" 
-          class="error-box passphrase-message-box">
-      {{ passphraseStatus.errorMessage }}
-    </span>
+    <ion-row>
+      <ion-col text-center>
+        <span *ngIf="passwordStatus && passwordStatus.type != 'success'" 
+              [ngClass]="{'error-box': passwordStatus.type == 'error', 'warning-box': passwordStatus.type == 'warning'}" 
+              class="password-message-box">
+          {{ passwordStatus.message }}
+        </span>
+      </ion-col>
+    </ion-row>
 
-    <button ion-button *ngIf="dataIsValid()" class="smilo-button import-button" (click)="import()">
-      {{ 'restore_backup.buttons.import' | translate }}
-    </button>
-  </div>
+    <ion-row>
+      <ion-col text-center>
+        <span *ngIf="passphraseStatus && !passphraseStatus.isValid"
+              [ngClass]="{'error-box': passphraseStatus.isBlocking, 'warning-box': !passphraseStatus.isBlocking}" 
+              class="error-box passphrase-message-box">
+          {{ passphraseStatus.errorMessage }}
+        </span>
+      </ion-col>
+    </ion-row>
+
+    <ion-row justify-content-center>
+      <ion-col text-center>
+        <button ion-button *ngIf="dataIsValid()" class="import-button" (click)="import()">
+          {{ 'restore_backup.buttons.import' | translate }}
+        </button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
