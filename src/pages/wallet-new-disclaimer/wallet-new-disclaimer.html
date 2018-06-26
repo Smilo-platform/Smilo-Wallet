@@ -3,7 +3,86 @@
 </ion-header>
 
 <ion-content padding>
-  <div class="top-container">
+  <ion-grid>
+    <ion-row>
+      <ion-col text-center class="title">
+        {{ 'disclaimer.title' | translate }}
+      </ion-col>
+    </ion-row>
+
+    <ion-row justify-content-center>
+      <ion-col col-12 col-md-6 col-lg-5 col-xl-4>
+        <ion-grid>
+          <ion-row>
+            <ion-col col-1>
+              <ion-checkbox [(ngModel)]="agreedToTerm1"></ion-checkbox>
+            </ion-col>
+
+            <ion-col (click)="agreedToTerm1 = !agreedToTerm1">
+              {{ 'disclaimer.term1' | translate }}
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col col-1>
+              <ion-checkbox [(ngModel)]="agreedToTerm2"></ion-checkbox>
+            </ion-col>
+
+            <ion-col (click)="agreedToTerm2 = !agreedToTerm2">
+              {{ 'disclaimer.term2' | translate }}
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col col-1>
+              <ion-checkbox [(ngModel)]="agreedToTerm3"></ion-checkbox>
+            </ion-col>
+
+            <ion-col (click)="agreedToTerm3 = !agreedToTerm3">
+              {{ 'disclaimer.term3' | translate }}
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col col-1>
+              <ion-checkbox [(ngModel)]="agreedToTerm4"></ion-checkbox>
+            </ion-col>
+
+            <ion-col (click)="agreedToTerm4 = !agreedToTerm4">
+              {{ 'disclaimer.term4' | translate }}
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col text-center class="title">
+        {{ 'disclaimer.title_name' | translate }}
+      </ion-col>
+    </ion-row>
+
+    <ion-row justify-content-center>
+      <ion-col col-12 col-md-6 col-lg-5 col-xl-4>
+        <ion-item>
+          <ion-label stacked>
+            {{ 'disclaimer.wallet_name' | translate }}
+          </ion-label>
+          <ion-input class="wallet-name-input" [(ngModel)]="walletName"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col text-center>
+        <button ion-button (click)="finish()" *ngIf="canShowFinishButton()" class="finish-button">
+          {{ 'disclaimer.buttons.finish' | translate }}
+        </button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <!-- <div class="top-container">
     <div class="title">
       {{ 'disclaimer.title' | translate }}
     </div>
@@ -74,5 +153,5 @@
     <button ion-button (click)="finish()" *ngIf="canShowFinishButton()" class="smilo-button finish-button">
       {{ 'disclaimer.buttons.finish' | translate }}
     </button>
-  </div>
+  </div> -->
 </ion-content>
