@@ -37,17 +37,11 @@ page-wallet-new-passphrase {
                 }
             }
         }
+    }
 
-        .passphrase-footer {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-
-            .passphrase-error {
-                color: red;
-                margin-bottom: 10px;
-            }
-        }
+    .passphrase-error {
+        color: red;
+        margin-bottom: 10px;
     }
 }
 
