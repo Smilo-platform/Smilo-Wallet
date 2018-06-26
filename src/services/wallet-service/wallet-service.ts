@@ -3,6 +3,7 @@ import { IWallet } from "../../models/IWallet";
 import { Storage } from "@ionic/storage";
 import { HttpClient } from '@angular/common/http';
 import 'rxjs/add/operator/map';
+import { MerkleTreeService } from "../merkle-tree-service/merkle-tree-service";
 import { IAvailableExchange } from "../../models/IAvailableExchange";
 import { ITransaction } from "../../models/ITransaction";
 
@@ -31,7 +32,9 @@ export class WalletService implements IWalletService {
     private wallets: IWallet[]; 
     private baseUrl: string;
 
-    constructor(private storage: Storage, private http: HttpClient) {
+    constructor(private storage: Storage, 
+                private http: HttpClient,
+                private merkleTreeService: MerkleTreeService) {
         this.baseUrl = "http://api.smilo.network:8080";
     }
 
@@ -46,22 +49,12 @@ export class WalletService implements IWalletService {
         }
         else {
             return this.storage.get(WALLET_STORAGE_KEY).then(
-                (walletsJson) => {
+                (wallets) => {
                     // If no wallets are found we fall back to an empty json array.
-                    walletsJson = walletsJson || "[]";
-    
-                    let wallets: IWallet[] = null;
-    
-                    // Try and parse the json. We use a try catch to prevent the app from crashing should
-                    // the json be malformed.
-                    try {
-                        wallets = JSON.parse(walletsJson);
-                    }
-                    catch(ex) {
-                        return <any>Promise.reject(`Wallet data appears to be malformed: ${ ex }`);
-                    }
-    
-                    return wallets;
+                    if(Array.isArray(wallets))
+                        return wallets;
+                    else
+                        return [];
                 }
             ).then(
                 (wallets) => {
@@ -75,7 +68,6 @@ export class WalletService implements IWalletService {
     }
 
     getPrices(currency: string, exchange: string): Promise<string[]> {
-        // this.baseUrl + '/price'
         return this.http.get("assets/json/exchangeCurrencyValues.json").toPromise().then(data => {
             var json = JSON.parse(JSON.stringify(data));
             var foundCurrencies: string[] = [];
@@ -150,8 +142,11 @@ export class WalletService implements IWalletService {
         if(index != -1) {
             this.wallets.splice(index, 1);
 
-            // Write back to disk
-            return this.writeWalletsToDisk();
+            // Write wallets back to disk and remove the wallet Merkle Tree.
+            return Promise.all([
+                this.writeWalletsToDisk(),
+                this.merkleTreeService.remove(wallet)
+            ]).then<void>();
         }
         else {
             // Wallet does not exist
@@ -170,7 +165,7 @@ export class WalletService implements IWalletService {
     }
 
     private writeWalletsToDisk(): Promise<void> {
-        return this.storage.set(WALLET_STORAGE_KEY, JSON.stringify(this.wallets));
+        return this.storage.set(WALLET_STORAGE_KEY, this.wallets);
     }
 
     /**

@@ -1,4 +1,12 @@
 .light-theme {
+    ion-textarea {
+        color: #000;
+    }
+ 
+    ion-input {
+        color: #000;
+    }
+
     .select-text {
         color: #000;
     }
@@ -115,11 +123,10 @@
 
     .button {
         background-color: #1B79A9;
-    }
 
-    .button:hover {
-        background-color: #1B79A9 !important;
-        opacity: 0.8;
+        &:hover {
+            opacity: 0.8;
+        }
     }
 
     .item-radio-checked.item {

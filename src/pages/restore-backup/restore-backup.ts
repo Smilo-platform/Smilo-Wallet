@@ -3,12 +3,11 @@ import { IonicPage, NavController, NavParams } from "ionic-angular";
 import { PasswordService, IPasswordValidationResult } from "../../services/password-service/password-service";
 import { ILocalWallet } from "../../models/ILocalWallet";
 import { WalletService } from "../../services/wallet-service/wallet-service";
-import { CryptoKeyService } from "../../services/crypto-key-service/crypto-key-service";
 import { KeyStoreService } from "../../services/key-store-service/key-store-service";
-import { NavigationOrigin, NAVIGATION_ORIGIN_KEY } from "../wallet/wallet";
-import { HomePage } from "../home/home";
-import { NavigationHelperService } from "../../services/navigation-helper-service/navigation-helper-service";
+import { NAVIGATION_ORIGIN_KEY } from "../wallet/wallet";
 import { BIP39Service, IPassphraseValidationResult } from "../../services/bip39-service/bip39-service";
+import { PrepareWalletPage } from "../prepare-wallet/prepare-wallet";
+import { BIP32Service } from "../../services/bip32-service/bip32-service";
 
 @IonicPage()
 @Component({
@@ -29,9 +28,8 @@ export class RestoreBackupPage {
               private navParams: NavParams,
               private passwordService: PasswordService,
               private walletService: WalletService,
-              private cryptoKeyService: CryptoKeyService,
               private keyStoreService: KeyStoreService,
-              private navigationHelperService: NavigationHelperService,
+              private bip32Service: BIP32Service,
               private bip39Service: BIP39Service) {
   }
 
@@ -60,43 +58,32 @@ export class RestoreBackupPage {
   import(): Promise<void> {
     let wallet = this.prepareWallet();
 
-    return this.walletService.store(wallet).then(
-      () => {
-        this.goBackToOriginPage();
-      },
-      (error) => {
-        // TODO: Handle errors here
-      }
-    );
+    return this.goToPrepareWalletPage(wallet, this.password);
   }
 
-  goBackToOriginPage() {
-    switch(<NavigationOrigin>this.navParams.get(NAVIGATION_ORIGIN_KEY) || "landing") {
-      case("landing"):
-        this.navCtrl.setRoot(HomePage);
-        break;
-      case("home"):
-        this.navigationHelperService.navigateBack(this.navCtrl, 3);
-        break;
-      case("wallet_overview"):
-        this.navigationHelperService.navigateBack(this.navCtrl, 3);
-        break;
-    }
+  goToPrepareWalletPage(wallet: ILocalWallet, password: string): Promise<void> {
+    let params = {
+      wallet: wallet,
+      password: password
+    };
+    params[NAVIGATION_ORIGIN_KEY] = this.navParams.get(NAVIGATION_ORIGIN_KEY);
+
+    return this.navCtrl.push(PrepareWalletPage, params);
   }
 
   prepareWallet(): ILocalWallet {
-    // Generate key pair from passphrase
-    let keyPair = this.cryptoKeyService.generateKeyPair(this.passphrase);
+    let seed = this.bip39Service.toSeed(this.passphrase);
+    let privateKey = this.bip32Service.getPrivateKey(seed);
 
     // Create key store for private key
-    let keyStore = this.keyStoreService.createKeyStore(keyPair.privateKey, this.password);
+    let keyStore = this.keyStoreService.createKeyStore(privateKey, this.password);
 
     // Prepare wallet
     let wallet: ILocalWallet = {
       id: this.walletService.generateId(),
       name: this.walletName,
       type: "local",
-      publicKey: keyPair.publicKey,
+      publicKey: null,
       keyStore: keyStore,
       transactions: [],
       lastUpdateTime: null,

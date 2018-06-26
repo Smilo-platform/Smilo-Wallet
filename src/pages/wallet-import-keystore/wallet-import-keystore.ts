@@ -1,17 +1,11 @@
 import { Component } from "@angular/core";
-import { IonicPage, NavController, NavParams, ToastController, Platform } from "ionic-angular";
+import { IonicPage, NavController, NavParams } from "ionic-angular";
 import { IKeyStore } from "../../models/IKeyStore";
 import { WalletService } from "../../services/wallet-service/wallet-service";
 import { ILocalWallet } from "../../models/ILocalWallet";
 import { KeyStoreService } from "../../services/key-store-service/key-store-service";
-import { CryptoKeyService } from "../../services/crypto-key-service/crypto-key-service";
-import { NavigationHelperService } from "../../services/navigation-helper-service/navigation-helper-service";
-import { NavigationOrigin, NAVIGATION_ORIGIN_KEY } from "../wallet/wallet";
-import { HomePage } from "../home/home";
-import { TranslateService } from "@ngx-translate/core";
-import { FileChooser } from "@ionic-native/file-chooser";
-import { platform } from "os";
-import { IOSFilePicker } from '@ionic-native/file-picker';
+import { NAVIGATION_ORIGIN_KEY } from "../wallet/wallet";
+import { PrepareWalletPage } from "../prepare-wallet/prepare-wallet";
 
 export declare type ImportType = "clipboard" | "file";
 
@@ -47,27 +41,11 @@ export class WalletImportKeystorePage {
   passwordFile: string = "";
   walletNameFileImport: string = "";
 
-  /**
-   * The translated message to shown when the importing succeeded.
-   */
-  successMessage: string;
-
   constructor(private navCtrl: NavController,
               private navParams: NavParams,
               private walletService: WalletService,
-              private keyStoreService: KeyStoreService,
-              private cryptoKeyService: CryptoKeyService,
-              private navigationHelperService: NavigationHelperService,
-              private toastController: ToastController,
-              private translateService: TranslateService,
-              private fileChooser: FileChooser,
-              private platform: Platform,
-              private filePicker: IOSFilePicker) {
-    this.translateService.get("import_keystore.toast.success").subscribe(
-      (message) => {
-        this.successMessage = message;
-      }
-    );
+              private keyStoreService: KeyStoreService) {
+
   }
 
   canShowClipboardPasswordInput(): boolean {
@@ -113,29 +91,26 @@ export class WalletImportKeystorePage {
    */
   importWalletByCurrentKeystoreInfo(type: ImportType): Promise<void> {
     let wallet = this.prepareWallet(type);
-    if(wallet == null) {
+    if(wallet === null) {
       if (type === "clipboard") {
         this.passwordIsInvalid = true;
       } else if (type === "file") {
         this.filePasswordIsInvalid = true;
       }
       return Promise.resolve();
+    } else {
+      return this.goToPrepareWalletPage(wallet, this.password);
     }
+  }
 
-    return this.walletService.store(wallet).then(
-      () => {
-        this.toastController.create({
-          message: this.successMessage,
-          duration: 1500,
-          position: "top"
-        }).present();
+  goToPrepareWalletPage(wallet: ILocalWallet, password: string): Promise<void> {
+    let params = {
+      wallet: wallet,
+      password: password
+    };
+    params[NAVIGATION_ORIGIN_KEY] = this.navParams.get(NAVIGATION_ORIGIN_KEY);
 
-        this.goBackToOriginPage();
-      },
-      (error) => {
-        // Could not store wallet, what do?
-      }
-    );
+    return this.navCtrl.push(PrepareWalletPage, params);
   }
 
   /**
@@ -160,7 +135,7 @@ export class WalletImportKeystorePage {
       id: this.walletService.generateId(),
       type: "local",
       name: name,
-      publicKey: this.cryptoKeyService.generatePublicKey(privateKey),
+      publicKey: null,
       keyStore: this.keyStore,
       transactions: [],
       lastUpdateTime: null,
@@ -178,23 +153,6 @@ export class WalletImportKeystorePage {
     this.importedFilename = "";
     this.passwordFile = "";
     this.walletNameFileImport = "";
-  }
-
-  /**
-   * Navigates back to the page the user originally came from.
-   */
-  goBackToOriginPage() {
-    switch(<NavigationOrigin>this.navParams.get(NAVIGATION_ORIGIN_KEY) || "landing") {
-      case("landing"):
-        this.navCtrl.setRoot(HomePage);
-        break;
-      case("home"):
-        this.navigationHelperService.navigateBack(this.navCtrl, 3);
-        break;
-      case("wallet_overview"):
-        this.navigationHelperService.navigateBack(this.navCtrl, 3);
-        break;
-    }
   }
 
   /**
@@ -308,27 +266,27 @@ export class WalletImportKeystorePage {
     //     .then(uri => this.readInputFromBlob(this.dataURItoBlob(uri), "FILENAME"))
     //     .catch(err => console.log('Error', err));
     // } else if (this.platform.is("android")) {
-      this.fileChooser.open()
-        .then(uri => this.readInputFromBlob(this.dataURItoBlob(uri), "FILENAME"))
-        .catch(e => console.log(e));
+      // this.fileChooser.open()
+      //   .then(uri => this.readInputFromBlob(this.dataURItoBlob(uri), "FILENAME"))
+      //   .catch(e => console.log(e));
     // } else {
-    //   var input = document.createElement('input');
-    //   input.type = 'file';
-    //   input.click();
-    //   input.onchange = (e) => {
-    //     let target: any = event.target;
-    //     let file: File = target.files[0];
-    //     let type = file.type;
-    //     let filename = file.name;
-    //     let startChars = file.name.substring(0, 5);
-    //     console.log(filename);
-    //     if (type === "" && startChars === "UTC--") {
-    //       this.keystoreFileIsInvalid = false;
-    //       this.readInputFromBlob(file, filename);
-    //     } else {
-    //       this.keystoreFileIsInvalid = true;
-    //     }
-    //   }
+      var input = document.createElement('input');
+      input.type = 'file';
+      input.click();
+      input.onchange = (e) => {
+        let target: any = event.target;
+        let file: File = target.files[0];
+        let type = file.type;
+        let filename = file.name;
+        let startChars = file.name.substring(0, 5);
+        console.log(filename);
+        if (type === "" && startChars === "UTC--") {
+          this.keystoreFileIsInvalid = false;
+          this.readInputFromBlob(file, filename);
+        } else {
+          this.keystoreFileIsInvalid = true;
+        }
+      }
     // }
   }
 

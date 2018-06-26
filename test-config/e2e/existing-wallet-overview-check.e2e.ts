@@ -58,6 +58,11 @@ describe("Creating a new wallet (happy path)", () => {
         exchangesOverviewButton = element(by.className("exchanges-overview"));
     });
 
+    afterEach(() => {
+        // Because we actually create a wallet we must restart the browser to clear all locally stored data.
+        browser.restart();
+    });
+
     it("should check every option in the wallet overview page while having an existing wallet", () => {
         navigateToWalletOverViewPage();
 

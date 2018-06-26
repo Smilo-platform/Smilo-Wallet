@@ -1,6 +1,5 @@
 import { ITransaction } from "./ITransaction";
 import { IBalance } from "./IBalance";
-import { IKeyStore } from "./IKeyStore";
 
 export declare type WalletType = "local" | "ledger";
 

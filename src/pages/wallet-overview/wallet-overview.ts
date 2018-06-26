@@ -1,5 +1,5 @@
 import { Component, ViewChild } from "@angular/core";
-import { IonicPage, NavController, NavParams, LoadingController, Loading, Alert } from "ionic-angular";
+import { IonicPage, NavController, NavParams, LoadingController, Loading, Alert, Platform } from "ionic-angular";
 import { Chart } from 'chart.js';
 import { WalletService } from '../../services/wallet-service/wallet-service';
 import { AlertController } from 'ionic-angular';
@@ -8,10 +8,11 @@ import { LandingPage } from "../landing/landing";
 import { ToastController } from 'ionic-angular';
 import { IWallet } from "../../models/IWallet";
 import { TransferPage } from "../transfer/transfer";
-import { RestoreBackupPage } from "../restore-backup/restore-backup";
 import { IAvailableExchange } from "../../models/IAvailableExchange";
 import { ITransaction } from "../../models/ITransaction";
 import { ILocalWallet } from "../../models/ILocalWallet";
+import { File as FileNative} from '@ionic-native/file';
+import { Clipboard } from '@ionic-native/clipboard';
 
 /**
  * Generated class for the WalletOverviewPage page.
@@ -20,7 +21,15 @@ import { ILocalWallet } from "../../models/ILocalWallet";
  * Ionic pages and navigation.
  */
 
-export declare type VisibilityType = "shown" | "hidden"; 
+export declare type VisibilityType = "shown" | "hidden";
+
+declare let cordova: any;
+
+export interface IWriteOptions {
+  replace?: boolean;
+  append?: boolean;
+  truncate?: number;
+}
 
 @IonicPage()
 @Component({
@@ -60,10 +69,13 @@ export class WalletOverviewPage {
 
   constructor(public navCtrl: NavController, 
               public navParams: NavParams, 
+              public platform: Platform,
+              public fileNative: FileNative,
               public walletService: WalletService,
               public alertCtrl: AlertController,
               public toastCtrl: ToastController,
-              public loadingCtrl: LoadingController) {
+              public loadingCtrl: LoadingController,
+              public clipboard: Clipboard) {
 
   }
   
@@ -72,7 +84,22 @@ export class WalletOverviewPage {
    */
   initialize(): Promise<void> {
     return Promise.all([this.getAllWallets(), 
-                        this.getAvailableExchanges()]).then<void>();
+                        this.getAvailableExchanges()]).then<void>().catch(data => {
+                          console.log("Initialize: ERROR: " + data);
+                          const confirm = this.alertCtrl.create({
+                            title: 'Error',
+                            message: 'Could not retrieve data',
+                            buttons: [
+                              {
+                                text: 'Click here to retry',
+                                handler: () => {
+                                  this.initialize();
+                                }
+                              }
+                            ]
+                          });
+                          confirm.present();
+                        });
   }
 
   /**
@@ -116,55 +143,100 @@ export class WalletOverviewPage {
     if (this.currentWallet.type !== "local") {
       return false;
     }
-    console.log("Export keystore!");
     let alert = this.alertCtrl.create();
     alert.setTitle('Export keystore');
-
     alert.addInput({
       type: 'radio',
       label: 'Download file',
       value: 'file',
       checked: true
     });
-
     alert.addInput({
       type: 'radio',
       label: 'Copy to clipboard',
       value: 'clipboard',
       checked: false
     });
-
     alert.addButton('Cancel');
     alert.addButton({
       text: 'OK',
       handler: data => {
+        let keystoreData = JSON.stringify((this.currentWallet as ILocalWallet).keyStore);
         if (data === "clipboard") {
-          var dummyElementToCopyText = document.createElement("input");
-          document.body.appendChild(dummyElementToCopyText);
-          dummyElementToCopyText.setAttribute('value', JSON.stringify((this.currentWallet as ILocalWallet).keyStore));
-          dummyElementToCopyText.select();
-          document.execCommand("copy");
-          document.body.removeChild(dummyElementToCopyText);
-          let toast = this.toastCtrl.create({
-            message: 'Copied keystore to clipboard!',
-            duration: 2000,
-            position: "middle"
-          });
-          toast.present(toast);
+          if (this.platform.is("android") || this.platform.is("ios")) {
+            this.clipboard.copy(keystoreData);
+          } else {
+            this.copyToClipboardWeb(keystoreData);
+          }
+          this.showBottomToastMessage('Copied keystore to clipboard!', 2000, "bottom");
+          return true;
         } else if (data === "file") {
-          var dummyElementToDownload = document.createElement('a');
-          dummyElementToDownload.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify((this.currentWallet as ILocalWallet).keyStore)));
-          var filename = ("UTC--" + new Date().toISOString() + "--" + this.currentWallet.publicKey).replace(/:/g, "-");
-          dummyElementToDownload.setAttribute('download', filename);
-          dummyElementToDownload.style.display = 'none';
-          document.body.appendChild(dummyElementToDownload);
-          dummyElementToDownload.click();
-          document.body.removeChild(dummyElementToDownload);
+          let filename = ("UTC--" + new Date().toISOString() + "--" + this.currentWallet.publicKey).replace(/:/g, "-");
+          if (this.platform.is("android") || this.platform.is("ios")) {
+            let options: IWriteOptions = {replace: true};
+            if (this.platform.is("android")) {
+              let storageLocation = cordova.file.externalRootDirectory + "Download";
+              this.writeFile(storageLocation, filename, keystoreData, options, "android");
+            } else {
+              let storageLocation = cordova.file.syncedDataDirectory;
+              this.writeFile(storageLocation, filename, keystoreData, options, "ios");
+            }
+          } else {
+            this.downloadFileWeb(keystoreData, filename);
+          }
+          return true;
         }
       }
     });
     alert.present();
-    return true;
+  }
+
+  copyToClipboardWeb(keystoreData): void {
+    var dummyElementToCopyText = document.createElement("input");
+    document.body.appendChild(dummyElementToCopyText);
+    dummyElementToCopyText.setAttribute('value', keystoreData);
+    dummyElementToCopyText.select();
+    document.execCommand("copy");
+    document.body.removeChild(dummyElementToCopyText);
+  }
+
+  downloadFileWeb(keystoreData, filename): void {
+    var dummyElementToDownload = document.createElement('a');
+    dummyElementToDownload.setAttribute('href', 'data:text/plain;charset=utf-8,' + keystoreData);
+    dummyElementToDownload.setAttribute('download', filename);
+    dummyElementToDownload.style.display = 'none';
+    document.body.appendChild(dummyElementToDownload);
+    dummyElementToDownload.click();
+    document.body.removeChild(dummyElementToDownload);
+  }
+
+  showBottomToastMessage(toastMessage, duration, position): void {
+    let toast = this.toastCtrl.create({
+      message: toastMessage,
+      duration: duration,
+      position: position
+    });
+    toast.present(toast);
+  }
+
+  writeFile(storageLocation, filename, keystoreData, options, os): void {
+    this.fileNative.writeFile(storageLocation, filename, keystoreData, options).then(data => {
+      let toastMessage = "";
+      if (os === "ios") {
+        toastMessage = 'Successfully saved keystore to cloud. Will be synced when device is ready.';
+      } else {
+        toastMessage = 'Successfully saved keystore to downloads folder.';
+      }
+      this.showBottomToastMessage(toastMessage, 2000, "bottom");
+    }).catch(error => {
+      let toast = this.toastCtrl.create({
+        message: 'Please restart the application to save the file to your downloads folder.',
+        position: "bottom",
+        showCloseButton: true,
+        closeButtonText: 'Ok'
+      });
+      toast.present(toast);
+    });
   }
 
   /**
@@ -177,9 +249,7 @@ export class WalletOverviewPage {
       buttons: [
         {
           text: 'No, cancel',
-          handler: () => {
-            
-          }
+          handler: () => {}
         },
         {
           text: 'Yes, delete',
@@ -207,12 +277,7 @@ export class WalletOverviewPage {
         return true;
       } else {
         this.openLandingPage();
-        let toast = this.toastCtrl.create({
-          message: 'You deleted all your wallets. Returning to main screen.',
-          duration: 5000,
-          position: "Bottom"
-        });
-        toast.present();
+        this.showBottomToastMessage('You deleted all your wallets. Returning to main screen.', 5000, "bottom");
         return false;
       }
     } else {
@@ -230,6 +295,21 @@ export class WalletOverviewPage {
         this.noTransactionHistoryVisibility = "shown";
         this.transactionHistoryVisibility = "hidden";
       }
+    }).catch(error => {
+      console.log("getTransactionHistory. Error: " + error);
+      const confirm = this.alertCtrl.create({
+        title: 'Error',
+        message: 'Could not retrieve data',
+        buttons: [
+          {
+            text: 'Click here to retry',
+            handler: () => {
+              this.getTransactionHistory(publicKey);
+            }
+          }
+        ]
+      });
+      confirm.present();
     });
   }
 
@@ -240,6 +320,21 @@ export class WalletOverviewPage {
     return this.walletService.getAll().then(data => {
       this.wallets = data;
       this.currentWallet = this.wallets[0];
+    }).catch(error => {
+      console.log("getAllWallets. Error: " + error);
+      const confirm = this.alertCtrl.create({
+        title: 'Error',
+        message: 'Could not retrieve data',
+        buttons: [
+          {
+            text: 'Click here to retry',
+            handler: () => {
+              this.getAllWallets();
+            }
+          }
+        ]
+      });
+      confirm.present();
     });
   }
 
@@ -256,6 +351,21 @@ export class WalletOverviewPage {
         this.pickedCurrency = this.availableExchanges[0].availableCurrencies[0];
         this.currentExchangeCurrencies = this.availableExchanges[0].availableCurrencies;
       }
+    }).catch(error => {
+      console.log("getAvailableExchanges. Error: " + error);
+      const confirm = this.alertCtrl.create({
+        title: 'Error',
+        message: 'Could not retrieve data',
+        buttons: [
+          {
+            text: 'Click here to retry',
+            handler: () => {
+              this.getAvailableExchanges();
+            }
+          }
+        ]
+      });
+      confirm.present();
     });
   }
   
@@ -285,6 +395,21 @@ export class WalletOverviewPage {
         this.currentWallet.balances = balances;
         this.setCalculatedCurrencyValue();
       }
+    }).catch(data => {
+      console.log("getWalletBalance - Error: " + data);
+      const confirm = this.alertCtrl.create({
+        title: 'Error',
+        message: 'Could not retrieve data',
+        buttons: [
+          {
+            text: 'Click here to retry',
+            handler: () => {
+              this.getWalletBalance(publicKey);
+            }
+          }
+        ]
+      });
+      confirm.present();
     });
   }
 
@@ -317,6 +442,9 @@ export class WalletOverviewPage {
    */
   setCalculatedCurrencyValue(): Promise<void> {
     if (this.pickedCurrency === undefined || this.currentWallet === undefined) {
+      if (this.loading !== undefined) {
+        this.loading.dismiss();
+      }
       return Promise.resolve();
     }
     return this.walletService.getPrices(this.pickedCurrency, this.pickedExchange).then(data => {
@@ -396,11 +524,28 @@ export class WalletOverviewPage {
         }
       }
       this.totalCurrentCurrencyValue = Number(totalValue.toFixed(this.getFixedNumbers()));
-      this.displayChart();
+      this.displayChart(); // Android Emulator rip
       if (this.doughnutChart !== undefined) {
         this.legendList = this.doughnutChart.generateLegend();
       }
-      this.loading.dismiss();
+      if (this.loading !== undefined) {
+        this.loading.dismiss();
+      }
+    }).catch(error => {
+      console.log("setCalculatedCurrencyValue: Error: " + error);
+      const confirm = this.alertCtrl.create({
+        title: 'Error',
+        message: 'Could not retrieve data',
+        buttons: [
+          {
+            text: 'Click here to retry',
+            handler: () => {
+              this.setCalculatedCurrencyValue();
+            }
+          }
+        ]
+      });
+      confirm.present();
     });
   }
 
@@ -416,7 +561,7 @@ export class WalletOverviewPage {
    */
   onWalletChanged() {
     this.getWalletBalance(this.currentWallet.publicKey);
-    this.getTransactionHistory(this.currentWallet.publicKey);
+    this.getTransactionHistory(this.currentWallet.publicKey); 
   }
   
   /**

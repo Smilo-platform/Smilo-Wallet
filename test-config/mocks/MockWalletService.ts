@@ -3,6 +3,9 @@ import { IWallet } from "../../src/models/IWallet";
 import { ITransaction } from "../../src/models/ITransaction";
 
 export class MockWalletService implements IWalletService {
+    getCurrencyValue(currency: string, exchange: string) {
+        throw new Error("Method not implemented.");
+    }
 
     getTransactionHistory(publicKey: string): Promise<ITransaction[]> {
         return new Promise(resolve => { resolve([
