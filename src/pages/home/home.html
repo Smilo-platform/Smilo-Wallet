@@ -4,19 +4,9 @@
 
 <ion-content padding>
 
+  <smilo-logo subTitleTranslationKey="slogan"></smilo-logo>
+
   <ion-grid>
-    <ion-row justify-content-center>
-      <ion-col col-12 col-md-9 col-lg-6 col-xl-3>
-        <img class="logo-container-image" alt="smilo-logo" src="assets/imgs/smilo-logo.png">
-      </ion-col>
-    </ion-row>
-
-    <ion-row justify-content-center>
-      <ion-col class="slogan" col-12 col-md-9 col-lg-6 col-xl-3>
-        {{ 'slogan' | translate }}
-      </ion-col>
-    </ion-row>
-
     <ion-row justify-content-center>
       <ion-col col-9 col-md-6 col-lg-3 col-xl-2>
         <button ion-button full  (click)="openNewWallet()">
