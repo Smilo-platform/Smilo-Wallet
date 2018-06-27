@@ -13,42 +13,42 @@
     <ion-row justify-content-center>
       <ion-col col-12 col-md-6 col-lg-5 col-xl-4>
         <ion-grid>
-          <ion-row>
+          <ion-row justify-content-center>
             <ion-col col-1>
               <ion-checkbox [(ngModel)]="agreedToTerm1"></ion-checkbox>
             </ion-col>
 
-            <ion-col (click)="agreedToTerm1 = !agreedToTerm1">
+            <ion-col class="term-description" col-xs-12 col-md-9 (click)="agreedToTerm1 = !agreedToTerm1">
               {{ 'disclaimer.term1' | translate }}
             </ion-col>
           </ion-row>
 
-          <ion-row>
+          <ion-row justify-content-center>
             <ion-col col-1>
               <ion-checkbox [(ngModel)]="agreedToTerm2"></ion-checkbox>
             </ion-col>
 
-            <ion-col (click)="agreedToTerm2 = !agreedToTerm2">
+            <ion-col class="term-description" col-xs-12 col-md-9 (click)="agreedToTerm2 = !agreedToTerm2">
               {{ 'disclaimer.term2' | translate }}
             </ion-col>
           </ion-row>
 
-          <ion-row>
+          <ion-row justify-content-center>
             <ion-col col-1>
               <ion-checkbox [(ngModel)]="agreedToTerm3"></ion-checkbox>
             </ion-col>
 
-            <ion-col (click)="agreedToTerm3 = !agreedToTerm3">
+            <ion-col class="term-description" col-xs-12 col-md-9 (click)="agreedToTerm3 = !agreedToTerm3">
               {{ 'disclaimer.term3' | translate }}
             </ion-col>
           </ion-row>
 
-          <ion-row>
+          <ion-row justify-content-center>
             <ion-col col-1>
               <ion-checkbox [(ngModel)]="agreedToTerm4"></ion-checkbox>
             </ion-col>
 
-            <ion-col (click)="agreedToTerm4 = !agreedToTerm4">
+            <ion-col class="term-description" col-xs-12 col-md-9 (click)="agreedToTerm4 = !agreedToTerm4">
               {{ 'disclaimer.term4' | translate }}
             </ion-col>
           </ion-row>
@@ -81,77 +81,4 @@
       </ion-col>
     </ion-row>
   </ion-grid>
-
-  <!-- <div class="top-container">
-    <div class="title">
-      {{ 'disclaimer.title' | translate }}
-    </div>
-  </div>
-
-  <div class="center-container">
-    <div class="center-container-content">
-      <div class="term-container">
-        <div class="checkbox-container">
-          <ion-checkbox [(ngModel)]="agreedToTerm1"></ion-checkbox>
-        </div>
-  
-        <div (click)="agreedToTerm1 = !agreedToTerm1" class="term-description-container">
-          {{ 'disclaimer.term1' | translate }}
-        </div>
-      </div>
-
-      <div class="term-container">
-        <div class="checkbox-container">
-          <ion-checkbox [(ngModel)]="agreedToTerm2"></ion-checkbox>
-        </div>
-  
-        <div (click)="agreedToTerm2 = !agreedToTerm2" class="term-description-container">
-          {{ 'disclaimer.term2' | translate }}
-        </div>
-      </div>
-
-      <div class="term-container">
-        <div class="checkbox-container">
-          <ion-checkbox [(ngModel)]="agreedToTerm3"></ion-checkbox>
-        </div>
-  
-        <div (click)="agreedToTerm3 = !agreedToTerm3" class="term-description-container">
-          {{ 'disclaimer.term3' | translate }}
-        </div>
-      </div>
-
-      <div class="term-container">
-        <div class="checkbox-container">
-          <ion-checkbox [(ngModel)]="agreedToTerm4"></ion-checkbox>
-        </div>
-  
-        <div (click)="agreedToTerm4 = !agreedToTerm4" class="term-description-container">
-          {{ 'disclaimer.term4' | translate }}
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="top-container">
-    <div class="title">
-      {{ 'disclaimer.title_name' | translate }}
-    </div>
-  </div>
-
-  <div class="center-container">
-    <div class="center-container-content">
-      <ion-item>
-        <ion-label stacked>
-          {{ 'disclaimer.wallet_name' | translate }}
-        </ion-label>
-        <ion-input class="wallet-name-input" [(ngModel)]="walletName"></ion-input>
-      </ion-item>
-    </div>
-  </div>
-
-  <div class="bottom-container">
-    <button ion-button (click)="finish()" *ngIf="canShowFinishButton()" class="smilo-button finish-button">
-      {{ 'disclaimer.buttons.finish' | translate }}
-    </button>
-  </div> -->
 </ion-content>

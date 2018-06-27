@@ -130,7 +130,7 @@ describe("Creating a new wallet (happy path)", () => {
 
         expect(finishButton.isPresent()).toBeFalsy("the finish button should not be displayed (2)");
 
-        element.all(by.className("term-description-container")).click();
+        element.all(by.className("term-description")).click();
 
         browser.sleep(500);
 
