@@ -3,6 +3,7 @@ import { IonicPage, NavController } from 'ionic-angular';
 import { WalletPage, NAVIGATION_ORIGIN_KEY } from '../wallet/wallet';
 import { RestoreBackupPage } from '../restore-backup/restore-backup';
 import { SplashScreen } from '@ionic-native/splash-screen';
+import { SettingsGeneralPage } from '../settings-general/settings-general';
 
 @IonicPage()
 @Component({
@@ -35,5 +36,9 @@ export class LandingPage {
     params[NAVIGATION_ORIGIN_KEY] = "landing";
 
     this.navCtrl.push(RestoreBackupPage, params);
+  }
+
+  openSettingsPage() {
+    this.navCtrl.push(SettingsGeneralPage);
   }
 }

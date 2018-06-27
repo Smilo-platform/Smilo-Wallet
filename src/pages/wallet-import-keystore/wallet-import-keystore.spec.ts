@@ -169,18 +169,18 @@ describe("WalletImportKeystorePage", () => {
     comp.keyStoreString = "keystore-string";
     comp.keyStoreIsInvalid = false;
 
-    expect(comp.dataIsValid()).toBeTruthy("Data should be valid");
+    expect(comp.clipboardDataIsValid()).toBeTruthy("Data should be valid");
 
     comp.name = "";
-    expect(comp.dataIsValid()).toBeFalsy("Data should not be valid if name is not set");
+    expect(comp.clipboardDataIsValid()).toBeFalsy("Data should not be valid if name is not set");
     comp.name = "name";
 
     comp.keyStoreString = "";
-    expect(comp.dataIsValid()).toBeFalsy("Data should not be valid if key store is not set");
+    expect(comp.clipboardDataIsValid()).toBeFalsy("Data should not be valid if key store is not set");
     comp.keyStoreString = "keystore-string";
 
     comp.keyStoreIsInvalid = true;
-    expect(comp.dataIsValid()).toBeFalsy("Data should not be valid if key store is marked as invalid");
+    expect(comp.clipboardDataIsValid()).toBeFalsy("Data should not be valid if key store is marked as invalid");
   });
 
   it("should prepare the wallet correctly", () => {
@@ -191,7 +191,7 @@ describe("WalletImportKeystorePage", () => {
     comp.keyStore = <any>{};
     comp.password = "pass123";
 
-    let wallet = comp.prepareWallet();
+    let wallet = comp.prepareWallet("clipboard");
 
     expect(wallet).toEqual({
       id: "WALLET_ID",
@@ -211,11 +211,11 @@ describe("WalletImportKeystorePage", () => {
     let dummyWallet: ILocalWallet = <any>{};
     comp.password = "pass123";
     
-    spyOn(comp, "dataIsValid").and.returnValue(true);
+    spyOn(comp, "clipboardDataIsValid").and.returnValue(true);
     spyOn(comp, "prepareWallet").and.returnValue(dummyWallet);
     spyOn(comp, "goToPrepareWalletPage").and.returnValue(Promise.resolve());
 
-    comp.import().then(
+    comp.importByClipboard().then(
       () => {
         expect(comp.goToPrepareWalletPage).toHaveBeenCalledWith(dummyWallet, "pass123");
 
@@ -231,10 +231,10 @@ describe("WalletImportKeystorePage", () => {
   });
 
   it("should abort the import when the password is not correct", (done) => {
-    spyOn(comp, "dataIsValid").and.returnValue(true);
+    spyOn(comp, "clipboardDataIsValid").and.returnValue(true);
     spyOn(comp, "prepareWallet").and.returnValue(null);
 
-    comp.import().then(
+    comp.importByClipboard().then(
       () => {
         expect(comp.passwordIsInvalid).toBeTruthy("Password should be marked as invalid");
 
@@ -250,9 +250,9 @@ describe("WalletImportKeystorePage", () => {
   });
 
   it("should abort the import when the data is not valid", (done) => {
-    spyOn(comp, "dataIsValid").and.returnValue(false);
+    spyOn(comp, "clipboardDataIsValid").and.returnValue(false);
 
-    comp.import().then(
+    comp.importByClipboard().then(
       () => {
         expect(true).toBeTruthy();
         done();

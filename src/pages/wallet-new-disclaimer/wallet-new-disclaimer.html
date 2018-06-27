@@ -1,4 +1,6 @@
-<smilo-nav-header titleTranslationKey="disclaimer.nav-bar-title"></smilo-nav-header>
+<ion-header>
+  <smilo-nav-header titleTranslationKey="disclaimer.nav-bar-title"></smilo-nav-header>
+</ion-header>
 
 <ion-content padding>
   <div class="top-container">
@@ -69,7 +71,7 @@
   </div>
 
   <div class="bottom-container">
-    <button (click)="finish()" *ngIf="canShowFinishButton()" class="smilo-button finish-button">
+    <button ion-button (click)="finish()" *ngIf="canShowFinishButton()" class="smilo-button finish-button">
       {{ 'disclaimer.buttons.finish' | translate }}
     </button>
   </div>

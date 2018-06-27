@@ -1,10 +1,10 @@
 import { browser, by, element, ExpectedConditions, WebElement, ElementFinder, ElementArrayFinder } from "protractor";
 
-describe("Creating a new wallet (happy path)", () => {
+require('events').EventEmitter.defaultMaxListeners = Infinity;
+
+describe("Clicking in the settings page", () => {
     console.log(browser.params.testFile);
     if (browser.params.testFile !== undefined && browser.params.testFile !== "settings-page") return;
-
-    // npm run e2e -- --params.testFile="settings-page"
     
     beforeEach(() => {
         browser.waitForAngularEnabled(false);
@@ -37,7 +37,7 @@ describe("Creating a new wallet (happy path)", () => {
 
         expect(element(by.className("toolbar-title")).isPresent()).toBeTruthy("toolbar-title should be displayed");
 
-        expect(element.all(by.className("toolbar-title")).get(1).getAttribute('textContent')).toBe(<any>"Settings");
+        expect(element(by.className("toolbar-title")).getAttribute('textContent')).toBe(<any>"Settings");
 
         expect(element.all(by.className("language-item")).get(0).getAttribute("class")).toMatch("item-radio-checked");
 
@@ -45,15 +45,15 @@ describe("Creating a new wallet (happy path)", () => {
 
         browser.sleep(1000);
 
-        expect(element.all(by.className("toolbar-title")).get(1).getAttribute('textContent')).toBe(<any>"Instellingen");
+        expect(element(by.className("toolbar-title")).getAttribute('textContent')).toBe(<any>"Instellingen");
 
         expect(element.all(by.className("language-item")).get(1).getAttribute("class")).toMatch("item-radio-checked");
 
     });
 
     function navigateToSettingsPage() {
-        browser.wait(ExpectedConditions.presenceOf(element(by.className("settings-nav-bar"))));
+        browser.wait(ExpectedConditions.presenceOf(element(by.className("settings-button"))));
 
-        element(by.className("settings-nav-bar")).click();
+        element(by.className("settings-button")).click();
     }
 });

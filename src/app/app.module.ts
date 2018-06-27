@@ -42,6 +42,8 @@ import { ComponentsModule } from "../components/components.module";
 import { File as FileNative} from '@ionic-native/file';
 import { AndroidPermissions } from '@ionic-native/android-permissions';
 import { Clipboard } from '@ionic-native/clipboard';
+import { WalletErrorPage } from "../pages/wallet-error/wallet-error";
+import { WalletErrorPageModule } from "../pages/wallet-error/wallet-error.module";
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, "assets/i18n/");
@@ -62,7 +64,7 @@ export function HttpLoaderFactory(http: HttpClient) {
         deps: [HttpClient]
       }
     }),
-    IonicStorageModule.forRoot({ name: '__mydb', driverOrder: ['sqlite', 'websql', 'indexeddb'] }),
+    IonicStorageModule.forRoot(),
     HomePageModule,
     AboutPageModule,
     WalletOverviewPageModule,
@@ -84,12 +86,14 @@ export function HttpLoaderFactory(http: HttpClient) {
     WalletNewPasswordPageModule,
     PasswordExplanationPageModule,
     PrepareWalletPageModule,
+    WalletErrorPageModule,
     IonicModule.forRoot(SmiloWallet)
   ],
   bootstrap: [IonicApp],
   entryComponents: [
     SmiloWallet,
-    PasswordExplanationPage
+    PasswordExplanationPage,
+    WalletErrorPage
   ],
   providers: [
     StatusBar,

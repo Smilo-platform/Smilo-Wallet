@@ -30,7 +30,6 @@ export class WalletImportPrivatekeyPage {
   }
 
   import(): Promise<void> {
-    console.log("Import!!");
     if(this.dataIsValid()) {
       let wallet = this.prepareWallet();
       return this.goToPrepareWalletPage(wallet, this.password);
@@ -69,7 +68,6 @@ export class WalletImportPrivatekeyPage {
   }
 
   onPasswordsChanged() {
-    console.log("Password change");
     this.passwordStatus = this.passwordService.validate(this.password, this.confirmedPassword);
   }
   

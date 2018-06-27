@@ -1,6 +1,8 @@
 import { browser, by, element, ExpectedConditions, WebElement } from "protractor";
 import { clickElementByClassName } from "./helpers";
 
+require('events').EventEmitter.defaultMaxListeners = Infinity;
+
 describe("Importing a key store", () => {
     if (browser.params.testFile !== undefined && browser.params.testFile !== "import-keystore") return;
     beforeEach(() => {
@@ -18,8 +20,6 @@ describe("Importing a key store", () => {
         navigateToImportPage();
 
         let keyStoreInput = element(by.css(".key-store-input > textarea"));
-        let passwordInput = element(by.css(".password-input > input"));
-        let nameInput = element(by.css(".name-input > input"));
 
         // Ensure the import button is not shown initially
         expect(element(by.className("import-button")).isPresent()).toBeFalsy("Import button should initially not be visible");
@@ -30,12 +30,20 @@ describe("Importing a key store", () => {
 
         // Ensure inputs are all empty
         expect(keyStoreInput.getAttribute("value")).toBe(<any>"");
-        expect(passwordInput.getAttribute("value")).toBe(<any>"");
-        expect(nameInput.getAttribute("value")).toBe(<any>"");
 
         // Enter some values
         keyStoreInput.sendKeys(getValidKeyStore());
+
+        browser.sleep(500);
+
+        let passwordInput = element(by.css(".password-input > input"));
+        expect(passwordInput.getAttribute("value")).toBe(<any>"");
         passwordInput.sendKeys("pass123");
+
+        browser.sleep(500);
+
+        let nameInput = element(by.css(".name-input > input"));
+        expect(nameInput.getAttribute("value")).toBe(<any>"");
         nameInput.sendKeys("name");
 
         browser.sleep(500);
@@ -55,12 +63,20 @@ describe("Importing a key store", () => {
         navigateToImportPage();
 
         let keyStoreInput = element(by.css(".key-store-input > textarea"));
-        let passwordInput = element(by.css(".password-input > input"));
-        let nameInput = element(by.css(".name-input > input"));
 
         // Enter some values
         keyStoreInput.sendKeys(getValidKeyStore());
+
+        browser.sleep(500);
+
+        let passwordInput = element(by.css(".password-input > input"));
+
         passwordInput.sendKeys("wrong_password");
+
+        browser.sleep(500);
+
+        let nameInput = element(by.css(".name-input > input"));
+
         nameInput.sendKeys("name");
 
         browser.sleep(500);
@@ -80,13 +96,9 @@ describe("Importing a key store", () => {
         navigateToImportPage();
 
         let keyStoreInput = element(by.css(".key-store-input > textarea"));
-        let passwordInput = element(by.css(".password-input > input"));
-        let nameInput = element(by.css(".name-input > input"));
 
         // Enter some values
         keyStoreInput.sendKeys(getInvalidKeyStore());
-        passwordInput.sendKeys("pass123");
-        nameInput.sendKeys("name");
 
         browser.sleep(500);
 
@@ -95,6 +107,10 @@ describe("Importing a key store", () => {
 
         // Expect the import button to be invisible
         expect(element(by.className("import-button")).isPresent()).toBeFalsy("Import button should not be visible when the input is invalid");
+
+        expect(element(by.css(".name-input > input")).isPresent()).toBeFalsy("Wallet name input should not be visible");
+        
+        expect(element(by.css(".password-input > input")).isPresent()).toBeFalsy("Wallet password input should not be visible");
     });
 
     /**

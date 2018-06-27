@@ -72,15 +72,19 @@ export class WalletImportKeystorePage {
     return this.canShowFileImportNameInput() && this.walletNameFileImport.length > 0;
   }
 
-  importByClipboard() {
+  importByClipboard(): Promise<void> {
     if (this.clipboardDataIsValid()) {
-      this.importWalletByCurrentKeystoreInfo("clipboard");
+      return this.importWalletByCurrentKeystoreInfo("clipboard");
+    } else {
+      return Promise.resolve();
     }
   }
 
-  importByFile() {
+  importByFile(): Promise<void> {
     if (this.keystoreFileDataIsValid()) {
-      this.importWalletByCurrentKeystoreInfo("file");
+      return this.importWalletByCurrentKeystoreInfo("file");
+    } else {
+      return Promise.resolve();
     }
   }
 
@@ -261,33 +265,22 @@ export class WalletImportKeystorePage {
   }
 
   importKeystoreFile() {
-    // if (this.platform.is("ios")) {
-    //   this.filePicker.pickFile()
-    //     .then(uri => this.readInputFromBlob(this.dataURItoBlob(uri), "FILENAME"))
-    //     .catch(err => console.log('Error', err));
-    // } else if (this.platform.is("android")) {
-      // this.fileChooser.open()
-      //   .then(uri => this.readInputFromBlob(this.dataURItoBlob(uri), "FILENAME"))
-      //   .catch(e => console.log(e));
-    // } else {
-      var input = document.createElement('input');
-      input.type = 'file';
-      input.click();
-      input.onchange = (e) => {
-        let target: any = event.target;
-        let file: File = target.files[0];
-        let type = file.type;
-        let filename = file.name;
-        let startChars = file.name.substring(0, 5);
-        console.log(filename);
-        if (type === "" && startChars === "UTC--") {
-          this.keystoreFileIsInvalid = false;
-          this.readInputFromBlob(file, filename);
-        } else {
-          this.keystoreFileIsInvalid = true;
-        }
+    var input = document.createElement('input');
+    input.type = 'file';
+    input.click();
+    input.onchange = (e) => {
+      let target: any = event.target;
+      let file: File = target.files[0];
+      let type = file.type;
+      let filename = file.name;
+      let startChars = file.name.substring(0, 5);
+      if (type === "" && startChars === "UTC--") {
+        this.keystoreFileIsInvalid = false;
+        this.readInputFromBlob(file, filename);
+      } else {
+        this.keystoreFileIsInvalid = true;
       }
-    // }
+    }
   }
 
   readInputFromBlob(uri: Blob, filename: string) {

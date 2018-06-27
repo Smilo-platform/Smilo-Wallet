@@ -1,6 +1,8 @@
 import { browser, by, element, ExpectedConditions, WebElement } from "protractor";
 import { clickElementByClassName } from "./helpers";
 
+require('events').EventEmitter.defaultMaxListeners = Infinity;
+
 describe("Importing a private key", () => {
     if (browser.params.testFile !== undefined && browser.params.testFile !== "import-privatekey") return;
     beforeEach(() => {

@@ -1,4 +1,6 @@
-<smilo-nav-header titleTranslationKey="passphrase.nav-bar-title"></smilo-nav-header>
+<ion-header>
+  <smilo-nav-header titleTranslationKey="passphrase.nav-bar-title"></smilo-nav-header>
+</ion-header>
 
 <ion-content padding>
 
@@ -27,7 +29,7 @@
     </div>
   
     <div class="bottom-container">
-      <button class="smilo-button next-button" (click)="goToEnterState()">
+      <button ion-button class="smilo-button next-button" (click)="goToEnterState()">
         {{ 'passphrase.show.buttons.next' | translate }}
       </button>
     </div>
@@ -70,7 +72,7 @@
             {{ 'passphrase.enter.passphrase_error' | translate }}
           </span>
   
-          <button *ngIf="!passphraseIsValid"class="smilo-button small reset-button" (click)="reset()">
+          <button ion-button *ngIf="!passphraseIsValid"class="smilo-button small reset-button" (click)="reset()">
             {{ 'passphrase.enter.buttons.reset' | translate }}
           </button>
         </div>
@@ -78,7 +80,7 @@
     </div>
   
     <div class="bottom-container">
-      <button *ngIf="passphraseIsValid" class="smilo-button next-button" (click)="next()">
+      <button ion-button *ngIf="passphraseIsValid" class="smilo-button next-button" (click)="next()">
         {{ 'passphrase.enter.buttons.next' | translate }}
       </button>
     </div>

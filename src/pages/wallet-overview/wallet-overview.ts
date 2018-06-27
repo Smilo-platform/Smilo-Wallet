@@ -70,12 +70,12 @@ export class WalletOverviewPage {
   constructor(public navCtrl: NavController, 
               public navParams: NavParams, 
               public platform: Platform,
-              public fileNative: FileNative,
               public walletService: WalletService,
               public alertCtrl: AlertController,
               public toastCtrl: ToastController,
               public loadingCtrl: LoadingController,
-              public clipboard: Clipboard) {
+              public clipboard: Clipboard,
+              public fileNative: FileNative) {
 
   }
   

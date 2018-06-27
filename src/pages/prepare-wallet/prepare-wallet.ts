@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { IonicPage, NavController, NavParams, ToastController } from "ionic-angular";
+import { IonicPage, NavController, NavParams, ToastController, ModalController } from "ionic-angular";
 import { ILocalWallet } from "../../models/ILocalWallet";
 import { MerkleTreeService } from "../../services/merkle-tree-service/merkle-tree-service";
 import { NavigationOrigin, NAVIGATION_ORIGIN_KEY } from "../wallet/wallet";
@@ -7,6 +7,8 @@ import { HomePage } from "../home/home";
 import { NavigationHelperService } from "../../services/navigation-helper-service/navigation-helper-service";
 import { WalletService } from "../../services/wallet-service/wallet-service";
 import { TranslateService } from "@ngx-translate/core";
+import { WalletErrorPage } from "../wallet-error/wallet-error";
+import { Platform } from "ionic-angular/platform/platform";
 
 @IonicPage()
 @Component({
@@ -35,18 +37,35 @@ export class PrepareWalletPage {
    */
   successMessage: string;
 
+  unregisterBackButtonAction: Function;
+
   constructor(private navCtrl: NavController, 
               private navParams: NavParams,
               private merkleTreeService: MerkleTreeService,
               private navigationHelperService: NavigationHelperService,
               private walletService: WalletService,
               private translateService: TranslateService,
-              private toastController: ToastController) {
+              private toastController: ToastController,
+              private modalController: ModalController,
+              private platform: Platform) {
     
   }
 
   ionViewDidLoad() {
     this.initialize();
+
+    // Register for the back button action. On iOS this will simply never get called.
+    // The returned value is a function we can call to unregister for the back button.
+    this.unregisterBackButtonAction = this.platform.registerBackButtonAction(this.onBackButtonClicked, 101);
+  }
+
+  ionViewDidLeave() {
+    // Unregister the back button action to allow the use of the back button again.
+    this.unregisterBackButtonAction();
+  }
+
+  onBackButtonClicked = () => {
+    // We simply do nothing!
   }
 
   initialize() {
@@ -115,7 +134,17 @@ export class PrepareWalletPage {
 
   onMerkleTreeFailed = (error) => {
     // Display error, after user goes back to origin page.
-    console.error("Failed to generate Merkle Tree", JSON.stringify(error));
+    let modal = this.modalController.create(WalletErrorPage, {
+      error: error.toString()
+    }, {
+      enableBackdropDismiss: false
+    });
+
+    modal.present();
+
+    modal.onDidDismiss(() => {
+      this.goBackToOriginPage();
+    });
   }
 
   goBackToOriginPage() {

@@ -16,6 +16,10 @@ import { MockAlertController } from "../../../test-config/mocks/MockAlertControl
 import { MockAlert } from "../../../test-config/mocks/MockAlert";
 import { IBalance } from "../../models/IBalance";
 import { ComponentsModule } from "../../components/components.module";
+import { Clipboard } from "@ionic-native/clipboard";
+import { File as FileNative} from "@ionic-native/file";
+import { MockClipboard } from "../../../test-config/mocks/MockClipboard";
+import { MockFileNative } from "../../../test-config/mocks/MockFileNative";
 
 describe("WalletOverviewPage", () => {
   let comp: WalletOverviewPage;
@@ -25,6 +29,8 @@ describe("WalletOverviewPage", () => {
   let walletService: IWalletService;
   let loadingController: LoadingController;
   let alertController: AlertController;
+  let clipBoard: Clipboard;
+  let fileNative: FileNative;
 
   beforeEach(async(() => {
     navController = new MockNavController();
@@ -32,6 +38,8 @@ describe("WalletOverviewPage", () => {
     walletService = new MockWalletService();
     loadingController = new MockLoadingController();
     alertController = new MockAlertController();
+    clipBoard = new MockClipboard();
+    fileNative = new MockFileNative();
 
     TestBed.configureTestingModule({
       declarations: [WalletOverviewPage],
@@ -48,7 +56,9 @@ describe("WalletOverviewPage", () => {
         { provide: NavParams, useValue: new MockNavParams() },
         { provide: ToastController, useValue: toastController },
         { provide: LoadingController, useValue: loadingController },
-        { provide: AlertController, useValue: alertController }
+        { provide: AlertController, useValue: alertController },
+        { provide: Clipboard, useValue: clipBoard },
+        { provide: FileNative, useValue: fileNative }
       ]
     }).compileComponents();
   }));

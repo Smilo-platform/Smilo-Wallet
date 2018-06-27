@@ -188,9 +188,6 @@ export class MerkleTree {
 
             let totalKeys = Math.pow(2, layerCount - 1);
 
-            console.log("protocol", window.location.protocol);
-            console.log("host", window.location.host);
-
             let scripts: string[];
 
             if(platform.is("android")) {

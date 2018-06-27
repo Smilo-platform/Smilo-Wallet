@@ -1,9 +1,9 @@
 import { browser, by, element, ExpectedConditions, WebElement, ElementFinder, ElementArrayFinder } from "protractor";
 
-describe("Creating a new wallet (happy path)", () => {
-    if (browser.params.testFile !== undefined && browser.params.testFile !== "existing-wallet-overview-check") return;
+require('events').EventEmitter.defaultMaxListeners = Infinity;
 
-    // npm run e2e -- --params.testFile="existing-wallet-overview-check"
+describe("Testing existing wallet path", () => {
+    if (browser.params.testFile !== undefined && browser.params.testFile !== "existing-wallet-overview-check") return;
 
     let deleteWalletButtonConfirm: ElementFinder;
     let deleteWalletButton: ElementFinder;
@@ -26,9 +26,9 @@ describe("Creating a new wallet (happy path)", () => {
 
         // Set dummy data in Indexeddb
         browser.executeScript(`
-            const walletData = \`[{"id":"012d294e-cb11-439b-937a-12d47a52c305","type":"local","name":"Biosta","publicKey":"ETm9QUJLVdJkTqRojTNqswmeAQGaofojJJ","encryptedPrivateKey":"E9873D79C6D87DC0FB6A5778633389F4453213303DA61F20BD67FC233AA33262"},
+            const walletData = [{"id":"012d294e-cb11-439b-937a-12d47a52c305","type":"local","name":"Biosta","publicKey":"ETm9QUJLVdJkTqRojTNqswmeAQGaofojJJ","encryptedPrivateKey":"E9873D79C6D87DC0FB6A5778633389F4453213303DA61F20BD67FC233AA33262"},
                                 {"id":"9b5329ff-c683-42a5-9165-4093e4076166","type":"local","name":"Labilo","publicKey":"ELsKCchf9rcGsufjRR62PG5Fn5dFinfgeN","encryptedPrivateKey":"E9873D79C6D87DC0FB6A5778633389F4453213303DA61F20BD67FC233AA33262"},
-                                {"id":"a2e16167-fedb-47d2-8856-2b3f97389c35","type":"local","name":"Zalista","publicKey":"EZ7tP3CBdBKrB9MaBgZNHyDcTg5TFRRpaY","encryptedPrivateKey":"E9873D79C6D87DC0FB6A5778633389F4453213303DA61F20BD67FC233AA33262"}]\`;
+                                {"id":"a2e16167-fedb-47d2-8856-2b3f97389c35","type":"local","name":"Zalista","publicKey":"EZ7tP3CBdBKrB9MaBgZNHyDcTg5TFRRpaY","encryptedPrivateKey":"E9873D79C6D87DC0FB6A5778633389F4453213303DA61F20BD67FC233AA33262"}];
             const dbName = "_ionicstorage";
 
             var request = indexedDB.open(dbName);

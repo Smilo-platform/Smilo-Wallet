@@ -1,6 +1,8 @@
 import { browser, by, element, ExpectedConditions, WebElement, ElementFinder } from "protractor";
 import { clickElementByClassName } from "./helpers";
 
+require('events').EventEmitter.defaultMaxListeners = Infinity;
+
 describe("Restoring a backup", () => {
     if (browser.params.testFile !== undefined && browser.params.testFile !== "restore-backup") return;
     // Get elements
