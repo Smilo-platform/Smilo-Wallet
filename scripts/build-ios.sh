@@ -1,5 +1,5 @@
 # Build the project
-ionic cordova build ios
+ionic cordova build ios --prod --release --aot
 
 # Create the release directory if it does not exists
 mkdir -p ./release
