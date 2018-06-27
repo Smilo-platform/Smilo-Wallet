@@ -37,7 +37,7 @@ Promise.all([
 
                         foundErrors = true;
 
-                        // Write ammended file
+                        // Write amended file
                         let json = JSON.stringify(otherTranslation, null, 4);
 
                         // Malform MISSING_KEY entries. This results in syntax errors in the JSON
@@ -96,7 +96,7 @@ function compareObjects(from, to, toName, propertyPrefix) {
 
             errors = errors.concat(compareObjects(fromValue, toValue, toName, `${ propertyPrefix }${ propertyPrefix.length > 0 ? "." : "" }${ key }`))
         }
-        else if(typeof(fromValue) === "string") {
+        else {
             if(toValueIsUndefined) {
                 // List error
                 errors.push(
@@ -104,10 +104,6 @@ function compareObjects(from, to, toName, propertyPrefix) {
                 );
                 to[key] = "MISSING_KEY";
             }
-        }
-        else {
-            // Invalid type value
-            // What do?
         }
     }
 
