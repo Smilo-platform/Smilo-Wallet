@@ -12,10 +12,10 @@ import { BIP32Service } from "../../services/bip32-service/bip32-service";
 
 @IonicPage()
 @Component({
-  selector: "page-restore-backup",
-  templateUrl: "restore-backup.html",
+  selector: "page-wallet-import-passphrase",
+  templateUrl: "wallet-import-passphrase.html",
 })
-export class RestoreBackupPage {
+export class WalletImportPassphrasePage {
 
   passphrase: string = "";
   password: string = "";

@@ -4,7 +4,6 @@ import { IonicModule, NavController, NavParams} from "ionic-angular/index";
 import { MockNavController } from "../../../test-config/mocks/MockNavController";
 import { MockNavParams } from "../../../test-config/mocks/MockNavParams";
 import { WalletPage } from "../wallet/wallet";
-import { RestoreBackupPage } from "../restore-backup/restore-backup";
 import { TranslateModule, TranslateService, TranslatePipe, TranslateLoader } from "@ngx-translate/core";
 import { MockTranslateService } from "../../../test-config/mocks/MockTranslateService";
 import { MockTranslatePipe } from "../../../test-config/mocks/MockTranslatePipe";
@@ -13,6 +12,9 @@ import { Observable } from "rxjs/Observable";
 import { SplashScreen } from "@ionic-native/splash-screen";
 import { MockSplashScreen } from "../../../test-config/mocks/MockSplashScreen";
 import { ComponentsModule } from "../../components/components.module";
+import { WalletImportPassphrasePage } from "../wallet-import-passphrase/wallet-import-passphrase";
+import { WalletImportPage } from "../wallet-import/wallet-import";
+import { WalletNewPage } from "../wallet-new/wallet-new";
 
 describe("LandingPage", () => {
   let comp: LandingPage;
@@ -65,19 +67,19 @@ describe("LandingPage", () => {
     expect(splashScreen.hide).toHaveBeenCalled();
   });
 
-  it("should go to the import wallet page", () => {
+  it("should go to the new wallet page", () => {
     spyOn(navController, "push");
 
     comp.openNewWallet();
 
-    expect(navController.push).toHaveBeenCalledWith(WalletPage, {NAVIGATION_ORIGIN: "landing"});
+    expect(navController.push).toHaveBeenCalledWith(WalletNewPage, {NAVIGATION_ORIGIN: "landing"});
   });
 
-  it("should go to the restore backup page", () => {
+  it("should go to the import wallet page", () => {
     spyOn(navController, "push");
 
     comp.openRestoreBackup();
 
-    expect(navController.push).toHaveBeenCalledWith(RestoreBackupPage, {NAVIGATION_ORIGIN: "landing"});
+    expect(navController.push).toHaveBeenCalledWith(WalletImportPage, {NAVIGATION_ORIGIN: "landing"});
   });
 });

@@ -1,5 +1,5 @@
 <ion-header>
-    <smilo-nav-header titleTranslationKey="restore_backup.nav-bar-title"></smilo-nav-header>
+    <smilo-nav-header titleTranslationKey="import_passphrase.nav-bar-title"></smilo-nav-header>
 </ion-header>
 
 <ion-content padding>
@@ -8,13 +8,13 @@
       <ion-col col-xs-12 col-md-9 col-lg-5>
         <ion-item>
           <ion-label stacked>
-            {{ 'restore_backup.instruction' | translate }}
+            {{ 'import_passphrase.instruction' | translate }}
           </ion-label>
           <ion-textarea rows="3"
                       [(ngModel)]="passphrase" 
                       (ionBlur)="onPassphraseChanged()"
                       class="passphrase-input"
-                      [placeholder]="'restore_backup.passphrase_hint' | translate"></ion-textarea>
+                      [placeholder]="'import_passphrase.passphrase_hint' | translate"></ion-textarea>
         </ion-item>
       </ion-col>
     </ion-row>
@@ -23,7 +23,7 @@
       <ion-col col-xs-12 col-md-9 col-lg-5>
         <ion-item>
           <ion-label stacked>
-            {{ 'restore_backup.password_instruction' | translate }}
+            {{ 'import_passphrase.password_instruction' | translate }}
           </ion-label>
           <ion-input type="password" 
                       class="password-input"
@@ -37,7 +37,7 @@
       <ion-col col-xs-12 col-md-9 col-lg-5>
         <ion-item>
           <ion-label stacked>
-            {{ 'restore_backup.password_confirm_instruction' | translate }}
+            {{ 'import_passphrase.password_confirm_instruction' | translate }}
           </ion-label>
           <ion-input type="password" 
                       class="password-confirm-input"
@@ -51,7 +51,7 @@
       <ion-col col-xs-12 col-md-9 col-lg-5>
         <ion-item>
           <ion-label stacked>
-            {{ 'restore_backup.wallet_name' | translate }}
+            {{ 'import_passphrase.wallet_name' | translate }}
           </ion-label>
           <ion-input class="name-input" [(ngModel)]="walletName"></ion-input>
         </ion-item>
@@ -81,7 +81,7 @@
     <ion-row justify-content-center>
       <ion-col text-center>
         <button ion-button *ngIf="dataIsValid()" class="import-button" (click)="import()">
-          {{ 'restore_backup.buttons.import' | translate }}
+          {{ 'import_passphrase.buttons.import' | translate }}
         </button>
       </ion-col>
     </ion-row>
