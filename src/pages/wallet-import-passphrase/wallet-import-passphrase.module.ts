@@ -1,17 +1,17 @@
 import { NgModule } from '@angular/core';
 import { IonicPageModule } from 'ionic-angular';
-import { RestoreBackupPage } from './restore-backup';
+import { WalletImportPassphrasePage } from './wallet-import-passphrase';
 import { TranslateModule } from '@ngx-translate/core';
 import { ComponentsModule } from '../../components/components.module';
 
 @NgModule({
   declarations: [
-    RestoreBackupPage,
+    WalletImportPassphrasePage,
   ],
   imports: [
-    IonicPageModule.forChild(RestoreBackupPage),
+    IonicPageModule.forChild(WalletImportPassphrasePage),
     TranslateModule,
     ComponentsModule
   ],
 })
-export class RestoreBackupPageModule {}
+export class WalletImportPassphrasePageModule {}

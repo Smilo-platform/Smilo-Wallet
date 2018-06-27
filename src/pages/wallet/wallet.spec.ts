@@ -3,10 +3,6 @@ import { WalletPage } from "./wallet";
 import { IonicModule, NavController, NavParams} from "ionic-angular/index";
 import { MockNavController } from "../../../test-config/mocks/MockNavController";
 import { MockNavParams } from "../../../test-config/mocks/MockNavParams";
-import { WalletImportKeystorePage } from "../wallet-import-keystore/wallet-import-keystore";
-import { WalletImportPrivatekeyPage } from "../wallet-import-privatekey/wallet-import-privatekey";
-import { WalletImportLedgerPage } from "../wallet-import-ledger/wallet-import-ledger";
-import { RestoreBackupPage } from "../restore-backup/restore-backup";
 import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
 import { MockTranslationLoader } from "../../../test-config/mocks/MockTranslationLoader";
 import { WalletNewPage } from "../wallet-new/wallet-new";
@@ -16,7 +12,7 @@ import { ComponentsModule } from "../../components/components.module";
 describe("WalletPage", () => {
   let comp: WalletPage;
   let fixture: ComponentFixture<WalletPage>;
-  let navController: NavController;
+  let navController: MockNavController;
   let navParams: MockNavParams;
 
   beforeEach(async(() => {

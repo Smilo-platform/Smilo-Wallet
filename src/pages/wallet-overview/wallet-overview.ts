@@ -8,9 +8,9 @@ import { LandingPage } from "../landing/landing";
 import { ToastController } from 'ionic-angular';
 import { IWallet } from "../../models/IWallet";
 import { TransferPage } from "../transfer/transfer";
-import { RestoreBackupPage } from "../restore-backup/restore-backup";
 import { IAvailableExchange } from "../../models/IAvailableExchange";
 import { ITransaction } from "../../models/ITransaction";
+import { WalletImportPassphrasePage } from "../wallet-import-passphrase/wallet-import-passphrase";
 
 /**
  * Generated class for the WalletOverviewPage page.
@@ -120,7 +120,7 @@ export class WalletOverviewPage {
    * Open the backup wallet page
    */
   backupWallet(): void {
-    this.navCtrl.push(RestoreBackupPage);
+    this.navCtrl.push(WalletImportPassphrasePage);
   }
 
   refreshWalletBalance(): void {

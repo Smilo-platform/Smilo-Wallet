@@ -248,11 +248,7 @@ describe("Creating a new wallet (happy path)", () => {
 
         element(by.className("get-started-button")).click();
 
-        browser.wait(ExpectedConditions.presenceOf(element(by.className("new-wallet-button"))));
-
         browser.sleep(500);
-
-        element(by.className("new-wallet-button")).click();
 
         browser.wait(ExpectedConditions.presenceOf(element(by.tagName("page-wallet-new"))));
 

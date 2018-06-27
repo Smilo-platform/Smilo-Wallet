@@ -67,13 +67,9 @@ describe("Importing a private key", () => {
      * Navigates to the import private key page.
      */
     function navigateToImportPage() {
-        browser.wait(ExpectedConditions.presenceOf(element(by.className("get-started-button"))))
+        browser.wait(ExpectedConditions.presenceOf(element(by.className("restore-backup-button"))))
 
-        element(by.className("get-started-button")).click();
-
-        browser.sleep(500);
-
-        element(by.className("import-wallet-button")).click();
+        element(by.className("restore-backup-button")).click();
 
         browser.sleep(500);
 

@@ -17,7 +17,6 @@ import { TransferPageModule } from "../pages/transfer/transfer.module";
 import { WalletImportKeystorePageModule } from "../pages/wallet-import-keystore/wallet-import-keystore.module";
 import { WalletImportLedgerPageModule } from "../pages/wallet-import-ledger/wallet-import-ledger.module";
 import { WalletImportPrivatekeyPageModule } from "../pages/wallet-import-privatekey/wallet-import-privatekey.module";
-import { RestoreBackupPageModule } from "../pages/restore-backup/restore-backup.module";
 import { LandingPageModule } from "../pages/landing/landing.module";
 import { WalletService } from "../services/wallet-service/wallet-service";
 import { IonicStorageModule } from "@ionic/storage";
@@ -41,6 +40,7 @@ import { PrepareWalletPageModule } from "../pages/prepare-wallet/prepare-wallet.
 import { ComponentsModule } from "../components/components.module";
 import { WalletErrorPage } from "../pages/wallet-error/wallet-error";
 import { WalletErrorPageModule } from "../pages/wallet-error/wallet-error.module";
+import { WalletImportPassphrasePageModule } from "../pages/wallet-import-passphrase/wallet-import-passphrase.module";
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, "assets/i18n/");
@@ -72,7 +72,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     WalletImportKeystorePageModule,
     WalletImportLedgerPageModule,
     WalletImportPrivatekeyPageModule,
-    RestoreBackupPageModule,
+    WalletImportPassphrasePageModule,
     LandingPageModule,
     ComponentsModule,
     WalletNewPageModule,

@@ -3,7 +3,7 @@
     "landing": {
         "nav-bar-title": "Smilo Wallet",
         "get_started": "Begin",
-        "restore_from_backup": "Herstellen van backup"
+        "import_wallet": "Importeer wallet"
     },
     "home": {
         "nav-bar-title": "Hoofdmenu",
@@ -29,7 +29,7 @@
             "keystore": "Van een keystore bestand",
             "private_key": "Van een privé sleutel",
             "ledger": "Een ledger wallet gebruiken",
-            "restore_backup": "Herstel backup"
+            "passphrase": "Van een wachtwoordzin"
         }
     },
     "settings_page": {
@@ -155,8 +155,8 @@
             "ok": "ok"
         }
     },
-    "restore_backup": {
-        "nav-bar-title": "Herstel backup",
+    "import_passphrase": {
+        "nav-bar-title": "Herstel wachtwoordzin",
         "instruction": "Voer jouw 24-woorden herstelzin in",
         "passphrase_hint": "Voeg spaties toe tussen elk woord",
         "password_instruction": "Stel een wachtwoord in",

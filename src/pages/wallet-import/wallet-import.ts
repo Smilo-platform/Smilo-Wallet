@@ -3,9 +3,9 @@ import { IonicPage, NavController, NavParams } from "ionic-angular";
 import { WalletImportKeystorePage } from "../wallet-import-keystore/wallet-import-keystore";
 import { WalletImportPrivatekeyPage } from "../wallet-import-privatekey/wallet-import-privatekey";
 import { WalletImportLedgerPage } from "../wallet-import-ledger/wallet-import-ledger";
-import { RestoreBackupPage } from "../restore-backup/restore-backup";
 import { NAVIGATION_ORIGIN_KEY } from "../wallet/wallet";
 import { Page } from "ionic-angular/navigation/nav-util";
+import { WalletImportPassphrasePage } from "../wallet-import-passphrase/wallet-import-passphrase";
 
 @IonicPage()
 @Component({
@@ -30,7 +30,7 @@ export class WalletImportPage {
   }
 
   openRestoreBackupPage() {
-    this.navigateTo(RestoreBackupPage);
+    this.navigateTo(WalletImportPassphrasePage);
   }
 
   navigateTo(page: Page) {

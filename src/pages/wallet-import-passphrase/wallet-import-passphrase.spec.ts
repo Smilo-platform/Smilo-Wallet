@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
-import { RestoreBackupPage } from "./restore-backup";
+import { WalletImportPassphrasePage } from "./wallet-import-passphrase";
 import { IonicModule, NavController, NavParams} from "ionic-angular/index";
 import { MockNavController } from "../../../test-config/mocks/MockNavController";
 import { MockNavParams } from "../../../test-config/mocks/MockNavParams";
@@ -22,9 +22,9 @@ import { IBIP32Service, BIP32Service } from "../../services/bip32-service/bip32-
 import { MockBIP32Service } from "../../../test-config/mocks/MockBIP32Service";
 import { ComponentsModule } from "../../components/components.module";
 
-describe("RestoreBackupPage", () => {
-  let comp: RestoreBackupPage;
-  let fixture: ComponentFixture<RestoreBackupPage>;
+describe("WalletImportPassphrasePage", () => {
+  let comp: WalletImportPassphrasePage;
+  let fixture: ComponentFixture<WalletImportPassphrasePage>;
   let keyStoreService: IKeyStoreService;
   let passwordService: IPasswordService;
   let walletService: IWalletService;
@@ -45,9 +45,9 @@ describe("RestoreBackupPage", () => {
     bip32Service = new MockBIP32Service();
 
     TestBed.configureTestingModule({
-      declarations: [RestoreBackupPage],
+      declarations: [WalletImportPassphrasePage],
       imports: [
-        IonicModule.forRoot(RestoreBackupPage),
+        IonicModule.forRoot(WalletImportPassphrasePage),
         TranslateModule.forRoot({
           loader: {provide: TranslateLoader, useClass: MockTranslationLoader},
         }),
@@ -67,7 +67,7 @@ describe("RestoreBackupPage", () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(RestoreBackupPage);
+    fixture = TestBed.createComponent(WalletImportPassphrasePage);
     comp = fixture.componentInstance;
   });
 
