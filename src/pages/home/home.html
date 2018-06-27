@@ -4,31 +4,44 @@
 
 <ion-content padding>
 
-  <div class="logo-container">
-    <img class="logo-container-image" alt="smilo-logo" src="assets/imgs/smilo-logo.png">
-    <div class="logo-container-title">
-      {{ 'slogan' | translate }}
-    </div>
-  </div>
+  <smilo-logo subTitleTranslationKey="slogan"></smilo-logo>
 
-  <div class="button-container">
-    <button ion-button (click)="openNewWallet()" class="smilo-button">
-      {{ 'home.buttons.new_wallet' | translate }}
-    </button>
+  <ion-grid>
+    <ion-row justify-content-center>
+      <ion-col col-9 col-md-6 col-lg-3 col-xl-2>
+        <button ion-button full  (click)="openNewWallet()">
+          {{ 'home.buttons.new_wallet' | translate }}
+        </button>
+      </ion-col>
+    </ion-row>
 
-    <button ion-button (click)="openMyWallet()" class="smilo-button wallet-overview-page">
-        {{ 'home.buttons.my_wallet' | translate }}
-    </button>
+    <ion-row justify-content-center>
+      <ion-col col-9 col-md-6 col-lg-3 col-xl-2>
+        <button ion-button full class="wallet-overview-page" (click)="openMyWallet()">
+          {{ 'home.buttons.my_wallet' | translate }}
+        </button>
+      </ion-col>
+    </ion-row>
 
-    <button ion-button (click)="openAbout()" class="smilo-button">
-        {{ 'home.buttons.about' | translate }}
-    </button>
+    <ion-row justify-content-center>
+      <ion-col col-9 col-md-6 col-lg-3 col-xl-2>
+        <button ion-button full  (click)="openAbout()">
+          {{ 'home.buttons.about' | translate }}
+        </button>
+      </ion-col>
+    </ion-row>
 
-    <button ion-button (click)="openFaq()" class="smilo-button">
-        {{ 'home.buttons.faq' | translate }}
-    </button>
-  </div>
+    <ion-row justify-content-center>
+      <ion-col col-9 col-md-6 col-lg-3 col-xl-2>
+        <button ion-button full  (click)="openFaq()">
+          {{ 'home.buttons.faq' | translate }}
+        </button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
 
+<ion-footer no-border>
   <div class="social-links-container">
     <a target="_blank" href="https://t.me/SmiloPlatform">
       <img class="social-media-button" alt="telegram" src="assets/imgs/social/telegram.png">
@@ -54,5 +67,4 @@
       <img class="social-media-button" alt="medium" src="assets/imgs/social/medium.png">
     </a>
   </div>
-
-</ion-content>
+</ion-footer>

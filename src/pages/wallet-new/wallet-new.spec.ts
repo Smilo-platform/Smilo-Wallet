@@ -11,7 +11,7 @@ import { ComponentsModule } from "../../components/components.module";
 describe("WalletNewPage", () => {
   let comp: WalletNewPage;
   let fixture: ComponentFixture<WalletNewPage>;
-  let navController: NavController;
+  let navController: MockNavController;
 
   beforeEach(async(() => {
     navController = new MockNavController();
@@ -38,10 +38,6 @@ describe("WalletNewPage", () => {
   });
 
   it("should create component", () => expect(comp).toBeDefined());
-
-  it("should show the first warning page first", () => {
-    expect(comp.warningState).toBe("first");
-  });
 
   it("should open the passphrase page correctly", () => {
     spyOn(navController, "push");

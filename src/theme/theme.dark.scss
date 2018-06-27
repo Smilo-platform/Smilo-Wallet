@@ -8,7 +8,7 @@
   }
 
   .label {
-    color: #fff !important;
+    color: #fff;
   }
 
   h4 {
@@ -38,7 +38,11 @@
   }
 
   ion-app {
-    background-color: #363232 !important;
+    background-color: #363232;
+  }
+
+  ion-footer {
+    background-color: #434343;
   }
 
   .card {
@@ -70,44 +74,44 @@
   }
 
   .select-icon-inner {
-    color: #1B79A9 !important;
+    color: #1B79A9;
   }
 
   .radio-checked { 
-    border-color: #1B79A9 !important;
+    border-color: #1B79A9;
   } 
 
   .radio-md div div {
-    background-color: #1B79A9 !important;
+    background-color: #1B79A9;
   }
 
   .radio-ios div div {
-    border-color: #1B79A9 !important;
+    border-color: #1B79A9;
   }
 
   .item-radio-checked {
-    color: #1B79A9 !important;
+    color: #1B79A9;
   }
 
   .item-radio-checked div div ion-label {
-    color: #1B79A9 !important;
+    color: #1B79A9;
   }
 
   .toggle-icon {
-    background-color: #5ea1e5 !important;
+    background-color: #5ea1e5;
   }
 
   .toggle-inner {
-    background-color: #1B79A9 !important;
+    background-color: #1B79A9;
   }
 
   ion-icon {
-    color: #1B79A9 !important;
+    color: #1B79A9;
   }
 
   .checkbox-checked {
-    background-color: #1B79A9 !important;
-    border-color: #1B79A9 !important;
+    background-color: #1B79A9;
+    border-color: #1B79A9;
   }
 
   .button {
@@ -115,7 +119,7 @@
   }
 
   .button:hover {
-    background-color: #1B79A9 !important;
+    background-color: #1B79A9;
     opacity: 0.8;
   }
 
@@ -128,11 +132,11 @@
   }
 
   .back-button-icon {
-    color: #fff !important;
+    color: #fff;
   }
 
   .settings-nav-bar {
-    color: #fff !important;
+    color: #fff;
   }
 
   .smilo-button {

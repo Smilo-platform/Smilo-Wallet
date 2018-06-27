@@ -1,34 +1,3 @@
 page-wallet-import {
-    .scroll-content {
-        display: flex;
-        flex-direction: column;
 
-        .top-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-
-            .logo {
-                max-height: $smilo-logo-max-height;
-            }
-
-            .title {
-                margin-top: 10px;
-            }
-        }
-
-        .action-container {
-            margin-top: 30px;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-
-            .restore-backup-button {
-                color: gray;
-                background-color: transparent;
-                font-size: 12px;
-            }
-        }
-    }
 }

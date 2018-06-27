@@ -1,0 +1,15 @@
+smilo-logo {
+    .top-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .logo {
+            max-height: $smilo-logo-max-height;
+        }
+
+        .title {
+            margin-top: 10px;
+        }
+    }
+}

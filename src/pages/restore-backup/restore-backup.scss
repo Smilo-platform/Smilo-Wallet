@@ -1,25 +1,8 @@
 page-restore-backup {
-    .center-container {
-        display: flex;
-        justify-content: center;
-        margin-bottom: 20px;
-
-        .input-container {
-            width: 500px;
-        }
+    .error-box {
+        color: red;
     }
-
-    .action-container {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-
-        .error-box {
-            color: red;
-        }
-        .warning-box {
-            color: orange;
-        }
+    .warning-box {
+        color: orange;
     }
 }
