@@ -122,7 +122,7 @@ describe("Testing existing wallet path", () => {
 
         allActionSheetButtons.get(0).click();
 
-        browser.sleep(1000);
+        browser.sleep(2000);
 
         exchangesOverviewButton.click();
 
@@ -130,7 +130,7 @@ describe("Testing existing wallet path", () => {
 
         allActionSheetButtons.get(1).click();
 
-        browser.sleep(1000);
+        browser.sleep(2000);
 
         expect(walletTotalValue.getText()).toEqual(<any>"1736.77", "wallet 1 total value not correct");
 
