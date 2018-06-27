@@ -167,7 +167,7 @@ describe("WalletImportKeystorePage", () => {
   it("should detect correctly when all data is valid", () => {
     comp.name = "name";
     comp.keyStoreString = "keystore-string";
-    comp.keyStoreIsInvalid = false;
+    comp.clipBoardKeyStoreIsInvalid = false;
 
     expect(comp.clipboardDataIsValid()).toBeTruthy("Data should be valid");
 
@@ -179,7 +179,7 @@ describe("WalletImportKeystorePage", () => {
     expect(comp.clipboardDataIsValid()).toBeFalsy("Data should not be valid if key store is not set");
     comp.keyStoreString = "keystore-string";
 
-    comp.keyStoreIsInvalid = true;
+    comp.clipBoardKeyStoreIsInvalid = true;
     expect(comp.clipboardDataIsValid()).toBeFalsy("Data should not be valid if key store is marked as invalid");
   });
 
@@ -236,7 +236,7 @@ describe("WalletImportKeystorePage", () => {
 
     comp.importByClipboard().then(
       () => {
-        expect(comp.passwordIsInvalid).toBeTruthy("Password should be marked as invalid");
+        expect(comp.clipboardPasswordIsInvalid).toBeTruthy("Password should be marked as invalid");
 
         done();
       },
@@ -249,16 +249,31 @@ describe("WalletImportKeystorePage", () => {
     );
   });
 
-  it("should abort the import when the data is not valid", (done) => {
+  it("should abort the import by clipboard when the data is not valid", (done) => {
     spyOn(comp, "clipboardDataIsValid").and.returnValue(false);
 
     comp.importByClipboard().then(
       () => {
-        expect(true).toBeTruthy();
+        expect(true).toBeFalsy("Promise resolve should not be called");
         done();
       },
       (error) => {
+        expect(true).toBeTruthy();
+        done();
+      }
+    )
+  });
+
+  it("should abort the import by file when the data is not valid", (done) => {
+    spyOn(comp, "keystoreFileDataIsValid").and.returnValue(false);
+
+    comp.importByFile().then(
+      () => {
         expect(true).toBeFalsy("Promise resolve should not be called");
+        done();
+      },
+      (error) => {
+        expect(true).toBeTruthy();
         done();
       }
     )

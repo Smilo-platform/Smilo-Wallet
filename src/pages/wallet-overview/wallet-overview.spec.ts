@@ -20,6 +20,10 @@ import { Clipboard } from "@ionic-native/clipboard";
 import { File as FileNative} from "@ionic-native/file";
 import { MockClipboard } from "../../../test-config/mocks/MockClipboard";
 import { MockFileNative } from "../../../test-config/mocks/MockFileNative";
+import { BulkTranslateService } from "../../services/bulk-translate-service/bulk-translate-service";
+import { MockBulkTranslateService } from "../../../test-config/mocks/MockBulkTranslateService";
+import { KeyStoreService, IKeyStoreService } from "../../services/key-store-service/key-store-service";
+import { MockKeyStoreService } from "../../../test-config/mocks/MockKeyStoreService";
 
 describe("WalletOverviewPage", () => {
   let comp: WalletOverviewPage;
@@ -31,6 +35,8 @@ describe("WalletOverviewPage", () => {
   let alertController: AlertController;
   let clipBoard: Clipboard;
   let fileNative: FileNative;
+  let bulkTranslateService: BulkTranslateService;
+  let keystoreService: IKeyStoreService;
 
   beforeEach(async(() => {
     navController = new MockNavController();
@@ -40,6 +46,8 @@ describe("WalletOverviewPage", () => {
     alertController = new MockAlertController();
     clipBoard = new MockClipboard();
     fileNative = new MockFileNative();
+    bulkTranslateService = new MockBulkTranslateService();
+    keystoreService = new MockKeyStoreService();
 
     TestBed.configureTestingModule({
       declarations: [WalletOverviewPage],
@@ -58,7 +66,9 @@ describe("WalletOverviewPage", () => {
         { provide: LoadingController, useValue: loadingController },
         { provide: AlertController, useValue: alertController },
         { provide: Clipboard, useValue: clipBoard },
-        { provide: FileNative, useValue: fileNative }
+        { provide: FileNative, useValue: fileNative },
+        { provide: BulkTranslateService, useValue: bulkTranslateService },
+        { provide: KeyStoreService, useValue: keystoreService }
       ]
     }).compileComponents();
   }));

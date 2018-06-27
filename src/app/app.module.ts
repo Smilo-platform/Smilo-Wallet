@@ -44,6 +44,7 @@ import { AndroidPermissions } from '@ionic-native/android-permissions';
 import { Clipboard } from '@ionic-native/clipboard';
 import { WalletErrorPage } from "../pages/wallet-error/wallet-error";
 import { WalletErrorPageModule } from "../pages/wallet-error/wallet-error.module";
+import { BulkTranslateService } from "../services/bulk-translate-service/bulk-translate-service";
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, "assets/i18n/");
@@ -104,6 +105,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     PasswordService,
     SettingsService,
     FileNative,
+    BulkTranslateService,
     AndroidPermissions,
     BIP39Service,
     BIP32Service,

@@ -29,17 +29,17 @@ export class WalletImportKeystorePage {
   /**
    * Set to true if the pasted key store JSON was not valid.
    */
-  keyStoreIsInvalid: boolean = false;
+  clipBoardKeyStoreIsInvalid: boolean = false;
   /**
    * Set to true if the keystore could not be decrypted with the password.
    */
-  passwordIsInvalid: boolean = false;
+  clipboardPasswordIsInvalid: boolean = false;
   filePasswordIsInvalid: boolean = false;
-  keystoreFileIsInvalid: boolean = false;
-  keystoreFileInvalidData: boolean = false;
-  importedFilename: string = "";
-  passwordFile: string = "";
-  walletNameFileImport: string = "";
+  fileKeystoreIsInvalidNameExtension: boolean = false;
+  fileKeystoreInvalidData: boolean = false;
+  fileImportedName: string = "";
+  filePassword: string = "";
+  fileWalletNameImport: string = "";
 
   constructor(private navCtrl: NavController,
               private navParams: NavParams,
@@ -49,7 +49,7 @@ export class WalletImportKeystorePage {
   }
 
   canShowClipboardPasswordInput(): boolean {
-    return this.keyStoreString.length > 0 && !this.keyStoreIsInvalid;
+    return this.keyStoreString.length > 0 && !this.clipBoardKeyStoreIsInvalid;
   }
 
   canShowClipboardWalletNameInput(): boolean {
@@ -57,26 +57,26 @@ export class WalletImportKeystorePage {
   }
 
   canShowFileChooseImportButton(): boolean { 
-    return this.importedFilename.length === 0;
+    return this.fileImportedName.length === 0;
   }
 
   canShowFilePasswordInputAndImportedName(): boolean { 
-    return this.importedFilename.length > 0;
+    return this.fileImportedName.length > 0;
   }
 
   canShowFileImportNameInput(): boolean { 
-    return this.canShowFilePasswordInputAndImportedName() && this.passwordFile.length > 0;
+    return this.canShowFilePasswordInputAndImportedName() && this.filePassword.length > 0;
   }
 
   canShowFileImportButton(): boolean {
-    return this.canShowFileImportNameInput() && this.walletNameFileImport.length > 0;
+    return this.canShowFileImportNameInput() && this.fileWalletNameImport.length > 0;
   }
 
   importByClipboard(): Promise<void> {
     if (this.clipboardDataIsValid()) {
       return this.importWalletByCurrentKeystoreInfo("clipboard");
     } else {
-      return Promise.resolve();
+      return Promise.reject("Keystore not valid");
     }
   }
 
@@ -84,7 +84,7 @@ export class WalletImportKeystorePage {
     if (this.keystoreFileDataIsValid()) {
       return this.importWalletByCurrentKeystoreInfo("file");
     } else {
-      return Promise.resolve();
+      return Promise.reject("Keystore not valid");
     }
   }
 
@@ -97,7 +97,7 @@ export class WalletImportKeystorePage {
     let wallet = this.prepareWallet(type);
     if(wallet === null) {
       if (type === "clipboard") {
-        this.passwordIsInvalid = true;
+        this.clipboardPasswordIsInvalid = true;
       } else if (type === "file") {
         this.filePasswordIsInvalid = true;
       }
@@ -128,8 +128,8 @@ export class WalletImportKeystorePage {
       password = this.password;
       name = this.name;
     } else if (type === "file") {
-      password = this.passwordFile;
-      name = this.walletNameFileImport;
+      password = this.filePassword;
+      name = this.fileWalletNameImport;
     }
     let privateKey = this.keyStoreService.decryptKeyStore(this.keyStore, password);
     if(privateKey == null)
@@ -150,13 +150,13 @@ export class WalletImportKeystorePage {
   }
 
   resetCurrentKeystoreFile() {
-    this.passwordIsInvalid = false;
+    this.clipboardPasswordIsInvalid = false;
     this.filePasswordIsInvalid = false;
-    this.keystoreFileIsInvalid = false;
-    this.keystoreFileInvalidData = false;
-    this.importedFilename = "";
-    this.passwordFile = "";
-    this.walletNameFileImport = "";
+    this.fileKeystoreIsInvalidNameExtension = false;
+    this.fileKeystoreInvalidData = false;
+    this.fileImportedName = "";
+    this.filePassword = "";
+    this.fileWalletNameImport = "";
   }
 
   /**
@@ -165,12 +165,12 @@ export class WalletImportKeystorePage {
   clipboardDataIsValid(): boolean {
     return this.name.length > 0 && 
            this.keyStoreString.length > 0 && 
-           !this.keyStoreIsInvalid;
+           !this.clipBoardKeyStoreIsInvalid;
   }
 
   keystoreFileDataIsValid(): boolean {
-    return !this.keystoreFileInvalidData &&
-           !this.keystoreFileIsInvalid
+    return !this.fileKeystoreInvalidData &&
+           !this.fileKeystoreIsInvalidNameExtension
   }
 
   /**
@@ -180,12 +180,12 @@ export class WalletImportKeystorePage {
    */
   onKeyStoreChanged() {
     if(this.keyStoreString.length == 0) {
-      this.keyStoreIsInvalid = false;
+      this.clipBoardKeyStoreIsInvalid = false;
       return;
     }
 
     // We assume the key store is invalid. If all checks succeed we flip this variable to true.
-    this.keyStoreIsInvalid = true;
+    this.clipBoardKeyStoreIsInvalid = true;
 
     // First try and parse the key store as JSON
     let testKeyStore: IKeyStore;
@@ -202,7 +202,7 @@ export class WalletImportKeystorePage {
       return;
 
     this.keyStore = testKeyStore;
-    this.keyStoreIsInvalid = false;
+    this.clipBoardKeyStoreIsInvalid = false;
   }
 
   isValidKeyStore(keyStore: IKeyStore): boolean {
@@ -264,21 +264,38 @@ export class WalletImportKeystorePage {
     return true;
   }
 
-  importKeystoreFile() {
+  /**
+   * This method is called when the user clicks the import button to import a keystore file
+   */
+  importKeystoreFile(): void {
+    // When clicking the button create an input element
     var input = document.createElement('input');
+    // With type file so the browser understands the file browser should be opened on click
     input.type = 'file';
+    // Click it as if the user clicked the generated input 
     input.click();
+    // When the user has selected a file in the file browser
     input.onchange = (e) => {
+      // Cast the target to any type so we can access the files array
       let target: any = event.target;
+      // Get the first selected file (we should only get one)
       let file: File = target.files[0];
+      // Get the file type
       let type = file.type;
+      // Get the file name
       let filename = file.name;
+      // Get the first five characters of the file name
       let startChars = file.name.substring(0, 5);
+      // The type should be empty (no extension) and the file should start with UTC--
       if (type === "" && startChars === "UTC--") {
-        this.keystoreFileIsInvalid = false;
+        // So the type and start of the name is correct
+        this.fileKeystoreIsInvalidNameExtension = false;
+        // Read the text from the blob
         this.readInputFromBlob(file, filename);
+      // So the type or start of the file is not correct  
       } else {
-        this.keystoreFileIsInvalid = true;
+        // Set to true so we can show in the UI
+        this.fileKeystoreIsInvalidNameExtension = true;
       }
     }
   }
@@ -293,12 +310,12 @@ export class WalletImportKeystorePage {
           let keyStore = JSON.parse(allLines[0]) as IKeyStore;
           if (this.isValidKeyStore(keyStore)) {
             this.keyStore = keyStore;
-            this.importedFilename = filename;
+            this.fileImportedName = filename;
           } else {
-            this.keystoreFileInvalidData = true;
+            this.fileKeystoreInvalidData = true;
           }
         } catch (exception) {
-          this.keystoreFileInvalidData = true;
+          this.fileKeystoreInvalidData = true;
         }
     };
     reader.readAsText(uri);
