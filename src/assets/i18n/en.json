@@ -186,10 +186,15 @@
         "passphrase_hint": "Add spaces between each word",
         "password_instruction": "Set password",
         "wallet_name": "Wallet name",
+        "wallet_index": "BIP44 address index",
         "password_confirm_instruction": "Confirm password",
         "passphrase_error": "The passphrase you entered is incorrect. Please make sure you enter the correct amount of words.",
         "buttons": {
-            "import": "Import"
+            "import": "Import",
+            "advanced": "Toggle advanced"
+        },
+        "errors": {
+            "wallet_index": "The BIP44 address index has an invalid value"
         }
     },
     "password_messages": {

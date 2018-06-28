@@ -8,6 +8,8 @@ import { NAVIGATION_ORIGIN_KEY } from "../wallet/wallet";
 import { BIP39Service, IPassphraseValidationResult } from "../../services/bip39-service/bip39-service";
 import { PrepareWalletPage } from "../prepare-wallet/prepare-wallet";
 import { BIP32Service } from "../../services/bip32-service/bip32-service";
+import { FormGroup, FormBuilder, Validators } from "@angular/forms";
+import { WalletIndexValidator } from "../../validators/WalletIndexValidator";
 
 @IonicPage()
 @Component({
@@ -15,7 +17,6 @@ import { BIP32Service } from "../../services/bip32-service/bip32-service";
   templateUrl: "wallet-import-passphrase.html",
 })
 export class WalletImportPassphrasePage {
-
   passphrase: string = "";
   password: string = "";
   passwordConfirm: string = "";
@@ -24,6 +25,12 @@ export class WalletImportPassphrasePage {
   passphraseStatus: IPassphraseValidationResult;
   passwordStatus: IPasswordValidationResult;
 
+  showAdvanced: boolean = false;
+
+  walletIndex: number = 0;
+
+  form: FormGroup;
+
   constructor(private navCtrl: NavController, 
               private navParams: NavParams,
               private passwordService: PasswordService,
@@ -31,6 +38,15 @@ export class WalletImportPassphrasePage {
               private keyStoreService: KeyStoreService,
               private bip32Service: BIP32Service,
               private bip39Service: BIP39Service) {
+    let formBuilder = new FormBuilder();
+
+    this.form = formBuilder.group({
+      passphrase: ["", Validators.compose([Validators.required])],
+      password: ["", Validators.compose([Validators.required])],
+      passwordConfirm: ["", Validators.compose([Validators.required])],
+      walletName: ["", Validators.compose([Validators.required])],
+      walletIndex: ["", Validators.compose([WalletIndexValidator()])]
+    });
   }
 
   onPasswordChanged() {
@@ -46,12 +62,10 @@ export class WalletImportPassphrasePage {
   }
 
   dataIsValid(): boolean {
-    return this.passphrase.length > 0 &&
-           this.password.length > 0 &&
-           this.walletName.length > 0 &&
-           this.passwordStatus &&
+    return this.passwordStatus &&
            this.passwordStatus.type == "success" &&
            this.passphraseStatus &&
+           this.form.valid && 
            (this.passphraseStatus.isValid || !this.passphraseStatus.isBlocking);
   }
   
@@ -73,7 +87,7 @@ export class WalletImportPassphrasePage {
 
   prepareWallet(): ILocalWallet {
     let seed = this.bip39Service.toSeed(this.passphrase);
-    let privateKey = this.bip32Service.getPrivateKey(seed);
+    let privateKey = this.bip32Service.getPrivateKey(seed, this.walletIndex);
 
     // Create key store for private key
     let keyStore = this.keyStoreService.createKeyStore(privateKey, this.password);
