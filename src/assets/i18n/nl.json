@@ -58,7 +58,8 @@
         "buttons": {
             "download_backup": "Download backup",
             "show_passphrase": "Toon wachtwoordzin"
-        }
+        },
+        "general_message": "Even voor de duidelijkheid..."
     },
     "passphrase": {
         "nav-bar-title": "Wachtwoordzin",
@@ -204,24 +205,30 @@
         "question5": "Wat als ik mijn privésleutel verlies of het wachtwoord van mijn gecodeerde Keystore-bestand vergeet?",
         "answer5": "Je behoudt de volledige controle over jouw sleutels en jouw tegoeden. We kunnen jouw geld niet terugkrijgen of jouw account niet blokkeren als je een phishing-site bezoekt of jouw privésleutel kwijtraakt. <p>Wij zijn niet verantwoordelijk voor enig verlies.</p> SmiloWallet.io wordt momenteel actief ontwikkeld. Hoewel we de portefeuille grondig hebben getest, is er altijd de mogelijkheid dat er iets onverwachts gebeurt waardoor jouw geld verloren gaat. Investeer niet meer dan je bereid bent te verliezen."
     },
-  "prepare_wallet": {
-      "description": "Uw wallet wordt geschikt gemaakt voor eerste gebruik",
-      "status1": "Genereer coolheid...",
-      "status2": "Je processor martellen...",
-      "status3": "Je wallet quantum veilig maken...",
-      "status4": "Meer geheugen downloaden...",
-      "status5": "De ventilering betreden....",
-      "status6": "Pi berekenen...",
-      "status7": "Laatste puntjes afronden...",
-      "toast": {
-          "success": "Wallet aangemaakt!"
-      }
-  },
-  "wallet_error": {
-      "title": "Er ging iets fout!",
-      "message": "Er is een fout opgetreden bij het maken van uw wallet. Als gevolg hiervan kon uw wallet niet aangemaakt worden. Het systeem heeft de onderstaande fout gerapporteerd.",
-      "buttons": {
-          "go_back": "Ga terug"
-      }
-  }
+    "prepare_wallet": {
+        "description": "Uw wallet wordt geschikt gemaakt voor eerste gebruik",
+        "status1": "Genereer coolheid...",
+        "status2": "Je processor martellen...",
+        "status3": "Je wallet quantum veilig maken...",
+        "status4": "Meer geheugen downloaden...",
+        "status5": "De ventilering betreden....",
+        "status6": "Pi berekenen...",
+        "status7": "Laatste puntjes afronden...",
+        "toast": {
+            "success": "Wallet aangemaakt!"
+        }
+    },
+    "wallet_error": {
+        "title": "Er ging iets fout!",
+        "message": "Er is een fout opgetreden bij het maken van uw wallet. Als gevolg hiervan kon uw wallet niet aangemaakt worden. Het systeem heeft de onderstaande fout gerapporteerd.",
+        "buttons": {
+            "go_back": "Ga terug"
+        }
+    },
+    "transfer": {
+        "nav-bar-title": "Overmaken"
+    },
+    "wallet_import_ledger": {
+        "nav-bar-title": "Ledger"
+    }
 }

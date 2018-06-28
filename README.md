@@ -31,32 +31,6 @@ Next run the following command to run the project locally:
 ionic serve
 ```
 
-## Testing the project
-
-We use Jasmine and Karma to unit test this project. To unit test the project run the following command in the root of this project:
-
-````
-npm run test
-````
-
-For end-to-end testing we use Protractor and Jasmine. To e2e test the project first ensure the project is running with `ionic serve`. Next run the following command in the root of this project:
-
-```
-npm run e2e
-```
-
-For end-to-end testing we use Protractor and Jasmine. To e2e test the project first ensure the project is running with `ionic serve`. Next run the following command in the root of this project. Use the FILE_NAME as variable defined in the e2e script. 
-
-```
-npm run e2e -- --params.testFile=<FILE_NAME>
-```
-
-Example
-
-```
-npm run e2e -- --params.testFile="existing-wallet-overview-check"
-```
-
 ### Building and running on Android
 
 First make sure you have the following dependencies installed:
@@ -119,6 +93,54 @@ npm run upload:hockey-app
 ```
 
 For this to work the environment variable `HOCKEY_APP_TOKEN` is expected to be available.
+
+## Testing the project
+
+We use Jasmine and Karma to unit test this project. To unit test the project run the following command in the root of this project:
+
+````
+npm run test
+````
+
+For end-to-end testing we use Protractor and Jasmine. To e2e test the project first ensure the project is running with `ionic serve`. Next run the following command in the root of this project:
+
+```
+npm run e2e
+```
+
+For end-to-end testing we use Protractor and Jasmine. To e2e test the project first ensure the project is running with `ionic serve`. Next run the following command in the root of this project. Use the FILE_NAME as variable defined in the e2e script. 
+
+```
+npm run e2e -- --params.testFile=<FILE_NAME>
+```
+
+Example
+
+```
+npm run e2e -- --params.testFile="existing-wallet-overview-check"
+```
+
+## Validating translations
+
+To validate if all translations have a definition for all translation keys you can use the following command:
+
+```
+npm run validate-translations
+```
+
+This will, based on the English translation, check if any translation keys are missing in all other translations.
+
+All missing translation keys will be logged. The original translation will also be amended with the missing translation key and a default value.
+
+This default value will result in an invalid JSON string on purpose. This allows us to easily find missing strings in a code editor.
+
+When running on a build serve you may want to skip amending the translation file. To skip amending use the following command:
+
+```
+npm run validate-translations:ci
+```
+
+This will only output the errors.
 
 ## Generating private and public keys
 

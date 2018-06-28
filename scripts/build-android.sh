@@ -1,3 +1,8 @@
+set -e
+
+# Ensure translations are complete
+npm run validate-translations:ci
+
 # Build the project
 ionic cordova build android --prod --release --aot
 
