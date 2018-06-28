@@ -199,9 +199,7 @@ describe("WalletImportPrivatekeyPage", () => {
         type: "local",
         publicKey: null,
         keyStore: dummyKeyStore,
-        transactions: [],
-        lastUpdateTime: null,
-        balances: []
+        lastUpdateTime: null
       }
     );
   });

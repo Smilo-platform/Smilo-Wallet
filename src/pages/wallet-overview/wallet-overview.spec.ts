@@ -91,7 +91,6 @@ describe("WalletOverviewPage", () => {
     expect(comp.legendList.length).toBe(0, "legendList length should be 0");
     expect(comp.availableExchanges.length).toBe(0, "availableCurrencies length should be 0");
     expect(comp.showFundsStatus).toBe(true, "showFundsStatus should be true");
-    expect(comp.twoFactorStatus).toBe(false, "twoFactorStatus should be false");
     expect(comp.walletFundsVisibility).toBe("shown", "walletFundsVisiblity should be shown");
   })
 
@@ -206,10 +205,10 @@ describe("WalletOverviewPage", () => {
   it("should get two specific currency types and amounts back after getting it with mock data", (done) => {
     comp.getAllWallets().then(data => {
       comp.getWalletBalance("I EXIST").then(data => {
-        expect(comp.currentWallet.balances[0].currency).toBe("XSM");
-        expect(comp.currentWallet.balances[0].amount).toBe(5712);
-        expect(comp.currentWallet.balances[1].currency).toBe("XSP");
-        expect(comp.currentWallet.balances[1].amount).toBe(234);
+        expect(comp.balances[0].currency).toBe("XSM");
+        expect(comp.balances[0].amount).toBe(5712);
+        expect(comp.balances[1].currency).toBe("XSP");
+        expect(comp.balances[1].amount).toBe(234);
 
         done();
       });

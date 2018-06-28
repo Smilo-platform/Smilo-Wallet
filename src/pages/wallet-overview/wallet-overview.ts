@@ -16,6 +16,7 @@ import { Clipboard } from "@ionic-native/clipboard";
 import { KeyStoreService } from "../../services/key-store-service/key-store-service";
 import { BulkTranslateService } from "../../services/bulk-translate-service/bulk-translate-service";
 import { TranslateService } from "@ngx-translate/core";
+import { IBalance } from "../../models/IBalance";
 
 /**
  * Generated class for the WalletOverviewPage page.
@@ -46,28 +47,94 @@ export interface IWriteOptions {
 })
 export class WalletOverviewPage {
   @ViewChild("doughnutCanvas") doughnutCanvas;
+  /**
+   * The picked currency for the shown values
+   */
   pickedCurrency: string;
+  /**
+   * The picked exchange to show 
+   */
   pickedExchange: string;
+  /**
+   * The chart to show the currencies distribution
+   */
   doughnutChart: Chart;
+  /**
+   * All of the wallets
+   */
   wallets: IWallet[] = [];
+  /**
+   * The currency in amounts to show on the chart
+   */
   currenciesForDoughnutCanvas: number[] = [];
+  /**
+   * The currency labels to show on the chart
+   */
   currenciesForDoughnutCanvasLabels: string[] = [];
+  /**
+   * The current selected wallet
+   */
   currentWallet: IWallet;
+  /**
+   * The current selected wallet index
+   */
   currentWalletIndex: number = 0;
+  /**
+   * The legend labels + amount list to show underneith the distribution chart
+   */
   legendList: string[] = [];
+  /**
+   * The list of the available exchanges to pick from
+   */
   availableExchanges: IAvailableExchange[] = [];
+  /**
+   * The list of available currencies for the picked exchange
+   */
   currentExchangeCurrencies: string[] = [];
+  /**
+   * The transaction history for the current wallet
+   */
   transactionsHistory: ITransaction[] = [];
+  /**
+   * Status to show the funds for the switch
+   */
   showFundsStatus: boolean = true;
-  twoFactorStatus: boolean = false;
+  /**
+   * Visibility connection for the UI funds
+   */
   walletFundsVisibility: VisibilityType = "shown";
+  /**
+   * Visiblity connection for the UI transfer button
+   */
   walletFundsVisibilityTransferButton: VisibilityType = "hidden";
+  /**
+   * Visiblity connection for the message of no transaction history UI
+   */
   noTransactionHistoryVisibility: VisibilityType = "shown";
+  /**
+   * Visiblity connection for the transaction history
+   */
   transactionHistoryVisibility: VisibilityType = "hidden";
+  /**
+   * The loading modal
+   */
   loading: Loading;
+  /**
+   * The loading error modal
+   */
   loadingError: Alert;
+  /**
+   * The total value of all combined currencies and exchange
+   */
   totalCurrentCurrencyValue: number;
+  /**
+   * List of translations set programmatically
+   */
   translations: Map<string, string> = new Map<string, string>();
+  /**
+   * Current wallet balances
+   */
+  balances: IBalance[];
 
   constructor(private navCtrl: NavController, 
               private platform: Platform,
@@ -86,7 +153,10 @@ export class WalletOverviewPage {
     this.retrieveTranslations();
   }
 
-  retrieveTranslations() {
+  /**
+   * Gets the translations to set programmatically
+   */
+  retrieveTranslations(): void {
     this.bulkTranslateService.getTranslations([
       "wallet_overview.error",
       "wallet_overview.error_retrieving_data",
@@ -164,11 +234,17 @@ export class WalletOverviewPage {
     this.navCtrl.push(TransferPage);
   }
 
+  /**
+   * Helper method to refresh the current wallet information
+   */
   refreshWalletBalance(): void {
     this.getWalletBalance(this.currentWallet.publicKey);
     this.getTransactionHistory(this.currentWallet.publicKey);
   }
 
+  /**
+   * Creates a modal to export the private key
+   */
   exportPrivatekeyModal(): boolean {
     if (this.currentWallet.type !== "local") {
       return false;
@@ -225,6 +301,9 @@ export class WalletOverviewPage {
     alert.present();
   }
 
+  /**
+   * Creates a modal to export the keystore
+   */
   exportKeystoreModal(): boolean {
     if (this.currentWallet.type !== "local") {
       return false;
@@ -254,6 +333,12 @@ export class WalletOverviewPage {
     alert.present();
   }
 
+  /**
+   * Exports the wallet
+   * @param type Either file or clipboard
+   * @param data The data to export
+   * @param exportType Either keystore or privateky
+   */
   export(type, data, exportType): boolean {
     if (type === "clipboard") {
       if (this.platform.is("android") || this.platform.is("ios")) {
@@ -290,6 +375,10 @@ export class WalletOverviewPage {
     }
   }
 
+  /**
+   * Copies the data to the clipboard for web
+   * @param data The data to copy
+   */
   copyToClipboardWeb(data): void {
     var dummyElementToCopyText = document.createElement("input");
     document.body.appendChild(dummyElementToCopyText);
@@ -298,7 +387,12 @@ export class WalletOverviewPage {
     document.execCommand("copy");
     document.body.removeChild(dummyElementToCopyText);
   }
-
+  
+  /**
+   * Downloads the data as file
+   * @param data The data to export
+   * @param filename The filename to set
+   */
   downloadTxtFileWeb(data, filename): void {
     var dummyElementToDownload = document.createElement("a");
     dummyElementToDownload.setAttribute("href", "data:text/plain;charset=utf-8," + data);
@@ -309,6 +403,12 @@ export class WalletOverviewPage {
     document.body.removeChild(dummyElementToDownload);
   }
 
+  /**
+   * Helper method to show a toast
+   * @param toastMessage The message to show as text inside the toast
+   * @param duration The duration of the toast to last
+   * @param position The position of the toast to show
+   */
   showToastMessage(toastMessage, duration, position): void {
     let toast = this.toastCtrl.create({
       message: toastMessage,
@@ -318,6 +418,14 @@ export class WalletOverviewPage {
     toast.present(toast);
   }
 
+  /**
+   * Writes the file to the storage
+   * @param storageLocation Location where to store the file
+   * @param filename The name of the file to store
+   * @param keystoreData The keystoredata to store
+   * @param options Options to overwrite existing file name
+   * @param os Either android or ios
+   */
   writeFileMobile(storageLocation, filename, keystoreData, options, os): void {
     this.fileNative.writeFile(storageLocation, filename, keystoreData, options).then(data => {
       let toastMessage = "";
@@ -388,6 +496,10 @@ export class WalletOverviewPage {
     }
   }
 
+  /**
+   * Retrieves the transaction history for the current wallet
+   * @param publicKey 
+   */
   getTransactionHistory(publicKey: string): Promise<void> {
     return this.walletService.getTransactionHistory(this.currentWallet.publicKey).then(data => {
       this.transactionsHistory = data;
@@ -492,7 +604,7 @@ export class WalletOverviewPage {
         }
       }
       if (this.currentWallet !== undefined) {
-        this.currentWallet.balances = balances;
+        this.balances = balances;
         this.setCalculatedCurrencyValue();
       }
     }).catch(data => {
@@ -556,9 +668,9 @@ export class WalletOverviewPage {
         this.doughnutChart.destroy();
       }
       // Loop all balances of current wallet
-      for (let y = 0; y < this.currentWallet.balances.length; y++) {
-        let walletCurrency = this.currentWallet.balances[y].currency;
-        let walletCurrencyAmount = this.currentWallet.balances[y].amount;
+      for (let y = 0; y < this.balances.length; y++) {
+        let walletCurrency = this.balances[y].currency;
+        let walletCurrencyAmount = this.balances[y].amount;
         // Loop all prices
         for (let i = 0; i < prices.length; i++) {
           let currencyFromApi = prices[i].currencyFrom;
@@ -600,7 +712,7 @@ export class WalletOverviewPage {
             this.currenciesForDoughnutCanvas.push(Number(walletCurrencyAmount));
 
             totalCurrencies += walletCurrencyAmount;
-            this.currentWallet.balances[y].valueAmount = Number((currentCurrencyValue).toFixed(this.getFixedNumbers()));
+            this.balances[y].valueAmount = Number((currentCurrencyValue).toFixed(this.getFixedNumbers()));
             break;
           } else if (!found && i === prices.length -1) {
             // TODO: Didn"t find an alternative path
