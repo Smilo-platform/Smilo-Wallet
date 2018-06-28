@@ -37,10 +37,9 @@ export class WalletImportPassphrasePage {
               private walletService: WalletService,
               private keyStoreService: KeyStoreService,
               private bip32Service: BIP32Service,
-              private bip39Service: BIP39Service) {
-    let formBuilder = new FormBuilder();
-
-    this.form = formBuilder.group({
+              private bip39Service: BIP39Service,
+              private formBuilder: FormBuilder) {
+    this.form = this.formBuilder.group({
       passphrase: ["", Validators.compose([Validators.required])],
       password: ["", Validators.compose([Validators.required])],
       passwordConfirm: ["", Validators.compose([Validators.required])],

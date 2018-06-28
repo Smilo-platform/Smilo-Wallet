@@ -72,14 +72,9 @@
             </ion-label>
             <ion-input class="name-input" 
                         formControlName="walletIndex"
+                        class="wallet-index-input"
                         [(ngModel)]="walletIndex"></ion-input>
           </ion-item>
-        </ion-col>
-      </ion-row>
-
-      <ion-row *ngIf="!form.controls.walletIndex.valid">
-        <ion-col text-center class="error-box">
-          {{ 'import_passphrase.errors.wallet_index' | translate }}
         </ion-col>
       </ion-row>
     </form>
@@ -100,6 +95,14 @@
               [ngClass]="{'error-box': passphraseStatus.isBlocking, 'warning-box': !passphraseStatus.isBlocking}" 
               class="error-box passphrase-message-box">
           {{ passphraseStatus.errorMessage }}
+        </span>
+      </ion-col>
+    </ion-row>
+    
+    <ion-row *ngIf="!form.controls.walletIndex.valid">
+      <ion-col text-center>
+        <span class="wallet-index-message-box error-box">
+            {{ 'import_passphrase.errors.wallet_index' | translate }}
         </span>
       </ion-col>
     </ion-row>

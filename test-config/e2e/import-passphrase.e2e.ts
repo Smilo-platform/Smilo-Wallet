@@ -11,8 +11,11 @@ describe("Importing a passphrase", () => {
     let passwordInput: ElementFinder;
     let passwordConfirmInput: ElementFinder;
     let nameInput: ElementFinder;
+    let walletIndexInput: ElementFinder;
     let passphraseMessageBox: ElementFinder;
     let passwordMessageBox: ElementFinder;
+    let walletIndexMessageBox: ElementFinder;
+    let toggleAdvancedButton: ElementFinder;
 
     // Basic setup
     beforeEach(() => {
@@ -33,8 +36,11 @@ describe("Importing a passphrase", () => {
         passwordInput = element(by.css(".password-input > input"));
         passwordConfirmInput = element(by.css(".password-confirm-input > input"));
         nameInput = element(by.css(".name-input > input"));
+        walletIndexInput = element(by.css(".wallet-index-input > input"));
         passphraseMessageBox = element(by.className("passphrase-message-box"));
         passwordMessageBox = element(by.className("password-message-box"));
+        walletIndexMessageBox = element(by.className("wallet-index-message-box"));
+        toggleAdvancedButton = element(by.className("show-advanced-button"));
     });
 
     afterEach(() => {
@@ -46,6 +52,7 @@ describe("Importing a passphrase", () => {
         // Make sure no message boxes are shown
         expect(passphraseMessageBox.isPresent()).toBeFalsy("Passphrase error should not be shown initially");
         expect(passwordMessageBox.isPresent()).toBeFalsy("Password error should not be shown initially");
+        expect(walletIndexMessageBox.isPresent()).toBeFalsy("Wallet index error should not be shown initially");
 
         // Make sure the import button is not shown
         expect(importButton.isPresent()).toBeFalsy("Import button should not be shown initially");
@@ -55,6 +62,9 @@ describe("Importing a passphrase", () => {
         expect(passwordInput.getAttribute("value")).toBe(<any>"", "Password input should be empty initially");
         expect(passwordConfirmInput.getAttribute("value")).toBe(<any>"", "Password confirm input should be empty initially");
         expect(nameInput.getAttribute("value")).toBe(<any>"", "Name input should be empty initially");
+        
+        // Advanced options should be hidden
+        expect(walletIndexInput.isPresent()).toBeFalsy();
     });
 
     it("should trigger a passphrase error correctly", () => {
@@ -67,6 +77,51 @@ describe("Importing a passphrase", () => {
         browser.sleep(500);
 
         expect(passphraseMessageBox.isPresent()).toBeTruthy("Password error should be visible");
+    });
+
+    it("should toggle the advanced options correctly", () => {
+        toggleAdvancedButton.click();
+
+        browser.sleep(500);
+
+        expect(walletIndexInput.isPresent()).toBeTruthy();
+
+        toggleAdvancedButton.click();
+
+        browser.sleep(500);
+
+        expect(walletIndexInput.isPresent()).toBeFalsy();
+    });
+
+    it("should show the wallet index error correctly", () => {
+        toggleAdvancedButton.click();
+
+        browser.sleep(500);
+        
+        walletIndexInput.clear();
+        walletIndexInput.sendKeys("-1");
+
+        browser.sleep(500);
+
+        expect(walletIndexMessageBox.isPresent()).toBeTruthy();
+    });
+
+    it("should clear the wallet index error correctly", () => {
+        toggleAdvancedButton.click();
+
+        browser.sleep(500);
+        
+        walletIndexInput.clear();
+        walletIndexInput.sendKeys("-1");
+
+        browser.sleep(500);
+
+        walletIndexInput.clear();
+        walletIndexInput.sendKeys("1");
+
+        browser.sleep(500);
+
+        expect(walletIndexMessageBox.isPresent()).toBeFalsy();
     });
 
     it("should clear the passphrase error correctly", () => {
