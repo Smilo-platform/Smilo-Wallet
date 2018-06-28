@@ -77,7 +77,9 @@ export class WalletImportPassphrasePage {
   goToPrepareWalletPage(wallet: ILocalWallet, password: string): Promise<void> {
     let params = {
       wallet: wallet,
-      password: password
+      password: password,
+      passphrase: this.passphrase,
+      walletIndex: this.walletIndex
     };
     params[NAVIGATION_ORIGIN_KEY] = this.navParams.get(NAVIGATION_ORIGIN_KEY);
 

@@ -253,5 +253,14 @@
       "buttons": {
           "go_back": "Go back"
       }
+  },
+  "wallet_extra_import": {
+      "title": "Import another wallet?",
+      "description": "Your wallet has been imported! Would you like to import another wallet using the same passphrase?",
+      "buttons": {
+          "yes": "Yes",
+          "no": "No",
+          "yes_alternative": "Yes, using a custom BIP44 address index"
+      }
   }
 }

@@ -1,0 +1,29 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>{{ 'wallet_extra_import.title' | translate }}</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-grid>
+    <ion-row>
+      <ion-col text-center>
+        {{ 'wallet_extra_import.description' | translate }}
+      </ion-col>
+    </ion-row>
+
+    <ion-row justify-content-center>
+      <ion-col text-center>
+        <button ion-button (click)="yes()">
+          {{ 'wallet_extra_import.buttons.yes' | translate }}
+        </button>
+      </ion-col>
+
+      <ion-col text-center>
+        <button ion-button (click)="no()">
+          {{ 'wallet_extra_import.buttons.no' | translate }}
+        </button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
