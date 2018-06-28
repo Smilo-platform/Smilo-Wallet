@@ -141,9 +141,7 @@ export class WalletImportKeystorePage {
       name: name,
       publicKey: null,
       keyStore: this.keyStore,
-      transactions: [],
       lastUpdateTime: null,
-      balances: []
     };
 
     return wallet;

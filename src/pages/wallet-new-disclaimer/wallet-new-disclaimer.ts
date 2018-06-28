@@ -70,9 +70,7 @@ export class WalletNewDisclaimerPage {
       name: this.walletName,
       publicKey: null,
       keyStore: this.keyStoreService.createKeyStore(privateKey, this.password),
-      transactions: [],
-      lastUpdateTime: new Date(),
-      balances: []
+      lastUpdateTime: new Date()
     };
 
     return wallet;
