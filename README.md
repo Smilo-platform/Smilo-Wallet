@@ -19,12 +19,6 @@ npm install
 
 As part of the installation the bitcoinjs-lib will also be build. For more information see the chapter `Generating private and public keys`.
 
-Make sure you start the mock API for data to retrieve 
-
-```
-json-server --watch ./test-config/json-mocks/mock-data.json
-```
-
 Next run the following command to run the project locally:
 
 ```
