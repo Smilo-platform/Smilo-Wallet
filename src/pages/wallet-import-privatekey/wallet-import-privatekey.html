@@ -4,47 +4,73 @@
 
 <ion-content padding>
 
-  <div class="input-container">
-    <ion-item>
-      <ion-label stacked>
-        {{ 'import_privatekey.privatekey' | translate }}
-      </ion-label>
-      <ion-textarea class="private-key-input" [(ngModel)]="privateKey" rows="10" cols="50"></ion-textarea> 
-    </ion-item>
+  <ion-grid>
+    <ion-row justify-content-center>
+      <ion-col col-12 col-md-9 col-lg-6 col-xl-4>
+        <ion-item>
+          <ion-label stacked>
+            {{ 'import_privatekey.privatekey' | translate }}
+          </ion-label>
+          <ion-textarea class="private-key-input" [(ngModel)]="privateKey" rows="10" cols="50"></ion-textarea> 
+        </ion-item>
+      </ion-col>
+    </ion-row>
 
-    <ion-item>
-      <ion-label stacked>
-        {{ 'import_privatekey.name' | translate }}
-      </ion-label>
-      <ion-input class="name-input" [(ngModel)]="name"></ion-input>
-    </ion-item>
+    <ion-row justify-content-center>
+      <ion-col col-12 col-md-9 col-lg-6 col-xl-4>
+        <ion-item>
+          <ion-label stacked>
+            {{ 'import_privatekey.name' | translate }}
+          </ion-label>
+          <ion-input class="name-input" [(ngModel)]="name"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
 
-    <ion-item>
-      <ion-label stacked>
-        {{ 'import_privatekey.password' | translate }}
-      </ion-label>
-      <ion-input class="password-input" type="password" [(ngModel)]="password" (ionChange)="onPasswordsChanged()"></ion-input>
-    </ion-item>
+    <ion-row justify-content-center>
+      <ion-col col-12 col-md-9 col-lg-6 col-xl-4>
+        <ion-item>
+          <ion-label stacked>
+            {{ 'import_privatekey.password' | translate }}
+          </ion-label>
+          <ion-input class="password-input" type="password" [(ngModel)]="password" (ionChange)="onPasswordsChanged()"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
 
-    <ion-item>
-      <ion-label stacked>
-        {{ 'import_privatekey.validate_password' | translate }}
-      </ion-label>
-      <ion-input class="password-confirmation-input" type="password" [(ngModel)]="confirmedPassword" (ionChange)="onPasswordsChanged()"></ion-input>
-    </ion-item>
-  </div>
+    <ion-row justify-content-center>
+      <ion-col col-12 col-md-9 col-lg-6 col-xl-4>
+        <ion-item>
+          <ion-label stacked>
+            {{ 'import_privatekey.validate_password' | translate }}
+          </ion-label>
+          <ion-input class="password-confirmation-input" type="password" [(ngModel)]="confirmedPassword" (ionChange)="onPasswordsChanged()"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
 
-  <div class="action-container">
-    <span *ngIf="!passwordsArePristine() && passwordStatus.type != 'success'" class="password-error">
-      {{ passwordStatus.message }}
-    </span>
+    <ion-row>
+      <ion-col text-center>
+        <span *ngIf="!passwordsArePristine() && passwordStatus.type != 'success'" class="password-error">
+          {{ passwordStatus.message }}
+        </span>
+      </ion-col>
+    </ion-row>
 
-    <a class="password-explanation" (click)="showPasswordExplanation()">
-      {{ 'import_privatekey.password_why' | translate }}
-    </a>
+    <ion-row>
+      <ion-col text-center>
+        <a class="password-explanation" (click)="showPasswordExplanation()">
+          {{ 'import_privatekey.password_why' | translate }}
+        </a>
+      </ion-col>
+    </ion-row>
 
-    <button ion-button *ngIf="dataIsValid()" class="smilo-button import-button" (click)="import()">
-      {{ 'import_privatekey.buttons.import' | translate }}
-    </button>
-  </div>
+    <ion-row justify-content-center>
+      <ion-col text-center>
+        <button ion-button *ngIf="dataIsValid()" class="import-button" (click)="import()">
+          {{ 'import_privatekey.buttons.import' | translate }}
+        </button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>

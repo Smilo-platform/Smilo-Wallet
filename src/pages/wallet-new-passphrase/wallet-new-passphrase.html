@@ -4,85 +4,109 @@
 
 <ion-content padding>
 
-  <!-- This part will be shown when the user writes down the passphrase -->
-  <div *ngIf="state == 'showPassphrase'">
-    <div class="top-container">
-      <div class="title">
+  <ion-grid *ngIf="state == 'showPassphrase'">
+    <ion-row>
+      <ion-col class="title" text-center>
         {{ 'passphrase.show.title' | translate }}
-      </div>
-  
-      <div class="sub-title">
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col class="sub-title" text-center>
         {{ 'passphrase.show.sub_title' | translate }}
-      </div>
-    </div>
-  
-    <div class="center-container">
-      <div class="passphrase-box">
-        <div class="passphrase-content">
-          <div class="word" *ngFor="let word of words">
-            <span>
-              {{ word }}
-            </span>
+      </ion-col>
+    </ion-row>
+
+    <ion-row justify-content-center>
+      <ion-col col-12 col-md-6 col-lg-6 col-xl-4>
+        <div class="passphrase-box">
+          <div class="passphrase-content">
+            <div class="word" *ngFor="let word of words">
+              <span>
+                {{ word }}
+              </span>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
-  
-    <div class="bottom-container">
-      <button ion-button class="smilo-button next-button" (click)="goToEnterState()">
-        {{ 'passphrase.show.buttons.next' | translate }}
-      </button>
-    </div>
-  </div>
+      </ion-col>
+    </ion-row>
 
-  <!-- This part will be shown when the user enters the passphrase -->
-  <div *ngIf="state == 'enterPassphrase'">
-    <div class="top-container">
-      <div class="title">
+    <ion-row>
+      <ion-col text-center>
+        <button ion-button class="next-button" (click)="goToEnterState()">
+          {{ 'passphrase.show.buttons.next' | translate }}
+        </button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-grid *ngIf="state == 'enterPassphrase'">
+    <ion-row>
+      <ion-col class="title" text-center>
         {{ 'passphrase.enter.title' | translate }}
-      </div>
-  
-      <div class="sub-title">
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col class="sub-title" text-center>
         {{ 'passphrase.enter.sub_title' | translate }}
-      </div>
-    </div>
-  
-    <div class="center-container">
-      <div class="passphrase-box shuffled-box">
-        <div class="passphrase-content">
-          <div class="word" *ngFor="let word of shuffledWords" (click)="pickWord(word)">
-            <span [ngClass]="{'is-picked': isPickedWord(word)}">
-              {{ word }}
-            </span>
+      </ion-col>
+    </ion-row>
+
+    <ion-row justify-content-center>
+      <ion-col col-12 col-md-6 col-lg-6 col-xl-4>
+          <div class="passphrase-box shuffled-box">
+            <div class="passphrase-content">
+              <div class="word" *ngFor="let word of shuffledWords" (click)="pickWord(word)">
+                <span [ngClass]="{'is-picked': isPickedWord(word)}">
+                  {{ word }}
+                </span>
+              </div>
+            </div>
+          </div>
+      </ion-col>
+
+      <ion-col col-12 col-md-6 col-lg-6 col-xl-4>
+        <div class="passphrase-box entered-box">
+          <div class="passphrase-content">
+            <div class="word" *ngFor="let word of enteredWords" (click)="unpickWord(word)">
+              <span>
+                {{ word }}
+              </span>
+            </div>
           </div>
         </div>
-      </div>
+      </ion-col>
+    </ion-row>
 
-      <div class="passphrase-box entered-box">
-        <div class="passphrase-content">
-          <div class="word" *ngFor="let word of enteredWords" (click)="unpickWord(word)">
-            <span>
-              {{ word }}
-            </span>
-          </div>
-        </div>
+    <ion-row>
+      <ion-col 
+        text-center 
+        col-12 col-md-6 col-lg-6 col-xl-4
+        offset-md-6 offset-lg-6 offset-xl-6>
+        <span class="passphrase-error" *ngIf="!passphraseIsValid && enteredWords.length == words.length">
+          {{ 'passphrase.enter.passphrase_error' | translate }}
+        </span>
+      </ion-col>
+    </ion-row>
 
-        <div class="passphrase-footer">
-          <span class="passphrase-error" *ngIf="!passphraseIsValid && enteredWords.length == words.length">
-            {{ 'passphrase.enter.passphrase_error' | translate }}
-          </span>
-  
-          <button ion-button *ngIf="!passphraseIsValid"class="smilo-button small reset-button" (click)="reset()">
-            {{ 'passphrase.enter.buttons.reset' | translate }}
-          </button>
-        </div>
-      </div>
-    </div>
-  
-    <div class="bottom-container">
-      <button ion-button *ngIf="passphraseIsValid" class="smilo-button next-button" (click)="next()">
-        {{ 'passphrase.enter.buttons.next' | translate }}
-      </button>
-    </div>
-  </div>
+    <ion-row>
+      <ion-col 
+        text-center 
+        col-12 col-md-6 col-lg-6 col-xl-4
+        offset-md-6 offset-lg-6 offset-xl-6>
+        <button ion-button *ngIf="!passphraseIsValid" class="small reset-button" (click)="reset()">
+          {{ 'passphrase.enter.buttons.reset' | translate }}
+        </button>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col text-center>
+        <button ion-button *ngIf="passphraseIsValid" class="next-button" (click)="next()">
+          {{ 'passphrase.enter.buttons.next' | translate }}
+        </button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>

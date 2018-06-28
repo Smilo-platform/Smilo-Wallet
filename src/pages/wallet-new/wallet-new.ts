@@ -1,8 +1,6 @@
 import { Component } from "@angular/core";
-import { IonicPage, NavController, NavParams } from "ionic-angular";
+import { IonicPage, NavController } from "ionic-angular";
 import { WalletNewPassphrasePage } from "../wallet-new-passphrase/wallet-new-passphrase";
-
-declare type WarningState = "first" | "second";
 
 @IonicPage()
 @Component({
@@ -11,9 +9,7 @@ declare type WarningState = "first" | "second";
 })
 export class WalletNewPage {
 
-  warningState: WarningState = "first";
-
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(private navCtrl: NavController) {
   }
 
   goToPassphrasePage() {

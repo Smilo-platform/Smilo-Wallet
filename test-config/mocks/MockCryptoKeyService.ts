@@ -1,7 +1,6 @@
-import { ICryptoKeyService } from "../../src/services/crypto-key-service/crypto-key-service";
 import { IKeyPair } from "../../src/models/IKeyPair";
 
-export class MockCryptoKeyService implements ICryptoKeyService {
+export class MockCryptoKeyService {
     availablePublicKeys: string[] = [
         "ETm9QUJLVdJkTqRojTNqswmeAQGaofojJJ",
         "ELsKCchf9rcGsufjRR62PG5Fn5dFinfgeN",

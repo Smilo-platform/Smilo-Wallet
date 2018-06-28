@@ -8,13 +8,13 @@ import { MockTranslationLoader } from "../../../test-config/mocks/MockTranslatio
 import { WalletImportKeystorePage } from "../wallet-import-keystore/wallet-import-keystore";
 import { WalletImportPrivatekeyPage } from "../wallet-import-privatekey/wallet-import-privatekey";
 import { WalletImportLedgerPage } from "../wallet-import-ledger/wallet-import-ledger";
-import { RestoreBackupPage } from "../restore-backup/restore-backup";
 import { ComponentsModule } from "../../components/components.module";
+import { WalletImportPassphrasePage } from "../wallet-import-passphrase/wallet-import-passphrase";
 
 describe("WalletImportPage", () => {
   let comp: WalletImportPage;
   let fixture: ComponentFixture<WalletImportPage>;
-  let navController: NavController;
+  let navController: MockNavController;
   let navParams: NavParams;
 
   beforeEach(async(() => {
@@ -86,6 +86,6 @@ describe("WalletImportPage", () => {
 
     comp.openRestoreBackupPage();
 
-    expect(navController.push).toHaveBeenCalledWith(RestoreBackupPage, {NAVIGATION_ORIGIN: "home"});
+    expect(navController.push).toHaveBeenCalledWith(WalletImportPassphrasePage, {NAVIGATION_ORIGIN: "home"});
   });
 });

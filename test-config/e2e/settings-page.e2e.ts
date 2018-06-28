@@ -2,8 +2,7 @@ import { browser, by, element, ExpectedConditions, WebElement, ElementFinder, El
 
 require('events').EventEmitter.defaultMaxListeners = Infinity;
 
-describe("Clicking in the settings page", () => {
-    console.log(browser.params.testFile);
+describe("Settings page", () => {
     if (browser.params.testFile !== undefined && browser.params.testFile !== "settings-page") return;
     
     beforeEach(() => {

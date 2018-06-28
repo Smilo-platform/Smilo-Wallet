@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, isDevMode } from "@angular/core";
 import { IonicPage, NavController, NavParams } from "ionic-angular";
 import { WalletNewPasswordPage } from "../wallet-new-password/wallet-new-password";
 import { BIP39Service } from "../../services/bip39-service/bip39-service";
@@ -19,6 +19,8 @@ export class WalletNewPassphrasePage {
   passphraseIsValid: boolean = false;
 
   state: State = "showPassphrase";
+
+  resetClickCount: number = 0;
 
   constructor(public navCtrl: NavController, 
               public navParams: NavParams,
@@ -62,6 +64,15 @@ export class WalletNewPassphrasePage {
    */
   reset() {
     this.enteredWords = [];
+
+    // This code should only be allowed to run in development environment!
+    // It allows testers to click the reset button three times
+    // to quickly fill the passphrase box.
+    this.resetClickCount++;
+    if(this.resetClickCount % 3 == 0 && isDevMode()) {
+      this.enteredWords = this.words.slice();
+      this.validatePassphrase();
+    }
   }
 
   /**

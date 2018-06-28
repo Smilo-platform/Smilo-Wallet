@@ -3,21 +3,23 @@
 </ion-header>
 
 <ion-content padding>
-  <div class="top-container">
-    <img class="logo" src="assets/imgs/smilo-logo.png" alt="smilo-logo">
+  <smilo-logo subTitleTranslationKey="create_wallet.title"></smilo-logo>
 
-    <div class="title">
-      {{ 'create_wallet.title' | translate }}
-    </div>
-  </div>
+  <ion-grid>
+    <ion-row justify-content-center>
+      <ion-col col-9 col-md-6 col-lg-3 col-xl-2>
+        <button ion-button full class="new-wallet-button" (click)="openNewWalletPage()">
+          {{ 'create_wallet.buttons.new' | translate }}
+        </button>
+      </ion-col>
+    </ion-row>
 
-  <div class="action-container">
-    <button ion-button class="smilo-button new-wallet-button" (click)="openNewWalletPage()">
-      {{ 'create_wallet.buttons.new' | translate }}
-    </button>
-
-    <button ion-button class="smilo-button import-wallet-button" (click)="openLoadWalletPage()">
-      {{ 'create_wallet.buttons.load' | translate }}
-    </button>
-  </div>
+    <ion-row justify-content-center>
+      <ion-col col-9 col-md-6 col-lg-3 col-xl-2>
+        <button ion-button full class="import-wallet-button" (click)="openLoadWalletPage()">
+          {{ 'create_wallet.buttons.load' | translate }}
+        </button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>

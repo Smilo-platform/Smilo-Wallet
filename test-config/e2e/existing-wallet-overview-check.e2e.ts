@@ -2,7 +2,7 @@ import { browser, by, element, ExpectedConditions, WebElement, ElementFinder, El
 
 require('events').EventEmitter.defaultMaxListeners = Infinity;
 
-describe("Testing existing wallet path", () => {
+describe("Wallet overview page", () => {
     if (browser.params.testFile !== undefined && browser.params.testFile !== "existing-wallet-overview-check") return;
 
     let deleteWalletButtonConfirm: ElementFinder;
@@ -38,7 +38,7 @@ describe("Testing existing wallet path", () => {
                 var objectStore = db.transaction(['_ionickv'], "readwrite").objectStore('_ionickv');
                 objectStore.put(walletData, "wallets");
             };
-        `)
+        `);
         
         // Refresh the browser so that the data is retrieved from the database on startup
         browser.refresh();

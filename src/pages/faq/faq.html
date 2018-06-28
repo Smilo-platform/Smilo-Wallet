@@ -3,50 +3,70 @@
 </ion-header>
 
 <ion-content>
-  <div class="question-container">
-    <div class="question">
-      <div class="question-header">
+  <ion-grid>
+    <!-- Question 1 -->
+    <ion-row justify-content-center>
+      <ion-col col-xs-12 col-md-9 col-xl-6 class="question-header">
         {{ 'faq.question1' | translate }}
-      </div>
-      <div class="question-answer" [innerHTML]="'faq.answer1' | translate">
-  
-      </div>
-    </div>
-  
-    <div class="question">
-      <div class="question-header">
+      </ion-col>
+    </ion-row>
+
+    <ion-row justify-content-center>
+      <ion-col col-xs-12 col-md-9 col-xl-6 [innerHTML]="'faq.answer1' | translate">
+
+      </ion-col>
+    </ion-row>
+
+    <!-- Question 2 -->
+    <ion-row justify-content-center>
+      <ion-col col-xs-12 col-md-9 col-xl-6 class="question-header">
         {{ 'faq.question2' | translate }}
-      </div>
-      <div class="question-answer" [innerHTML]="'faq.answer2' | translate">
-        
-      </div>
-    </div>
-  
-    <div class="question">
-      <div class="question-header">
+      </ion-col>
+    </ion-row>
+
+    <ion-row justify-content-center>
+      <ion-col col-xs-12 col-md-9 col-xl-6 [innerHTML]="'faq.answer2' | translate">
+
+      </ion-col>
+    </ion-row>
+
+    <!-- Question 3 -->
+    <ion-row justify-content-center>
+      <ion-col col-xs-12 col-md-9 col-xl-6 class="question-header">
         {{ 'faq.question3' | translate }}
-      </div>
-      <div class="question-answer" [innerHTML]="'faq.answer3' | translate">
-  
-      </div>
-    </div>
-  
-    <div class="question">
-      <div class="question-header">
+      </ion-col>
+    </ion-row>
+
+    <ion-row justify-content-center>
+      <ion-col col-xs-12 col-md-9 col-xl-6 [innerHTML]="'faq.answer3' | translate">
+
+      </ion-col>
+    </ion-row>
+
+    <!-- Question 4 -->
+    <ion-row justify-content-center>
+      <ion-col col-xs-12 col-md-9 col-xl-6 class="question-header">
         {{ 'faq.question4' | translate }}
-      </div>
-      <div class="question-answer" [innerHTML]="'faq.answer4' | translate">
-  
-      </div>
-    </div>
-  
-    <div class="question">
-      <div class="question-header">
+      </ion-col>
+    </ion-row>
+
+    <ion-row justify-content-center>
+      <ion-col col-xs-12 col-md-9 col-xl-6 [innerHTML]="'faq.answer4' | translate">
+
+      </ion-col>
+    </ion-row>
+
+    <!-- Question 5 -->
+    <ion-row justify-content-center>
+      <ion-col col-xs-12 col-md-9 col-xl-6 class="question-header">
         {{ 'faq.question5' | translate }}
-      </div>
-      <div class="question-answer" [innerHTML]="'faq.answer5' | translate">
-  
-      </div>
-    </div>
-  </div>
+      </ion-col>
+    </ion-row>
+
+    <ion-row justify-content-center>
+      <ion-col col-xs-12 col-md-9 col-xl-6 [innerHTML]="'faq.answer5' | translate">
+
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>

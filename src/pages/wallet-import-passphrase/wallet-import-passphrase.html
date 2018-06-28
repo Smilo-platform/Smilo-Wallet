@@ -1,0 +1,89 @@
+<ion-header>
+    <smilo-nav-header titleTranslationKey="import_passphrase.nav-bar-title"></smilo-nav-header>
+</ion-header>
+
+<ion-content padding>
+  <ion-grid>
+    <ion-row justify-content-center>
+      <ion-col col-xs-12 col-md-9 col-lg-5>
+        <ion-item>
+          <ion-label stacked>
+            {{ 'import_passphrase.instruction' | translate }}
+          </ion-label>
+          <ion-textarea rows="3"
+                      [(ngModel)]="passphrase" 
+                      (ionBlur)="onPassphraseChanged()"
+                      class="passphrase-input"
+                      [placeholder]="'import_passphrase.passphrase_hint' | translate"></ion-textarea>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row justify-content-center>
+      <ion-col col-xs-12 col-md-9 col-lg-5>
+        <ion-item>
+          <ion-label stacked>
+            {{ 'import_passphrase.password_instruction' | translate }}
+          </ion-label>
+          <ion-input type="password" 
+                      class="password-input"
+                      [(ngModel)]="password" 
+                      (ionChange)="onPasswordChanged()"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row justify-content-center>
+      <ion-col col-xs-12 col-md-9 col-lg-5>
+        <ion-item>
+          <ion-label stacked>
+            {{ 'import_passphrase.password_confirm_instruction' | translate }}
+          </ion-label>
+          <ion-input type="password" 
+                      class="password-confirm-input"
+                      [(ngModel)]="passwordConfirm" 
+                      (ionChange)="onPasswordChanged()"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row justify-content-center>
+      <ion-col col-xs-12 col-md-9 col-lg-5>
+        <ion-item>
+          <ion-label stacked>
+            {{ 'import_passphrase.wallet_name' | translate }}
+          </ion-label>
+          <ion-input class="name-input" [(ngModel)]="walletName"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col text-center>
+        <span *ngIf="passwordStatus && passwordStatus.type != 'success'" 
+              [ngClass]="{'error-box': passwordStatus.type == 'error', 'warning-box': passwordStatus.type == 'warning'}" 
+              class="password-message-box">
+          {{ passwordStatus.message }}
+        </span>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col text-center>
+        <span *ngIf="passphraseStatus && !passphraseStatus.isValid"
+              [ngClass]="{'error-box': passphraseStatus.isBlocking, 'warning-box': !passphraseStatus.isBlocking}" 
+              class="error-box passphrase-message-box">
+          {{ passphraseStatus.errorMessage }}
+        </span>
+      </ion-col>
+    </ion-row>
+
+    <ion-row justify-content-center>
+      <ion-col text-center>
+        <button ion-button *ngIf="dataIsValid()" class="import-button" (click)="import()">
+          {{ 'import_passphrase.buttons.import' | translate }}
+        </button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

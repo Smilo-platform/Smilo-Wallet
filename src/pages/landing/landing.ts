@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController } from 'ionic-angular';
-import { WalletPage, NAVIGATION_ORIGIN_KEY } from '../wallet/wallet';
-import { RestoreBackupPage } from '../restore-backup/restore-backup';
+import { NAVIGATION_ORIGIN_KEY } from '../wallet/wallet';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { SettingsGeneralPage } from '../settings-general/settings-general';
+import { WalletImportPage } from '../wallet-import/wallet-import';
+import { WalletNewPage } from '../wallet-new/wallet-new';
 
 @IonicPage()
 @Component({
@@ -28,14 +29,14 @@ export class LandingPage {
     let params = {};
     params[NAVIGATION_ORIGIN_KEY] = "landing";
 
-    this.navCtrl.push(WalletPage, params);
+    this.navCtrl.push(WalletNewPage, params);
   }
 
   openRestoreBackup() {
     let params = {};
     params[NAVIGATION_ORIGIN_KEY] = "landing";
 
-    this.navCtrl.push(RestoreBackupPage, params);
+    this.navCtrl.push(WalletImportPage, params);
   }
 
   openSettingsPage() {

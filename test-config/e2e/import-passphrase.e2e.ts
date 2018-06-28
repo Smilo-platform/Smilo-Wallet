@@ -3,8 +3,8 @@ import { clickElementByClassName } from "./helpers";
 
 require('events').EventEmitter.defaultMaxListeners = Infinity;
 
-describe("Restoring a backup", () => {
-    if (browser.params.testFile !== undefined && browser.params.testFile !== "restore-backup") return;
+describe("Importing a passphrase", () => {
+    if (browser.params.testFile !== undefined && browser.params.testFile !== "import-passphrase") return;
     // Get elements
     let importButton: ElementFinder;
     let passphraseInput: ElementFinder;
@@ -127,6 +127,10 @@ describe("Restoring a backup", () => {
         browser.wait(ExpectedConditions.presenceOf(element(by.className("restore-backup-button"))))
 
         element(by.className("restore-backup-button")).click();
+
+        browser.sleep(500);
+
+        element(by.className("import-passphrase-button")).click();
 
         browser.sleep(500);
     }

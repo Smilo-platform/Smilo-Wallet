@@ -1,25 +1,9 @@
 page-faq {
-    .scroll-content {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-
-        .question-container {
-            max-width: 600px;
-
-            .question {
-                .question-header {
-                    padding: 10px;
-                    background-color: #4F586B;
-                    color: white;
-                    font-weight: bold;
-                }
-        
-                .question-answer {
-                    padding: 10px;
-                }
-            }
-        }
+    .question-header {
+        padding: 10px;
+        background-color: #4F586B;
+        color: white;
+        font-weight: bold;
     }
     
 }
