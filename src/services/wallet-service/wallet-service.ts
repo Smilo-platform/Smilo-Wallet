@@ -1,11 +1,8 @@
 import { Injectable } from "@angular/core";
 import { IWallet } from "../../models/IWallet";
 import { Storage } from "@ionic/storage";
-import { HttpClient } from '@angular/common/http';
 import 'rxjs/add/operator/map';
 import { MerkleTreeService } from "../merkle-tree-service/merkle-tree-service";
-import { IAvailableExchange } from "../../models/IAvailableExchange";
-import { ITransaction } from "../../models/ITransaction";
 
 const WALLET_STORAGE_KEY = "wallets";
 
@@ -17,25 +14,15 @@ export interface IWalletService {
     remove(wallet: IWallet): Promise<void>;
 
     generateId(): string;
-
-    getPrices(currency: string, exchange: string);
-
-    getWalletBalance(publicKey: string);
-
-    getAvailableExchanges();
-
-    getTransactionHistory(publicKey: string): Promise<ITransaction[]>;
 }
 
 @Injectable()
 export class WalletService implements IWalletService {
     private wallets: IWallet[]; 
-    private baseUrl: string;
 
     constructor(private storage: Storage, 
-                private http: HttpClient,
                 private merkleTreeService: MerkleTreeService) {
-        this.baseUrl = "http://api.smilo.network:8080";
+        
     }
 
     /**
@@ -65,48 +52,6 @@ export class WalletService implements IWalletService {
                 }
             );
         }
-    }
-
-    getPrices(currency: string, exchange: string): Promise<string[]> {
-        return this.http.get("assets/json/exchangeCurrencyValues.json").toPromise().then(data => {
-            var json = JSON.parse(JSON.stringify(data));
-            var foundCurrencies: string[] = [];
-            for (var i = 0; i < json.length; i++) {
-                if (
-                    // json[i].currencyTo === currency
-                    //  && 
-                    json[i].exchange === exchange) {
-                    foundCurrencies.push(json[i]);
-                }
-            }
-            return foundCurrencies;
-        });
-    }
-
-    getWalletBalance(publicKey: string): Promise<string[]> {
-        return this.http.get(this.baseUrl + '/balance/' + publicKey).toPromise().then(data => {
-            var json = JSON.parse(JSON.stringify(data));
-            return json;
-        });
-    }
-
-    getAvailableExchanges(): Promise<{availableExchanges: IAvailableExchange[]}> {
-        return this.http.get('assets/json/availableExchanges.json').toPromise().then(data => {
-            return <any>data;
-        });
-    }
-
-    getTransactionHistory(publicKey: string): Promise<ITransaction[]> {
-        return this.http.get('assets/json/previousTransactions.json').toPromise().then(data => {
-            let transactions = [];
-            var json = JSON.parse(JSON.stringify(data));
-            for (let i = 0; i < json.length; i++) {
-                if (json[i].input === publicKey || json[i].output === publicKey) {
-                    transactions.push(json[i]);
-                }
-            }
-            return transactions;
-        });
     }
 
     /**

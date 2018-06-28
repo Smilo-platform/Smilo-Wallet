@@ -17,6 +17,9 @@ import { KeyStoreService } from "../../services/key-store-service/key-store-serv
 import { BulkTranslateService } from "../../services/bulk-translate-service/bulk-translate-service";
 import { TranslateService } from "@ngx-translate/core";
 import { IBalance } from "../../models/IBalance";
+import { ExchangesService } from "../../services/exchanges-service/exchanges-service";
+import { WalletTransactionHistoryService } from "../../services/wallet-transaction-history-service/wallet-transaction-history-service";
+import { WalletBalanceService } from "../../services/wallet-balance-service/wallet-balance-service";
 
 /**
  * Generated class for the WalletOverviewPage page.
@@ -146,7 +149,10 @@ export class WalletOverviewPage {
               private loadingCtrl: LoadingController,
               private clipboard: Clipboard,
               private fileNative: FileNative,
-              private keyStoreService: KeyStoreService) {
+              private keyStoreService: KeyStoreService,
+              private exchangeService: ExchangesService,
+              private transactionHistoryService: WalletTransactionHistoryService,
+              private walletBalancesService: WalletBalanceService) {
     this.translateService.onLangChange.subscribe(data => {
       this.retrieveTranslations();
     });
@@ -501,7 +507,7 @@ export class WalletOverviewPage {
    * @param publicKey 
    */
   getTransactionHistory(publicKey: string): Promise<void> {
-    return this.walletService.getTransactionHistory(this.currentWallet.publicKey).then(data => {
+    return this.transactionHistoryService.getTransactionHistory(this.currentWallet.publicKey).then(data => {
       this.transactionsHistory = data;
       if (this.transactionsHistory.length > 0) {
         this.noTransactionHistoryVisibility = "hidden";
@@ -555,7 +561,7 @@ export class WalletOverviewPage {
    * Get all available exchanges that support XSM and XMP and their corresponding available currencies
    */
   getAvailableExchanges(): Promise<void> {
-    return this.walletService.getAvailableExchanges().then(data => {
+    return this.exchangeService.getAvailableExchanges().then(data => {
       for (let i = 0; i < data.availableExchanges.length; i++) {
         this.availableExchanges.push(data.availableExchanges[i]);
       }
@@ -590,7 +596,7 @@ export class WalletOverviewPage {
       content: this.translations.get("wallet_overview.loading_wallet")
     });
     this.loading.present();
-    return this.walletService.getWalletBalance(publicKey).then(data => {
+    return this.walletBalancesService.getWalletBalance(publicKey).then(data => {
       let json = JSON.parse(JSON.stringify(data));
       let balances = [];
       if (json === null || Object.keys(json).length === 0) {
@@ -658,7 +664,7 @@ export class WalletOverviewPage {
       }
       return Promise.resolve();
     }
-    return this.walletService.getPrices(this.pickedCurrency, this.pickedExchange).then(data => {
+    return this.exchangeService.getPrices(this.pickedCurrency, this.pickedExchange).then(data => {
       let prices = JSON.parse(JSON.stringify(data));
       let totalValue: number = 0;
       let totalCurrencies: number = 0;

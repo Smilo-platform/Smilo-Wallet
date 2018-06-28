@@ -45,6 +45,10 @@ import { WalletErrorPage } from "../pages/wallet-error/wallet-error";
 import { WalletErrorPageModule } from "../pages/wallet-error/wallet-error.module";
 import { BulkTranslateService } from "../services/bulk-translate-service/bulk-translate-service";
 import { WalletImportPassphrasePageModule } from "../pages/wallet-import-passphrase/wallet-import-passphrase.module";
+import { ExchangesService } from "../services/exchanges-service/exchanges-service";
+import { WalletTransactionHistoryService } from "../services/wallet-transaction-history-service/wallet-transaction-history-service";
+import { WalletBalanceService } from "../services/wallet-balance-service/wallet-balance-service";
+import { UrlService } from "../services/url-service/url-service";
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, "assets/i18n/");
@@ -105,11 +109,15 @@ export function HttpLoaderFactory(http: HttpClient) {
     PasswordService,
     SettingsService,
     FileNative,
+    UrlService,
     BulkTranslateService,
+    ExchangesService,
     AndroidPermissions,
     BIP39Service,
     BIP32Service,
     Clipboard,
+    WalletBalanceService,
+    WalletTransactionHistoryService,
     HockeyApp,
     MerkleTreeService,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
