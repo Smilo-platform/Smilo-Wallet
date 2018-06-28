@@ -24,6 +24,12 @@ import { BulkTranslateService } from "../../services/bulk-translate-service/bulk
 import { MockBulkTranslateService } from "../../../test-config/mocks/MockBulkTranslateService";
 import { KeyStoreService, IKeyStoreService } from "../../services/key-store-service/key-store-service";
 import { MockKeyStoreService } from "../../../test-config/mocks/MockKeyStoreService";
+import { IExchangesService, ExchangesService } from "../../services/exchanges-service/exchanges-service";
+import { IWalletTransactionHistoryService, WalletTransactionHistoryService } from "../../services/wallet-transaction-history-service/wallet-transaction-history-service";
+import { IWalletBalanceService, WalletBalanceService } from "../../services/wallet-balance-service/wallet-balance-service";
+import { MockExchangesService } from "../../../test-config/mocks/MockExchangesSevice";
+import { MockWalletTransactionHistoryService } from "../../../test-config/mocks/MockWalletTransactionHistoryService";
+import { MockWalletBalanceService } from "../../../test-config/mocks/MockWalletBalanceService";
 
 describe("WalletOverviewPage", () => {
   let comp: WalletOverviewPage;
@@ -37,6 +43,9 @@ describe("WalletOverviewPage", () => {
   let fileNative: FileNative;
   let bulkTranslateService: BulkTranslateService;
   let keystoreService: IKeyStoreService;
+  let exchangeService: IExchangesService;
+  let transactionHistoryService: IWalletTransactionHistoryService;
+  let walletBalancesService: IWalletBalanceService;
 
   beforeEach(async(() => {
     navController = new MockNavController();
@@ -48,6 +57,9 @@ describe("WalletOverviewPage", () => {
     fileNative = new MockFileNative();
     bulkTranslateService = new MockBulkTranslateService();
     keystoreService = new MockKeyStoreService();
+    exchangeService = new MockExchangesService();
+    transactionHistoryService = new MockWalletTransactionHistoryService();
+    walletBalancesService = new MockWalletBalanceService();
 
     TestBed.configureTestingModule({
       declarations: [WalletOverviewPage],
@@ -68,7 +80,10 @@ describe("WalletOverviewPage", () => {
         { provide: Clipboard, useValue: clipBoard },
         { provide: FileNative, useValue: fileNative },
         { provide: BulkTranslateService, useValue: bulkTranslateService },
-        { provide: KeyStoreService, useValue: keystoreService }
+        { provide: KeyStoreService, useValue: keystoreService },
+        { provide: ExchangesService, useValue: exchangeService },
+        { provide: WalletTransactionHistoryService, useValue: transactionHistoryService },
+        { provide: WalletBalanceService, useValue: walletBalancesService }
       ]
     }).compileComponents();
   }));
