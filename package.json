@@ -18,7 +18,9 @@
     "ionic:serve": "ionic-app-scripts serve",
     "release:android": "./scripts/build-android.sh",
     "upload:hockey-app": "./scripts/release-to-hockey-app.sh",
-    "postinstall": "browserify ./bitcoin-js-wrapper/wrapper.js --standalone bitcoinjs > ./src/assets/scripts/bitcoinjs-lib.js"
+    "postinstall": "browserify ./bitcoin-js-wrapper/wrapper.js --standalone bitcoinjs > ./src/assets/scripts/bitcoinjs-lib.js",
+    "validate-translations": "node ./scripts/translation_checker.js",
+    "validate-translations:ci": "node ./scripts/translation_checker.js --ci"
   },
   "dependencies": {
     "@angular/animations": "5.2.10",
