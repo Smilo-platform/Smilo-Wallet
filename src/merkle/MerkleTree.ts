@@ -198,16 +198,8 @@ export class MerkleTree {
                     `file:///android_asset/www/assets/scripts/seedrandom.min.js`
                 ];
             }
-            else if(platform.is("ios")) {
-                // Do we need to do anything special for iOS?
-                scripts = [
-                    `${ window.location.protocol }//${ window.location.host }/assets/scripts/forge.min.js`,
-                    `${ window.location.protocol }//${ window.location.host }/assets/scripts/sjcl.js`,
-                    `${ window.location.protocol }//${ window.location.host }/assets/scripts/seedrandom.min.js`,
-                ];
-            }
             else {
-                // Web is easy.
+                // Web & ios is easy.
                 scripts = [
                     `${ window.location.protocol }//${ window.location.host }/assets/scripts/forge.min.js`,
                     `${ window.location.protocol }//${ window.location.host }/assets/scripts/sjcl.js`,
