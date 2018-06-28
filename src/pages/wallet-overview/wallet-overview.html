@@ -106,12 +106,12 @@
                             <ion-toggle class="show-funds" [(ngModel)]="showFundsStatus" (ngModelChange)="fundsSwitch()" color="secondary"></ion-toggle>
                         </button>
                     
-                        <button ion-item (click)="exportKeystoreModal()">
+                        <button ion-item (click)="exportModal('keystore')">
                             <ion-icon class="export-keystore-wallet" name="filing" item-end></ion-icon>
                             <ion-label>{{ 'wallet_overview.export_keystore' | translate }}</ion-label>
                         </button>
 
-                        <button ion-item (click)="exportPrivatekeyModal()">
+                        <button ion-item (click)="exportModal('privatekey')">
                             <ion-icon class="export-privatekey-wallet" name="key" item-end></ion-icon>
                             <ion-label>{{ 'wallet_overview.export_privatekey' | translate }}</ion-label>
                         </button>

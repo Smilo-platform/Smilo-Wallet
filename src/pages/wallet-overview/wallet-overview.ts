@@ -249,14 +249,20 @@ export class WalletOverviewPage {
   }
 
   /**
-   * Creates a modal to export the private key
+   * Creates a modal to export the keystore
    */
-  exportPrivatekeyModal(): boolean {
+  exportModal(exportType): boolean {
     if (this.currentWallet.type !== "local") {
       return false;
     }
+    let title = "";
+    if (exportType === "keystore") {
+      title = this.translations.get("wallet_overview.export_keystore");
+    } else if (exportType === "privatekey") {
+      title = this.translations.get("wallet_overview.export_privatekey");
+    }
     let alert = this.alertCtrl.create();
-    alert.setTitle(this.translations.get("wallet_overview.export_privatekey"));
+    alert.setTitle(title);
     alert.addInput({
       type: "radio",
       label: this.translations.get("wallet_overview.download_file"),
@@ -272,81 +278,58 @@ export class WalletOverviewPage {
     alert.addButton(this.translations.get("wallet_overview.cancel"));
     alert.addButton({
       text: "OK",
-      handler: type => {
-        let keystoreData = (this.currentWallet as ILocalWallet).keyStore;
-        const prompt = this.alertCtrl.create({
-          title: this.translations.get("wallet_overview.export_privatekey"),
-          inputs: [
-            {
-              name: "password",
-              placeholder: this.translations.get("wallet_overview.password_placeholder"),
-              type: "password"
-            },
-          ],
-          buttons: [
-            {
-              text: this.translations.get("wallet_overview.cancel"),
-              handler: data => {}
-            },
-            {
-              text: this.translations.get("wallet_overview.continue"),
-              handler: data => {
-                let result = this.keyStoreService.decryptKeyStore(keystoreData, data.password);
-                if (result === null) {
-                  this.showToastMessage(this.translations.get("wallet_overview.incorrect_password"), 5000, "bottom");
-                } else {
-                  this.export(type, result, "privatekey");
-                } 
-              }
-            }
-          ]
-        });
-        prompt.present();
+      handler: dataType => {
+        this.handleExportModalClick(dataType, exportType);
       }
     });
     alert.present();
   }
 
-  /**
-   * Creates a modal to export the keystore
-   */
-  exportKeystoreModal(): boolean {
-    if (this.currentWallet.type !== "local") {
-      return false;
+  handleExportModalClick(dataType, exportType) {
+    if (exportType === "keystore") {
+      let keystoreData = JSON.stringify((this.currentWallet as ILocalWallet).keyStore);
+      this.export(dataType, keystoreData, "keystore");
+    } else if (exportType === "privatekey") {
+      let keystoreDataObj = (this.currentWallet as ILocalWallet).keyStore;
+      const prompt = this.alertCtrl.create({
+        title: this.translations.get("wallet_overview.export_privatekey"),
+        inputs: [
+          {
+            name: "password",
+            placeholder: this.translations.get("wallet_overview.password_placeholder"),
+            type: "password"
+          },
+        ],
+        buttons: [
+          {
+            text: this.translations.get("wallet_overview.cancel"),
+            handler: data => {}
+          },
+          {
+            text: this.translations.get("wallet_overview.continue"),
+            handler: data => {
+              let result = this.keyStoreService.decryptKeyStore(keystoreDataObj, data.password);
+              if (result === null) {
+                this.showToastMessage(this.translations.get("wallet_overview.incorrect_password"), 5000, "bottom");
+              } else {
+                this.export(dataType, result, "privatekey");
+              } 
+            }
+          }
+        ]
+      });
+      prompt.present();
     }
-    let alert = this.alertCtrl.create();
-    alert.setTitle(this.translations.get("wallet_overview.export_keystore"));
-    alert.addInput({
-      type: "radio",
-      label: this.translations.get("wallet_overview.download_file"),
-      value: "file",
-      checked: true
-    });
-    alert.addInput({
-      type: "radio",
-      label: this.translations.get("wallet_overview.copy_clipboard"),
-      value: "clipboard",
-      checked: false
-    });
-    alert.addButton(this.translations.get("wallet_overview.cancel"));
-    alert.addButton({
-      text: "OK",
-      handler: type => {
-        let keystoreData = JSON.stringify((this.currentWallet as ILocalWallet).keyStore);
-        this.export(type, keystoreData, "keystore");
-      }
-    });
-    alert.present();
   }
 
   /**
    * Exports the wallet
-   * @param type Either file or clipboard
+   * @param dataType Either file or clipboard
    * @param data The data to export
-   * @param exportType Either keystore or privateky
+   * @param exportType Either keystore or privatekey
    */
-  export(type, data, exportType): boolean {
-    if (type === "clipboard") {
+  export(dataType, data, exportType): boolean {
+    if (dataType === "clipboard") {
       if (this.platform.is("android") || this.platform.is("ios")) {
         this.clipboard.copy(data);
       } else {
@@ -358,7 +341,7 @@ export class WalletOverviewPage {
           return true;
         }
       );
-    } else if (type === "file") {
+    } else if (dataType === "file") {
       let filename = "";
       if (exportType === "keystore") {
         filename = ("UTC--" + new Date().toISOString() + "--" + this.currentWallet.publicKey).replace(/:/g, "-");
