@@ -19,6 +19,7 @@ import { IPasswordService, PasswordService } from "../../services/password-servi
 import { MockPasswordService } from "../../../test-config/mocks/MockPasswordService";
 import { PrepareWalletPage } from "../prepare-wallet/prepare-wallet";
 import { ComponentsModule } from "../../components/components.module";
+import { reject } from "q";
 
 describe("WalletImportPrivatekeyPage", () => {
   let comp: WalletImportPrivatekeyPage;
@@ -244,5 +245,14 @@ describe("WalletImportPrivatekeyPage", () => {
         done();
       }
     );
+  });
+
+  it("should return a rejected promise because the data is not valid", (done) => {
+    spyOn(comp, "dataIsValid").and.returnValue(false);
+
+    comp.import().catch(data => {
+      expect(data).toEqual("");
+      done();
+    });    
   });
 });
