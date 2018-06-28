@@ -129,4 +129,16 @@ describe("WalletNewPasswordPage", () => {
     comp.validatedPassword = "321ssap";
     expect(comp.passwordsAreValid()).toBe(false);
   });
+
+  it("should return nothing when the passwords don't match", () => {
+    spyOn(comp, "passwordsAreValid").and.returnValue(false);
+
+    spyOn(comp, "passwordsArePristine");
+
+    spyOn(navController, "push");
+
+    comp.next();
+
+    expect(navController.push).not.toHaveBeenCalled();
+  })
 });
