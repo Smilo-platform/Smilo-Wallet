@@ -80,6 +80,13 @@ export class WalletOverviewPage {
               private clipboard: Clipboard,
               private fileNative: FileNative,
               private keyStoreService: KeyStoreService) {
+    this.translateService.onLangChange.subscribe(data => {
+      this.retrieveTranslations();
+    });
+    this.retrieveTranslations();
+  }
+
+  retrieveTranslations() {
     this.bulkTranslateService.getTranslations([
       "wallet_overview.error",
       "wallet_overview.error_retrieving_data",
