@@ -20,7 +20,7 @@
                     <ion-icon (click)="refreshWalletBalance()" class="refresh" name="refresh-circle"></ion-icon>
                 </div>
                 <ion-card class="funds-overview" [@visibilityChanged]="walletFundsVisibility">
-                    <ion-card-header class="wallet-currency" *ngFor="let currency of currentWallet.balances;">
+                    <ion-card-header class="wallet-currency" *ngFor="let currency of balances;">
                         <p class="amount-header">{{ currency.currency }}</p>
                         <div>
                             <p class="value-text">{{ currency.amount }}</p>

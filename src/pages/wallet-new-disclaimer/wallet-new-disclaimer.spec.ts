@@ -189,9 +189,7 @@ describe("WalletNewDisclaimerPage", () => {
         name: "name",
         publicKey: null,
         keyStore: dummyKeyStore,
-        transactions: [],
-        lastUpdateTime: null,
-        balances: []
+        lastUpdateTime: null
       }
     );
   });

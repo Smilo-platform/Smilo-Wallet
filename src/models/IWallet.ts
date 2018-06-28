@@ -1,6 +1,3 @@
-import { ITransaction } from "./ITransaction";
-import { IBalance } from "./IBalance";
-
 export declare type WalletType = "local" | "ledger";
 
 export interface IWallet {
@@ -22,19 +19,9 @@ export interface IWallet {
      */
     type: WalletType;
     /**
-     * Known transactions for this wallet.
-     */
-    transactions: ITransaction[];
-    /**
      * Last time this wallet's transactions was updated.
      * 
      * This value can be used to query for new transactions which occured after this time.
      */
     lastUpdateTime: Date;
-    /**
-     * The currencies of the wallet.
-     * 
-     * This value contains an amount and name of the currency
-     */
-    balances: IBalance[];
 }

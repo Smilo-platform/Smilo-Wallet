@@ -59,9 +59,7 @@ export class WalletImportPrivatekeyPage {
       type: "local",
       publicKey: null,
       keyStore: this.keyStoreService.createKeyStore(this.privateKey, this.password),
-      transactions: [],
-      lastUpdateTime: null,
-      balances: []
+      lastUpdateTime: null
     };
 
     return wallet;

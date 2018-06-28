@@ -85,9 +85,7 @@ export class WalletImportPassphrasePage {
       type: "local",
       publicKey: null,
       keyStore: keyStore,
-      transactions: [],
-      lastUpdateTime: null,
-      balances: []
+      lastUpdateTime: null
     };
 
     return wallet;

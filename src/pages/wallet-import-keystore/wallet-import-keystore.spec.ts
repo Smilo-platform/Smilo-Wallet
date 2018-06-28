@@ -199,9 +199,7 @@ describe("WalletImportKeystorePage", () => {
       name: "name",
       publicKey: null,
       keyStore: comp.keyStore,
-      transactions: [],
-      lastUpdateTime: null,
-      balances: []
+      lastUpdateTime: null
     });
 
     expect(keyStoreService.decryptKeyStore).toHaveBeenCalledWith(comp.keyStore, "pass123");
