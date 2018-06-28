@@ -1,12 +1,13 @@
 import { Component } from "@angular/core";
 import { Platform } from "ionic-angular";
-import { StatusBar } from "@ionic-native/status-bar";
 import { HomePage } from "../pages/home/home";
 import { TranslateService } from "@ngx-translate/core";
 import { LandingPage } from "../pages/landing/landing";
 import { WalletService } from "../services/wallet-service/wallet-service";
 import { SettingsService } from "../services/settings-service/settings-service";
 import { HockeyApp } from "ionic-hockeyapp";
+import { AndroidPermissions } from '@ionic-native/android-permissions';
+import { StatusBar } from '@ionic-native/status-bar';
 
 const HOCKEY_APP_ANDROID_ID = "551bfde014ca4620996d78a376671a01";
 const HOCKEY_APP_IOS_ID = "";
@@ -21,13 +22,18 @@ export class SmiloWallet {
   selectedTheme: string;
 
   constructor(private platform: Platform, 
-              private statusBar: StatusBar, 
+              private androidPermissions: AndroidPermissions,
               private translate: TranslateService,
               private walletService: WalletService,
               private hockeyApp: HockeyApp,
-              private settingsService: SettingsService) {
+              private settingsService: SettingsService,
+              private statusBar: StatusBar) {
+    this.statusBar.styleLightContent();
     this.platform.ready().then(() => {
-      this.statusBar.styleDefault();
+
+      if (this.platform.is("android")) {
+        this.androidPermissions.requestPermissions([this.androidPermissions.PERMISSION.READ_EXTERNAL_STORAGE, this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE]);
+      }
 
       this.prepareSettings();
       
@@ -41,10 +47,6 @@ export class SmiloWallet {
 
   prepareSettings() {
     this.settingsService.getActiveTheme().subscribe(val => this.selectedTheme = val);
-    
-    if (this.platform.is('ios')) {
-      window['plugins'].webviewcolor.change('#fff');
-    }
 
     this.settingsService.getLanguageSettings().then(data => {
       this.translate.setDefaultLang("en");

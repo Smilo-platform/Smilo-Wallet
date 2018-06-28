@@ -1,7 +1,6 @@
 import { Component } from "@angular/core";
 import { IonicPage, NavController, NavParams, ToastController, ModalController } from "ionic-angular";
 import { ILocalWallet } from "../../models/ILocalWallet";
-import { MerkleTree } from "../../merkle/MerkleTree";
 import { MerkleTreeService } from "../../services/merkle-tree-service/merkle-tree-service";
 import { NavigationOrigin, NAVIGATION_ORIGIN_KEY } from "../wallet/wallet";
 import { HomePage } from "../home/home";
@@ -134,6 +133,7 @@ export class PrepareWalletPage {
   }
 
   onMerkleTreeFailed = (error) => {
+    // Display error, after user goes back to origin page.
     let modal = this.modalController.create(WalletErrorPage, {
       error: error.toString()
     }, {

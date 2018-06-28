@@ -48,15 +48,31 @@ $smilo-logo-max-height: 100px;
 }
 
 .settings-nav-bar {
-    position: absolute;
-    right: 16px;
-    top: 15px;
+    float: right;
+    margin-right: 12px;
     font-size: 28px;
     color: white;
 }
 
 .settings-nav-bar:hover {
     cursor: pointer;
+}
+
+.ion-ios-settings {
+    padding-top: 20px;
+}
+
+.toolbar-title-ios {
+    padding-top: 20px;
+}
+
+.back-button-ios {
+    padding-top: 20px;
+    height: 50px;
+}
+
+.toolbar-ios {
+    min-height: 70px;
 }
 
 ion-title {

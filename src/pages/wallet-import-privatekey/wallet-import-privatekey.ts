@@ -3,7 +3,6 @@ import { IonicPage, NavController, NavParams, ModalController } from "ionic-angu
 import { WalletService } from "../../services/wallet-service/wallet-service";
 import { ILocalWallet } from "../../models/ILocalWallet";
 import { NAVIGATION_ORIGIN_KEY } from "../wallet/wallet";
-import { NavigationHelperService } from "../../services/navigation-helper-service/navigation-helper-service";
 import { PasswordExplanationPage } from "../password-explanation/password-explanation";
 import { KeyStoreService } from "../../services/key-store-service/key-store-service";
 import { IPasswordValidationResult, PasswordService } from "../../services/password-service/password-service";
@@ -33,7 +32,6 @@ export class WalletImportPrivatekeyPage {
   import(): Promise<void> {
     if(this.dataIsValid()) {
       let wallet = this.prepareWallet();
-
       return this.goToPrepareWalletPage(wallet, this.password);
     }
     else {

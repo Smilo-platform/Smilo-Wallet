@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { IonicPage, NavController, NavParams } from "ionic-angular";
+import { IonicPage, NavController } from "ionic-angular";
 import { WalletNewPassphrasePage } from "../wallet-new-passphrase/wallet-new-passphrase";
 
 @IonicPage()
@@ -9,8 +9,7 @@ import { WalletNewPassphrasePage } from "../wallet-new-passphrase/wallet-new-pas
 })
 export class WalletNewPage {
 
-  constructor(private navCtrl: NavController, 
-              private navParams: NavParams) {
+  constructor(private navCtrl: NavController) {
   }
 
   goToPassphrasePage() {

@@ -16,6 +16,14 @@ import { MockAlertController } from "../../../test-config/mocks/MockAlertControl
 import { MockAlert } from "../../../test-config/mocks/MockAlert";
 import { IBalance } from "../../models/IBalance";
 import { ComponentsModule } from "../../components/components.module";
+import { Clipboard } from "@ionic-native/clipboard";
+import { File as FileNative} from "@ionic-native/file";
+import { MockClipboard } from "../../../test-config/mocks/MockClipboard";
+import { MockFileNative } from "../../../test-config/mocks/MockFileNative";
+import { BulkTranslateService } from "../../services/bulk-translate-service/bulk-translate-service";
+import { MockBulkTranslateService } from "../../../test-config/mocks/MockBulkTranslateService";
+import { KeyStoreService, IKeyStoreService } from "../../services/key-store-service/key-store-service";
+import { MockKeyStoreService } from "../../../test-config/mocks/MockKeyStoreService";
 
 describe("WalletOverviewPage", () => {
   let comp: WalletOverviewPage;
@@ -25,6 +33,10 @@ describe("WalletOverviewPage", () => {
   let walletService: IWalletService;
   let loadingController: LoadingController;
   let alertController: AlertController;
+  let clipBoard: Clipboard;
+  let fileNative: FileNative;
+  let bulkTranslateService: BulkTranslateService;
+  let keystoreService: IKeyStoreService;
 
   beforeEach(async(() => {
     navController = new MockNavController();
@@ -32,6 +44,10 @@ describe("WalletOverviewPage", () => {
     walletService = new MockWalletService();
     loadingController = new MockLoadingController();
     alertController = new MockAlertController();
+    clipBoard = new MockClipboard();
+    fileNative = new MockFileNative();
+    bulkTranslateService = new MockBulkTranslateService();
+    keystoreService = new MockKeyStoreService();
 
     TestBed.configureTestingModule({
       declarations: [WalletOverviewPage],
@@ -48,7 +64,11 @@ describe("WalletOverviewPage", () => {
         { provide: NavParams, useValue: new MockNavParams() },
         { provide: ToastController, useValue: toastController },
         { provide: LoadingController, useValue: loadingController },
-        { provide: AlertController, useValue: alertController }
+        { provide: AlertController, useValue: alertController },
+        { provide: Clipboard, useValue: clipBoard },
+        { provide: FileNative, useValue: fileNative },
+        { provide: BulkTranslateService, useValue: bulkTranslateService },
+        { provide: KeyStoreService, useValue: keystoreService }
       ]
     }).compileComponents();
   }));

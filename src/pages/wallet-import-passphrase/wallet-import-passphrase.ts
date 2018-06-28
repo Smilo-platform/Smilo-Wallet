@@ -5,7 +5,6 @@ import { ILocalWallet } from "../../models/ILocalWallet";
 import { WalletService } from "../../services/wallet-service/wallet-service";
 import { KeyStoreService } from "../../services/key-store-service/key-store-service";
 import { NAVIGATION_ORIGIN_KEY } from "../wallet/wallet";
-import { NavigationHelperService } from "../../services/navigation-helper-service/navigation-helper-service";
 import { BIP39Service, IPassphraseValidationResult } from "../../services/bip39-service/bip39-service";
 import { PrepareWalletPage } from "../prepare-wallet/prepare-wallet";
 import { BIP32Service } from "../../services/bip32-service/bip32-service";

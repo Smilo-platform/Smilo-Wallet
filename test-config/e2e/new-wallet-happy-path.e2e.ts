@@ -1,5 +1,7 @@
 import { browser, by, element, ExpectedConditions, WebElement } from "protractor";
 
+require('events').EventEmitter.defaultMaxListeners = Infinity;
+
 describe("Creating a new wallet (happy path)", () => {
     if (browser.params.testFile !== undefined && browser.params.testFile !== "new-wallet-happy-path") return;
     let memorizedWordOrder: string[] = null;

@@ -1,8 +1,7 @@
-declare const forge: any;
 declare const sjcl: any;
 import "seedrandom";
 import { LamportGeneratorThread, ILamportGeneratorThreadInput, ILamportGeneratorThreadOutput } from "./LamportGenerator";
-import { spawn, Pool } from "threads";
+import { Pool } from "threads";
 import { Storage } from "@ionic/storage";
 import { KeyStoreService } from "../services/key-store-service/key-store-service";
 import { IWallet } from "../models/IWallet";

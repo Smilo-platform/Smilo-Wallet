@@ -19,6 +19,9 @@
     color: #DADFE1;
   }
 
+  ion-textarea {
+    color: #fff !important;
+  }
 
   .toolbar-background {
     background-color: #064C70;
@@ -48,10 +51,6 @@
   .card {
     background-color: #242424;
   }
-
-  // .item {
-  //   background-color: #242424;
-  // }
 
   ion-list ion-item {
     background-color: #242424;
@@ -98,11 +97,11 @@
   }
 
   .toggle-icon {
-    background-color: #5ea1e5;
+    background-color: #5ea1e5 !important; 
   }
 
   .toggle-inner {
-    background-color: #1B79A9;
+    background-color: #1B79A9 !important;
   }
 
   ion-icon {

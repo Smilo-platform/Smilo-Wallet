@@ -1,5 +1,7 @@
 import { browser, by, element, ExpectedConditions, WebElement, promise } from "protractor";
 
+require('events').EventEmitter.defaultMaxListeners = Infinity;
+
 /**
  * Delay applied after certain actions. 
  */

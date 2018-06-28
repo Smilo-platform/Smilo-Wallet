@@ -1,16 +1,21 @@
 import { Component, ViewChild } from "@angular/core";
-import { IonicPage, NavController, NavParams, LoadingController, Loading, Alert } from "ionic-angular";
-import { Chart } from 'chart.js';
-import { WalletService } from '../../services/wallet-service/wallet-service';
-import { AlertController } from 'ionic-angular';
-import { trigger, state, style, animate, transition } from '@angular/animations';
+import { IonicPage, NavController, LoadingController, Loading, Alert, Platform } from "ionic-angular";
+import { Chart } from "chart.js";
+import { WalletService } from "../../services/wallet-service/wallet-service";
+import { AlertController } from "ionic-angular";
+import { trigger, state, style, animate, transition } from "@angular/animations";
 import { LandingPage } from "../landing/landing";
-import { ToastController } from 'ionic-angular';
+import { ToastController } from "ionic-angular";
 import { IWallet } from "../../models/IWallet";
 import { TransferPage } from "../transfer/transfer";
 import { IAvailableExchange } from "../../models/IAvailableExchange";
 import { ITransaction } from "../../models/ITransaction";
-import { WalletImportPassphrasePage } from "../wallet-import-passphrase/wallet-import-passphrase";
+import { ILocalWallet } from "../../models/ILocalWallet";
+import { File as FileNative} from "@ionic-native/file";
+import { Clipboard } from "@ionic-native/clipboard";
+import { KeyStoreService } from "../../services/key-store-service/key-store-service";
+import { BulkTranslateService } from "../../services/bulk-translate-service/bulk-translate-service";
+import { TranslateService } from "@ngx-translate/core";
 
 /**
  * Generated class for the WalletOverviewPage page.
@@ -19,22 +24,28 @@ import { WalletImportPassphrasePage } from "../wallet-import-passphrase/wallet-i
  * Ionic pages and navigation.
  */
 
-export declare type VisibilityType = "shown" | "hidden"; 
+export declare type VisibilityType = "shown" | "hidden";
+
+export interface IWriteOptions {
+  replace?: boolean;
+  append?: boolean;
+  truncate?: number;
+}
 
 @IonicPage()
 @Component({
   selector: "page-wallet-overview",
   templateUrl: "wallet-overview.html",
   animations: [
-    trigger('visibilityChanged', [
-      state('shown', style({ opacity: 1 })),
-      state('hidden', style({ opacity: 0 , display: "none"})),
-      transition('* => *', animate('500ms'))
+    trigger("visibilityChanged", [
+      state("shown", style({ opacity: 1 })),
+      state("hidden", style({ opacity: 0 , display: "none"})),
+      transition("* => *", animate("500ms"))
     ])
   ]
 })
 export class WalletOverviewPage {
-  @ViewChild('doughnutCanvas') doughnutCanvas;
+  @ViewChild("doughnutCanvas") doughnutCanvas;
   pickedCurrency: string;
   pickedExchange: string;
   doughnutChart: Chart;
@@ -49,44 +60,81 @@ export class WalletOverviewPage {
   transactionsHistory: ITransaction[] = [];
   showFundsStatus: boolean = true;
   twoFactorStatus: boolean = false;
-  walletFundsVisibility: VisibilityType = 'shown';
+  walletFundsVisibility: VisibilityType = "shown";
   walletFundsVisibilityTransferButton: VisibilityType = "hidden";
   noTransactionHistoryVisibility: VisibilityType = "shown";
   transactionHistoryVisibility: VisibilityType = "hidden";
   loading: Loading;
   loadingError: Alert;
   totalCurrentCurrencyValue: number;
+  translations: Map<string, string> = new Map<string, string>();
 
-  constructor(public navCtrl: NavController, 
-              public navParams: NavParams, 
-              public walletService: WalletService,
-              public alertCtrl: AlertController,
-              public toastCtrl: ToastController,
-              public loadingCtrl: LoadingController) {
+  constructor(private navCtrl: NavController, 
+              private platform: Platform,
+              private walletService: WalletService,
+              private translateService: TranslateService,
+              private bulkTranslateService: BulkTranslateService,
+              private alertCtrl: AlertController,
+              private toastCtrl: ToastController,
+              private loadingCtrl: LoadingController,
+              private clipboard: Clipboard,
+              private fileNative: FileNative,
+              private keyStoreService: KeyStoreService) {
+    this.translateService.onLangChange.subscribe(data => {
+      this.retrieveTranslations();
+    });
+    this.retrieveTranslations();
+  }
 
+  retrieveTranslations() {
+    this.bulkTranslateService.getTranslations([
+      "wallet_overview.error",
+      "wallet_overview.error_retrieving_data",
+      "wallet_overview.click_retry",
+      "wallet_overview.export_privatekey",
+      "wallet_overview.download_file",
+      "wallet_overview.copy_clipboard",
+      "wallet_overview.cancel",
+      "wallet_overview.export_privatekey",
+      "wallet_overview.password_placeholder",
+      "wallet_overview.continue",
+      "wallet_overview.incorrect_password",
+      "wallet_overview.export_keystore",
+      "wallet_overview.saved_keystore_ios",
+      "wallet_overview.saved_keystore_android",
+      "wallet_overview.first_start_keystore_download",
+      "wallet_overview.no_cancel",
+      "wallet_overview.yes_delete",
+      "wallet_overview.delete_wallet",
+      "wallet_overview.loading_wallet",
+      "wallet_overview.currency_value_zero"
+    ]).then(data => {
+      this.translations = data;
+    });
   }
   
   /**
    * Returns a promise when initialization is done
    */
   initialize(): Promise<void> {
-    return Promise.all([this.getAllWallets(), 
-                        this.getAvailableExchanges()]).then<void>().catch(data => {
-                          console.log("Initialize: ERROR: " + data);
-                          const confirm = this.alertCtrl.create({
-                            title: 'Error',
-                            message: 'Could not retrieve data',
-                            buttons: [
-                              {
-                                text: 'Click here to retry',
-                                handler: () => {
-                                  this.initialize();
-                                }
-                              }
-                            ]
-                          });
-                          confirm.present();
-                        });
+    return Promise.all([
+      this.getAllWallets(), 
+      this.getAvailableExchanges()]).then<void>().catch(data => {
+        const confirm = this.alertCtrl.create({
+          title: this.translations.get("wallet_overview.error"),
+          message: this.translations.get("wallet_overview.error_retrieving_data"),
+          buttons: [
+            {
+              text: this.translations.get("wallet_overview.click_retry"),
+              handler: () => {
+                this.initialize();
+              }
+            }
+          ]
+        });
+        confirm.present();
+      }
+    );
   }
 
   /**
@@ -116,43 +164,207 @@ export class WalletOverviewPage {
     this.navCtrl.push(TransferPage);
   }
 
-  /**
-   * Open the backup wallet page
-   */
-  backupWallet(): void {
-    this.navCtrl.push(WalletImportPassphrasePage);
-  }
-
   refreshWalletBalance(): void {
     this.getWalletBalance(this.currentWallet.publicKey);
     this.getTransactionHistory(this.currentWallet.publicKey);
+  }
+
+  exportPrivatekeyModal(): boolean {
+    if (this.currentWallet.type !== "local") {
+      return false;
+    }
+    let alert = this.alertCtrl.create();
+    alert.setTitle(this.translations.get("wallet_overview.export_privatekey"));
+    alert.addInput({
+      type: "radio",
+      label: this.translations.get("wallet_overview.download_file"),
+      value: "file",
+      checked: true
+    });
+    alert.addInput({
+      type: "radio",
+      label: this.translations.get("wallet_overview.copy_clipboard"),
+      value: "clipboard",
+      checked: false
+    });
+    alert.addButton(this.translations.get("wallet_overview.cancel"));
+    alert.addButton({
+      text: "OK",
+      handler: type => {
+        let keystoreData = (this.currentWallet as ILocalWallet).keyStore;
+        const prompt = this.alertCtrl.create({
+          title: this.translations.get("wallet_overview.export_privatekey"),
+          inputs: [
+            {
+              name: "password",
+              placeholder: this.translations.get("wallet_overview.password_placeholder"),
+              type: "password"
+            },
+          ],
+          buttons: [
+            {
+              text: this.translations.get("wallet_overview.cancel"),
+              handler: data => {}
+            },
+            {
+              text: this.translations.get("wallet_overview.continue"),
+              handler: data => {
+                let result = this.keyStoreService.decryptKeyStore(keystoreData, data.password);
+                if (result === null) {
+                  this.showToastMessage(this.translations.get("wallet_overview.incorrect_password"), 5000, "bottom");
+                } else {
+                  this.export(type, result, "privatekey");
+                } 
+              }
+            }
+          ]
+        });
+        prompt.present();
+      }
+    });
+    alert.present();
+  }
+
+  exportKeystoreModal(): boolean {
+    if (this.currentWallet.type !== "local") {
+      return false;
+    }
+    let alert = this.alertCtrl.create();
+    alert.setTitle(this.translations.get("wallet_overview.export_keystore"));
+    alert.addInput({
+      type: "radio",
+      label: this.translations.get("wallet_overview.download_file"),
+      value: "file",
+      checked: true
+    });
+    alert.addInput({
+      type: "radio",
+      label: this.translations.get("wallet_overview.copy_clipboard"),
+      value: "clipboard",
+      checked: false
+    });
+    alert.addButton(this.translations.get("wallet_overview.cancel"));
+    alert.addButton({
+      text: "OK",
+      handler: type => {
+        let keystoreData = JSON.stringify((this.currentWallet as ILocalWallet).keyStore);
+        this.export(type, keystoreData, "keystore");
+      }
+    });
+    alert.present();
+  }
+
+  export(type, data, exportType): boolean {
+    if (type === "clipboard") {
+      if (this.platform.is("android") || this.platform.is("ios")) {
+        this.clipboard.copy(data);
+      } else {
+        this.copyToClipboardWeb(data);
+      }
+      this.translateService.get("wallet_overview.copied_to_clipboard", {export_type: exportType}).subscribe(
+        (translation) => {
+          this.showToastMessage(translation, 2000, "bottom");
+          return true;
+        }
+      );
+    } else if (type === "file") {
+      let filename = "";
+      if (exportType === "keystore") {
+        filename = ("UTC--" + new Date().toISOString() + "--" + this.currentWallet.publicKey).replace(/:/g, "-");
+      } else if (exportType === "privatekey") {
+        filename = ("PVK--" + this.currentWallet.publicKey).replace(/:/g, "-");
+      }
+      if (this.platform.is("android") || this.platform.is("ios")) {
+        let options: IWriteOptions = {replace: true};
+        if (this.platform.is("android")) {
+          let storageLocation = this.fileNative.externalRootDirectory + "Download";
+          this.writeFileMobile(storageLocation, filename, data, options, "android");
+        } else {
+          let storageLocation = this.fileNative.syncedDataDirectory;
+          this.writeFileMobile(storageLocation, filename, data, options, "ios");
+        }
+      } else {
+        this.downloadTxtFileWeb(data, filename);
+      }
+      return true;
+    }
+  }
+
+  copyToClipboardWeb(data): void {
+    var dummyElementToCopyText = document.createElement("input");
+    document.body.appendChild(dummyElementToCopyText);
+    dummyElementToCopyText.setAttribute("value", data);
+    dummyElementToCopyText.select();
+    document.execCommand("copy");
+    document.body.removeChild(dummyElementToCopyText);
+  }
+
+  downloadTxtFileWeb(data, filename): void {
+    var dummyElementToDownload = document.createElement("a");
+    dummyElementToDownload.setAttribute("href", "data:text/plain;charset=utf-8," + data);
+    dummyElementToDownload.setAttribute("download", filename);
+    dummyElementToDownload.style.display = "none";
+    document.body.appendChild(dummyElementToDownload);
+    dummyElementToDownload.click();
+    document.body.removeChild(dummyElementToDownload);
+  }
+
+  showToastMessage(toastMessage, duration, position): void {
+    let toast = this.toastCtrl.create({
+      message: toastMessage,
+      duration: duration,
+      position: position
+    });
+    toast.present(toast);
+  }
+
+  writeFileMobile(storageLocation, filename, keystoreData, options, os): void {
+    this.fileNative.writeFile(storageLocation, filename, keystoreData, options).then(data => {
+      let toastMessage = "";
+      if (os === "ios") {
+        toastMessage = this.translations.get("wallet_overview.saved_keystore_ios");
+      } else {
+        toastMessage = this.translations.get("wallet_overview.saved_keystore_android");
+      }
+      this.showToastMessage(toastMessage, 2000, "bottom");
+    }).catch(error => {
+      let toast = this.toastCtrl.create({
+        message: this.translations.get("wallet_overview.first_start_keystore_download"),
+        position: "bottom",
+        showCloseButton: true,
+        closeButtonText: "Ok"
+      });
+      toast.present(toast);
+    });
   }
 
   /**
    * Open a modal to delete the wallet
    */
   deleteWallet(): void {
-    const confirm = this.alertCtrl.create({
-      title: 'Delete wallet',
-      message: "Are you <b>sure</b> you want to delete wallet '" + this.currentWallet.name + "' ('" + this.currentWallet.publicKey + "')?",
-      buttons: [
-        {
-          text: 'No, cancel',
-          handler: () => {
-            
-          }
-        },
-        {
-          text: 'Yes, delete',
-          cssClass: 'delete-button',
-          handler: () => {
-            this.walletService.remove(this.currentWallet);
-            this.deleteSelectedWallet(this.currentWallet);
-          }
-        }
-      ]
-    });
-    confirm.present();
+    this.translateService.get("wallet_overview.delete_wallet_confirmation", {wallet_name: this.currentWallet.name, publickey: this.currentWallet.publicKey}).subscribe(
+      (translation) => {
+        const confirm = this.alertCtrl.create({
+          title: this.translations.get("wallet_overview.delete_wallet"),
+          message: translation,
+          buttons: [
+            {
+              text: this.translations.get("wallet_overview.no_cancel"),
+              handler: () => {}
+            },
+            {
+              text: this.translations.get("wallet_overview.yes_delete"),
+              cssClass: "delete-button",
+              handler: () => {
+                this.walletService.remove(this.currentWallet);
+                this.deleteSelectedWallet(this.currentWallet);
+              }
+            }
+          ]
+        });
+        confirm.present();
+      }
+    );
   }
 
   /**
@@ -168,12 +380,7 @@ export class WalletOverviewPage {
         return true;
       } else {
         this.openLandingPage();
-        let toast = this.toastCtrl.create({
-          message: 'You deleted all your wallets. Returning to main screen.',
-          duration: 5000,
-          position: "Bottom"
-        });
-        toast.present();
+        this.showToastMessage(this.translations.get("deleted_all_wallets"), 5000, "bottom");
         return false;
       }
     } else {
@@ -192,13 +399,12 @@ export class WalletOverviewPage {
         this.transactionHistoryVisibility = "hidden";
       }
     }).catch(error => {
-      console.log("getTransactionHistory. Error: " + error);
       const confirm = this.alertCtrl.create({
-        title: 'Error',
-        message: 'Could not retrieve data',
+        title: this.translations.get("wallet_overview.error"),
+        message: this.translations.get("wallet_overview.error_retrieving_data"),
         buttons: [
           {
-            text: 'Click here to retry',
+            text: this.translations.get("wallet_overview.click_retry"),
             handler: () => {
               this.getTransactionHistory(publicKey);
             }
@@ -217,13 +423,12 @@ export class WalletOverviewPage {
       this.wallets = data;
       this.currentWallet = this.wallets[0];
     }).catch(error => {
-      console.log("getAllWallets. Error: " + error);
       const confirm = this.alertCtrl.create({
-        title: 'Error',
-        message: 'Could not retrieve data',
+        title: this.translations.get("wallet_overview.error"),
+        message: this.translations.get("wallet_overview.error_retrieving_data"),
         buttons: [
           {
-            text: 'Click here to retry',
+            text: this.translations.get("wallet_overview.click_retry"),
             handler: () => {
               this.getAllWallets();
             }
@@ -248,13 +453,12 @@ export class WalletOverviewPage {
         this.currentExchangeCurrencies = this.availableExchanges[0].availableCurrencies;
       }
     }).catch(error => {
-      console.log("getAvailableExchanges. Error: " + error);
       const confirm = this.alertCtrl.create({
-        title: 'Error',
-        message: 'Could not retrieve data',
+        title: this.translations.get("wallet_overview.error"),
+        message: this.translations.get("wallet_overview.error_retrieving_data"),
         buttons: [
           {
-            text: 'Click here to retry',
+            text: this.translations.get("wallet_overview.click_retry"),
             handler: () => {
               this.getAvailableExchanges();
             }
@@ -271,7 +475,7 @@ export class WalletOverviewPage {
    */
   getWalletBalance(publicKey: string): Promise<void> {
     this.loading = this.loadingCtrl.create({
-      content: 'Loading wallet...'
+      content: this.translations.get("wallet_overview.loading_wallet")
     });
     this.loading.present();
     return this.walletService.getWalletBalance(publicKey).then(data => {
@@ -292,13 +496,12 @@ export class WalletOverviewPage {
         this.setCalculatedCurrencyValue();
       }
     }).catch(data => {
-      console.log("getWalletBalance - Error: " + data);
       const confirm = this.alertCtrl.create({
-        title: 'Error',
-        message: 'Could not retrieve data',
+        title: this.translations.get("wallet_overview.error"),
+        message: this.translations.get("wallet_overview.error_retrieving_data"),
         buttons: [
           {
-            text: 'Click here to retry',
+            text: this.translations.get("wallet_overview.click_retry"),
             handler: () => {
               this.getWalletBalance(publicKey);
             }
@@ -327,7 +530,7 @@ export class WalletOverviewPage {
   getFixedNumbers() {
     let fixedNumbers = 7;
     if (this.pickedCurrency === "USD" ||
-        this.pickedCurrency === "€") {
+        this.pickedCurrency === "EUR") {
       fixedNumbers = 2;
     }
     return fixedNumbers;
@@ -378,9 +581,9 @@ export class WalletOverviewPage {
             } else if (alternatePrice === undefined) {
               if (y === 0) {
                 const alert = this.alertCtrl.create({
-                  title: 'Error',
-                  subTitle: 'Could not determine currency value, setting to 0.',
-                  buttons: ['OK']
+                  title: this.translations.get("wallet_overview.error"),
+                  subTitle: this.translations.get("wallet_overview.currency_value_zero"),
+                  buttons: ["OK"]
                 });
                 alert.present();
               }
@@ -400,8 +603,7 @@ export class WalletOverviewPage {
             this.currentWallet.balances[y].valueAmount = Number((currentCurrencyValue).toFixed(this.getFixedNumbers()));
             break;
           } else if (!found && i === prices.length -1) {
-            // TODO: Didn't find an alternative path
-            console.log("Not found: " + walletCurrency);
+            // TODO: Didn"t find an alternative path
           }
         }
       }
@@ -420,7 +622,7 @@ export class WalletOverviewPage {
         }
       }
       this.totalCurrentCurrencyValue = Number(totalValue.toFixed(this.getFixedNumbers()));
-      this.displayChart();
+      this.displayChart(); // Android Emulator rip
       if (this.doughnutChart !== undefined) {
         this.legendList = this.doughnutChart.generateLegend();
       }
@@ -428,13 +630,12 @@ export class WalletOverviewPage {
         this.loading.dismiss();
       }
     }).catch(error => {
-      console.log("setCalculatedCurrencyValue: Error: " + error);
       const confirm = this.alertCtrl.create({
-        title: 'Error',
-        message: 'Could not retrieve data',
+        title: this.translations.get("wallet_overview.error"),
+        message: this.translations.get("wallet_overview.error_retrieving_data"),
         buttons: [
           {
-            text: 'Click here to retry',
+            text: this.translations.get("wallet_overview.click_retry"),
             handler: () => {
               this.setCalculatedCurrencyValue();
             }
@@ -469,13 +670,13 @@ export class WalletOverviewPage {
       return false;
     }
     this.doughnutChart = new Chart(this.doughnutCanvas.nativeElement, {
-      type: 'doughnut',
+      type: "doughnut",
       data: {
         datasets: [{
           data: this.currenciesForDoughnutCanvas,
           backgroundColor: [
-            '#064C70',
-            '#1B79A9'
+            "#064C70",
+            "#1B79A9"
           ]
         }],
         labels: this.currenciesForDoughnutCanvasLabels

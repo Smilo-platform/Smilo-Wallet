@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { IonicPage, NavController, NavParams, ModalController } from "ionic-angular";
+import { IonicPage, NavParams } from "ionic-angular";
 import { ViewController } from "ionic-angular/navigation/view-controller";
 
 @IonicPage()
@@ -11,8 +11,7 @@ export class WalletErrorPage {
 
   error: string;
 
-  constructor(private navCtrl: NavController, 
-              private navParams: NavParams,
+  constructor(private navParams: NavParams,
               private viewController: ViewController) {
     this.error = this.navParams.get("error");
   }

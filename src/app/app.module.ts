@@ -38,8 +38,12 @@ import { BIP32Service } from "../services/bip32-service/bip32-service";
 import { MerkleTreeService } from "../services/merkle-tree-service/merkle-tree-service";
 import { PrepareWalletPageModule } from "../pages/prepare-wallet/prepare-wallet.module";
 import { ComponentsModule } from "../components/components.module";
+import { File as FileNative} from '@ionic-native/file';
+import { AndroidPermissions } from '@ionic-native/android-permissions';
+import { Clipboard } from '@ionic-native/clipboard';
 import { WalletErrorPage } from "../pages/wallet-error/wallet-error";
 import { WalletErrorPageModule } from "../pages/wallet-error/wallet-error.module";
+import { BulkTranslateService } from "../services/bulk-translate-service/bulk-translate-service";
 import { WalletImportPassphrasePageModule } from "../pages/wallet-import-passphrase/wallet-import-passphrase.module";
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -100,8 +104,12 @@ export function HttpLoaderFactory(http: HttpClient) {
     KeyStoreService,
     PasswordService,
     SettingsService,
+    FileNative,
+    BulkTranslateService,
+    AndroidPermissions,
     BIP39Service,
     BIP32Service,
+    Clipboard,
     HockeyApp,
     MerkleTreeService,
     {provide: ErrorHandler, useClass: IonicErrorHandler}

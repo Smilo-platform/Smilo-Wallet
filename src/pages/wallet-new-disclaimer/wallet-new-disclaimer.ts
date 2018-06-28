@@ -3,7 +3,6 @@ import { IonicPage, NavController, NavParams } from "ionic-angular";
 import { WalletService } from "../../services/wallet-service/wallet-service";
 import { ILocalWallet } from "../../models/ILocalWallet";
 import { KeyStoreService } from "../../services/key-store-service/key-store-service";
-import { HomePage } from "../home/home";
 import { NAVIGATION_ORIGIN_KEY } from "../wallet/wallet";
 import { PrepareWalletPage } from "../prepare-wallet/prepare-wallet";
 import { BIP39Service } from "../../services/bip39-service/bip39-service";

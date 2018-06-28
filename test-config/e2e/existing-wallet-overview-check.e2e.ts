@@ -1,9 +1,9 @@
 import { browser, by, element, ExpectedConditions, WebElement, ElementFinder, ElementArrayFinder } from "protractor";
 
+require('events').EventEmitter.defaultMaxListeners = Infinity;
+
 describe("Wallet overview page", () => {
     if (browser.params.testFile !== undefined && browser.params.testFile !== "existing-wallet-overview-check") return;
-
-    // npm run e2e -- --params.testFile="existing-wallet-overview-check"
 
     let deleteWalletButtonConfirm: ElementFinder;
     let deleteWalletButton: ElementFinder;
@@ -122,7 +122,7 @@ describe("Wallet overview page", () => {
 
         allActionSheetButtons.get(0).click();
 
-        browser.sleep(1000);
+        browser.sleep(2000);
 
         exchangesOverviewButton.click();
 
@@ -130,7 +130,7 @@ describe("Wallet overview page", () => {
 
         allActionSheetButtons.get(1).click();
 
-        browser.sleep(1000);
+        browser.sleep(2000);
 
         expect(walletTotalValue.getText()).toEqual(<any>"1736.77", "wallet 1 total value not correct");
 
