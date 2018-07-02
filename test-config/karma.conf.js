@@ -23,6 +23,13 @@ module.exports = function(config) {
         included: false,
         served: true,
         nocache: false
+      },
+      {
+        pattern: './src/assets/scripts/*',
+        watched: true,
+        included: true,
+        served: true,
+        nocache: true
       }
     ],
 
