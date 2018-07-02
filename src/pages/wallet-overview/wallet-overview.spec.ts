@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 import { WalletOverviewPage } from "./wallet-overview";
-import { IonicModule, NavController, NavParams, ToastController, Toast, LoadingController, Loading, AlertController} from "ionic-angular/index";
+import { IonicModule, NavController, NavParams, ToastController, Toast, Alert, LoadingController, Loading, AlertController} from "ionic-angular/index";
 import { MockNavController } from "../../../test-config/mocks/MockNavController";
 import { MockNavParams } from "../../../test-config/mocks/MockNavParams";
 import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
@@ -50,6 +50,7 @@ describe("WalletOverviewPage", () => {
   let transactionHistoryService: IWalletTransactionHistoryService;
   let walletBalancesService: IWalletBalanceService;
   let toast: MockToast;
+  let alert: MockAlert;
 
   beforeEach(async(() => {
     navController = new MockNavController();
@@ -65,6 +66,7 @@ describe("WalletOverviewPage", () => {
     transactionHistoryService = new MockWalletTransactionHistoryService();
     walletBalancesService = new MockWalletBalanceService();
     toast = new MockToast();
+    alert = new MockAlert();
 
     TestBed.configureTestingModule({
       declarations: [WalletOverviewPage],
@@ -89,7 +91,8 @@ describe("WalletOverviewPage", () => {
         { provide: ExchangesService, useValue: exchangeService },
         { provide: WalletTransactionHistoryService, useValue: transactionHistoryService },
         { provide: WalletBalanceService, useValue: walletBalancesService },
-        { provide: Toast, useValue: toast }
+        { provide: Toast, useValue: toast },
+        { provide: Alert, useValue: alert }
       ]
     }).compileComponents();
   }));
@@ -392,5 +395,29 @@ describe("WalletOverviewPage", () => {
     expect(toast.present).toHaveBeenCalled();
   });
 
-  
+  it("should call a create and present error modal after getting the available exchanges list with a rejected promise", (done) => {
+    spyOn(exchangeService, "getAvailableExchanges").and.returnValue(Promise.reject(""));
+    spyOn(comp, "getAvailableExchanges").and.callThrough();
+    spyOn(alertController, "create").and.returnValue(alert);
+    spyOn(alert, "present");
+
+    comp.initialize().then(data => {
+      expect(alertController.create).toHaveBeenCalled();
+      expect(alert.present).toHaveBeenCalled();
+      done();
+    });
+  });
+
+  it("should call a create and present error modal after getting the wallets with a rejected promise", (done) => {
+    spyOn(walletService, "getAll").and.returnValue(Promise.reject(""));
+    spyOn(comp, "getAllWallets").and.callThrough();
+    spyOn(alertController, "create").and.returnValue(alert);
+    spyOn(alert, "present");
+
+    comp.initialize().then(data => {
+      expect(alertController.create).toHaveBeenCalled();
+      expect(alert.present).toHaveBeenCalled();
+      done();
+    });
+  })
 });

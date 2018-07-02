@@ -195,22 +195,7 @@ export class WalletOverviewPage {
   initialize(): Promise<void> {
     return Promise.all([
       this.getAllWallets(), 
-      this.getAvailableExchanges()]).then<void>().catch(data => {
-        const confirm = this.alertCtrl.create({
-          title: this.translations.get("wallet_overview.error"),
-          message: this.translations.get("wallet_overview.error_retrieving_data"),
-          buttons: [
-            {
-              text: this.translations.get("wallet_overview.click_retry"),
-              handler: () => {
-                this.initialize();
-              }
-            }
-          ]
-        });
-        confirm.present();
-      }
-    );
+      this.getAvailableExchanges()]).then<void>();
   }
 
   /**
