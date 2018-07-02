@@ -17,9 +17,9 @@ declare const forge: any;
  * Next we generate the encryption key on a worker thread and bump the iteration
  * count to something like 20000 :D
  */
-const KEY_NUM_ITERATIONS = 10000;
-const KEY_SIZE = 32;
-const CIPHER_ALGO = "AES-CTR";
+export const KEY_NUM_ITERATIONS = 10000;
+export const KEY_SIZE = 32;
+export const CIPHER_ALGO = "AES-CTR";
 
 export interface IKeyStoreService {
     createKeyStore(privateKey: string, password: string): IKeyStore;
@@ -40,7 +40,7 @@ export class KeyStoreService implements IKeyStoreService {
 
         // Initialise cipher
         let iv = this.getInitialisationVector();
-        let cipher = this.getCipher(key);
+        let cipher = forge.cipher.createCipher(CIPHER_ALGO, key);
         cipher.start({iv: iv});
 
         // Encrypt private key
@@ -115,10 +115,6 @@ export class KeyStoreService implements IKeyStoreService {
 
     getInitialisationVector(): string {
         return forge.random.getBytesSync(32);
-    }
-
-    getCipher(key: string): any {
-        return forge.cipher.createCipher(CIPHER_ALGO, key);
     }
 
     getSalt(): string {
