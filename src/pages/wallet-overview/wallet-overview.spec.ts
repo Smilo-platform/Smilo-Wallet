@@ -30,6 +30,9 @@ import { IWalletBalanceService, WalletBalanceService } from "../../services/wall
 import { MockExchangesService } from "../../../test-config/mocks/MockExchangesSevice";
 import { MockWalletTransactionHistoryService } from "../../../test-config/mocks/MockWalletTransactionHistoryService";
 import { MockWalletBalanceService } from "../../../test-config/mocks/MockWalletBalanceService";
+import { TransferPage } from "../transfer/transfer";
+import { IWallet } from "../../models/IWallet";
+import { MockToast } from "../../../test-config/mocks/MockToast";
 
 describe("WalletOverviewPage", () => {
   let comp: WalletOverviewPage;
@@ -46,6 +49,7 @@ describe("WalletOverviewPage", () => {
   let exchangeService: IExchangesService;
   let transactionHistoryService: IWalletTransactionHistoryService;
   let walletBalancesService: IWalletBalanceService;
+  let toast: MockToast;
 
   beforeEach(async(() => {
     navController = new MockNavController();
@@ -60,6 +64,7 @@ describe("WalletOverviewPage", () => {
     exchangeService = new MockExchangesService();
     transactionHistoryService = new MockWalletTransactionHistoryService();
     walletBalancesService = new MockWalletBalanceService();
+    toast = new MockToast();
 
     TestBed.configureTestingModule({
       declarations: [WalletOverviewPage],
@@ -83,7 +88,8 @@ describe("WalletOverviewPage", () => {
         { provide: KeyStoreService, useValue: keystoreService },
         { provide: ExchangesService, useValue: exchangeService },
         { provide: WalletTransactionHistoryService, useValue: transactionHistoryService },
-        { provide: WalletBalanceService, useValue: walletBalancesService }
+        { provide: WalletBalanceService, useValue: walletBalancesService },
+        { provide: Toast, useValue: toast }
       ]
     }).compileComponents();
   }));
@@ -107,12 +113,18 @@ describe("WalletOverviewPage", () => {
     expect(comp.availableExchanges.length).toBe(0, "availableCurrencies length should be 0");
     expect(comp.showFundsStatus).toBe(true, "showFundsStatus should be true");
     expect(comp.walletFundsVisibility).toBe("shown", "walletFundsVisiblity should be shown");
+    expect(comp.currentWallet).toBeUndefined();
+    expect(comp.loading).toBeUndefined();
+    expect(comp.loadingError).toBeUndefined();
+    expect(comp.totalCurrentCurrencyValue).toBeUndefined();
+    expect(comp.balances).toBeUndefined();
   })
 
   it("should have visibility hidden after switching visibility", () => {
     comp.fundsSwitch();
 
     expect(comp.walletFundsVisibility).toBe("hidden");
+    expect(comp.walletFundsVisibilityTransferButton).toBe("shown");
   })
 
   it("should present an alert when deleting a wallet", (done) => {
@@ -130,10 +142,25 @@ describe("WalletOverviewPage", () => {
     });
   })
 
-  it("should return false after deleting a wallet that doesn't exist", () => {
-    let result = comp.deleteSelectedWallet(null);
+  it("should open landing page and show a toast after deleting the only wallet", (done) => {
+    // Get all 3 wallets
+    comp.getAllWallets().then(data => {
+      // Delete first one
+      comp.deleteSelectedWallet(comp.currentWallet);
+      // Delete second one
+      comp.deleteSelectedWallet(comp.currentWallet);
 
-    expect(result).toBe(false);
+      spyOn(comp, "openLandingPage");
+      spyOn(comp, "showToastMessage");
+
+      // Delete last one
+      comp.deleteSelectedWallet(comp.currentWallet);
+
+      expect(comp.openLandingPage).toHaveBeenCalled();
+      expect(comp.showToastMessage).toHaveBeenCalled();
+      
+      done();
+    });
   })
 
   it("should return undefined because there is no current wallet", () => {
@@ -164,11 +191,11 @@ describe("WalletOverviewPage", () => {
     expect(navController.push).toHaveBeenCalledWith(LandingPage);
   });
 
-  it("should return false after displaying the chart because the chart currencies and amounts are not defined", () => {
-    let result = comp.displayChart();
+  // it("should return false after displaying the chart because the chart currencies and amounts are not defined", () => {
+  //   let result = comp.displayChart();
 
-    expect(result).toBe(false);
-  })
+  //   expect(result).toBe(false);
+  // })
 
   it("should call getAllWallets and getAvailableCurrencies", () => {
     spyOn(comp, "getAllWallets");
@@ -263,4 +290,107 @@ describe("WalletOverviewPage", () => {
       });
     });
   })
+
+  it("should call initialize when the view is loaded", () => {
+    spyOn(comp, "initialize");
+
+    comp.ionViewDidLoad();
+
+    expect(comp.initialize).toHaveBeenCalled();
+  });
+
+  it("should have the funds visiblity to shown after they were invisible", () => {
+    comp.walletFundsVisibility = "hidden";
+
+    comp.fundsSwitch();
+
+    expect(comp.walletFundsVisibility).toBe("shown");
+    expect(comp.walletFundsVisibilityTransferButton).toBe("hidden");
+  });
+
+  it("should open the transfer page correctly", () => {
+    spyOn(navController, "push");
+
+    comp.openTransferPage();
+
+    expect(navController.push).toHaveBeenCalledWith(TransferPage);
+  })
+
+  it("should call balance and history after refreshing the wallet", () => {
+    spyOn(comp, "getWalletBalance");
+    spyOn(comp, "getTransactionHistory");
+
+    comp.currentWallet = <IWallet>{};
+    comp.currentWallet.publicKey = "";
+
+    comp.refreshWalletBalance();
+
+    expect(comp.getWalletBalance).toHaveBeenCalled();
+    expect(comp.getTransactionHistory).toHaveBeenCalled();
+  })
+
+  it("should not open landing page and show a toast after deleting a wallet while some wallets still exist", (done) => {
+    // Get all 3 wallets
+    comp.getAllWallets().then(data => {
+      // Delete first one
+      comp.deleteSelectedWallet(comp.currentWallet);
+
+      spyOn(comp, "openLandingPage");
+      spyOn(comp, "showToastMessage");
+
+      // Delete last one
+      comp.deleteSelectedWallet(comp.currentWallet);
+
+      expect(comp.openLandingPage).not.toHaveBeenCalled();
+      expect(comp.showToastMessage).not.toHaveBeenCalled();
+      
+      done();
+    });
+  })
+
+  it("should return 7 fixed numbers if the picked currency is not in the if condition", () => {
+    comp.pickedCurrency = "I DON'T EXIST";
+
+    let result = comp.getFixedNumbers();
+
+    expect(result).toEqual(7);
+  })
+
+  it("should call createElement, appendChild, execCommand and removechild upon copying to clipboard for web", () => {
+    spyOn(document, "createElement");
+    spyOn(document.body, "appendChild");
+    spyOn(document, "execCommand");
+    spyOn(document.body, "removeChild");
+
+    comp.copyToClipboardWeb("data");
+
+    expect(document.createElement).toHaveBeenCalled();
+    expect(document.body.appendChild).toHaveBeenCalled();
+    expect(document.execCommand).toHaveBeenCalled();
+    expect(document.body.removeChild).toHaveBeenCalled();
+  })
+
+  it("should call createElement, appendChild, removeChild upon downloading a txt file for web", () => {
+    spyOn(document, "createElement");
+    spyOn(document.body, "appendChild");
+    spyOn(document.body, "removeChild");
+
+    comp.downloadTxtFileWeb("data", "filename");
+
+    expect(document.createElement).toHaveBeenCalled();
+    expect(document.body.appendChild).toHaveBeenCalled();
+    expect(document.body.removeChild).toHaveBeenCalled();
+  });
+
+  it("should call create and present upon showing a toast message", () => {
+    spyOn(toastController, "create").and.returnValue(toast);
+    spyOn(toast, "present");
+    
+    comp.showToastMessage("message", 1000, "bottom");
+
+    expect(toastController.create).toHaveBeenCalled();
+    expect(toast.present).toHaveBeenCalled();
+  });
+
+  
 });
