@@ -256,7 +256,7 @@
   },
   "wallet_extra_import": {
       "title": "Import another wallet?",
-      "description": "Your wallet has been imported! Would you like to import another wallet using the same passphrase?",
+      "description": "Your wallet has been imported! Would you like to import another wallet using the same passphrase? (Select 'No' if in doubt).",
       "buttons": {
           "yes": "Yes",
           "no": "No",

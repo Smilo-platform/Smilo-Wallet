@@ -21,6 +21,8 @@ export class WalletExtraImportPage {
 
   nextIndex: number;
 
+  importAnotherWallet: boolean = false;
+
   constructor(private navParams: NavParams,
               private viewController: ViewController) {
     this.nextIndex = this.navParams.get("nextIndex");
@@ -35,11 +37,13 @@ export class WalletExtraImportPage {
   }
 
   yes() {
-    let data: IWalletExtraImportDismissData = {
-      importExtra: true,
-      index: this.nextIndex
-    };
+    this.importAnotherWallet = true;
 
-    this.viewController.dismiss(data);
+    // let data: IWalletExtraImportDismissData = {
+    //   importExtra: true,
+    //   index: this.nextIndex
+    // };
+
+    // this.viewController.dismiss(data);
   }
 }

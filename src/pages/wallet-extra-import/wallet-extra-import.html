@@ -12,7 +12,7 @@
       </ion-col>
     </ion-row>
 
-    <ion-row justify-content-center>
+    <ion-row *ngIf="!importAnotherWallet" justify-content-center>
       <ion-col text-center>
         <button ion-button (click)="yes()">
           {{ 'wallet_extra_import.buttons.yes' | translate }}
@@ -23,6 +23,12 @@
         <button ion-button (click)="no()">
           {{ 'wallet_extra_import.buttons.no' | translate }}
         </button>
+      </ion-col>
+    </ion-row>
+
+    <ion-row *ngIf="importAnotherWallet">
+      <ion-col>
+        <ion-input></ion-input>
       </ion-col>
     </ion-row>
   </ion-grid>
