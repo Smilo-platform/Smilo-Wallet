@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { IonicPage, NavController, NavParams, ViewController } from "ionic-angular";
+import { IonicPage, NavParams, ViewController } from "ionic-angular";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { WalletIndexValidator } from "../../validators/WalletIndexValidator";
 
