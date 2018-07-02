@@ -263,7 +263,6 @@
       "buttons": {
           "yes": "Yes",
           "no": "No",
-          "yes_alternative": "Yes, using a custom BIP44 address index",
           "back": "Go back",
           "import": "Import"
       }

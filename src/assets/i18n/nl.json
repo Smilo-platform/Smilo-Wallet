@@ -256,5 +256,18 @@
     },
     "wallet_import_ledger": {
         "nav-bar-title": "Ledger"
+    },
+    "wallet_extra_import": {
+        "title": "Importeer nog een wallet?",
+        "description1": "Uw wallet is geïmporteerd! Wilt u nog een wallet importeren op basis van dezelfde wachtwoordzin? (Selecteer 'Nee' in geval van twijfel).",
+        "description2": "Vul het onderstaande formulier in om nog een wallet te importeren.",
+        "wallet_index": "Volgende BIP44 adres index om te importeren",
+        "wallet_name": "Wallet naam",
+        "buttons": {
+            "yes": "Ja",
+            "no": "Nee",
+            "back": "Terug",
+            "import": "Importeer"
+        }
     }
 }
