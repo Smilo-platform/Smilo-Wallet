@@ -10,6 +10,9 @@ import { TranslateService } from "@ngx-translate/core";
 import { WalletErrorPage } from "../wallet-error/wallet-error";
 import { Platform } from "ionic-angular/platform/platform";
 import { WalletExtraImportPage, IWalletExtraImportDismissData } from "../wallet-extra-import/wallet-extra-import";
+import { BIP39Service } from "../../services/bip39-service/bip39-service";
+import { BIP32Service } from "../../services/bip32-service/bip32-service";
+import { KeyStoreService } from "../../services/key-store-service/key-store-service";
 
 @IonicPage()
 @Component({
@@ -69,7 +72,10 @@ export class PrepareWalletPage {
               private translateService: TranslateService,
               private toastController: ToastController,
               private modalController: ModalController,
-              private platform: Platform) {
+              private platform: Platform,
+              private bip39Service: BIP39Service,
+              private bip32Service: BIP32Service,
+              private keyStoreService: KeyStoreService) {
     
   }
 
@@ -109,6 +115,9 @@ export class PrepareWalletPage {
   }
 
   generateMerkleTree(): Promise<void> {
+    this.progress = 0;
+    this.activeStatusMessageIndex = 0;
+    
     return this.merkleTreeService.generate(this.wallet, this.password, this.onProgressUpdate).then(
       this.onMerkleTreeGenerated,
       this.onMerkleTreeFailed
@@ -201,12 +210,10 @@ export class PrepareWalletPage {
     return promptPromise.then(
       (data) => {
         if(data.importExtra) {
-          console.log("Import at ", data.index);
-
-          // TODO:
-          // - Create a new wallet
-          // - Start generating Merkle Tree again
-          // - Afterwards prompt again!
+          this.wallet = this.prepareWallet(data.name, data.index);
+          this.walletIndex = data.index;
+          
+          this.generateMerkleTree();
         }
         else {
           return this.goBackToOriginPage();
@@ -216,6 +223,26 @@ export class PrepareWalletPage {
         console.error(error);
       }
     );
+  }
+
+  prepareWallet(walletName: string, walletIndex: number): ILocalWallet {
+    let seed = this.bip39Service.toSeed(this.passphrase);
+    let privateKey = this.bip32Service.getPrivateKey(seed, walletIndex);
+
+    // Create key store for private key
+    let keyStore = this.keyStoreService.createKeyStore(privateKey, this.password);
+
+    // Prepare wallet
+    let wallet: ILocalWallet = {
+      id: this.walletService.generateId(),
+      name: walletName,
+      type: "local",
+      publicKey: null,
+      keyStore: keyStore,
+      lastUpdateTime: null
+    };
+
+    return wallet;
   }
 
   goBackToOriginPage() {

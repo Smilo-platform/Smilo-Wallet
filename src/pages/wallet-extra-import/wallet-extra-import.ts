@@ -1,5 +1,7 @@
 import { Component } from "@angular/core";
 import { IonicPage, NavController, NavParams, ViewController } from "ionic-angular";
+import { FormGroup, FormBuilder, Validators } from "@angular/forms";
+import { WalletIndexValidator } from "../../validators/WalletIndexValidator";
 
 export interface IWalletExtraImportDismissData {
   /**
@@ -10,6 +12,10 @@ export interface IWalletExtraImportDismissData {
    * The index of the extra wallet to import
    */
   index?: number;
+  /**
+   * The name of the extra wallet to import
+   */
+  name?: string;
 }
 
 @IonicPage()
@@ -20,12 +26,21 @@ export interface IWalletExtraImportDismissData {
 export class WalletExtraImportPage {
 
   nextIndex: number;
+  walletName: string;
 
   importAnotherWallet: boolean = false;
 
+  form: FormGroup;
+
   constructor(private navParams: NavParams,
-              private viewController: ViewController) {
+              private viewController: ViewController,
+              private formBuilder: FormBuilder) {
     this.nextIndex = this.navParams.get("nextIndex");
+
+    this.form = this.formBuilder.group({
+      walletName: ["", Validators.compose([Validators.required])],
+      nextIndex: ["", Validators.compose([Validators.required, WalletIndexValidator()])]
+    });
   }
 
   no() {
@@ -38,12 +53,19 @@ export class WalletExtraImportPage {
 
   yes() {
     this.importAnotherWallet = true;
+  }
 
-    // let data: IWalletExtraImportDismissData = {
-    //   importExtra: true,
-    //   index: this.nextIndex
-    // };
+  back() {
+    this.importAnotherWallet = false;
+  }
 
-    // this.viewController.dismiss(data);
+  import() {
+    let data: IWalletExtraImportDismissData = {
+      importExtra: true,
+      index: this.nextIndex,
+      name: this.walletName
+    };
+
+    this.viewController.dismiss(data);
   }
 }
