@@ -19,6 +19,15 @@ import { MockModalController } from "../../../test-config/mocks/MockModalControl
 import { MockModal } from "../../../test-config/mocks/MockModal";
 import { WalletErrorPage } from "../wallet-error/wallet-error";
 import { Platform } from "ionic-angular/platform/platform";
+import { IBIP32Service, BIP32Service } from "../../services/bip32-service/bip32-service";
+import { IBIP39Service, BIP39Service } from "../../services/bip39-service/bip39-service";
+import { IKeyStoreService, KeyStoreService } from "../../services/key-store-service/key-store-service";
+import { MockBIP39Service } from "../../../test-config/mocks/MockBIP39Service";
+import { MockBIP32Service } from "../../../test-config/mocks/MockBIP32Service";
+import { MockKeyStoreService } from "../../../test-config/mocks/MockKeyStoreService";
+import { IWalletExtraImportDismissData, WalletExtraImportPage } from "../wallet-extra-import/wallet-extra-import";
+import { ILocalWallet } from "../../models/ILocalWallet";
+import { IKeyStore } from "../../models/IKeyStore";
 
 describe("PrepareWalletPage", () => {
   let comp: PrepareWalletPage;
@@ -32,6 +41,9 @@ describe("PrepareWalletPage", () => {
   let translateService: MockTranslateService;
   let modalController: MockModalController;
   let platformService: Platform;
+  let bip32Service: IBIP32Service;
+  let bip39Service: IBIP39Service;
+  let keyStoreService: IKeyStoreService;
 
   beforeEach(async(() => {
     walletService = new MockWalletService();
@@ -42,6 +54,9 @@ describe("PrepareWalletPage", () => {
     toastController = new MockToastController();
     translateService = new MockTranslateService();
     modalController = new MockModalController();
+    bip32Service = new MockBIP32Service();
+    bip39Service = new MockBIP39Service();
+    keyStoreService = new MockKeyStoreService();
 
     TestBed.configureTestingModule({
       declarations: [PrepareWalletPage],
@@ -59,7 +74,10 @@ describe("PrepareWalletPage", () => {
         { provide: ToastController, useValue: toastController },
         { provide: MerkleTreeService, useValue: merkleTreeService },
         { provide: TranslateService, useValue: translateService },
-        { provide: ModalController, useValue: modalController }
+        { provide: ModalController, useValue: modalController },
+        { provide: BIP32Service, useValue: bip32Service },
+        { provide: BIP39Service, useValue: bip39Service },
+        { provide: KeyStoreService, useValue: keyStoreService }
       ]
     }).compileComponents();
 
@@ -139,8 +157,22 @@ describe("PrepareWalletPage", () => {
     expect(merkleTreeService.generate).toHaveBeenCalledWith(dummyWallet, "pass123", comp.onProgressUpdate);
   });
 
+  it("should reset progress when starting to generate a merkle tree", () => {
+    spyOn(merkleTreeService, "generate").and.returnValue(Promise.resolve());
+    spyOn(comp, "onMerkleTreeGenerated");
+    spyOn(comp, "onMerkleTreeFailed");
+
+    comp.progress = 80;
+    comp.activeStatusMessageIndex = 5;
+
+    comp.generateMerkleTree();
+
+    expect(comp.progress).toBe(0);
+    expect(comp.activeStatusMessageIndex).toBe(0);
+  });
+
   it("should call the correct handler when the merkle tree was succesfully generated", (done) => {
-      let dummyWallet = {};
+    let dummyWallet = {};
     comp.wallet = <any>dummyWallet;
     comp.password = "pass123";
 
@@ -215,7 +247,7 @@ describe("PrepareWalletPage", () => {
 
     spyOn(walletService, "store").and.returnValue(Promise.resolve());
     spyOn(toastController, "create").and.returnValue(dummyToast);
-    spyOn(comp, "goBackToOriginPage").and.returnValue(Promise.resolve());
+    spyOn(comp, "finalize").and.returnValue(Promise.resolve());
     spyOn(merkleTree, "getPublicKey").and.returnValue("PUBLIC_KEY");
     spyOn(merkleTreeService, "get").and.returnValue(Promise.resolve(merkleTree));
     
@@ -237,7 +269,7 @@ describe("PrepareWalletPage", () => {
 
         expect(dummyToast.present).toHaveBeenCalled();
 
-        expect(comp.goBackToOriginPage).toHaveBeenCalled();
+        expect(comp.finalize).toHaveBeenCalled();
 
         done();
       },
@@ -247,6 +279,146 @@ describe("PrepareWalletPage", () => {
         done();
       }
     );
+  });
+
+  it("should handle finalize correctly when no passphrase was defined", (done) => {
+    comp.passphrase = null;
+    comp.walletIndex = null;
+
+    spyOn(modalController, "create");
+    spyOn(comp, "goBackToOriginPage");
+
+    comp.finalize().then(
+      () => {
+        expect(modalController.create).not.toHaveBeenCalled();
+        expect(comp.goBackToOriginPage).toHaveBeenCalled();
+
+        done();
+      },
+      (error) => {
+        expect(true).toBe(false, "Promise reject should never be called");
+
+        done();
+      }
+    )
+  });
+
+  it("should handle finalize correctly when a passphrase was defined and the user does not want to import another wallet", (done) => {
+    comp.passphrase = "PASSPHRASE";
+    comp.walletIndex = 10;
+
+    let mockModal = new MockModal();
+    let dummyWallet: ILocalWallet = <any>{};
+
+    spyOn(modalController, "create").and.returnValue(mockModal);
+    spyOn(comp, "goBackToOriginPage");
+    spyOn(comp, "generateMerkleTree");
+    spyOn(mockModal, "present");
+    spyOn(comp, "prepareWallet").and.returnValue(dummyWallet);
+    spyOn(mockModal, "onDidDismiss").and.callFake((callback) => {
+      // We listen for any listeners attaching to the onDidDismiss event.
+      // Once attached we immediately call the callback function.
+      callback({
+        importExtra: false
+      })
+    });
+    
+    comp.finalize().then(
+      () => {
+        // Expect a modal to have been created and displayed to the user
+        expect(modalController.create).toHaveBeenCalledWith(WalletExtraImportPage, {
+          nextIndex: 11
+        }, {
+          enableBackdropDismiss: false
+        });
+        expect(mockModal.present).toHaveBeenCalled();
+
+        // make sure the goBackToOriginPage was called
+        expect(comp.goBackToOriginPage).toHaveBeenCalled();
+
+        // Make sure no extra Merkle Tree is being generated
+        expect(comp.generateMerkleTree).not.toHaveBeenCalled();
+
+        done();
+      },
+      (error) => {
+        expect(true).toBe(false, "Promise reject should never be called");
+        done();
+      }
+    );
+  });
+
+  it("should handle finalize correctly when a passphrase was defined and the user wants to import another wallet", (done) => {
+    comp.passphrase = "PASSPHRASE";
+    comp.walletIndex = 10;
+
+    let mockModal = new MockModal();
+    let dummyWallet: ILocalWallet = <any>{};
+
+    spyOn(modalController, "create").and.returnValue(mockModal);
+    spyOn(comp, "goBackToOriginPage");
+    spyOn(comp, "generateMerkleTree");
+    spyOn(mockModal, "present");
+    spyOn(comp, "prepareWallet").and.returnValue(dummyWallet);
+    spyOn(mockModal, "onDidDismiss").and.callFake((callback) => {
+      // We listen for any listeners attaching to the onDidDismiss event.
+      // Once attached we immediately call the callback function.
+      callback({
+        importExtra: true,
+        name: "WALLET_NAME",
+        index: 100
+      })
+    });
+    
+    comp.finalize().then(
+      () => {
+        // Expect a modal to have been created and displayed to the user
+        expect(modalController.create).toHaveBeenCalledWith(WalletExtraImportPage, {
+          nextIndex: 11
+        }, {
+          enableBackdropDismiss: false
+        });
+        expect(mockModal.present).toHaveBeenCalled();
+
+        // make sure the goBackToOriginPage was not called
+        expect(comp.goBackToOriginPage).not.toHaveBeenCalled();
+
+        // Expect wallet and walletIndex to be updated correctly
+        expect(comp.wallet).toBe(dummyWallet);
+        expect(comp.walletIndex).toBe(100);
+
+        // Expect another Merkle Tree is being generated
+        expect(comp.generateMerkleTree).toHaveBeenCalled();
+
+        done();
+      },
+      (error) => {
+        expect(true).toBe(false, "Promise reject should never be called");
+        done();
+      }
+    );
+  });
+
+  it("should prepare an extra wallet correctly", () => {
+    comp.passphrase = "PASSPHRASE";
+
+    spyOn(bip39Service, "toSeed").and.returnValue("SEED");
+    spyOn(bip32Service, "getPrivateKey").and.returnValue("PRIVATE_KEY");
+    spyOn(walletService, "generateId").and.returnValue("WALLET_ID");
+
+    let dummyKeystore: IKeyStore = <any>{};
+    spyOn(keyStoreService, "createKeyStore").and.returnValue(dummyKeystore);
+
+    let wallet = comp.prepareWallet("WALLET_NAME", 10);
+
+    expect(wallet).toEqual({
+      id: "WALLET_ID",
+      name: "WALLET_NAME",
+      type: "local",
+      publicKey: null,
+      keyStore: dummyKeystore,
+      lastUpdateTime: null
+    });
   });
 
   it("should handle the merkle tree failed event correctly", () => {

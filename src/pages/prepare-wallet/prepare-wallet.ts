@@ -187,7 +187,7 @@ export class PrepareWalletPage {
    * if he/she wishes to import another wallet. Otherwise (or if the user declines)
    * the wallet will navigate back to the origin page.
    */
-  finalize() {
+  finalize(): Promise<void> {
     let promptPromise = Promise.resolve<IWalletExtraImportDismissData>({importExtra: false});
 
     if(this.passphrase && this.walletIndex !== undefined) {
@@ -203,7 +203,7 @@ export class PrepareWalletPage {
           resolve(data);
         });
 
-        promptPromise = modal.present();
+        modal.present();
       });
     }
     
@@ -213,7 +213,7 @@ export class PrepareWalletPage {
           this.wallet = this.prepareWallet(data.name, data.index);
           this.walletIndex = data.index;
           
-          this.generateMerkleTree();
+          return this.generateMerkleTree();
         }
         else {
           return this.goBackToOriginPage();
