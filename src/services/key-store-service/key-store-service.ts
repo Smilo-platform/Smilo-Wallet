@@ -6,7 +6,14 @@ import { IKeyStore } from "../../models/IKeyStore";
  */
 declare const forge: any;
 
-const KEY_NUM_ITERATIONS = 128;
+/**
+ * The amount of iterations to apply when generating the encryption key.
+ * 
+ * This number was chosen based on a simple test on a modern Core i7.
+ * 
+ * With this value about 20 keys can be generated every second.
+ */
+const KEY_NUM_ITERATIONS = 2048;
 const KEY_SIZE = 32;
 const CIPHER_ALGO = "AES-CTR";
 
