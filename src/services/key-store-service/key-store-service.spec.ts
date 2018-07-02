@@ -1,5 +1,4 @@
 import { KeyStoreService } from "./key-store-service";
-import { NavController } from "ionic-angular";
 
 declare const forge: any;
 
