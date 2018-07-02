@@ -186,7 +186,12 @@
         "password_confirm_instruction": "Bevestig wachtwoord",
         "passphrase_error": "De wachtwoordzin die je hebt ingevoerd is onjuist. Zorg ervoor dat je het juiste aantal woorden invoert",
         "buttons": {
-            "import": "Importeren"
+            "import": "Importeren",
+            "advanced": "Toggle geavanceerd"
+        },
+        "wallet_index": "BIP44 adres index",
+        "errors": {
+            "wallet_index": "De BIP44 adres index bevat een ongeldige waarde"
         }
     },
     "password_messages": {
@@ -251,5 +256,18 @@
     },
     "wallet_import_ledger": {
         "nav-bar-title": "Ledger"
+    },
+    "wallet_extra_import": {
+        "title": "Importeer nog een wallet?",
+        "description1": "Uw wallet is geïmporteerd! Wilt u nog een wallet importeren op basis van dezelfde wachtwoordzin? (Selecteer 'Nee' in geval van twijfel).",
+        "description2": "Vul het onderstaande formulier in om nog een wallet te importeren.",
+        "wallet_index": "Volgende BIP44 adres index om te importeren",
+        "wallet_name": "Wallet naam",
+        "buttons": {
+            "yes": "Ja",
+            "no": "Nee",
+            "back": "Terug",
+            "import": "Importeer"
+        }
     }
 }

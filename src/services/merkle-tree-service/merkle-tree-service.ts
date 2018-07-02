@@ -29,7 +29,7 @@ export class MerkleTreeService implements IMerkleTreeService {
         let privateKey = this.keyStoreService.decryptKeyStore(wallet.keyStore, password);
 
         // Start generating the Merkle Tree
-        return MerkleTree.generate(privateKey, 18, this.platform, progressUpdate).then(
+        return MerkleTree.generate(privateKey, 14, this.platform, progressUpdate).then(
             (merkleTree) => {
                 // Cache Merkle Tree
                 this.cache[wallet.id] = merkleTree;

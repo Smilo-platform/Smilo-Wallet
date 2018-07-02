@@ -6,7 +6,18 @@ import { IKeyStore } from "../../models/IKeyStore";
  */
 declare const forge: any;
 
-const KEY_NUM_ITERATIONS = 128;
+/**
+ * This number is important! This defines the amount of hashing iterations
+ * applied to the encryption key. Too low and all encrypted data stored
+ * locally is at risk of being hacked. Too high and generating a key can take
+ * a long time. Note that in the current implementation this would 'lock' the browser
+ * negatively impacting user experience. 
+ * 
+ * Better way to do this: rewrite the 'createKeyStore' function to work async.
+ * Next we generate the encryption key on a worker thread and bump the iteration
+ * count to something like 20000 :D
+ */
+const KEY_NUM_ITERATIONS = 10000;
 const KEY_SIZE = 32;
 const CIPHER_ALGO = "AES-CTR";
 

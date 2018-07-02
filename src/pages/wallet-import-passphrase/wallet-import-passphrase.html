@@ -4,59 +4,80 @@
 
 <ion-content padding>
   <ion-grid>
-    <ion-row justify-content-center>
-      <ion-col col-xs-12 col-md-9 col-lg-5>
-        <ion-item>
-          <ion-label stacked>
-            {{ 'import_passphrase.instruction' | translate }}
-          </ion-label>
-          <ion-textarea rows="3"
-                      [(ngModel)]="passphrase" 
-                      (ionBlur)="onPassphraseChanged()"
-                      class="passphrase-input"
-                      [placeholder]="'import_passphrase.passphrase_hint' | translate"></ion-textarea>
-        </ion-item>
-      </ion-col>
-    </ion-row>
-
-    <ion-row justify-content-center>
-      <ion-col col-xs-12 col-md-9 col-lg-5>
-        <ion-item>
-          <ion-label stacked>
-            {{ 'import_passphrase.password_instruction' | translate }}
-          </ion-label>
-          <ion-input type="password" 
-                      class="password-input"
-                      [(ngModel)]="password" 
-                      (ionChange)="onPasswordChanged()"></ion-input>
-        </ion-item>
-      </ion-col>
-    </ion-row>
-
-    <ion-row justify-content-center>
-      <ion-col col-xs-12 col-md-9 col-lg-5>
-        <ion-item>
-          <ion-label stacked>
-            {{ 'import_passphrase.password_confirm_instruction' | translate }}
-          </ion-label>
-          <ion-input type="password" 
-                      class="password-confirm-input"
-                      [(ngModel)]="passwordConfirm" 
-                      (ionChange)="onPasswordChanged()"></ion-input>
-        </ion-item>
-      </ion-col>
-    </ion-row>
-
-    <ion-row justify-content-center>
-      <ion-col col-xs-12 col-md-9 col-lg-5>
-        <ion-item>
-          <ion-label stacked>
-            {{ 'import_passphrase.wallet_name' | translate }}
-          </ion-label>
-          <ion-input class="name-input" [(ngModel)]="walletName"></ion-input>
-        </ion-item>
-      </ion-col>
-    </ion-row>
+    <form [formGroup]="form">
+      <ion-row justify-content-center>
+        <ion-col col-xs-12 col-md-9 col-lg-5>
+          <ion-item>
+            <ion-label stacked>
+              {{ 'import_passphrase.instruction' | translate }}
+            </ion-label>
+            <ion-textarea rows="3"
+                        formControlName="passphrase"
+                        [(ngModel)]="passphrase" 
+                        (ionBlur)="onPassphraseChanged()"
+                        class="passphrase-input"
+                        [placeholder]="'import_passphrase.passphrase_hint' | translate"></ion-textarea>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+  
+      <ion-row justify-content-center>
+        <ion-col col-xs-12 col-md-9 col-lg-5>
+          <ion-item>
+            <ion-label stacked>
+              {{ 'import_passphrase.password_instruction' | translate }}
+            </ion-label>
+            <ion-input type="password" 
+                        formControlName="password"
+                        class="password-input"
+                        [(ngModel)]="password" 
+                        (ionChange)="onPasswordChanged()"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+  
+      <ion-row justify-content-center>
+        <ion-col col-xs-12 col-md-9 col-lg-5>
+          <ion-item>
+            <ion-label stacked>
+              {{ 'import_passphrase.password_confirm_instruction' | translate }}
+            </ion-label>
+            <ion-input type="password" 
+                        formControlName="passwordConfirm"
+                        class="password-confirm-input"
+                        [(ngModel)]="passwordConfirm" 
+                        (ionChange)="onPasswordChanged()"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+  
+      <ion-row justify-content-center>
+        <ion-col col-xs-12 col-md-9 col-lg-5>
+          <ion-item>
+            <ion-label stacked>
+              {{ 'import_passphrase.wallet_name' | translate }}
+            </ion-label>
+            <ion-input class="name-input" 
+                        formControlName="walletName"
+                        [(ngModel)]="walletName"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+  
+      <ion-row justify-content-center *ngIf="showAdvanced">
+        <ion-col col-xs-12 col-md-9 col-lg-5>
+          <ion-item>
+            <ion-label stacked>
+              {{ 'import_passphrase.wallet_index' | translate }}
+            </ion-label>
+            <ion-input class="name-input" 
+                        formControlName="walletIndex"
+                        class="wallet-index-input"
+                        [(ngModel)]="walletIndex"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </form>
 
     <ion-row>
       <ion-col text-center>
@@ -75,6 +96,22 @@
               class="error-box passphrase-message-box">
           {{ passphraseStatus.errorMessage }}
         </span>
+      </ion-col>
+    </ion-row>
+    
+    <ion-row *ngIf="!form.controls.walletIndex.valid">
+      <ion-col text-center>
+        <span class="wallet-index-message-box error-box">
+            {{ 'import_passphrase.errors.wallet_index' | translate }}
+        </span>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col text-center>
+        <button ion-button small class="show-advanced-button" (click)="walletIndex = 0; showAdvanced = !showAdvanced">
+          {{ 'import_passphrase.buttons.advanced' | translate }}
+        </button>
       </ion-col>
     </ion-row>
 
