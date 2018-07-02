@@ -245,4 +245,13 @@ describe("WalletImportPrivatekeyPage", () => {
       }
     );
   });
+
+  it("should return a rejected promise because the data is not valid", (done) => {
+    spyOn(comp, "dataIsValid").and.returnValue(false);
+
+    comp.import().catch(data => {
+      expect(data).toEqual("");
+      done();
+    });    
+  });
 });
