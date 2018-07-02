@@ -19,7 +19,6 @@ import { IPasswordService, PasswordService } from "../../services/password-servi
 import { MockPasswordService } from "../../../test-config/mocks/MockPasswordService";
 import { PrepareWalletPage } from "../prepare-wallet/prepare-wallet";
 import { ComponentsModule } from "../../components/components.module";
-import { reject } from "q";
 
 describe("WalletImportPrivatekeyPage", () => {
   let comp: WalletImportPrivatekeyPage;
