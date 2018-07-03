@@ -195,22 +195,7 @@ export class WalletOverviewPage {
   initialize(): Promise<void> {
     return Promise.all([
       this.getAllWallets(), 
-      this.getAvailableExchanges()]).then<void>().catch(data => {
-        const confirm = this.alertCtrl.create({
-          title: this.translations.get("wallet_overview.error"),
-          message: this.translations.get("wallet_overview.error_retrieving_data"),
-          buttons: [
-            {
-              text: this.translations.get("wallet_overview.click_retry"),
-              handler: () => {
-                this.initialize();
-              }
-            }
-          ]
-        });
-        confirm.present();
-      }
-    );
+      this.getAvailableExchanges()]).then<void>();
   }
 
   /**
@@ -236,7 +221,7 @@ export class WalletOverviewPage {
   /**
    * Open the transfer page
    */
-  transfer(): void {
+  openTransferPage(): void {
     this.navCtrl.push(TransferPage);
   }
 
@@ -328,7 +313,7 @@ export class WalletOverviewPage {
    * @param data The data to export
    * @param exportType Either keystore or privatekey
    */
-  export(dataType, data, exportType): boolean {
+  export(dataType, data, exportType): void {
     if (dataType === "clipboard") {
       if (this.platform.is("android") || this.platform.is("ios")) {
         this.clipboard.copy(data);
@@ -338,7 +323,6 @@ export class WalletOverviewPage {
       this.translateService.get("wallet_overview.copied_to_clipboard", {export_type: exportType}).subscribe(
         (translation) => {
           this.showToastMessage(translation, 2000, "bottom");
-          return true;
         }
       );
     } else if (dataType === "file") {
@@ -360,7 +344,6 @@ export class WalletOverviewPage {
       } else {
         this.downloadTxtFileWeb(data, filename);
       }
-      return true;
     }
   }
 
@@ -468,21 +451,17 @@ export class WalletOverviewPage {
    * Delete a wallet from the UI and local database
    * @param wallet The wallet to delete
    */
-  deleteSelectedWallet(wallet: IWallet): boolean {
+  deleteSelectedWallet(wallet: IWallet): void {
     let index = this.wallets.indexOf(wallet);
     if (index !== -1) {
       this.wallets.splice(index, 1);
       if (this.wallets.length > 0) {
         this.currentWallet = this.wallets[0];
-        return true;
       } else {
         this.openLandingPage();
         this.showToastMessage(this.translations.get("deleted_all_wallets"), 5000, "bottom");
-        return false;
       }
-    } else {
-      return false;
-    }
+    } 
   }
 
   /**
@@ -765,41 +744,38 @@ export class WalletOverviewPage {
   /**
    * Show the distribution chart. False when chart could not be drawn
    */
-  displayChart(): boolean {
-    if (this.currenciesForDoughnutCanvasLabels === undefined || 
-        this.doughnutCanvas === undefined) {
-      return false;
-    }
-    this.doughnutChart = new Chart(this.doughnutCanvas.nativeElement, {
-      type: "doughnut",
-      data: {
-        datasets: [{
-          data: this.currenciesForDoughnutCanvas,
-          backgroundColor: [
-            "#064C70",
-            "#1B79A9"
-          ]
-        }],
-        labels: this.currenciesForDoughnutCanvasLabels
-      },
-      options: {
-        legend: {
-          display: false
+  displayChart(): void {
+    if (this.currenciesForDoughnutCanvasLabels !== undefined || this.doughnutCanvas !== undefined) {
+      this.doughnutChart = new Chart(this.doughnutCanvas.nativeElement, {
+        type: "doughnut",
+        data: {
+          datasets: [{
+            data: this.currenciesForDoughnutCanvas,
+            backgroundColor: [
+              "#064C70",
+              "#1B79A9"
+            ]
+          }],
+          labels: this.currenciesForDoughnutCanvasLabels
         },
-        legendCallback: function(chart) {
-          let text = [];
-          for (let i= 0; i < chart.data.datasets[0].data.length; i++) {
-              text.push({backgroundColor: chart.data.datasets[0].backgroundColor[i],
-                         label: chart.data.labels[i],
-                         data: chart.data.datasets[0].data[i]});
+        options: {
+          legend: {
+            display: false
+          },
+          legendCallback: (chart) => {
+            let text = [];
+            for (let i= 0; i < chart.data.datasets[0].data.length; i++) {
+                text.push({backgroundColor: chart.data.datasets[0].backgroundColor[i],
+                          label: chart.data.labels[i],
+                          data: chart.data.datasets[0].data[i]});
+            }
+            return text;
+          },
+          title: {
+            display: false
           }
-          return text;
-        },
-        title: {
-          display: false
         }
-      }
-    });
-    return true;
+      });
+    }
   }
 }
