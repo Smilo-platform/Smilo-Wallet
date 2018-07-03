@@ -88,16 +88,102 @@ describe("BIP39Service", () => {
         for(let i = 0; i < phraseTestVectors.english.length; i++) {
             let testVector = phraseTestVectors.english[i];
 
-            let seed = service.toSeed(testVector[1]);
+            let seed = service.toSeed(testVector[1], passphrasePassword);
 
-            if(i == 0)
-                console.log("SEED", seed);
-            // expect(seed).toBe(testVector[2]);
+            expect(seed).toBe(testVector[2]);
         }
+    });
+
+    it("should validate a passphrase correctly", (done) => {
+        let tests = [
+            // Correct passphrase
+            {
+                phrases: [
+                    "one two three",
+                    "One Two Three",
+                    "zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo wrong",
+                    "panda eyebrow bullet gorilla call smoke muffin taste mesh discover soft ostrich alcohol speed nation flash devote level hobby quick inner drive ghost inside"
+
+                ],
+                result: {
+                    isValid: true
+                }
+            },
+            // Unrecognized words
+            {
+                phrases: [
+                    "bla blu ble blo bla ble",
+                    "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon totesmehotes",
+                    "zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo one",
+                    "k21n2k n2k1l28 nsdklk552 dnvsldk4 12nklsjf1 nalksfj124"
+                ],
+                result: {
+                    isValid: false,
+                    isBlocking: true,
+                    errorMessage: "passphrase_messages.invalid_word"
+                }
+            },
+            // Incorrect checksum
+            {
+                phrases: [
+                    "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon able",
+                    "letter advice cage absurd amount doctor acoustic avoid letter advice cage letter",
+                    "letter advice cage absurd amount doctor acoustic avoid letter advice cage absurd amount doctor acoustic avoid letter abandon",
+                    "legal winner thank year wave sausage worth useful legal winner thank year wave sausage worth useful legal winner thank year wave sausage worth legal"
+                ],
+                result: {
+                    isValid: false,
+                    isBlocking: false,
+                    errorMessage: "passphrase_messages.invalid_checksum"
+                }
+            },
+            // Invalid size
+            {
+                phrases: [
+                    "one two",
+                    "abandon abandon abandon abandon",
+                    "zoo zoo zoo zoo zoo zoo zoo",
+                    "cat swing flag economy stadium alone churn speed"
+                ],
+                result: {
+                    isValid: false,
+                    isBlocking: true,
+                    errorMessage: "passphrase_messages.invalid_size"
+                }
+            }
+        ];
+
+        let promise = Promise.resolve();
+
+        for(let test of tests) {
+            // Test all phrases
+            for(let phrase of test.phrases) {
+                promise = promise.then(
+                    () => {
+                        return service.check(phrase).then(
+                            (result) => {
+                                expect(result).toEqual(<any>test.result);
+                            }
+                        );
+                    }
+                );
+            }
+        }
+
+        promise.then(
+            () => {
+                done();
+            },
+            (error) => {
+                expect(true).toBe(false, "Promise reject should never be called");
+                done();
+            }
+        );
     });
 });
 
 // Test vectors taken from https://github.com/trezor/python-mnemonic/blob/master/vectors.json
+let passphrasePassword = "TREZOR";
 let phraseTestVectors = {
     "english": [
         [
