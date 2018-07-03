@@ -1,6 +1,7 @@
 import { browser, by, element, ExpectedConditions, WebElement, ElementFinder, ElementArrayFinder } from "protractor";
 
 require('events').EventEmitter.defaultMaxListeners = Infinity;
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 100000;
 
 describe("Wallet overview page", () => {
     if (browser.params.testFile !== undefined && browser.params.testFile !== "existing-wallet-overview-check") return;
@@ -24,6 +25,8 @@ describe("Wallet overview page", () => {
 
         browser.get("/");
 
+        browser.sleep(500);
+
         // Set dummy data in Indexeddb
         browser.executeScript(`
             const walletData = [{"id":"012d294e-cb11-439b-937a-12d47a52c305","type":"local","name":"Biosta","publicKey":"ETm9QUJLVdJkTqRojTNqswmeAQGaofojJJ","encryptedPrivateKey":"E9873D79C6D87DC0FB6A5778633389F4453213303DA61F20BD67FC233AA33262"},
@@ -39,6 +42,8 @@ describe("Wallet overview page", () => {
                 objectStore.put(walletData, "wallets");
             };
         `);
+
+        browser.sleep(500);
         
         // Refresh the browser so that the data is retrieved from the database on startup
         browser.refresh();
@@ -94,7 +99,7 @@ describe("Wallet overview page", () => {
 
         chooseValueButton.click();
 
-        browser.sleep(1000);
+        browser.sleep(2000);
 
         expect(element.all(by.className("action-sheet-group")).get(0).isDisplayed()).toBeTruthy();
 
@@ -106,7 +111,7 @@ describe("Wallet overview page", () => {
 
         chooseValueButton.click();
 
-        browser.sleep(1000);
+        browser.sleep(2000);
 
         allActionSheetButtons.get(2).click();
 
@@ -118,7 +123,7 @@ describe("Wallet overview page", () => {
 
         chooseValueButton.click();
         
-        browser.sleep(1000);
+        browser.sleep(2000);
 
         allActionSheetButtons.get(0).click();
 
@@ -126,7 +131,7 @@ describe("Wallet overview page", () => {
 
         exchangesOverviewButton.click();
 
-        browser.sleep(1000);
+        browser.sleep(2000);
 
         allActionSheetButtons.get(1).click();
 
@@ -136,7 +141,7 @@ describe("Wallet overview page", () => {
 
         exchangesOverviewButton.click();
 
-        browser.sleep(1000);
+        browser.sleep(2000);
 
         allActionSheetButtons.get(2).click();
 
@@ -146,7 +151,7 @@ describe("Wallet overview page", () => {
 
         exchangesOverviewButton.click();
 
-        browser.sleep(1000);
+        browser.sleep(2000);
 
         allActionSheetButtons.get(0).click();
 
