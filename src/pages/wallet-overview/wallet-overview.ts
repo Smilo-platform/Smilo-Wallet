@@ -354,10 +354,8 @@ export class WalletOverviewPage {
   copyToClipboardWeb(data): void {
     var dummyElementToCopyText = document.createElement("input");
     document.body.appendChild(dummyElementToCopyText);
-    if (dummyElementToCopyText !== undefined) {
-      dummyElementToCopyText.setAttribute("value", data);
-      dummyElementToCopyText.select();
-    }
+    dummyElementToCopyText.setAttribute("value", data);
+    dummyElementToCopyText.select();
     document.execCommand("copy");
     document.body.removeChild(dummyElementToCopyText);
   }
@@ -369,15 +367,11 @@ export class WalletOverviewPage {
    */
   downloadTxtFileWeb(data, filename): void {
     var dummyElementToDownload = document.createElement("a");
-    if (dummyElementToDownload !== undefined) {
-      dummyElementToDownload.setAttribute("href", "data:text/plain;charset=utf-8," + data);
-      dummyElementToDownload.setAttribute("download", filename);
-      dummyElementToDownload.style.display = "none";
-    }
+    dummyElementToDownload.setAttribute("href", "data:text/plain;charset=utf-8," + data);
+    dummyElementToDownload.setAttribute("download", filename);
+    dummyElementToDownload.style.display = "none";
     document.body.appendChild(dummyElementToDownload);
-    if (dummyElementToDownload !== undefined) {
-      dummyElementToDownload.click();
-    }
+    dummyElementToDownload.click();
     document.body.removeChild(dummyElementToDownload);
   }
 
@@ -768,7 +762,7 @@ export class WalletOverviewPage {
           legend: {
             display: false
           },
-          legendCallback: function(chart) {
+          legendCallback: (chart) => {
             let text = [];
             for (let i= 0; i < chart.data.datasets[0].data.length; i++) {
                 text.push({backgroundColor: chart.data.datasets[0].backgroundColor[i],

@@ -18,8 +18,6 @@ export class ExchangesService implements IExchangesService {
         
         return this.http.get('assets/json/availableExchanges.json').toPromise().then(data => {
             return <any>data;
-        }).catch(data => {
-            return Promise.reject("");
         });
     }
 
