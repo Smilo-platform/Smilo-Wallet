@@ -88,6 +88,11 @@ export class MerkleTreeService implements IMerkleTreeService {
                     );
                 }
 
+                // Finaly remove the config
+                promises.push(
+                    this.storage.remove(MerkleTree.getConfigStorageKey(wallet))
+                );
+
                 return Promise.all(promises).then<void>();
             }
         );
