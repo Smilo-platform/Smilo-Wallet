@@ -1,5 +1,4 @@
 declare const sjcl: any;
-declare const forge: any;
 
 export interface ILamportGeneratorThreadInput {
     startIndex: number,
@@ -30,7 +29,7 @@ export function LamportGeneratorThread(input: ILamportGeneratorThreadInput, done
     
             this.publicKeys = [];
             this.md256 = new sjcl.hash.sha256();
-            this.md512 = forge.md.sha512.create();
+            this.md512 = new sjcl.hash.sha512();
         }
     
         fill(): void {
@@ -104,11 +103,13 @@ export function LamportGeneratorThread(input: ILamportGeneratorThreadInput, done
         }
     
         private sha512(data: string): string {
-            this.md512.update(forge.util.encodeUtf8(data));
+            this.md512.update(sjcl.codec.utf8String.toBits(data));
     
-            let output = this.md512.digest();
+            let output = this.md512.finalize();
     
-            return forge.util.encode64(output);
+            this.md512.reset();
+    
+            return sjcl.codec.base64.fromBits(output);
         }
     
         private sha256(data: string): string {
