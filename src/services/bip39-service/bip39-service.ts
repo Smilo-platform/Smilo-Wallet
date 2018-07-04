@@ -148,22 +148,24 @@ export class BIP39Service implements IBIP39Service {
                     throw 'Strength should be divisible by 32, but it is not (' + r + ').';
                 }
 
-                // Generate a random collection of bytes
-                let randomString = forge.random.getBytesSync(strength / 8);
-                let forgeBuffer = forge.util.createBuffer(randomString, "raw");
-
-                let bytes = [];
-                while(forgeBuffer.length() > 0) {
-                    let byte = forgeBuffer.getByte();
-
-                    bytes.push(byte);
-                }
-                let byteBuffer = new Uint8Array(bytes);
-
-                return this.toMnemonic(byteBuffer);
+                return this.toMnemonic(this.getRandomBytes(strength));
             }
-        )
-        
+        );
+    }
+
+    private getRandomBytes(strength: number): Uint8Array {
+        // Generate a random collection of bytes
+        let randomString = forge.random.getBytesSync(strength / 8);
+        let forgeBuffer = forge.util.createBuffer(randomString, "raw");
+
+        let bytes = [];
+        while(forgeBuffer.length() > 0) {
+            let byte = forgeBuffer.getByte();
+
+            bytes.push(byte);
+        }
+
+        return new Uint8Array(bytes);
     }
 
     private toMnemonic(byteArray): string {

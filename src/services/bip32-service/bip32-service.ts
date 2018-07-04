@@ -5,12 +5,12 @@ export interface IBIP32Service {
 }
 
 declare var bitcoinjs: {
-    getPrivateKeyFromSeed(seed: string, index?: number): string;
+    getPrivateKeyFromSeed(seed: string, index?: number, coinType?: number): string;
 }
 
 @Injectable()
 export class BIP32Service implements IBIP32Service {
-    getPrivateKey(seedHex: string, index?: number): string {
-        return bitcoinjs.getPrivateKeyFromSeed(seedHex, index);
+    getPrivateKey(seedHex: string, index?: number, coinType?: number): string {
+        return bitcoinjs.getPrivateKeyFromSeed(seedHex, index, coinType);
     }
 }
