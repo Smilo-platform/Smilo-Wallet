@@ -256,78 +256,80 @@ export class WalletImportKeystorePage {
     if(typeof(value) != "string")
       return false;
 
-    if(value.length == 0)
-      return false;
-
     return true;
   }
 
   /**
    * This method is called when the user clicks the import button to import a keystore file
    */
-  importKeystoreFile(): void {
-    // When clicking the button create an input element
-    var input = document.createElement('input');
-    // With type file so the browser understands the file browser should be opened on click
-    input.type = 'file';
-    // Click it as if the user clicked the generated input 
-    input.click();
-    // When the user has selected a file in the file browser
-    input.onchange = (e) => {
-      // Cast the target to any type so we can access the files array
-      let target: any = event.target;
-      // Get the first selected file (we should only get one)
-      let file: File = target.files[0];
-      // Get the file type
-      let type = file.type;
-      // Get the file name
-      let filename = file.name;
-      // Get the first five characters of the file name
-      let startChars = file.name.substring(0, 5);
-      // The type should be empty (no extension) and the file should start with UTC--
-      if (type === "" && startChars === "UTC--") {
-        // So the type and start of the name is correct
-        this.fileKeystoreIsInvalidNameExtension = false;
-        // Read the text from the blob
-        this.readInputFromBlob(file, filename);
-      // So the type or start of the file is not correct  
-      } else {
-        // Set to true so we can show in the UI
-        this.fileKeystoreIsInvalidNameExtension = true;
+  importedKeystoreFile(event: any) : void {
+    // Get the first selected file (we should only get one)
+    let file: File = event.target.files[0];
+    // Get the file type
+    let extension = file.type;
+    // Get the file name
+    let filename = file.name;
+    // Process the input
+    this.processImportedKeystoreFile(filename, extension, file);
+  }
+
+  /**
+   * This method processes the input of the imported keystore file
+   * @param filename The name of the file
+   * @param extension The file extension
+   * @param file The actual file
+   */
+  processImportedKeystoreFile(filename: string, extension: string, file: File): void {
+    // Get the first five characters of the file name
+    let startChars = filename.substring(0, 5);
+    // The type should be empty (no extension) and the file should start with UTC--
+    if (extension === "" && startChars === "UTC--") {
+      // So the type and start of the name is correct
+      this.fileKeystoreIsInvalidNameExtension = false;
+      // Read the text from the blob
+      this.readInputFromBlob(file, filename);
+    // So the type or start of the file is not correct  
+    } else {
+      // Set to true so we can show in the UI
+      this.fileKeystoreIsInvalidNameExtension = true;
+    }
+  }
+
+  readInputFromBlob(uri: Blob, filename: string): Promise<void> {
+    let reader = new FileReader();
+    return new Promise((resolve, reject) => {
+      reader.readAsText(uri);
+      reader.onload = (event) => {
+        this.processInputBlob(event, filename);
+        resolve();
+      };
+      reader.onabort = (event) => {
+        reject("Filereader on abort");
       }
-    }
+      reader.onerror = (event) => {
+        reject("Filereader on error");
+      }
+    });
   }
 
-  readInputFromBlob(uri: Blob, filename: string) {
-    const reader = new FileReader();
-    reader.onload = (event) => {
-        let target: any = event.target;
-        let file: string = target.result;
-        const allLines = file.split(/\r\n|\n/);
-        try {
-          let keyStore = JSON.parse(allLines[0]) as IKeyStore;
-          if (this.isValidKeyStore(keyStore)) {
-            this.keyStore = keyStore;
-            this.fileImportedName = filename;
-          } else {
-            this.fileKeystoreInvalidData = true;
-          }
-        } catch (exception) {
-          this.fileKeystoreInvalidData = true;
-        }
-    };
-    reader.readAsText(uri);
-  }
-
-  dataURItoBlob(dataURI) {
-    var byteString = atob(dataURI.split(',')[1]);
-    var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
-    var ab = new ArrayBuffer(byteString.length);
-    var ia = new Uint8Array(ab);
-    for (var i = 0; i < byteString.length; i++) {
-        ia[i] = byteString.charCodeAt(i);
+  /**
+   * This function processes a file input
+   * @param event The event triggered
+   * @param filename The name of the file
+   */
+  processInputBlob(event: any, filename: string): void {
+    let file: string = event.target.result;
+    try {
+      let allLines = file.split(/\r\n|\n/);
+      let keyStore = JSON.parse(allLines[0]) as IKeyStore;
+      if (this.isValidKeyStore(keyStore)) {
+        this.keyStore = keyStore;
+        this.fileImportedName = filename;
+      } else {
+        this.fileKeystoreInvalidData = true;
+      }
+    } catch (exception) {
+      this.fileKeystoreInvalidData = true;
     }
-    var blob = new Blob([ab], {type: mimeString});
-    return blob;
   }
 }

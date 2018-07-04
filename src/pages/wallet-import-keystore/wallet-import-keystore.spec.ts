@@ -183,7 +183,7 @@ describe("WalletImportKeystorePage", () => {
     expect(comp.clipboardDataIsValid()).toBeFalsy("Data should not be valid if key store is marked as invalid");
   });
 
-  it("should prepare the wallet correctly", () => {
+  it("should prepare the wallet correctly by clipboard", () => {
     spyOn(keyStoreService, "decryptKeyStore").and.returnValue("SOME_PRIVATE_KEY");
     spyOn(walletService, "generateId").and.returnValue("WALLET_ID");
 
@@ -300,4 +300,242 @@ describe("WalletImportKeystorePage", () => {
       }
     );
   });
+
+  it("should return false when keystore string is not long enough and not valid and true when long enough and valid", () => {
+    comp.keyStoreString = "";
+    comp.clipBoardKeyStoreIsInvalid = true;
+
+    expect(comp.canShowClipboardPasswordInput()).toBe(false);
+
+    comp.keyStoreString = "this is not a valid keystore but long enough and we are faking the boolean to be false";
+    comp.clipBoardKeyStoreIsInvalid = false;
+
+    expect(comp.canShowClipboardPasswordInput()).toBe(true);
+  })
+
+  it("should return false when the password is not long enough and the password can not be shown and true when the password is long enough and the password can be shown", () => {
+    spyOn(comp, "canShowClipboardPasswordInput").and.returnValue(true);
+
+    comp.password = "";
+    expect(comp.canShowClipboardWalletNameInput()).toBe(false);
+
+    comp.password = "long enough password";
+    expect(comp.canShowClipboardWalletNameInput()).toBe(true);
+  })
+
+  it("should return true when the name of the imported wallet has zero length and false if the name has atleast one character", () => {
+    comp.fileImportedName = "";
+    expect(comp.canShowFileChooseImportButton()).toBe(true);
+
+    comp.fileImportedName = "more than one char it is!";
+    expect(comp.canShowFileChooseImportButton()).toBe(false);
+  })
+
+  it("should return false when the name has zero length and true when the file imported name is atleast one character", () => {
+    comp.fileImportedName = "";
+    expect(comp.canShowFilePasswordInputAndImportedName()).toBe(false);
+
+    comp.fileImportedName = "more than one char it is!";
+    expect(comp.canShowFilePasswordInputAndImportedName()).toBe(true);
+  })
+
+  it("should return false when the password has zero length and the file import name can be shown and true when the file import password is atleast one character", () => {
+    spyOn(comp, "canShowFilePasswordInputAndImportedName").and.returnValue(true);
+
+    comp.filePassword = "";
+    expect(comp.canShowFileImportNameInput()).toBe(false);
+
+    comp.filePassword = "more than one char it is!";
+    expect(comp.canShowFileImportNameInput()).toBe(true);
+  })
+
+  it("should return false when the file import name cannot be shown and that name has zero characters and true when the file import name is shown and atleast one character", () => {
+    spyOn(comp, "canShowFileImportNameInput").and.returnValue(true);
+
+    comp.fileWalletNameImport = "";
+    expect(comp.canShowFileImportButton()).toBe(false);
+
+    comp.fileWalletNameImport = "more than one char it is!";
+    expect(comp.canShowFileImportButton()).toBe(true);
+  })
+
+  it("should call importWalletByCurrentKeystoreInfo if the keystore data is valid", () => {
+    spyOn(comp, "keystoreFileDataIsValid").and.returnValue(true);
+    spyOn(comp, "importWalletByCurrentKeystoreInfo");
+
+    comp.importByFile();
+
+    expect(comp.importWalletByCurrentKeystoreInfo).toHaveBeenCalled();
+  })
+
+  it("should set clipboard password to invalid when preparing the wallet with an invalid password", (done) => {
+    spyOn(comp, "prepareWallet").and.returnValue(null);
+    comp.importWalletByCurrentKeystoreInfo("clipboard").then(data => {
+      expect(comp.clipboardPasswordIsInvalid).toBe(true);
+      done();
+    });
+  })
+
+  it("should set file password to invalid when preparing the wallet with an invalid password", (done) => {
+    spyOn(comp, "prepareWallet").and.returnValue(null);
+    comp.importWalletByCurrentKeystoreInfo("file").then(data => {
+      expect(comp.filePasswordIsInvalid).toBe(true);
+      done();
+    });
+  })
+
+  it("should prepare the wallet correctly by file", () => {
+    spyOn(keyStoreService, "decryptKeyStore").and.returnValue("SOME_PRIVATE_KEY");
+    spyOn(walletService, "generateId").and.returnValue("WALLET_ID");
+
+    comp.fileWalletNameImport = "name";
+    comp.keyStore = <any>{};
+    comp.filePassword = "pass123";
+
+    let wallet = comp.prepareWallet("file");
+
+    expect(wallet).toEqual({
+      id: "WALLET_ID",
+      type: "local",
+      name: "name",
+      publicKey: null,
+      keyStore: comp.keyStore,
+      lastUpdateTime: null
+    });
+
+    expect(keyStoreService.decryptKeyStore).toHaveBeenCalledWith(comp.keyStore, "pass123");
+  });
+
+  it("should return null after the decryptkeystore returned null as a private key as either file or clipboard", () => {
+    spyOn(comp, "prepareWallet").and.callThrough();
+    spyOn(keyStoreService, "decryptKeyStore").and.returnValue(null);
+
+    expect(comp.prepareWallet("file")).toBeNull();
+  })
+
+  it("should set the variables to default correctly after resetting the keystore file", () => {
+    spyOn(comp, "resetCurrentKeystoreFile").and.callThrough();
+
+    comp.resetCurrentKeystoreFile();
+
+    expect(comp.clipboardPasswordIsInvalid).toBe(false);
+    expect(comp.filePasswordIsInvalid).toBe(false);
+    expect(comp.fileKeystoreIsInvalidNameExtension).toBe(false);
+    expect(comp.fileKeystoreInvalidData).toBe(false);
+    expect(comp.fileImportedName).toBe("");
+    expect(comp.filePassword).toBe("");
+    expect(comp.fileWalletNameImport).toBe("");
+  })
+
+  it("should return true when the file keystore data is not invalid and the keystore filename extension is not valid and false when the file keystore data is invalid or keystore filename extension invalid", () => {
+    comp.fileKeystoreInvalidData = true;
+    comp.fileKeystoreIsInvalidNameExtension = true;
+
+    expect(comp.keystoreFileDataIsValid()).toBe(false);
+
+    comp.fileKeystoreInvalidData = false;
+    comp.fileKeystoreIsInvalidNameExtension = false;
+
+    expect(comp.keystoreFileDataIsValid()).toBe(true);
+  })
+
+  it("should set clipBoardKeyStoreIsInvalid to false when then the keystore length is zero", () => {
+    spyOn(comp, "keyStoreString").and.callThrough();
+
+    comp.keyStoreString = "";
+    comp.onKeyStoreChanged();
+    expect(comp.clipBoardKeyStoreIsInvalid).toBe(false);
+  })
+
+  it("should set clipBoardKeyStoreIsInvalid to true when the keystore JSON format is valid but the data is not", () => {
+    spyOn(comp, "keyStoreString").and.callThrough();
+    spyOn(comp, "isValidKeyStore").and.returnValue(false);
+
+    comp.keyStoreString = "{}";
+    comp.onKeyStoreChanged();
+    expect(comp.clipBoardKeyStoreIsInvalid).toBe(true);
+    expect(comp.keyStore).toBe(null);
+  })
+
+  it("should set clipBoardKeyStoreIsInvalid to false when the keystore JSON format is valid and the data is also", () => {
+    spyOn(comp, "keyStoreString").and.callThrough();
+    spyOn(comp, "isValidKeyStore").and.returnValue(true);
+
+    comp.keyStoreString = "{}";
+    comp.onKeyStoreChanged();
+    expect(comp.clipBoardKeyStoreIsInvalid).toBe(false);
+    expect(comp.keyStore).toEqual(Object({  }));
+  })
+
+  it("should check if process method is called after calling the importedKeystoreFile method", () => {
+    spyOn(comp, "importedKeystoreFile").and.callThrough();
+    spyOn(comp, "processImportedKeystoreFile");
+
+    comp.importedKeystoreFile({target: {files: [{type: "", name: ""}]}});
+
+    expect(comp.processImportedKeystoreFile).toHaveBeenCalled();
+  })
+
+  it("should set an error variable to true if conditions are not met", () => {
+    spyOn(comp, "processImportedKeystoreFile").and.callThrough();
+    spyOn(comp, "readInputFromBlob");
+
+    comp.processImportedKeystoreFile("", "", null);
+    expect(comp.fileKeystoreIsInvalidNameExtension).toBe(true);
+    expect(comp.readInputFromBlob).not.toHaveBeenCalled();
+    comp.fileKeystoreIsInvalidNameExtension = false;
+
+    comp.processImportedKeystoreFile("UTC--TEXT", ".zip", null);
+    expect(comp.fileKeystoreIsInvalidNameExtension).toBe(true);
+    expect(comp.readInputFromBlob).not.toHaveBeenCalled();
+    comp.fileKeystoreIsInvalidNameExtension = false;
+
+    comp.processImportedKeystoreFile("UTC--TEXT", "", null);
+    expect(comp.fileKeystoreIsInvalidNameExtension).toBe(false);
+    expect(comp.readInputFromBlob).toHaveBeenCalled();
+  })
+
+  it("should call processInputBlob", (done) => {
+    spyOn(comp, "readInputFromBlob").and.callThrough();
+    spyOn(comp, "processInputBlob");
+
+    let promiseThen = comp.readInputFromBlob(new Blob(), "UTC--TEXT").then(data => {
+      expect(comp.processInputBlob).toHaveBeenCalled();
+    });
+
+    let promiseCatch = comp.readInputFromBlob(null, null).catch(data => {
+      expect(comp.processInputBlob).not.toHaveBeenCalled();
+    });
+    Promise.all([promiseThen, promiseCatch]).then(data => {
+      done();
+    });
+  })
+
+  it("should set fileKeystoreInvalidData to true because the keystore is not valid", () => {
+    spyOn(comp, "processInputBlob").and.callThrough();
+    spyOn(comp, "isValidKeyStore").and.returnValue(false);
+
+    comp.processInputBlob({target: {files: [{type: "", name: ""}], result: "piece \n of \n text"}}, "filename");
+
+    expect(comp.fileKeystoreInvalidData).toBe(true);
+  })
+
+  it("should set fileKeystoreInvalidData to true because the text is not valid / missing", () => {
+    spyOn(comp, "processInputBlob").and.callThrough();
+
+    comp.processInputBlob({target: {files: [{type: "", name: ""}]}}, "filename");
+
+    expect(comp.fileKeystoreInvalidData).toBe(true);
+  })
+
+  it("should set fileKeystoreInvalidData to false because the keystore is valid", () => {
+    spyOn(comp, "processInputBlob").and.callThrough();
+    spyOn(comp, "isValidKeyStore").and.returnValue(true);
+    
+    let keystore = {"cipher":"AES-CTR","cipherParams":{"iv":"a/ÿûÅ\u0014)\u0018rêYgÅ.¾DÖwW;6×\u000e\u0016aqr"},"cipherText":"JIH","keyParams":{"salt":"G\u0004'G&\u0005ÃµÈ\u0010¶q\u0007vÍ\u0012\u0019O£M3ý`~põqög`\u000b\n\u0003¯4\\¤\u0019BùøÃ{!êjô\\Ý\u001c ½Îê\u0005\u000fN«Î¥^²Ôô`LEK_0\u0016{×ôºæç¯F\u0006Éd\u0012Ò`6ÉS\u0000îK¬D¡ÜnÛ¡\u001dc¸Éz\n\u001fë*P$}Lò?%±à\u0000$Ù¿B\u001fëÒ<@dT3'ê\u000bXï¡\tcÿÑÎÉ~\u00125\u001e¶÷\u001bû\u0007S@\u0002\u0001\u000fù/\u0005¡ö+°¿BC\u0015Íêü\u0016f\nÑÃ&öê\u0019X]\u000e(<ä\u0000=AósµcU£é\u0011ÒÀæÿ\u0018:\u0000¡íÓN+¹\u0013\u0003Py`ÿÈË5\u0018H1ÑRï¼","iterations":128,"keySize":32},"controlHash":"e845922979b1fad26a716ac155a4cbb822c6538561d7e575206190e87200d4c7"};
+
+    comp.processInputBlob({target: {files: [{type: "", name: ""}], result: JSON.stringify(keystore)}}, "correctname");
+
+    expect(comp.fileKeystoreInvalidData).toBe(false);
+  })
 });
