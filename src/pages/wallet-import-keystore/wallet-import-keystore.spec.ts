@@ -17,7 +17,6 @@ import { ILocalWallet } from "../../models/ILocalWallet";
 import { NAVIGATION_ORIGIN_KEY } from "../wallet/wallet";
 import { PrepareWalletPage } from "../prepare-wallet/prepare-wallet";
 import { ComponentsModule } from "../../components/components.module";
-import { EventListener } from "@angular/core/src/debug/debug_node";
 
 describe("WalletImportKeystorePage", () => {
   let comp: WalletImportKeystorePage;
