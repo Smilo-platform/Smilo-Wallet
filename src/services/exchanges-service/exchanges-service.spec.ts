@@ -4,6 +4,7 @@ import { MockTranslateService } from "../../../test-config/mocks/MockTranslateSe
 import { MockHttpClient } from "../../../test-config/mocks/MockHttpClient";
 import { MockExchangesService } from "../../../test-config/mocks/MockExchangesSevice";
 import { Observable } from "rxjs/Observable";
+import "rxjs/add/observable/of";
 
 describe("ExchangesService", () => {
     let service: ExchangesService;
