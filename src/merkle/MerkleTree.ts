@@ -182,6 +182,10 @@ export class MerkleTree {
         return layers;
     }
 
+    private static createThreadPool(): Pool {
+        return new Pool();
+    }
+
     private static generateLeafKeys(privateKey: string, layerCount: number, platform: Platform, progressUpdate?: (progress: number) => void): Promise<string[]> {
         return new Promise((resolve, reject) => {
             let prng = new (<any>Math).seedrandom(privateKey);
@@ -208,7 +212,7 @@ export class MerkleTree {
             }
 
             // Create a thread pool
-            let pool = new Pool();
+            let pool = MerkleTree.createThreadPool();
             pool.run(LamportGeneratorThread, scripts);
 
             let totalJobs = Math.ceil(totalKeys / MerkleTree.KEYS_PER_JOB);
