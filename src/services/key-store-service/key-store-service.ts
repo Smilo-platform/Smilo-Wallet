@@ -24,6 +24,14 @@ export const CIPHER_ALGO = "AES-CTR";
 export interface IKeyStoreService {
     createKeyStore(privateKey: string, password: string): IKeyStore;
     decryptKeyStore(keyStore: IKeyStore, password: string): string;
+
+    getControlHash(password: string, cipherText: string): string;
+
+    getInitialisationVector(): string;
+
+    getSalt(): string;
+
+    generateKey(password: string, salt: string, iterations?: number, size?: number): string;
 }
 
 @Injectable()
