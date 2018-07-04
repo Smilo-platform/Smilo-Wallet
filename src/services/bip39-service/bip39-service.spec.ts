@@ -30,6 +30,8 @@ describe("BIP39Service", () => {
     it("should generate correct mnemonic phrases", (done) => {
         let testIndex = 0;
 
+        // Spy on the (private) getRandomBytes method. Instead of
+        // returning true random bytes we return a predefined value.
         spyOn(<any>service, "getRandomBytes").and.callFake(() => {
             let testVector = phraseTestVectors.english[testIndex];
 
@@ -100,7 +102,7 @@ describe("BIP39Service", () => {
             {
                 phrases: [
                     "one two three",
-                    "One Two Three",
+                    "One Two Three", // Capitals should not matter
                     "zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo wrong",
                     "panda eyebrow bullet gorilla call smoke muffin taste mesh discover soft ostrich alcohol speed nation flash devote level hobby quick inner drive ghost inside"
 
@@ -114,7 +116,7 @@ describe("BIP39Service", () => {
                 phrases: [
                     "bla blu ble blo bla ble",
                     "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon totesmehotes",
-                    "zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo one",
+                    "zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo dubbelgeman",
                     "k21n2k n2k1l28 nsdklk552 dnvsldk4 12nklsjf1 nalksfj124"
                 ],
                 result: {
@@ -127,9 +129,9 @@ describe("BIP39Service", () => {
             {
                 phrases: [
                     "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon able",
-                    "letter advice cage absurd amount doctor acoustic avoid letter advice cage letter",
+                    "letter advice cage absurd amount doctor acoustic avoid letter advice cage abandon",
                     "letter advice cage absurd amount doctor acoustic avoid letter advice cage absurd amount doctor acoustic avoid letter abandon",
-                    "legal winner thank year wave sausage worth useful legal winner thank year wave sausage worth useful legal winner thank year wave sausage worth legal"
+                    "legal winner thank year wave sausage worth useful legal winner thank year wave sausage worth useful legal winner thank year wave sausage worth sausage"
                 ],
                 result: {
                     isValid: false,
@@ -162,7 +164,7 @@ describe("BIP39Service", () => {
                     () => {
                         return service.check(phrase).then(
                             (result) => {
-                                expect(result).toEqual(<any>test.result);
+                                expect(result).toEqual(<any>test.result, `'${ phrase }' is invalid`);
                             }
                         );
                     }
