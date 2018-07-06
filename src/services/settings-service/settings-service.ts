@@ -22,7 +22,7 @@ export interface ISettingsService {
 
 @Injectable()
 export class SettingsService {
-    theme: BehaviorSubject<string>;
+    readonly theme: BehaviorSubject<string>;
 
     constructor(private storage: Storage) {
         this.theme = new BehaviorSubject('light-theme');
@@ -37,11 +37,11 @@ export class SettingsService {
     }
 
     saveNightModeSettings(theme: ThemeType): Promise<any> {
-        return this.storage.set("night_mode", JSON.parse(JSON.stringify(theme)));
+        return this.storage.set("night_mode", theme);
     }
 
     saveLanguageSettings(language: LanguageType): Promise<any> {
-        return this.storage.set("language", JSON.parse(JSON.stringify(language)));
+        return this.storage.set("language", language);
     }
 
     getNightModeSettings(): Promise<string> {

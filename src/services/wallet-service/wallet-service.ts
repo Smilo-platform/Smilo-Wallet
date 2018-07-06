@@ -18,7 +18,7 @@ export interface IWalletService {
 
 @Injectable()
 export class WalletService implements IWalletService {
-    private wallets: IWallet[]; 
+    private wallets: IWallet[] = []; 
 
     constructor(private storage: Storage, 
                 private merkleTreeService: MerkleTreeService) {
@@ -30,7 +30,7 @@ export class WalletService implements IWalletService {
      * Therefore any changes you make to these wallets will not persist unless you call the `store` method on this service.
      */
     getAll(): Promise<IWallet[]> {
-        if(this.wallets) {
+        if(this.wallets.length > 0) {
             // We already loaded the wallets
             return Promise.resolve(this.getClonedWallets());
         } else {

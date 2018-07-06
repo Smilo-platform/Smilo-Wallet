@@ -255,12 +255,6 @@ describe("WalletOverviewPage", () => {
     expect(navController.push).toHaveBeenCalledWith(LandingPage);
   });
 
-  // it("should return false after displaying the chart because the chart currencies and amounts are not defined", () => {
-  //   let result = comp.displayChart();
-
-  //   expect(result).toBe(false);
-  // })
-
   it("should call getAllWallets and getAvailableCurrencies", () => {
     spyOn(comp, "getAllWallets");
     spyOn(comp, "getAvailableExchanges");
@@ -275,23 +269,60 @@ describe("WalletOverviewPage", () => {
     spyOn(comp, "getWalletBalance");
     comp.getAllWallets().then(() => {
       expect(comp.wallets).toEqual(<any>[
-        {id: "012d294e-cb11-439b-937a-12d47a52c305",
-            type: "local",
-            name: "Biosta",
-            publicKey: "ETm9QUJLVdJkTqRojTNqswmeAQGaofojJJ",
-            encryptedPrivateKey: "E9873D79C6D87DC0FB6A5778633389F4453213303DA61F20BD67FC233AA33262"},
-        {id: "9b5329ff-c683-42a5-9165-4093e4076166",
-            type: "local",
-            name: "Labilo",
-            publicKey: "ELsKCchf9rcGsufjRR62PG5Fn5dFinfgeN",
-            encryptedPrivateKey: "E9873D79C6D87DC0FB6A5778633389F4453213303DA61F20BD67FC233AA33262"},
-        {id: "a2e16167-fedb-47d2-8856-2b3f97389c35",
-            type: "local",
-            name: "Zalista",
-            publicKey: "EZ7tP3CBdBKrB9MaBgZNHyDcTg5TFRRpaY",
-            encryptedPrivateKey: "E9873D79C6D87DC0FB6A5778633389F4453213303DA61F20BD67FC233AA33262"}
-        ]);
-
+        {id : "4b6cff11-5888-43bb-bde1-911e12b659e6",
+            keyStore: { 
+                cipher: "AES-CTR",
+                cipherParams: {
+                    iv: "a/ÿûÅ)rêYgÅ.¾DÖwW;6×aqr"
+                },
+                cipherText : "JIH", 
+                controlHash : "e845922979b1fad26a716ac155a4cbb822c6538561d7e575206190e87200d4c7",
+                keyParams: {
+                    iterations: 128,
+                    keySize: 32,
+                    salt: "G'G&ÃµÈ¶qvÍO£M3ý`~põqög` ↵¯4\¤BùøÃ{!êjô\Ý ½ÎêN«Î¥^²Ôô`LEK_0{×ôºæç¯FÉdÒ`6ÉSîK¬D¡Ün Û¡c¸Éz↵ë*P$}Lò?%±à$Ù¿BëÒ<@dT3'ê Xï¡ cÿÑÎÉ~5¶÷ûS@ù/¡ö+°¿BCÍêüf↵ÑÃ&öêX](<ä=AósµcU£éÒÀæÿ:¡íÓN+¹Py`ÿÈË5H1ÑRï¼" 
+                },
+            },
+            lastUpdateTime: null,
+            name: "Hosha",
+            publicKey : "S5NEKHPKXS7F75IVKGVS4A56U4FF6VM5U4YF64",
+            type : "local"},
+        {id : "4b6cff11-5888-43bb-bde1-911e12b659e6",
+            keyStore: { 
+                cipher: "AES-CTR",
+                cipherParams: {
+                    iv: "a/ÿûÅ)rêYgÅ.¾DÖwW;6×aqr"
+                },
+                cipherText : "JIH", 
+                controlHash : "e845922979b1fad26a716ac155a4cbb822c6538561d7e575206190e87200d4c7",
+                keyParams: {
+                    iterations: 128,
+                    keySize: 32,
+                    salt: "G'G&ÃµÈ¶qvÍO£M3ý`~põqög` ↵¯4\¤BùøÃ{!êjô\Ý ½ÎêN«Î¥^²Ôô`LEK_0{×ôºæç¯FÉdÒ`6ÉSîK¬D¡Ün Û¡c¸Éz↵ë*P$}Lò?%±à$Ù¿BëÒ<@dT3'ê Xï¡ cÿÑÎÉ~5¶÷ûS@ù/¡ö+°¿BCÍêüf↵ÑÃ&öêX](<ä=AósµcU£éÒÀæÿ:¡íÓN+¹Py`ÿÈË5H1ÑRï¼" 
+                },
+            },
+            lastUpdateTime: null,
+            name: "Bosha",
+            publicKey : "S5NEKHPKXS7F75IVKGVS4A56U4FF6VM5U4YF64",
+            type : "local"},
+        {id : "4b6cff11-5888-43bb-bde1-911e12b659e6",
+            keyStore: { 
+                cipher: "AES-CTR",
+                cipherParams: {
+                    iv: "a/ÿûÅ)rêYgÅ.¾DÖwW;6×aqr"
+                },
+                cipherText : "JIH", 
+                controlHash : "e845922979b1fad26a716ac155a4cbb822c6538561d7e575206190e87200d4c7",
+                keyParams: {
+                    iterations: 128,
+                    keySize: 32,
+                    salt: "G'G&ÃµÈ¶qvÍO£M3ý`~põqög` ↵¯4\¤BùøÃ{!êjô\Ý ½ÎêN«Î¥^²Ôô`LEK_0{×ôºæç¯FÉdÒ`6ÉSîK¬D¡Ün Û¡c¸Éz↵ë*P$}Lò?%±à$Ù¿BëÒ<@dT3'ê Xï¡ cÿÑÎÉ~5¶÷ûS@ù/¡ö+°¿BCÍêüf↵ÑÃ&öêX](<ä=AósµcU£éÒÀæÿ:¡íÓN+¹Py`ÿÈË5H1ÑRï¼" 
+                },
+            },
+            lastUpdateTime: null,
+            name: "Losha",
+            publicKey : "S5NEKHPKXS7F75IVKGVS4A56U4FF6VM5U4YF64",
+            type : "local"}]);
       done();
     });
   })
