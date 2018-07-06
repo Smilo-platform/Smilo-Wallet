@@ -7,7 +7,7 @@ import { ILocalWallet } from "../../models/ILocalWallet";
 import { Platform } from "ionic-angular/platform/platform";
 
 export interface IMerkleTreeService {
-    generate(wallet: IWallet, password: string, progressUpdate: (progress: number) => void): Promise<void>;
+    generate(wallet: IWallet, password: string, progressUpdate?: (progress: number) => void): Promise<void>;
 
     get(wallet: IWallet, password: string): Promise<MerkleTree>;
 
@@ -24,9 +24,11 @@ export class MerkleTreeService implements IMerkleTreeService {
         
     }
 
-    generate(wallet: ILocalWallet, password: string, progressUpdate: (progress: number) => void): Promise<void> {
+    generate(wallet: ILocalWallet, password: string, progressUpdate?: (progress: number) => void): Promise<void> {
         // Decrypt private key
         let privateKey = this.keyStoreService.decryptKeyStore(wallet.keyStore, password);
+        if(!privateKey)
+            return Promise.reject("Could not decrypt keystore");
 
         // Start generating the Merkle Tree
         return MerkleTree.generate(privateKey, 14, this.platform, progressUpdate).then(
@@ -85,6 +87,11 @@ export class MerkleTreeService implements IMerkleTreeService {
                         )
                     );
                 }
+
+                // Finaly remove the config
+                promises.push(
+                    this.storage.remove(MerkleTree.getConfigStorageKey(wallet))
+                );
 
                 return Promise.all(promises).then<void>();
             }
