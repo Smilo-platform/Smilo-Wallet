@@ -4,6 +4,7 @@ import { MerkleTree } from "../../src/merkle/MerkleTree";
 import { MockMerkleTree } from "./MockMerkleTree";
 
 export class MockMerkleTreeService implements IMerkleTreeService {
+    
     generate(wallet: IWallet, password: string, progressUpdate: (progress: number) => void): Promise<void> {
         return Promise.resolve();
     }

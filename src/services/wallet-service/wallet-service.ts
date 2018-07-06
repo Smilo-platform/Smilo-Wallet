@@ -4,7 +4,7 @@ import { Storage } from "@ionic/storage";
 import 'rxjs/add/operator/map';
 import { MerkleTreeService } from "../merkle-tree-service/merkle-tree-service";
 
-const WALLET_STORAGE_KEY = "wallets";
+export const WALLET_STORAGE_KEY = "wallets";
 
 export interface IWalletService {
     getAll(): Promise<IWallet[]>;
@@ -33,18 +33,16 @@ export class WalletService implements IWalletService {
         if(this.wallets) {
             // We already loaded the wallets
             return Promise.resolve(this.getClonedWallets());
-        }
-        else {
-            return this.storage.get(WALLET_STORAGE_KEY).then(
-                (wallets) => {
-                    // If no wallets are found we fall back to an empty json array.
-                    if(Array.isArray(wallets))
+        } else {
+            return this.storage.get(WALLET_STORAGE_KEY).then(wallets => {
+                    // If there are wallets found
+                    if (Array.isArray(wallets))
+                        // Return the wallets
                         return wallets;
+                    // Else fall back to an empty array    
                     else
                         return [];
-                }
-            ).then(
-                (wallets) => {
+                }).then(wallets => {
                     // Do some sanity checks on the wallets here?
                     this.wallets = wallets;
     
@@ -64,7 +62,7 @@ export class WalletService implements IWalletService {
 
         let index = this.getWalletIndex(wallet);
 
-        if(index == -1) {
+        if (index === -1) {
             // This is a new wallet.
             this.wallets.push(wallet);
         }
@@ -84,7 +82,7 @@ export class WalletService implements IWalletService {
     remove(wallet: IWallet): Promise<void> {
         let index = this.getWalletIndex(wallet);
 
-        if(index != -1) {
+        if (index != -1) {
             this.wallets.splice(index, 1);
 
             // Write wallets back to disk and remove the wallet Merkle Tree.
@@ -103,7 +101,7 @@ export class WalletService implements IWalletService {
      * Generates a new wallet id which is unique among the current set of wallets.
      */
     generateId() {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
             let r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
             return v.toString(16);
         });
