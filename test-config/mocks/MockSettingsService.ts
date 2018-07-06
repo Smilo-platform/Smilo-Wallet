@@ -13,7 +13,7 @@ export class MockSettingService implements ISettingsService {
         return Promise.resolve();
     }
     
-    saveLanguageSettings(language: "Engels" | "Nederlands"): Promise<void> {
+    saveLanguageSettings(language: "en" | "nl"): Promise<void> {
         return Promise.resolve();
     }
 
