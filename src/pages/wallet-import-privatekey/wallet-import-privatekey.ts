@@ -35,7 +35,7 @@ export class WalletImportPrivatekeyPage {
       return this.goToPrepareWalletPage(wallet, this.password);
     }
     else {
-      return Promise.resolve();
+      return Promise.reject("");
     }
   }
 

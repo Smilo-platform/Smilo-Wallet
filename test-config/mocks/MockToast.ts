@@ -1,8 +1,8 @@
-import { NavOptions, Toast, Config } from "ionic-angular";
+import { NavOptions, Toast, Config, App, Platform } from "ionic-angular";
 
 export class MockToast extends Toast {
     constructor() {
-        super(null, {}, new Config());
+        super(new App(new Config(), new Platform()), {}, new Config());
     }
 
     present(navOptions?: NavOptions): Promise<any> {

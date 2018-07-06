@@ -9,6 +9,10 @@ import { WalletService } from "../../services/wallet-service/wallet-service";
 import { TranslateService } from "@ngx-translate/core";
 import { WalletErrorPage } from "../wallet-error/wallet-error";
 import { Platform } from "ionic-angular/platform/platform";
+import { WalletExtraImportPage, IWalletExtraImportDismissData } from "../wallet-extra-import/wallet-extra-import";
+import { BIP39Service } from "../../services/bip39-service/bip39-service";
+import { BIP32Service } from "../../services/bip32-service/bip32-service";
+import { KeyStoreService } from "../../services/key-store-service/key-store-service";
 
 @IonicPage()
 @Component({
@@ -37,6 +41,27 @@ export class PrepareWalletPage {
    */
   successMessage: string;
 
+  /**
+   * The passphrase used to generate this wallet.
+   * 
+   * This property is optionally set via the NavParams service.
+   * 
+   * If it is set together with the walletIndex property a prompt
+   * will be shown to the user after the Merkle Tree was generated asking
+   * the user if he/she wants to import another wallet.
+   */
+  passphrase: string;
+  /**
+   * The BIP44 address index used to generate this wallet.
+   * 
+   * This property is optionally set via the NavParams service.
+   * 
+   * If it is set together with the passphrase property a prompt
+   * will be shown to the user after the Merkle Tree was generated asking
+   * the user if he/she wants to import another wallet.
+   */
+  walletIndex: number;
+
   unregisterBackButtonAction: Function;
 
   constructor(private navCtrl: NavController, 
@@ -47,7 +72,10 @@ export class PrepareWalletPage {
               private translateService: TranslateService,
               private toastController: ToastController,
               private modalController: ModalController,
-              private platform: Platform) {
+              private platform: Platform,
+              private bip39Service: BIP39Service,
+              private bip32Service: BIP32Service,
+              private keyStoreService: KeyStoreService) {
     
   }
 
@@ -71,6 +99,8 @@ export class PrepareWalletPage {
   initialize() {
     this.wallet = this.navParams.get("wallet");
     this.password = this.navParams.get("password");
+    this.passphrase = this.navParams.get("passphrase");
+    this.walletIndex = this.navParams.get("walletIndex");
 
     this.translateService.get("prepare_wallet.toast.success").subscribe(
       (message) => {
@@ -85,6 +115,9 @@ export class PrepareWalletPage {
   }
 
   generateMerkleTree(): Promise<void> {
+    this.progress = 0;
+    this.activeStatusMessageIndex = 0;
+    
     return this.merkleTreeService.generate(this.wallet, this.password, this.onProgressUpdate).then(
       this.onMerkleTreeGenerated,
       this.onMerkleTreeFailed
@@ -120,8 +153,8 @@ export class PrepareWalletPage {
               duration: 1500,
               position: "top"
             }).present();
-    
-            return this.goBackToOriginPage();
+
+            return this.finalize();
           },
           (error) => {
             // Failed to store wallet...what do?
@@ -135,7 +168,7 @@ export class PrepareWalletPage {
   onMerkleTreeFailed = (error) => {
     // Display error, after user goes back to origin page.
     let modal = this.modalController.create(WalletErrorPage, {
-      error: error.toString()
+      error: error.message ? error.message : error.toString()
     }, {
       enableBackdropDismiss: false
     });
@@ -145,6 +178,71 @@ export class PrepareWalletPage {
     modal.onDidDismiss(() => {
       this.goBackToOriginPage();
     });
+  }
+
+  /**
+   * Finalizes this page after the Merkle Tree was generated.
+   * 
+   * If a passphrase and wallet index are defined the user will be asked
+   * if he/she wishes to import another wallet. Otherwise (or if the user declines)
+   * the wallet will navigate back to the origin page.
+   */
+  finalize(): Promise<void> {
+    let promptPromise = Promise.resolve<IWalletExtraImportDismissData>({importExtra: false});
+
+    if(this.passphrase && this.walletIndex !== undefined) {
+      // Set promise to a modal promise
+      let modal = this.modalController.create(WalletExtraImportPage, {
+        nextIndex: this.walletIndex + 1
+      }, {
+        enableBackdropDismiss: false
+      });
+
+      promptPromise = new Promise((resolve, reject) => {
+        modal.onDidDismiss((data) => {
+          resolve(data);
+        });
+
+        modal.present();
+      });
+    }
+    
+    return promptPromise.then(
+      (data) => {
+        if(data.importExtra) {
+          this.wallet = this.prepareWallet(data.name, data.index);
+          this.walletIndex = data.index;
+          
+          return this.generateMerkleTree();
+        }
+        else {
+          return this.goBackToOriginPage();
+        }
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
+  }
+
+  prepareWallet(walletName: string, walletIndex: number): ILocalWallet {
+    let seed = this.bip39Service.toSeed(this.passphrase);
+    let privateKey = this.bip32Service.getPrivateKey(seed, walletIndex);
+
+    // Create key store for private key
+    let keyStore = this.keyStoreService.createKeyStore(privateKey, this.password);
+
+    // Prepare wallet
+    let wallet: ILocalWallet = {
+      id: this.walletService.generateId(),
+      name: walletName,
+      type: "local",
+      publicKey: null,
+      keyStore: keyStore,
+      lastUpdateTime: null
+    };
+
+    return wallet;
   }
 
   goBackToOriginPage() {

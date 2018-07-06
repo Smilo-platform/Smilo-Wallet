@@ -6,7 +6,7 @@ import { MockNavParams } from "../../../test-config/mocks/MockNavParams";
 import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
 import { MockTranslationLoader } from "../../../test-config/mocks/MockTranslationLoader";
 import { IKeyStoreService, KeyStoreService } from "../../services/key-store-service/key-store-service";
-import { IPasswordService, PasswordService } from "../../services/password-service/password-service";
+import { IPasswordService, PasswordService, IPasswordValidationResult } from "../../services/password-service/password-service";
 import { MockKeyStoreService } from "../../../test-config/mocks/MockKeyStoreService";
 import { MockPasswordService } from "../../../test-config/mocks/MockPasswordService";
 import { MockWalletService } from "../../../test-config/mocks/MockWalletService";
@@ -14,13 +14,13 @@ import { IWalletService, WalletService } from "../../services/wallet-service/wal
 import { INavigationHelperService, NavigationHelperService } from "../../services/navigation-helper-service/navigation-helper-service";
 import { IKeyPair } from "../../models/IKeyPair";
 import { IKeyStore } from "../../models/IKeyStore";
-import { HomePage } from "../home/home";
 import { ILocalWallet } from "../../models/ILocalWallet";
 import { IBIP39Service, BIP39Service, IPassphraseValidationResult } from "../../services/bip39-service/bip39-service";
 import { MockBIP39Service } from "../../../test-config/mocks/MockBIP39Service";
 import { IBIP32Service, BIP32Service } from "../../services/bip32-service/bip32-service";
 import { MockBIP32Service } from "../../../test-config/mocks/MockBIP32Service";
 import { ComponentsModule } from "../../components/components.module";
+import { FormBuilder } from "@angular/forms";
 
 describe("WalletImportPassphrasePage", () => {
   let comp: WalletImportPassphrasePage;
@@ -61,7 +61,8 @@ describe("WalletImportPassphrasePage", () => {
         { provide: KeyStoreService, useValue: keyStoreService },
         { provide: NavigationHelperService, useValue: navigationHelperService },
         { provide: BIP39Service, useValue: bip39Service},
-        { provide: BIP32Service, useValue: bip32Service}
+        { provide: BIP32Service, useValue: bip32Service},
+        { provide: FormBuilder, useClass: FormBuilder }
       ]
     }).compileComponents();
   }));
@@ -78,6 +79,8 @@ describe("WalletImportPassphrasePage", () => {
     expect(comp.password).toBe("");
     expect(comp.passwordConfirm).toBe("");
     expect(comp.walletName).toBe("");
+    expect(comp.walletIndex).toBe(0);
+    expect(comp.form).toBeDefined();
 
     expect(comp.passphraseStatus).not.toBeDefined();
     expect(comp.passwordStatus).not.toBeDefined();
@@ -116,10 +119,6 @@ describe("WalletImportPassphrasePage", () => {
   });
 
   it("should prepare the wallet correctly", () => {
-    let keyPair: IKeyPair = {
-      privateKey: "PRIVATE_KEY", 
-      publicKey: "PUBLIC_KEY"
-    };
     spyOn(bip32Service, "getPrivateKey").and.returnValue("PRIVATE_KEY");
     spyOn(bip39Service, "toSeed").and.returnValue("SEED");
 
@@ -177,36 +176,129 @@ describe("WalletImportPassphrasePage", () => {
     );
   })
 
+  it("should detect correctly when the passphrase is invalid", (done) => {
+    let passphraseStatus: IPassphraseValidationResult = {
+      isValid: false,
+      isBlocking: false,
+      errorMessage: "SOME ERROR"
+    };
+
+    spyOn(bip39Service, "check").and.returnValue(Promise.resolve(passphraseStatus));
+
+    comp.passphraseStatus = null;
+    comp.passphrase = "passphrase";
+
+    comp.onPassphraseChanged().then(
+      () => {
+        expect(bip39Service.check).toHaveBeenCalledWith("passphrase");
+
+        expect(comp.passphraseStatus).toEqual({
+          isValid: false,
+          isBlocking: false,
+          errorMessage: "SOME ERROR"
+        });
+
+        done();
+      },
+      (error) => {
+        // Reject should never be called
+        expect(true).toBeFalsy();
+        done();
+      }
+    );
+  });
+
+  it("should detect correctly when the password is invalid", () => {
+    let passwordStatus: IPasswordValidationResult = {
+      type: "error",
+      message: "SOME ERROR"
+    };
+
+    spyOn(passwordService, "validate").and.returnValue(passwordStatus);
+
+    comp.passwordStatus = null;
+    comp.password = "pass123";
+    comp.passwordConfirm = "pass456";
+
+    comp.onPasswordChanged();
+
+    expect(passwordService.validate).toHaveBeenCalledWith("pass123", "pass456");
+  });
+
+  it("should detect correctly when the name is invalid", () => {
+    let passwordControl = comp.form.controls["password"];
+    let passwordConfirmControl = comp.form.controls["passwordConfirm"];
+
+    passwordControl.setValue("");
+    expect(passwordControl.valid).toBeFalsy();
+
+    passwordControl.setValue("pass123");
+    expect(passwordControl.valid).toBeTruthy();
+
+    passwordConfirmControl.setValue("");
+    expect(passwordConfirmControl.valid).toBeFalsy();
+
+    passwordConfirmControl.setValue("pass123");
+    expect(passwordConfirmControl.valid).toBeTruthy();
+  });
+
+  it("should detect correctly when the wallet index is invalid", () => {
+    let control = comp.form.controls["walletIndex"];
+
+    control.setValue("-1");
+    expect(control.valid).toBeFalsy();
+
+    control.setValue("1.1");
+    expect(control.valid).toBeFalsy();
+
+    control.setValue("1.1.1.1");
+    expect(control.valid).toBeFalsy();
+
+    control.setValue("2");
+    expect(control.valid).toBeTruthy();
+  });
+
   it("should detect correctly when the input data is valid", () => {
     comp.passphraseStatus = {
       isValid: false,
       isBlocking: true
     };
 
-    expect(comp.dataIsValid()).toBeFalsy();
+    // Set address index to an invalid value
+    comp.form.controls["walletIndex"].setValue(-1);
 
-    comp.passphrase = "1 2 3 4 5 6";
+    expect(comp.dataIsValid()).toBeFalsy("1");
 
-    expect(comp.dataIsValid()).toBeFalsy();
+    comp.form.controls["passphrase"].setValue("1 2 3 4 5 6");
 
-    comp.password = "pass123";
+    expect(comp.dataIsValid()).toBeFalsy("2");
 
-    expect(comp.dataIsValid()).toBeFalsy();
+    comp.form.controls["password"].setValue("pass123");
 
-    comp.walletName = "name";
+    expect(comp.dataIsValid()).toBeFalsy("3");
 
-    expect(comp.dataIsValid()).toBeFalsy();
+    comp.form.controls["passwordConfirm"].setValue("pass123");
+
+    expect(comp.dataIsValid()).toBeFalsy("3");
+
+    comp.form.controls["walletName"].setValue("name");
+
+    expect(comp.dataIsValid()).toBeFalsy("4");
 
     comp.passwordStatus = {type: "success"};
 
-    expect(comp.dataIsValid()).toBeFalsy();
+    expect(comp.dataIsValid()).toBeFalsy("5");
+
+    comp.form.controls["walletIndex"].setValue(1);
+
+    expect(comp.dataIsValid()).toBeFalsy("6");
 
     comp.passphraseStatus.isBlocking = false;
 
-    expect(comp.dataIsValid()).toBeTruthy();
+    expect(comp.dataIsValid()).toBeTruthy("7");
 
     comp.passphraseStatus.isValid = true;
 
-    expect(comp.dataIsValid()).toBeTruthy();
+    expect(comp.dataIsValid()).toBeTruthy("8");
   });
 });

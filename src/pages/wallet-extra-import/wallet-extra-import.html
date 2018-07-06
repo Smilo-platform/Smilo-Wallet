@@ -1,0 +1,77 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>{{ 'wallet_extra_import.title' | translate }}</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-grid *ngIf="!importAnotherWallet">
+    <ion-row>
+      <ion-col text-center>
+        {{ 'wallet_extra_import.description1' | translate }}
+      </ion-col>
+    </ion-row>
+
+    <ion-row justify-content-center>
+      <ion-col text-center>
+        <button ion-button (click)="yes()">
+          {{ 'wallet_extra_import.buttons.yes' | translate }}
+        </button>
+      </ion-col>
+
+      <ion-col text-center>
+        <button ion-button (click)="no()">
+          {{ 'wallet_extra_import.buttons.no' | translate }}
+        </button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-grid *ngIf="importAnotherWallet">
+    <ion-row>
+      <ion-col text-center>
+        {{ 'wallet_extra_import.description2' | translate }}
+      </ion-col>
+    </ion-row>
+
+    <form [formGroup]="form">
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label stacked>
+              {{ 'wallet_extra_import.wallet_name' | translate }}
+            </ion-label>
+            <ion-input [(ngModel)]="walletName"
+                      formControlName="walletName"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+          <ion-col>
+            <ion-item>
+              <ion-label stacked>
+                {{ 'wallet_extra_import.wallet_index' | translate }}
+              </ion-label>
+              <ion-input [(ngModel)]="nextIndex"
+                        formControlName="nextIndex"></ion-input>
+            </ion-item>
+          </ion-col>
+      </ion-row>
+    </form>
+
+    <ion-row justify-content-center>
+      <ion-col text-center>
+        <button ion-button (click)="back()">
+          {{ 'wallet_extra_import.buttons.back' | translate }}
+        </button>
+      </ion-col>
+
+      <ion-col text-center>
+        <button ion-button (click)="import()" [disabled]="!form.valid">
+          {{ 'wallet_extra_import.buttons.import' | translate }}
+        </button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

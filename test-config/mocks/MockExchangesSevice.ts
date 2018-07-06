@@ -16,8 +16,25 @@ export class MockExchangesService implements IExchangesService {
 
     getPrices(currency: string, exchange: string): Promise<IExchangePrice[]> {
         return new Promise(resolve => { resolve([
-            {"exchange": "GDAX", "currencyTo": "USD", "currencyFrom": "XSM", "value": 0.25},
-            {"exchange": "GDAX", "currencyTo": "USD", "currencyFrom": "XSP", "value": 0.025}
+            {"exchange": "Bitmex", "currencyFrom": "XSM", "currencyTo": "USD", "value": 0.25},
+            {"exchange": "Bitmex", "currencyFrom": "XSM", "currencyTo": "ETH", "value": 0.0003},
+            {"exchange": "Bitmex", "currencyFrom": "XSM", "currencyTo": "BTC", "value": 0.00003},
+            {"exchange": "Bitmex", "currencyFrom": "XSP", "currencyTo": "XSM", "value": 0.2},
+        
+            {"exchange": "GDAX", "currencyFrom": "XSM", "currencyTo": "USD", "value": 0.30},
+            {"exchange": "GDAX", "currencyFrom": "XSM", "currencyTo": "BTC", "value": 0.00033},
+            {"exchange": "GDAX", "currencyFrom": "XSP", "currencyTo": "XSM", "value": 0.33},
+        
+            {"exchange": "CexIO", "currencyFrom": "XSM", "currencyTo": "USD", "value": 0.20},
+            {"exchange": "CexIO", "currencyFrom": "XSP", "currencyTo": "XSM", "value": 0.4},
+        
+            {"exchange": "Kraken", "currencyFrom": "XSM", "currencyTo": "USD", "value": 0.35},
+            {"exchange": "Kraken", "currencyFrom": "XSP", "currencyTo": "XSM", "value": 0.4},
+        
+            {"exchange": "Coinbase", "currencyFrom": "XSM", "currencyTo": "USD", "value": 0.22},
+            {"exchange": "Coinbase", "currencyFrom": "XSM", "currencyTo": "ETH", "value": 0.0002},
+            {"exchange": "Coinbase", "currencyFrom": "XSM", "currencyTo": "BTC", "value": 0.00002},
+            {"exchange": "Coinbase", "currencyFrom": "XSP", "currencyTo": "XSM", "value": 0.1}
         ])});
     }
 }

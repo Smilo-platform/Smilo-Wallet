@@ -6,13 +6,32 @@ import { IKeyStore } from "../../models/IKeyStore";
  */
 declare const forge: any;
 
-const KEY_NUM_ITERATIONS = 128;
-const KEY_SIZE = 32;
-const CIPHER_ALGO = "AES-CTR";
+/**
+ * This number is important! This defines the amount of hashing iterations
+ * applied to the encryption key. Too low and all encrypted data stored
+ * locally is at risk of being hacked. Too high and generating a key can take
+ * a long time. Note that in the current implementation this would 'lock' the browser
+ * negatively impacting user experience. 
+ * 
+ * Better way to do this: rewrite the 'createKeyStore' function to work async.
+ * Next we generate the encryption key on a worker thread and bump the iteration
+ * count to something like 20000 :D
+ */
+export const KEY_NUM_ITERATIONS = 10000;
+export const KEY_SIZE = 32;
+export const CIPHER_ALGO = "AES-CTR";
 
 export interface IKeyStoreService {
     createKeyStore(privateKey: string, password: string): IKeyStore;
     decryptKeyStore(keyStore: IKeyStore, password: string): string;
+
+    getControlHash(password: string, cipherText: string): string;
+
+    getInitialisationVector(): string;
+
+    getSalt(): string;
+
+    generateKey(password: string, salt: string, iterations?: number, size?: number): string;
 }
 
 @Injectable()
@@ -29,7 +48,7 @@ export class KeyStoreService implements IKeyStoreService {
 
         // Initialise cipher
         let iv = this.getInitialisationVector();
-        let cipher = this.getCipher(key);
+        let cipher = forge.cipher.createCipher(CIPHER_ALGO, key);
         cipher.start({iv: iv});
 
         // Encrypt private key
@@ -104,10 +123,6 @@ export class KeyStoreService implements IKeyStoreService {
 
     getInitialisationVector(): string {
         return forge.random.getBytesSync(32);
-    }
-
-    getCipher(key: string): any {
-        return forge.cipher.createCipher(CIPHER_ALGO, key);
     }
 
     getSalt(): string {

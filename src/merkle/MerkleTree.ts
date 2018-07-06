@@ -1,12 +1,12 @@
 declare const sjcl: any;
 import "seedrandom";
 import { LamportGeneratorThread, ILamportGeneratorThreadInput, ILamportGeneratorThreadOutput } from "./LamportGenerator";
-import { Pool } from "threads";
 import { Storage } from "@ionic/storage";
-import { KeyStoreService } from "../services/key-store-service/key-store-service";
+import { KeyStoreService, IKeyStoreService } from "../services/key-store-service/key-store-service";
 import { IWallet } from "../models/IWallet";
 import { IKeyStore } from "../models/IKeyStore";
 import { Platform } from "ionic-angular/platform/platform";
+import { IThreadPool, ThreadPool } from "./ThreadPool";
 
 export interface IMerkleTreeConfig {
     version: number;
@@ -44,7 +44,7 @@ export class MerkleTree {
         return publicKey;
     }
 
-    serialize(storagePrefix: string, storage: Storage, keyStoreService: KeyStoreService, password: string): Promise<void> {
+    serialize(storagePrefix: string, storage: Storage, keyStoreService: IKeyStoreService, password: string): Promise<void> {
         let promises: Promise<void>[] = [];
 
         let config: IMerkleTreeConfig = {
@@ -85,7 +85,7 @@ export class MerkleTree {
             case(18):
                 return "S5";
             default:
-                return "A1";
+                return "X1";
         }
     }
 
@@ -97,7 +97,7 @@ export class MerkleTree {
         );
     }
 
-    static fromDisk(wallet: IWallet, storage: Storage, keyStoreService: KeyStoreService, password: string): Promise<MerkleTree> {
+    static fromDisk(wallet: IWallet, storage: Storage, keyStoreService: IKeyStoreService, password: string): Promise<MerkleTree> {
         // Retrieve the config
         return storage.get(
             MerkleTree.getConfigStorageKey(wallet)
@@ -122,6 +122,9 @@ export class MerkleTree {
 
                                     // Decrypt
                                     let decryptedLayer = keyStoreService.decryptKeyStore(encryptedLayer, password);
+                                    if(!decryptedLayer)
+                                        return Promise.reject("Could not decrypt Merkle Tree");
+
                                     let layer = JSON.parse(decryptedLayer);
 
                                     layers.push(layer);
@@ -182,6 +185,10 @@ export class MerkleTree {
         return layers;
     }
 
+    private static createThreadPool(): IThreadPool {
+        return new ThreadPool();
+    }
+
     private static generateLeafKeys(privateKey: string, layerCount: number, platform: Platform, progressUpdate?: (progress: number) => void): Promise<string[]> {
         return new Promise((resolve, reject) => {
             let prng = new (<any>Math).seedrandom(privateKey);
@@ -193,7 +200,7 @@ export class MerkleTree {
             if(platform.is("android")) {
                 // Android requires the scripts to be loaded as shown below.
                 scripts = [
-                    `file:///android_asset/www/assets/scripts/forge.min.js`,
+                    // `file:///android_asset/www/assets/scripts/forge.min.js`,
                     `file:///android_asset/www/assets/scripts/sjcl.js`,
                     `file:///android_asset/www/assets/scripts/seedrandom.min.js`
                 ];
@@ -201,15 +208,54 @@ export class MerkleTree {
             else {
                 // Web & ios is easy.
                 scripts = [
-                    `${ window.location.protocol }//${ window.location.host }/assets/scripts/forge.min.js`,
+                    // `${ window.location.protocol }//${ window.location.host }/assets/scripts/forge.min.js`,
                     `${ window.location.protocol }//${ window.location.host }/assets/scripts/sjcl.js`,
                     `${ window.location.protocol }//${ window.location.host }/assets/scripts/seedrandom.min.js`,
                 ];
             }
 
             // Create a thread pool
-            let pool = new Pool();
+            let pool = MerkleTree.createThreadPool();
             pool.run(LamportGeneratorThread, scripts);
+
+            // Store job output here. Later we will concatenate it.
+            let processedJobOutputs: ILamportGeneratorThreadOutput[] = [];
+
+            pool.onJobDone((job, message: ILamportGeneratorThreadOutput) => {
+                // Store job output without processing it any further at this point
+                processedJobOutputs.push(message);
+
+                totalJobsDone++;
+
+                if(progressUpdate) {
+                    // We only count to 99% because the last 1% is used
+                    // to serialize the Merkle Tree.
+                    progressUpdate((totalJobsDone / totalJobs) * 0.99);
+                }
+            });
+
+            pool.onError((job, error) => {
+                // A job failed, this means the entire Merkle Tree is worthless.
+                // Abort and notify calling function about the failure...
+                pool.killAll();
+
+                reject(error);
+            });
+
+            pool.onFinished(() => {
+                pool.killAll();
+
+                // Sort job outputs so public keys are in order
+                processedJobOutputs.sort((a, b) => a.startIndex - b.startIndex);
+
+                // Concatenate
+                let publicKeys = processedJobOutputs.reduce<string[]>(
+                    (previous, current) => previous.concat(current.publicKeys),
+                    []
+                );
+
+                resolve(publicKeys);
+            });
 
             let totalJobs = Math.ceil(totalKeys / MerkleTree.KEYS_PER_JOB);
             let totalJobsDone = 0;
@@ -235,45 +281,6 @@ export class MerkleTree {
                 // Send to job queue
                 pool.send(jobInput);
             }
-
-            // Store job output here. Later we will concatenate it.
-            let processedJobOutputs: ILamportGeneratorThreadOutput[] = [];
-
-            pool.on("done", (job, message: ILamportGeneratorThreadOutput) => {
-                // Store job output without processing it any further at this point
-                processedJobOutputs.push(message);
-
-                totalJobsDone++;
-
-                if(progressUpdate) {
-                    // We only count to 99% because the last 1% is used
-                    // to serialize the Merkle Tree.
-                    progressUpdate((totalJobsDone / totalJobs) * 0.99);
-                }
-            });
-
-            pool.on("error", (job, error) => {
-                // A job failed, this means the entire Merkle Tree is worthless.
-                // Abort and notify calling function about the failure...
-                pool.killAll();
-
-                reject(error);
-            });
-
-            pool.on("finished", () => {
-                pool.killAll();
-
-                // Sort job outputs so public keys are in order
-                processedJobOutputs.sort((a, b) => a.startIndex - b.startIndex);
-
-                // Concatenate
-                let publicKeys = processedJobOutputs.reduce<string[]>(
-                    (previous, current) => previous.concat(current.publicKeys),
-                    []
-                );
-
-                resolve(publicKeys);
-            });
         });
     }
 
