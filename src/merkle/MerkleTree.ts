@@ -85,7 +85,7 @@ export class MerkleTree {
             case(18):
                 return "S5";
             default:
-                return "A1";
+                return "X1";
         }
     }
 

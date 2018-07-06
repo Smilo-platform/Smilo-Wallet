@@ -11,6 +11,19 @@ describe("MerkleTree", () => {
     let storageService: Storage;
     let keyStoreService: IKeyStoreService;
 
+    function generateDummyMerkleTree(layerCount: Number): MerkleTree {
+        let layers: string[][] = [];
+
+        for(let i = 0; i < layerCount; i++) {
+            layers.push([]);
+        }
+
+        // Set root key
+        layers[layers.length - 1][0] = "KEY";
+
+        return new (<any>MerkleTree)(layers);
+    }
+
     beforeEach(() => {
         platformService = new Platform();
         storageService = new Storage(null);
@@ -96,8 +109,29 @@ describe("MerkleTree", () => {
         
     });
 
-    it("should generate a correct public key", () => {
+    it("should prefix the public keys correctly", () => {
+        expect(generateDummyMerkleTree(14).getPublicKey().startsWith("S1")).toBeTruthy();
+        expect(generateDummyMerkleTree(15).getPublicKey().startsWith("S2")).toBeTruthy();
+        expect(generateDummyMerkleTree(16).getPublicKey().startsWith("S3")).toBeTruthy();
+        expect(generateDummyMerkleTree(17).getPublicKey().startsWith("S4")).toBeTruthy();
+        expect(generateDummyMerkleTree(18).getPublicKey().startsWith("S5")).toBeTruthy();
+        expect(generateDummyMerkleTree(19).getPublicKey().startsWith("X1")).toBeTruthy();
+        expect(generateDummyMerkleTree(13).getPublicKey().startsWith("X1")).toBeTruthy();
+    });
 
+    it("should add the correct checksum to the public keys", () => {
+        // The last 4 characters of the public key are the first
+        // 4 characters of the checksum of the address prefix + the pre address.
+        let dummy = generateDummyMerkleTree(14);
+
+        let publicKey = dummy.getPublicKey();
+
+        let addressMinusChecksum = publicKey.substr(0, publicKey.length - 4);
+        let checkSum = publicKey.substr(publicKey.length - 4, 4);
+
+        let fullChecksum: string = (<any>MerkleTree).sha256Base32(addressMinusChecksum);
+
+        expect(fullChecksum.startsWith(checkSum)).toBeTruthy();
     });
 
     it("should generate the Merkle Tree correctly", (done) => {
