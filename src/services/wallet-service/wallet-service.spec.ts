@@ -147,12 +147,36 @@ describe("WalletService", () => {
             type : "local"};
         (<any>walletService).wallets.push(wallet);
         expect((<any>walletService).wallets.length).toBe(1);
-        walletService.remove(wallet).then(data => {
-            expect((<any>walletService).wallets.splice).toHaveBeenCalledWith(0, 1);
-            expect(storage.set).toHaveBeenCalled();
-            expect(merkleTreeService.remove).toHaveBeenCalledWith(wallet);
-            expect((<any>walletService).wallets.length).toBe(0);
-            done();
+        let fakeWallet = <IWallet>{id : "NOT_EXISTING",
+            keyStore: { 
+                cipher: "AES-CTR",
+                cipherParams: {
+                    iv: "a/ÿûÅ)rêYgÅ.¾DÖwW;6×aqr"
+                },
+                cipherText : "JIH", 
+                controlHash : "e845922979b1fad26a716ac155a4cbb822c6538561d7e575206190e87200d4c7",
+                keyParams: {
+                    iterations: 128,
+                    keySize: 32,
+                    alt: "G'G&ÃµÈ¶qvÍO£M3ý`~põqög` ↵¯4\¤BùøÃ{!êjô\Ý ½ÎêN«Î¥^²Ôô`LEK_0{×ôºæç¯FÉdÒ`6ÉSîK¬D¡Ün Û¡c¸Éz↵ë*P$}Lò?%±à$Ù¿BëÒ<@dT3'ê Xï¡ cÿÑÎÉ~5¶÷ûS@ù/¡ö+°¿BCÍêüf↵ÑÃ&öêX](<ä=AósµcU£éÒÀæÿ:¡íÓN+¹Py`ÿÈË5H1ÑRï¼" 
+                },
+            },
+            lastUpdateTime: null,
+            name: "Name",
+            publicKey : "NOT_EXISTING",
+            type : "local"};
+        walletService.remove(fakeWallet).then(data => {
+            expect((<any>walletService).wallets.splice).not.toHaveBeenCalled();
+            expect(storage.set).not.toHaveBeenCalled();
+            expect(merkleTreeService.remove).not.toHaveBeenCalled();
+            expect((<any>walletService).wallets.length).toBe(1);
+            walletService.remove(wallet).then(data => {
+                expect((<any>walletService).wallets.splice).toHaveBeenCalledWith(0, 1);
+                expect(storage.set).toHaveBeenCalled();
+                expect(merkleTreeService.remove).toHaveBeenCalledWith(wallet);
+                expect((<any>walletService).wallets.length).toBe(0);
+                done();
+            });
         });
     });
 
