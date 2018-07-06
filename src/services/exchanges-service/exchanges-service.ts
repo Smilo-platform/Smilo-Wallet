@@ -15,6 +15,7 @@ export class ExchangesService implements IExchangesService {
     constructor(private http: HttpClient) {}
 
     getAvailableExchanges(): Promise<{availableExchanges: IAvailableExchange[]}> {
+        
         return this.http.get('assets/json/availableExchanges.json').toPromise().then(data => {
             return <any>data;
         });

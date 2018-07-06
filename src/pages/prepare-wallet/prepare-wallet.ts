@@ -168,7 +168,7 @@ export class PrepareWalletPage {
   onMerkleTreeFailed = (error) => {
     // Display error, after user goes back to origin page.
     let modal = this.modalController.create(WalletErrorPage, {
-      error: error.toString()
+      error: error.message ? error.message : error.toString()
     }, {
       enableBackdropDismiss: false
     });

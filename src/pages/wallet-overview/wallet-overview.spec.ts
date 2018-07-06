@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 import { WalletOverviewPage } from "./wallet-overview";
-import { IonicModule, NavController, NavParams, ToastController, Toast, LoadingController, Loading, AlertController} from "ionic-angular/index";
+import { IonicModule, NavController, NavParams, ToastController, Toast, Alert, LoadingController, Loading, AlertController} from "ionic-angular/index";
 import { MockNavController } from "../../../test-config/mocks/MockNavController";
 import { MockNavParams } from "../../../test-config/mocks/MockNavParams";
 import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
@@ -30,6 +30,10 @@ import { IWalletBalanceService, WalletBalanceService } from "../../services/wall
 import { MockExchangesService } from "../../../test-config/mocks/MockExchangesSevice";
 import { MockWalletTransactionHistoryService } from "../../../test-config/mocks/MockWalletTransactionHistoryService";
 import { MockWalletBalanceService } from "../../../test-config/mocks/MockWalletBalanceService";
+import { TransferPage } from "../transfer/transfer";
+import { IWallet } from "../../models/IWallet";
+import { MockToast } from "../../../test-config/mocks/MockToast";
+import { ILocalWallet } from "../../models/ILocalWallet";
 
 describe("WalletOverviewPage", () => {
   let comp: WalletOverviewPage;
@@ -107,12 +111,21 @@ describe("WalletOverviewPage", () => {
     expect(comp.availableExchanges.length).toBe(0, "availableCurrencies length should be 0");
     expect(comp.showFundsStatus).toBe(true, "showFundsStatus should be true");
     expect(comp.walletFundsVisibility).toBe("shown", "walletFundsVisiblity should be shown");
+    expect(comp.currentWallet).toBeUndefined();
+    expect(comp.loading).toBeUndefined();
+    expect(comp.loadingError).toBeUndefined();
+    expect(comp.totalCurrentCurrencyValue).toBeUndefined();
+    expect(comp.balances).toBeUndefined();
   })
 
   it("should have visibility hidden after switching visibility", () => {
+    comp.walletFundsVisibility = "shown";
+    comp.walletFundsVisibilityTransferButton = "hidden";
+
     comp.fundsSwitch();
 
     expect(comp.walletFundsVisibility).toBe("hidden");
+    expect(comp.walletFundsVisibilityTransferButton).toBe("shown");
   })
 
   it("should present an alert when deleting a wallet", (done) => {
@@ -130,10 +143,88 @@ describe("WalletOverviewPage", () => {
     });
   })
 
-  it("should return false after deleting a wallet that doesn't exist", () => {
-    let result = comp.deleteSelectedWallet(null);
+  it("should open landing page and show a toast after deleting the last wallet", (done) => {
+    comp.wallets = [
+      <ILocalWallet>{
+        "id": "4b6cff11-5888-43bb-bde1-911e12b659e6",
+        "type": "local",
+        "name": "Bosha",
+        "publicKey": "S5NEKHPKXS7F75IVKGVS4A56U4FF6VM5U4YF64",
+        "keyStore": {
+          "cipher": "AES-CTR",
+          "cipherParams": {
+            "iv": "a/ÿûÅ\u0014)\u0018rêYgÅ.¾DÖwW;6×\u000e\u0016aqr"
+          },
+          "cipherText": "JIH",
+          "keyParams": {
+            "salt": "G\u0004'G&\u0005ÃµÈ\u0010¶q\u0007vÍ\u0012\u0019O£M3ý`~põqög`\u000b\n\u0003¯4\\¤\u0019BùøÃ{!êjô\\Ý\u001c ½Îê\u0005\u000fN«Î¥^²Ôô`LEK_0\u0016{×ôºæç¯F\u0006Éd\u0012Ò`6ÉS\u0000îK¬D¡ÜnÛ¡\u001dc¸Éz\n\u001fë*P$}Lò?%±à\u0000$Ù¿B\u001fëÒ<@dT3'ê\u000bXï¡\tcÿÑÎÉ~\u00125\u001e¶÷\u001bû\u0007S@\u0002\u0001\u000fù/\u0005¡ö+°¿BC\u0015Íêü\u0016f\nÑÃ&öê\u0019X]\u000e(<ä\u0000=AósµcU£é\u0011ÒÀæÿ\u0018:\u0000¡íÓN+¹\u0013\u0003Py`ÿÈË5\u0018H1ÑRï¼",
+            "iterations": 128,
+            "keySize": 32
+          },
+          "controlHash": "e845922979b1fad26a716ac155a4cbb822c6538561d7e575206190e87200d4c7"
+        },
+        "lastUpdateTime": null
+      },
+      <ILocalWallet>{
+        "id": "a6ecc41b-45ef-4834-8801-7865e9262d9f",
+        "type": "local",
+        "name": "Pilosha",
+        "publicKey": "S56RDBKX5237GDQQWIASNQFKOJHLMTXGL6OAQT",
+        "keyStore": {
+          "cipher": "AES-CTR",
+          "cipherParams": {
+            "iv": "¥YVù#µ°P´b­.L\r±ú]íP¼ ß~æb¸¡Zû\u0000"
+          },
+          "cipherText": "Gnïzá\u000fð\u0004C\bÑ}u=;É¤Ý\u001aM!Ør´<\u000bö\u0017lÕ\u0004*ýg\u0018r\r\"1uðP\u001c#",
+          "keyParams": {
+            "salt": "B\u0002åk÷ÜyDûJN\u001e©§\u0003\u0005g\u000fÂÁ\u0013à\"gð\u000bÚ\u0005\u0000«Ä8¾§»6´D¾ùâ\u001eÎÁ¿ç\\\u0016yáÉá«ÌësÊ/\u0010Ã74¥ë%y\u0001\".ÌK4__¥9CSwêuðø]©Zê\u0004»\u0015üÅ¹¸´CJW ¶1öMéyLc.ó\u0018¸¬x\nzNq$3I\u0014vÿÏø\u0000:@ïçëe\u0019\u0017ðu\f&¸\tVfÞ8á)µ9Jh\\\u0003WªU\u0010!, ßËzD\u001d\b ` K:Î\u000f°Ò8dp9½­øz§Ç¬\u0011¼NYMPÑ ´¸)hAöÄg:ìiSHÔµ*G(\u0011(5º}¿Ð£V\u001cöfA",
+            "iterations": 128,
+            "keySize": 32
+          },
+          "controlHash": "da5c5529888a42d2d810b2023aa169dc8bec12682641ac58da05d5da5e059acb"
+        },
+        "lastUpdateTime": null
+      },
+      <ILocalWallet>{
+        "id": "a16585b7-0f85-4e02-9331-e2bff92e6677",
+        "type": "local",
+        "name": "Bosha",
+        "publicKey": "S5UDTFETMPSS4KOZTO2CK6SALLYX2OJJ77FEQR",
+        "keyStore": {
+          "cipher": "AES-CTR",
+          "cipherParams": {
+            "iv": "a/ÿûÅ\u0014)\u0018rêYgÅ.¾DÖwW;6×\u000e\u0016aqr"
+          },
+          "cipherText": "JIH",
+          "keyParams": {
+            "salt": "G\u0004'G&\u0005ÃµÈ\u0010¶q\u0007vÍ\u0012\u0019O£M3ý`~põqög`\u000b\n\u0003¯4\\¤\u0019BùøÃ{!êjô\\Ý\u001c ½Îê\u0005\u000fN«Î¥^²Ôô`LEK_0\u0016{×ôºæç¯F\u0006Éd\u0012Ò`6ÉS\u0000îK¬D¡ÜnÛ¡\u001dc¸Éz\n\u001fë*P$}Lò?%±à\u0000$Ù¿B\u001fëÒ<@dT3'ê\u000bXï¡\tcÿÑÎÉ~\u00125\u001e¶÷\u001bû\u0007S@\u0002\u0001\u000fù/\u0005¡ö+°¿BC\u0015Íêü\u0016f\nÑÃ&öê\u0019X]\u000e(<ä\u0000=AósµcU£é\u0011ÒÀæÿ\u0018:\u0000¡íÓN+¹\u0013\u0003Py`ÿÈË5\u0018H1ÑRï¼",
+            "iterations": 128,
+            "keySize": 32
+          },
+          "controlHash": "e845922979b1fad26a716ac155a4cbb822c6538561d7e575206190e87200d4c7"
+        },
+        "lastUpdateTime": null
+      }
+    ];
+    spyOn(comp, "openLandingPage");
+    spyOn(comp, "showToastMessage");
 
-    expect(result).toBe(false);
+    comp.currentWallet = comp.wallets[0];
+    // Delete first one
+    comp.deleteSelectedWallet(comp.currentWallet);
+    expect(comp.openLandingPage).not.toHaveBeenCalled();
+    expect(comp.showToastMessage).not.toHaveBeenCalled();
+    // Delete second one
+    comp.deleteSelectedWallet(comp.currentWallet);
+    expect(comp.openLandingPage).not.toHaveBeenCalled();
+    expect(comp.showToastMessage).not.toHaveBeenCalled();
+    // Delete last one
+    comp.deleteSelectedWallet(comp.currentWallet);
+
+    expect(comp.openLandingPage).toHaveBeenCalled();
+    expect(comp.showToastMessage).toHaveBeenCalled();
+    
+    done();
   })
 
   it("should return undefined because there is no current wallet", () => {
@@ -164,11 +255,11 @@ describe("WalletOverviewPage", () => {
     expect(navController.push).toHaveBeenCalledWith(LandingPage);
   });
 
-  it("should return false after displaying the chart because the chart currencies and amounts are not defined", () => {
-    let result = comp.displayChart();
+  // it("should return false after displaying the chart because the chart currencies and amounts are not defined", () => {
+  //   let result = comp.displayChart();
 
-    expect(result).toBe(false);
-  })
+  //   expect(result).toBe(false);
+  // })
 
   it("should call getAllWallets and getAvailableCurrencies", () => {
     spyOn(comp, "getAllWallets");
@@ -261,6 +352,136 @@ describe("WalletOverviewPage", () => {
         ]);
         done();
       });
+    });
+  })
+
+  it("should call initialize when the view is loaded", () => {
+    spyOn(comp, "initialize");
+
+    comp.ionViewDidLoad();
+
+    expect(comp.initialize).toHaveBeenCalled();
+  });
+
+  it("should have the funds visiblity to shown after they were invisible", () => {
+    comp.walletFundsVisibility = "hidden";
+
+    comp.fundsSwitch();
+
+    expect(comp.walletFundsVisibility).toBe("shown");
+    expect(comp.walletFundsVisibilityTransferButton).toBe("hidden");
+  });
+
+  it("should open the transfer page correctly", () => {
+    spyOn(navController, "push");
+
+    comp.openTransferPage();
+
+    expect(navController.push).toHaveBeenCalledWith(TransferPage);
+  })
+
+  it("should call balance and history after refreshing the wallet", () => {
+    spyOn(comp, "getWalletBalance");
+    spyOn(comp, "getTransactionHistory");
+
+    comp.currentWallet = <IWallet>{};
+    comp.currentWallet.publicKey = "";
+
+    comp.refreshWalletBalance();
+
+    expect(comp.getWalletBalance).toHaveBeenCalled();
+    expect(comp.getTransactionHistory).toHaveBeenCalled();
+  })
+
+  it("should return two fixed numbers if the pickedcurrency is EUR or USD, otherwhise 7", () => {
+    comp.pickedCurrency = "I DON'T EXIST";
+    let result = comp.getFixedNumbers();
+    expect(result).toEqual(7);
+
+    comp.pickedCurrency = "EUR";
+    result = comp.getFixedNumbers();
+    expect(result).toEqual(2);
+
+    comp.pickedCurrency = "USD";
+    result = comp.getFixedNumbers();
+    expect(result).toEqual(2);
+  })
+
+  it("should call createElement, appendChild, execCommand and removechild upon copying to clipboard for web", () => {
+    let input: HTMLInputElement = document.createElement("input");
+    spyOn(document, "createElement").and.returnValue(input);
+    spyOn(input, "setAttribute");
+    spyOn(input, "select");
+    spyOn(document.body, "appendChild");
+    spyOn(document, "execCommand");
+    spyOn(document.body, "removeChild");
+
+    comp.copyToClipboardWeb("data");
+
+    expect(document.createElement).toHaveBeenCalled();
+    expect(document.body.appendChild).toHaveBeenCalledWith(input);
+    expect(input.setAttribute).toHaveBeenCalledWith("value", "data");
+    expect(input.select).toHaveBeenCalled();
+    expect(document.execCommand).toHaveBeenCalledWith("copy");
+    expect(document.body.removeChild).toHaveBeenCalledWith(input);
+  })
+
+  it("should call createElement, appendChild, removeChild upon downloading a txt file for web", () => {
+    let anchor: HTMLAnchorElement = document.createElement("a");
+    spyOn(document, "createElement").and.returnValue(anchor);
+    spyOn(anchor, "setAttribute");
+    spyOn(anchor, "style");
+    spyOn(anchor, "click");
+    spyOn(document.body, "appendChild");
+    spyOn(document.body, "removeChild");
+
+    comp.downloadTxtFileWeb("data", "filename");
+
+    expect(document.createElement).toHaveBeenCalled();
+    expect(anchor.setAttribute).toHaveBeenCalledWith("href", "data:text/plain;charset=utf-8,data");
+    expect(anchor.setAttribute).toHaveBeenCalledWith("download", "filename");
+    expect(anchor.style.display).toBe("none");
+    expect(document.body.appendChild).toHaveBeenCalledWith(anchor);
+    expect(anchor.click).toHaveBeenCalled();
+    expect(document.body.removeChild).toHaveBeenCalledWith(anchor);
+  });
+
+  it("should call create and present upon showing a toast message", () => {
+    let toast: MockToast = new MockToast();
+    spyOn(toastController, "create").and.returnValue(toast);
+    spyOn(toast, "present");
+    
+    comp.showToastMessage("message", 1000, "bottom");
+
+    expect(toastController.create).toHaveBeenCalled();
+    expect(toast.present).toHaveBeenCalled();
+  });
+
+  it("should call a create and present error modal after getting the available exchanges list with a rejected promise", (done) => {
+    let alert: MockAlert = new MockAlert();
+    spyOn(exchangeService, "getAvailableExchanges").and.returnValue(Promise.reject(""));
+    spyOn(comp, "getAvailableExchanges").and.callThrough();
+    spyOn(alertController, "create").and.returnValue(alert);
+    spyOn(alert, "present");
+
+    comp.getAvailableExchanges().then(data => {
+      expect(alertController.create).toHaveBeenCalled();
+      expect(alert.present).toHaveBeenCalled();
+      done();
+    });
+  });
+
+  it("should call a create and present error modal after getting the wallets with a rejected promise", (done) => {
+    let alert: MockAlert = new MockAlert();
+    spyOn(walletService, "getAll").and.returnValue(Promise.reject(""));
+    spyOn(comp, "getAllWallets").and.callThrough();
+    spyOn(alertController, "create").and.returnValue(alert);
+    spyOn(alert, "present");
+
+    comp.getAllWallets().then(data => {
+      expect(alertController.create).toHaveBeenCalled();
+      expect(alert.present).toHaveBeenCalled();
+      done();
     });
   })
 });
