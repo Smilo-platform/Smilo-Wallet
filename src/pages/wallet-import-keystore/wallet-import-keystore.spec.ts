@@ -384,6 +384,14 @@ describe("WalletImportKeystorePage", () => {
     });
   })
 
+  it("should return undefined when trying to remove with an undefined type", (done) => {
+    spyOn(comp, "prepareWallet").and.returnValue(null);
+    comp.importWalletByCurrentKeystoreInfo(<any>"NOT_EXISTING").then(data => {
+      expect(data).toBeUndefined();
+      done();
+    });
+  })
+
   it("should prepare the wallet correctly by file", () => {
     spyOn(keyStoreService, "decryptKeyStore").and.returnValue("SOME_PRIVATE_KEY");
     spyOn(walletService, "generateId").and.returnValue("WALLET_ID");
@@ -411,7 +419,14 @@ describe("WalletImportKeystorePage", () => {
     spyOn(keyStoreService, "decryptKeyStore").and.returnValue(null);
 
     expect(comp.prepareWallet("file")).toBeNull();
-  })
+  });
+
+  it("should return null after the decryptkeystore returned null as a private key as either file or clipboard", () => {
+    spyOn(comp, "prepareWallet").and.callThrough();
+    spyOn(keyStoreService, "decryptKeyStore").and.returnValue(null);
+
+    expect(comp.prepareWallet(<any>"NOT_EXISTING")).toBeNull();
+  });
 
   it("should set the variables to default correctly after resetting the keystore file", () => {
     spyOn(comp, "resetCurrentKeystoreFile").and.callThrough();
@@ -440,15 +455,12 @@ describe("WalletImportKeystorePage", () => {
   })
 
   it("should set clipBoardKeyStoreIsInvalid to false when then the keystore length is zero", () => {
-    spyOn(comp, "keyStoreString").and.callThrough();
-
     comp.keyStoreString = "";
     comp.onKeyStoreChanged();
     expect(comp.clipBoardKeyStoreIsInvalid).toBe(false);
   })
 
   it("should set clipBoardKeyStoreIsInvalid to true when the keystore JSON format is valid but the data is not", () => {
-    spyOn(comp, "keyStoreString").and.callThrough();
     spyOn(comp, "isValidKeyStore").and.returnValue(false);
 
     comp.keyStoreString = "{}";
@@ -458,13 +470,22 @@ describe("WalletImportKeystorePage", () => {
   })
 
   it("should set clipBoardKeyStoreIsInvalid to false when the keystore JSON format is valid and the data is also", () => {
-    spyOn(comp, "keyStoreString").and.callThrough();
     spyOn(comp, "isValidKeyStore").and.returnValue(true);
 
     comp.keyStoreString = "{}";
     comp.onKeyStoreChanged();
     expect(comp.clipBoardKeyStoreIsInvalid).toBe(false);
     expect(comp.keyStore).toEqual(Object({  }));
+  })
+
+  it("should catch the JSON parse because the JSON is not valid but length is greater than 0", () => {
+    spyOn(comp, "isValidKeyStore").and.returnValue(true);
+    spyOn(comp, "onKeyStoreChanged").and.callThrough();
+
+    comp.keyStoreString = "NOT_VALID_JSON";
+    comp.onKeyStoreChanged();
+    expect(comp.clipBoardKeyStoreIsInvalid).toBe(true);
+    expect(comp.keyStore).toBeNull();
   })
 
   it("should check if process method is called after calling the importedKeystoreFile method", () => {
@@ -511,11 +532,20 @@ describe("WalletImportKeystorePage", () => {
     });
   })
 
-  it("should set fileKeystoreInvalidData to true because the keystore is not valid", () => {
+  it("should set fileKeystoreInvalidData to true because the keystore is not valid and not a valid JSON", () => {
     spyOn(comp, "processInputBlob").and.callThrough();
     spyOn(comp, "isValidKeyStore").and.returnValue(false);
 
     comp.processInputBlob({target: {files: [{type: "", name: ""}], result: "piece \n of \n text"}}, "filename");
+
+    expect(comp.fileKeystoreInvalidData).toBe(true);
+  })
+
+  it("should set fileKeystoreInvalidData to true because the keystore is not valid but a valid JSON", () => {
+    spyOn(comp, "processInputBlob").and.callThrough();
+    spyOn(comp, "isValidKeyStore").and.returnValue(false);
+
+    comp.processInputBlob({target: {files: [{type: "", name: ""}], result: "{}"}}, "filename");
 
     expect(comp.fileKeystoreInvalidData).toBe(true);
   })
