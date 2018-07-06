@@ -303,12 +303,6 @@ export class WalletImportKeystorePage {
         this.processInputBlob(event, filename);
         resolve();
       };
-      reader.onabort = (event) => {
-        reject("Filereader on abort");
-      }
-      reader.onerror = (event) => {
-        reject("Filereader on error");
-      }
     });
   }
 
