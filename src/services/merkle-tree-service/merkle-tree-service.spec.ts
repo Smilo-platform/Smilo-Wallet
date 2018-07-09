@@ -243,6 +243,9 @@ describe("MerkleTreeService", () => {
             return Promise.resolve();
         });
 
+        // Add a spy to the console error to silence the logs showing up in the test output
+        spyOn(console, "error");
+
         service.remove(<any>dummyWallet).then(
             () => {
                 // Sort the removed keys so we can do an equality check
