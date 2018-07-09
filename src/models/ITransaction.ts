@@ -4,7 +4,7 @@ export interface ITransaction {
     timestamp: number;
     inputAddress: string;
     fee: number;
-    signatureData: string;
+    signatureData?: string;
     signatureIndex: number;
     dataHash: string;
     assetId: string;
