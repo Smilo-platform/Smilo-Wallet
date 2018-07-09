@@ -122,23 +122,22 @@ export class TransactionSignService implements ITransactionSignService {
         // With this root node we can verify if this transaction was
         // signed with the original Merkle Tree.
         let path = merkleAuthenticationPath.split(":");
-        let merkleTreeRoot: string = leafKey;
+        let nextRoot: string = leafKey;
         let layerCount = this.getLayerCount(transaction.inputAddress);
         let workingIndex = transaction.signatureIndex;
         for(let i = 0; i < layerCount - 1; i++) {
-
             let publicKey: string;
             let otherPublicKey = path[i];
             if(workingIndex % 2 == 0) {
-                publicKey = this.sha256(merkleTreeRoot + otherPublicKey);
+                publicKey = this.sha256(nextRoot + otherPublicKey);
             }
             else {
-                publicKey = this.sha256(otherPublicKey + merkleTreeRoot);
+                publicKey = this.sha256(otherPublicKey + nextRoot);
             }
 
             // Store the computed public key as we need it
             // in the next iteration.
-            merkleTreeRoot = publicKey;
+            nextRoot = publicKey;
 
             // We use bit shift instead of a division by 2
             // because Javascript does not support integer and we would
@@ -150,7 +149,7 @@ export class TransactionSignService implements ITransactionSignService {
         // Convert the last public key to a Smilo address.
         // This address should match the input address of the transaction.
         // Otherwise we know the signature is invalid.
-        return this.getPublicKey(merkleTreeRoot, layerCount) == transaction.inputAddress;
+        return this.getPublicKey(nextRoot, layerCount) == transaction.inputAddress;
     }
 
     private getPublicKey(publicKey: string, layerCount: number): string {
@@ -323,7 +322,7 @@ export class TransactionSignService implements ITransactionSignService {
     }
 
     private getLamportPrivateKey(prng: any): string {
-        let length = this.cs.length;
+        let length = this.cs.length - 1;
 
         return    this.cs[Math.round(prng() * length)] + this.cs[Math.round(prng() * length)] + this.cs[Math.round(prng() * length)] + this.cs[Math.round(prng() * length)] + this.cs[Math.round(prng() * length)]
                 + this.cs[Math.round(prng() * length)] + this.cs[Math.round(prng() * length)] + this.cs[Math.round(prng() * length)] + this.cs[Math.round(prng() * length)] + this.cs[Math.round(prng() * length)]
