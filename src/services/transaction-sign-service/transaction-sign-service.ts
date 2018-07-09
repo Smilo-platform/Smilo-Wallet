@@ -3,6 +3,7 @@ import { ITransaction } from "../../models/ITransaction";
 import { MerkleTreeService } from "../merkle-tree-service/merkle-tree-service";
 import { ILocalWallet } from "../../models/ILocalWallet";
 import { MerkleTree } from "../../merkle/MerkleTree";
+import { AddressService } from "../address-service/address-service";
 
 declare const sjcl: any;
 
@@ -17,7 +18,8 @@ export class TransactionSignService implements ITransactionSignService {
     private md256 = new sjcl.hash.sha256();
     private md512 = new sjcl.hash.sha512();
 
-    constructor(private merkleTreeService: MerkleTreeService) {
+    constructor(private merkleTreeService: MerkleTreeService,
+                private addressService: AddressService) {
 
     }
 
@@ -50,16 +52,74 @@ export class TransactionSignService implements ITransactionSignService {
         );
     }
 
+    /**
+     * Returns the data, as a single string, which can be hashed into
+     * the 'dataHash' property of the given transaction.
+     * @param transaction 
+     */
+    getHashableData(transaction: ITransaction): string {
+        let data = "";
+
+        data += `${ transaction.timestamp }:${ transaction.assetId }:${ transaction.inputAddress }:${ transaction.inputAmount }:${ transaction.fee }`;
+
+        for(let output of transaction.transactionOutputs) {
+            data += `:${ output.outputAddress }:${ output.outputAmount }`;
+        }
+
+        return data;
+    }
+
+    getDataHash(transaction: ITransaction): string {
+        return this.sha256Hex(this.getHashableData(transaction));
+    }
+
     isValid(transaction: ITransaction): boolean {
+        // Make sure a dataHash is set and is not empty
+        if(!transaction.dataHash)
+            return false;
+
+        // Make sure the dataHash is correct
+        if(transaction.dataHash != this.getDataHash(transaction))
+            return false;
+
+        // Make sure the input address is correct
+        if(!this.addressService.isValidAddress(transaction.inputAddress))
+            return false;
+
+        // Make sure the output addresses are correct
+        for(let output of transaction.transactionOutputs) {
+            if(!this.addressService.isValidAddress(output.outputAddress))
+                return false;
+        }
+
+        // Make sure the input and outputs are zero sum
+        let outputSum = transaction.transactionOutputs.reduce(
+            (previous, current) => {
+                return previous + current.outputAmount;
+            }, 0
+        );
+        if(outputSum != transaction.inputAmount)
+            return false;
+
+        // Make sure the signature is correct
+        if(!this.verifyMerkleSignature(transaction))
+            return false;
+
+        // TODO: check if the coins can actually be spent
+
         return true;
     }
 
     transactionToString(transaction: ITransaction): string {
-        let copy = JSON.parse(JSON.stringify(transaction));
-
-        delete copy["signatureData"];
-
-        return JSON.stringify(copy);
+        // Just a dummy....
+        return `
+            ${ transaction.timestamp.toString() }
+            ${ transaction.inputAddress }
+            ${ transaction.fee.toString() }
+            ${ transaction.dataHash }
+            ${ transaction.assetId }
+            ${ transaction.inputAmount.toString() }
+        `;
     }
 
     verifyMerkleSignature(transaction: ITransaction): boolean {
@@ -123,7 +183,7 @@ export class TransactionSignService implements ITransactionSignService {
         // signed with the original Merkle Tree.
         let path = merkleAuthenticationPath.split(":");
         let nextRoot: string = leafKey;
-        let layerCount = this.getLayerCount(transaction.inputAddress);
+        let layerCount = this.addressService.getLayerCount(transaction.inputAddress);
         let workingIndex = transaction.signatureIndex;
         for(let i = 0; i < layerCount - 1; i++) {
             let publicKey: string;
@@ -149,77 +209,17 @@ export class TransactionSignService implements ITransactionSignService {
         // Convert the last public key to a Smilo address.
         // This address should match the input address of the transaction.
         // Otherwise we know the signature is invalid.
-        return this.getPublicKey(nextRoot, layerCount) == transaction.inputAddress;
+        return this.addressService.addressFromPublicKey(nextRoot, layerCount) == transaction.inputAddress;
     }
-
-    private getPublicKey(publicKey: string, layerCount: number): string {
-        let preAddress = this.sha256ReturnBase32(
-            publicKey
-        ).substr(0, 32);
-
-        let addressPrefix = this.getPublicKeyPrefix(layerCount);
-
-        let checksum = this.sha256ReturnBase32(
-            addressPrefix +
-            preAddress
-        );
-
-        let address =  addressPrefix +
-                         preAddress +
-                         checksum.substr(0, 4);
-
-        return address;
-    }
-
-    private getPublicKeyPrefix(layerCount: number): string {
-        switch(layerCount) {
-            case(14):
-                return "S1";
-            case(15):
-                return "S2";
-            case(16):
-                return "S3";
-            case(17):
-                return "S4";
-            case(18):
-                return "S5";
-            default:
-                return "X1";
-        }
-    }
-
-    private getLayerCount(address: string): number {
-        let prefix = address.substr(0, 2);
-        switch(prefix) {
-            case("S1"):
-                return 14;
-            case("S2"):
-                return 15;
-            case("S3"):
-                return 16;
-            case("S4"):
-                return 17;
-            case("S5"):
-                return 18;
-            default:
-                return -1;
-        }
-    }
-
-    private merkleTree: MerkleTree;
 
     getMerkleSignature(wallet: ILocalWallet, password: string, message: string, privateKey: string, index: number, address: string): Promise<string> {
         return this.merkleTreeService.get(wallet, password).then<string>(
             (merkleTree) => {
-                this.merkleTree = merkleTree;
-                console.log("MERKLE TREE", merkleTree);
                 // Convert the message to a binary string. Next take the first 100 bits of this string.
                 let binaryMessage = this.sha256Binary(message).substr(0, 100);
 
                 // Get the lamport private key parts.
                 let lamportPrivateKeys = this.getLamportPrivateKeys(privateKey, index);
-
-                console.log("Lamport Private Keys", lamportPrivateKeys);
 
                 // We store the lamport signature in this variable.
                 let lamportSignature = "";
@@ -264,7 +264,6 @@ export class TransactionSignService implements ITransactionSignService {
                 // Construct the authentication path
                 let merklePath = "";
                 let authenticationPath = this.getAuthenticationPathIndexes(index, merkleTree.layers.length);
-                console.log("auth path", authenticationPath);
                 for(let i = 0; i < authenticationPath.length; i++) {
                     let layerData = merkleTree.layers[i][authenticationPath[i]];
 
@@ -296,7 +295,6 @@ export class TransactionSignService implements ITransactionSignService {
             // end up with floats...
             // Alternative would be divide by 2 and round down.
             workingIndex >>= 1;
-            console.log("Next working index: ", workingIndex);
         }
 
         return authenticationPath;
@@ -384,6 +382,16 @@ export class TransactionSignService implements ITransactionSignService {
         this.md256.reset();
 
         return sjcl.codec.base64.fromBits(hashedData);
+    }
+
+    private sha256Hex(data: string): string {
+        this.md256.update(data);
+
+        let hashedData = this.md256.finalize();
+
+        this.md256.reset();
+
+        return sjcl.codec.hex.fromBits(hashedData);
     }
 
     private sha256ReturnBase32(data: string): string {

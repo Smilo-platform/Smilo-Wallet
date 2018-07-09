@@ -52,6 +52,7 @@ import { UrlService } from "../services/url-service/url-service";
 import { WalletExtraImportPageModule } from "../pages/wallet-extra-import/wallet-extra-import.module";
 import { WalletExtraImportPage } from "../pages/wallet-extra-import/wallet-extra-import";
 import { TransactionSignService } from "../services/transaction-sign-service/transaction-sign-service";
+import { AddressService } from "../services/address-service/address-service";
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, "assets/i18n/");
@@ -126,6 +127,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     HockeyApp,
     MerkleTreeService,
     TransactionSignService,
+    AddressService,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
