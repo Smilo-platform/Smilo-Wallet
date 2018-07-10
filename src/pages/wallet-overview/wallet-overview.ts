@@ -49,7 +49,7 @@ export interface IWriteOptions {
   ]
 })
 export class WalletOverviewPage {
-  @ViewChild("doughnutCanvas") doughnutCanvas;
+  @ViewChild("doughnutCanvas") doughnutCanvas: any;
   /**
    * The picked currency for the shown values
    */
@@ -153,17 +153,14 @@ export class WalletOverviewPage {
               private exchangeService: ExchangesService,
               private transactionHistoryService: WalletTransactionHistoryService,
               private walletBalancesService: WalletBalanceService) {
-    this.translateService.onLangChange.subscribe(data => {
-      this.retrieveTranslations();
-    });
-    this.retrieveTranslations();
+
   }
 
   /**
    * Gets the translations to set programmatically
    */
-  retrieveTranslations(): void {
-    this.bulkTranslateService.getTranslations([
+  retrieveTranslations(): Promise<Map<string, string>> {
+    return this.bulkTranslateService.getTranslations([
       "wallet_overview.error",
       "wallet_overview.error_retrieving_data",
       "wallet_overview.click_retry",
@@ -185,7 +182,7 @@ export class WalletOverviewPage {
       "wallet_overview.loading_wallet",
       "wallet_overview.currency_value_zero"
     ]).then(data => {
-      this.translations = data;
+      return this.translations = data;
     });
   }
   
@@ -193,9 +190,17 @@ export class WalletOverviewPage {
    * Returns a promise when initialization is done
    */
   initialize(): Promise<void> {
+    this.getAndSubscribeToTranslations();
     return Promise.all([
       this.getAllWallets(), 
       this.getAvailableExchanges()]).then<void>();
+  }
+
+  getAndSubscribeToTranslations(): void {
+    this.translateService.onLangChange.subscribe(data => {
+      this.retrieveTranslations();
+    });
+    this.retrieveTranslations();
   }
 
   /**
@@ -332,15 +337,13 @@ export class WalletOverviewPage {
       } else if (exportType === "privatekey") {
         filename = ("PVK--" + this.currentWallet.publicKey).replace(/:/g, "-");
       }
-      if (this.platform.is("android") || this.platform.is("ios")) {
-        let options: IWriteOptions = {replace: true};
-        if (this.platform.is("android")) {
-          let storageLocation = this.fileNative.externalRootDirectory + "Download";
-          this.writeFileMobile(storageLocation, filename, data, options, "android");
-        } else {
-          let storageLocation = this.fileNative.syncedDataDirectory;
-          this.writeFileMobile(storageLocation, filename, data, options, "ios");
-        }
+      let options: IWriteOptions = {replace: true};
+      if (this.platform.is("android")) {
+        let storageLocation = this.fileNative.externalRootDirectory + "Download";
+        this.writeFileMobile(storageLocation, filename, data, options, "android");
+      } else if (this.platform.is("ios")) {
+        let storageLocation = this.fileNative.syncedDataDirectory;
+        this.writeFileMobile(storageLocation, filename, data, options, "ios");
       } else {
         this.downloadTxtFileWeb(data, filename);
       }
@@ -398,8 +401,8 @@ export class WalletOverviewPage {
    * @param options Options to overwrite existing file name
    * @param os Either android or ios
    */
-  writeFileMobile(storageLocation, filename, keystoreData, options, os): void {
-    this.fileNative.writeFile(storageLocation, filename, keystoreData, options).then(data => {
+  writeFileMobile(storageLocation, filename, keystoreData, options, os): Promise<any> {
+    return this.fileNative.writeFile(storageLocation, filename, keystoreData, options).then(data => {
       let toastMessage = "";
       if (os === "ios") {
         toastMessage = this.translations.get("wallet_overview.saved_keystore_ios");
@@ -409,7 +412,7 @@ export class WalletOverviewPage {
       this.showToastMessage(toastMessage, 2000, "bottom");
     }).catch(error => {
       let toast = this.toastCtrl.create({
-        message: this.translations.get("wallet_overview.first_start_keystore_download"),
+        message: "YO",
         position: "bottom",
         showCloseButton: true,
         closeButtonText: "Ok"
@@ -469,7 +472,7 @@ export class WalletOverviewPage {
    * @param publicKey 
    */
   getTransactionHistory(publicKey: string): Promise<void> {
-    return this.transactionHistoryService.getTransactionHistory(this.currentWallet.publicKey).then(data => {
+    return this.transactionHistoryService.getTransactionHistory(publicKey).then(data => {
       this.transactionsHistory = data;
       if (this.transactionsHistory.length > 0) {
         this.noTransactionHistoryVisibility = "hidden";
@@ -524,29 +527,35 @@ export class WalletOverviewPage {
    */
   getAvailableExchanges(): Promise<void> {
     return this.exchangeService.getAvailableExchanges().then(data => {
-      for (let i = 0; i < data.availableExchanges.length; i++) {
-        this.availableExchanges.push(data.availableExchanges[i]);
-      }
-      if (this.availableExchanges !== undefined) {
+      if (data.availableExchanges !== undefined) {
+        for (let i = 0; i < data.availableExchanges.length; i++) {
+          this.availableExchanges.push(data.availableExchanges[i]);
+        }
         this.pickedExchange = this.availableExchanges[0].exchangeName;
         this.pickedCurrency = this.availableExchanges[0].availableCurrencies[0];
         this.currentExchangeCurrencies = this.availableExchanges[0].availableCurrencies;
+      } else {
+        this.presentExchangesRetryButton();
       }
     }).catch(error => {
-      const confirm = this.alertCtrl.create({
-        title: this.translations.get("wallet_overview.error"),
-        message: this.translations.get("wallet_overview.error_retrieving_data"),
-        buttons: [
-          {
-            text: this.translations.get("wallet_overview.click_retry"),
-            handler: () => {
-              this.getAvailableExchanges();
-            }
-          }
-        ]
-      });
-      confirm.present();
+      this.presentExchangesRetryButton();
     });
+  }
+
+  presentExchangesRetryButton(): void {
+    const confirm = this.alertCtrl.create({
+      title: this.translations.get("wallet_overview.error"),
+      message: this.translations.get("wallet_overview.error_retrieving_data"),
+      buttons: [
+        {
+          text: this.translations.get("wallet_overview.click_retry"),
+          handler: () => {
+            this.getAvailableExchanges();
+          }
+        }
+      ]
+    });
+    confirm.present();
   }
   
   /**
@@ -620,7 +629,10 @@ export class WalletOverviewPage {
    * Set the currency values calculated on the exchange, currency and amount of coins
    */
   setCalculatedCurrencyValue(): Promise<void> {
-    if (this.pickedCurrency === undefined || this.currentWallet === undefined) {
+    if (this.pickedCurrency === undefined || 
+        this.currentWallet === undefined || 
+        this.pickedExchange === undefined ||
+        this.balances === undefined) {
       if (this.loading !== undefined) {
         this.loading.dismiss();
       }
@@ -632,9 +644,9 @@ export class WalletOverviewPage {
       let totalCurrencies: number = 0;
       this.currenciesForDoughnutCanvasLabels = [];
       this.currenciesForDoughnutCanvas = [];
-      if (this.doughnutChart !== undefined) {
-        this.doughnutChart.destroy();
-      }
+      // if (this.doughnutChart !== undefined) {
+        // this.doughnutChart.destroy();
+      // } 
       // Loop all balances of current wallet
       for (let y = 0; y < this.balances.length; y++) {
         let walletCurrency = this.balances[y].currency;
@@ -651,9 +663,8 @@ export class WalletOverviewPage {
             currentCurrencyValue = walletCurrencyAmount * valueApi;
             found = true;
           }
-          // So there was no price found for the current wallet currency
+          // So there was no direct price found for the current wallet currency
           if (i === prices.length -1 && !found) {
-            // TODO: If alternate price is also not found
             let alternatePrice = prices.find(price => price.currencyFrom === currencyToApi && price.currencyTo === this.pickedCurrency);
             if (currencyToApi === this.pickedCurrency) {
               alternatePrice = 1;
@@ -682,8 +693,6 @@ export class WalletOverviewPage {
             totalCurrencies += walletCurrencyAmount;
             this.balances[y].valueAmount = Number((currentCurrencyValue).toFixed(this.getFixedNumbers()));
             break;
-          } else if (!found && i === prices.length -1) {
-            // TODO: Didn"t find an alternative path
           }
         }
       }
@@ -708,7 +717,7 @@ export class WalletOverviewPage {
       }
       if (this.loading !== undefined) {
         this.loading.dismiss();
-      }
+      } 
     }).catch(error => {
       const confirm = this.alertCtrl.create({
         title: this.translations.get("wallet_overview.error"),
@@ -723,6 +732,7 @@ export class WalletOverviewPage {
         ]
       });
       confirm.present();
+      console.log("CATCH: " + error);
     });
   }
 
@@ -745,7 +755,9 @@ export class WalletOverviewPage {
    * Show the distribution chart. False when chart could not be drawn
    */
   displayChart(): void {
-    if (this.currenciesForDoughnutCanvasLabels !== undefined || this.doughnutCanvas !== undefined) {
+    if (this.currenciesForDoughnutCanvas !== undefined && 
+        this.currenciesForDoughnutCanvasLabels !== undefined && 
+        this.doughnutCanvas !== undefined) {
       this.doughnutChart = new Chart(this.doughnutCanvas.nativeElement, {
         type: "doughnut",
         data: {
@@ -753,7 +765,15 @@ export class WalletOverviewPage {
             data: this.currenciesForDoughnutCanvas,
             backgroundColor: [
               "#064C70",
-              "#1B79A9"
+              "#1B79A9",
+              "#d0ff00",
+              "#9aedbf",
+              "#99cc66",
+              "#9966cc",
+              "#ff6666",
+              "#800000",
+              "#993366",
+              "#40e0d0"
             ]
           }],
           labels: this.currenciesForDoughnutCanvasLabels
@@ -776,6 +796,6 @@ export class WalletOverviewPage {
           }
         }
       });
-    }
+    } 
   }
 }

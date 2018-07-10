@@ -2,7 +2,7 @@ declare const sjcl: any;
 import "seedrandom";
 import { LamportGeneratorThread, ILamportGeneratorThreadInput, ILamportGeneratorThreadOutput } from "./LamportGenerator";
 import { Storage } from "@ionic/storage";
-import { KeyStoreService, IKeyStoreService } from "../services/key-store-service/key-store-service";
+import { IKeyStoreService } from "../services/key-store-service/key-store-service";
 import { IWallet } from "../models/IWallet";
 import { IKeyStore } from "../models/IKeyStore";
 import { Platform } from "ionic-angular/platform/platform";
