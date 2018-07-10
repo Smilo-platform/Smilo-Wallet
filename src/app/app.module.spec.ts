@@ -1,7 +1,7 @@
 import { HttpLoaderFactory, AppModule } from "./app.module";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
-import { IonicModule } from "ionic-angular";
+import { IonicModule, Platform } from "ionic-angular";
 import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
 import { MockTranslationLoader } from "../../test-config/mocks/MockTranslationLoader";
 import { ComponentsModule } from "../components/components.module";
@@ -16,6 +16,7 @@ import { MockSettingService } from "../../test-config/mocks/MockSettingsService"
 import { SettingsService } from "../services/settings-service/settings-service";
 import { MockStatusBar } from "../../test-config/mocks/MockStatusBar";
 import { StatusBar } from "@ionic-native/status-bar";
+import { MockPlatform } from "../../test-config/mocks/MockPlatform";
 
 describe('SmiloWallet', () => {
     let comp: SmiloWallet;
@@ -25,7 +26,7 @@ describe('SmiloWallet', () => {
     let hockeyApp: MockHockeyApp;
     let settingsService: MockSettingService;
     let statusBar: MockStatusBar;
-    // let platform: MockPlatform;
+    let platform: MockPlatform;
 
     beforeEach(async(() => {
         androidPermissions = new MockAndroidPermissions();
@@ -33,6 +34,7 @@ describe('SmiloWallet', () => {
         hockeyApp = new MockHockeyApp();
         settingsService = new MockSettingService();
         statusBar = new MockStatusBar();
+        platform = new MockPlatform();
 
         TestBed.configureTestingModule({
             declarations: [SmiloWallet],
@@ -48,7 +50,8 @@ describe('SmiloWallet', () => {
                 { provide: WalletService, useValue: walletService },
                 { provide: HockeyApp, useValue: hockeyApp },
                 { provide: SettingsService, useValue: settingsService },
-                { provide: StatusBar, useValue: statusBar }
+                { provide: StatusBar, useValue: statusBar },
+                { provide: Platform, useValue: platform }
             ]
         }).compileComponents();
     }));
@@ -67,7 +70,7 @@ describe('SmiloWallet', () => {
 
     it("", () => {
         spyOn(comp, "ngOnInit").and.callThrough();
-        // spyOn(platform, "ready")
+        spyOn(platform, "ready").and.callThrough();
 
         comp.ngOnInit();
     });

@@ -36,7 +36,7 @@ export class SmiloWallet {
     this.platform.ready().then(() => {
 
       if (this.platform.is("android")) {
-        this.androidPermissions.requestPermissions([this.androidPermissions.PERMISSION.READ_EXTERNAL_STORAGE, this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE]);
+        // this.androidPermissions.requestPermissions([this.androidPermissions.PERMISSION.READ_EXTERNAL_STORAGE, this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE]);
       }
 
       this.prepareSettings();
