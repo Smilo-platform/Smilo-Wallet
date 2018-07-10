@@ -2,7 +2,7 @@ import { MerkleTreeService } from "./merkle-tree-service";
 import { MockKeyStoreService } from "../../../test-config/mocks/MockKeyStoreService";
 import { Platform } from "ionic-angular/platform/platform";
 import { Storage } from "@ionic/storage";
-import { MerkleTree } from "../../merkle/MerkleTree";
+import { MerkleTree } from "../../core/merkle/MerkleTree";
 
 describe("MerkleTreeService", () => {
     let service: MerkleTreeService;

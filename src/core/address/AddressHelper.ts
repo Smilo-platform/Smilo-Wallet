@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { CryptoHelper } from "../crypto/CryptoHelper";
 
 declare const sjcl: any;
 
@@ -9,14 +9,7 @@ export interface IAddressValidationResult {
     error?: AddressValidationErrorType;
 }
 
-export interface IAddressService {
-    addressFromPublicKey(publicKey: string, layerCount: number): string;
-    isValidAddress(address: string): IAddressValidationResult;
-    getLayerCount(address: string): number;
-}
-
-@Injectable()
-export class AddressService {
+export class AddressHelper {
     private prefixToCountMap = {
         S1: 14,
         S2: 15,
@@ -34,14 +27,16 @@ export class AddressService {
 
     private md256 = new sjcl.hash.sha256();
 
+    private cryptoHelper = new CryptoHelper();
+
     addressFromPublicKey(publicKey: string, layerCount: number): string {
-        let preAddress = this.sha256ReturnBase32(
+        let preAddress = this.cryptoHelper.sha256ReturnBase32(
             publicKey
         ).substr(0, 32);
 
         let addressPrefix = this.getAddressPrefix(layerCount);
 
-        let checksum = this.sha256ReturnBase32(
+        let checksum = this.cryptoHelper.sha256ReturnBase32(
             addressPrefix +
             preAddress
         );
@@ -84,7 +79,7 @@ export class AddressService {
         }
 
         let checksum = address.substr(34);
-        let correctEnding = this.sha256ReturnBase32(
+        let correctEnding = this.cryptoHelper.sha256ReturnBase32(
             address.substr(0, 2) + treeRoot
         ).substr(0, 4);
 
@@ -106,17 +101,7 @@ export class AddressService {
         return this.prefixToCountMap[address.substr(0, 2)] || -1;
     }
 
-    private getAddressPrefix(layerCount: number): string {
+    getAddressPrefix(layerCount: number): string {
         return this.countToPrefixMap[layerCount.toString()] || "X1";
-    }
-
-    private sha256ReturnBase32(data: string): string {
-        this.md256.update(data);
-
-        let hashedData = this.md256.finalize();
-
-        this.md256.reset();
-
-        return sjcl.codec.base32.fromBits(hashedData).substr(0, 32);
     }
 }

@@ -1,7 +1,7 @@
-import { AddressService } from "./address-service";
+import { AddressHelper } from "./AddressHelper";
 
-describe("AddressService", () => {
-    let service: AddressService;
+describe("AddressHelper", () => {
+    let helper: AddressHelper;
 
     // we use the addresses shown below as test vectors.
     let templatePublicKeys = [
@@ -40,7 +40,7 @@ describe("AddressService", () => {
     ];
 
     beforeEach(() => {
-        service = new AddressService();
+        helper = new AddressHelper();
     });
 
     beforeEach(() => {
@@ -52,7 +52,7 @@ describe("AddressService", () => {
 
     it("should generate correct addresses", () => {
         for(let addressTemplate of templatePublicKeys) {
-            let address = service.addressFromPublicKey(addressTemplate.key, addressTemplate.layerCount);
+            let address = helper.addressFromPublicKey(addressTemplate.key, addressTemplate.layerCount);
 
             expect(address).toBe(addressTemplate.address, `${ addressTemplate.key } should return ${ addressTemplate.address }`);
         }
@@ -62,7 +62,7 @@ describe("AddressService", () => {
         for(let templateAddress of templatePublicKeys) {
             let address = templateAddress.address;
 
-            expect(service.isValidAddress(address)).toEqual({
+            expect(helper.isValidAddress(address)).toEqual({
                 isValid: true
             })
         }
@@ -75,7 +75,7 @@ describe("AddressService", () => {
             // We sneakily change the address prefix.
             address = "X" + address.substr(1);
 
-            expect(service.isValidAddress(address)).toEqual({
+            expect(helper.isValidAddress(address)).toEqual({
                 isValid: false,
                 error: "prefix"
             });
@@ -89,7 +89,7 @@ describe("AddressService", () => {
             // We cut the address short
             address = address.substr(0, 30);
 
-            expect(service.isValidAddress(address)).toEqual({
+            expect(helper.isValidAddress(address)).toEqual({
                 isValid: false,
                 error: "tree_root_length"
             })
@@ -108,7 +108,7 @@ describe("AddressService", () => {
             // We sneakily change a character to an invalid value
             address = address.substr(0, 22) + invalidCharactersToTest[(i % invalidCharactersToTest.length)] + address.substr(23);
 
-            expect(service.isValidAddress(address)).toEqual({
+            expect(helper.isValidAddress(address)).toEqual({
                 isValid: false,
                 error: "invalid_character"
             });
@@ -126,7 +126,7 @@ describe("AddressService", () => {
 
             address = newPrefix + address.substr(2);
 
-            expect(service.isValidAddress(address)).toEqual({
+            expect(helper.isValidAddress(address)).toEqual({
                 isValid: false,
                 error: "checksum"
             })
