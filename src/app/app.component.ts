@@ -28,6 +28,10 @@ export class SmiloWallet {
               private hockeyApp: HockeyApp,
               private settingsService: SettingsService,
               private statusBar: StatusBar) {
+
+  }
+
+  ngOnInit(): void {
     this.statusBar.styleLightContent();
     this.platform.ready().then(() => {
 
@@ -42,6 +46,7 @@ export class SmiloWallet {
       this.prepareHockeyAppIntegration();
 
       this.prepareFirstPage();
+      console.log("IN READY");
     });
   }
 
