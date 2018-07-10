@@ -13,7 +13,6 @@ describe("TransactionSignService", () => {
     let keyStoreService: IKeyStoreService;
     let addressService: IAddressService;
     let merkleTree: MerkleTree;
-    let sjcl: any;
 
     beforeEach(() => {
         // Construct service
@@ -21,10 +20,12 @@ describe("TransactionSignService", () => {
         keyStoreService = new MockKeyStoreService();
         addressService = new MockAddressService();
 
-        service = new TransactionSignService(merkleTreeService, keyStoreService, addressService);
+        service = new TransactionSignService(<any>merkleTreeService, keyStoreService, <any>addressService);
     });
 
     beforeEach(() => {
+        let sjcl = (<any>window).sjcl;
+
         let md256 = new sjcl.hash.sha256();
         function sha256(data: string): string {
             md256.update(data, "utf8");

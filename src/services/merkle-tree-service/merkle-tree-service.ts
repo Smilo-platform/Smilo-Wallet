@@ -14,14 +14,10 @@ export interface IMerkleTreeService {
     remove(wallet: IWallet): Promise<void>;
 }
 
-/**
- * Cache storage for Merkle Trees. We moved this outside of the class declaration
- * to make it truly private.
- */
-let merkleTreeCache: {[index: string]: MerkleTree} = {};
-
 @Injectable()
 export class MerkleTreeService implements IMerkleTreeService {
+    private cache: {[index: string]: MerkleTree} = {};
+
     constructor(private keyStoreService: KeyStoreService,
                 private storage: Storage,
                 private platform: Platform) {
@@ -38,7 +34,7 @@ export class MerkleTreeService implements IMerkleTreeService {
         return MerkleTree.generate(privateKey, 14, this.platform, progressUpdate).then(
             (merkleTree) => {
                 // Cache Merkle Tree
-                merkleTreeCache[wallet.id] = merkleTree;
+                this.cache[wallet.id] = merkleTree;
                 
                 // Store Merkle Tree on disk
                 return merkleTree.serialize(wallet.id, this.storage, this.keyStoreService, password);
@@ -48,14 +44,14 @@ export class MerkleTreeService implements IMerkleTreeService {
     
     get(wallet: IWallet, password: string): Promise<MerkleTree> {
         // In cache?
-        if(merkleTreeCache[wallet.id]) {
-            return Promise.resolve(merkleTreeCache[wallet.id]);
+        if(this.cache[wallet.id]) {
+            return Promise.resolve(this.cache[wallet.id]);
         }
         else {
             // Read from disk and then cache
             return MerkleTree.fromDisk(wallet, this.storage, this.keyStoreService, password).then(
                 (merkleTree) => {
-                    merkleTreeCache[wallet.id] = merkleTree;
+                    this.cache[wallet.id] = merkleTree;
 
                     return merkleTree;
                 }
@@ -65,7 +61,7 @@ export class MerkleTreeService implements IMerkleTreeService {
 
     remove(wallet: IWallet): Promise<void> {
         // Remove from cache
-        delete merkleTreeCache[wallet.id];
+        delete this.cache[wallet.id];
 
         // Remove from disk
         return this.storage.get(MerkleTree.getConfigStorageKey(wallet)).then(
