@@ -2,8 +2,8 @@ import { AddressService } from "./address-service";
 
 describe("AddressService", () => {
     let service: AddressService;
-    let sjcl: any;
 
+    // we use the addresses shown below as test vectors.
     let templatePublicKeys = [
         {
             key: "PUBLIC_KEY_1",
@@ -58,7 +58,7 @@ describe("AddressService", () => {
         }
     });
 
-    it("should validate correctly addresses as valid", () => {
+    it("should validate correct addresses as valid", () => {
         for(let templateAddress of templatePublicKeys) {
             let address = templateAddress.address;
 

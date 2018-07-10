@@ -52,7 +52,6 @@ export class AddressService {
     }
 
     isValidAddress(address: string): IAddressValidationResult {
-        console.log("Address", address);
         // Check for invalid prefix
         if(this.getLayerCount(address) == -1) {
             return {
@@ -74,7 +73,7 @@ export class AddressService {
         // Check for valid characters
         let validCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
         for(let i = 0; i < 32; i++) {
-            if(validCharacters.indexOf(treeRoot[0]) == -1) {
+            if(validCharacters.indexOf(treeRoot[i]) == -1) {
                 return {
                     isValid: false,
                     error: "invalid_character"
@@ -86,8 +85,6 @@ export class AddressService {
         let correctEnding = this.sha256ReturnBase32(
             address.substr(0, 2) + treeRoot
         ).substr(0, 4);
-
-        console.log(checksum, correctEnding);
 
         // Check for valid checksum
         if(checksum != correctEnding) {
