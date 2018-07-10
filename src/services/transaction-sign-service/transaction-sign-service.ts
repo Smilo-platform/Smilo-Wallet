@@ -4,26 +4,41 @@ import { MerkleTreeService } from "../merkle-tree-service/merkle-tree-service";
 import { ILocalWallet } from "../../models/ILocalWallet";
 import { MerkleTree } from "../../merkle/MerkleTree";
 import { AddressService } from "../address-service/address-service";
+import { KeyStoreService } from "../key-store-service/key-store-service";
 
 declare const sjcl: any;
 
 export interface ITransactionSignService {
-    sign(wallet: ILocalWallet, password: string, transaction: ITransaction, privateKey: string, index: number): Promise<void>;
+    sign(wallet: ILocalWallet, password: string, transaction: ITransaction, index: number): Promise<void>;
+    getHashableData(transaction: ITransaction): string;
+    getDataHash(transaction: ITransaction): string;
 }
 
 @Injectable()
 export class TransactionSignService implements ITransactionSignService {
     private readonly cs = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     
-    private md256 = new sjcl.hash.sha256();
-    private md512 = new sjcl.hash.sha512();
+    private readonly md256 = new sjcl.hash.sha256();
+    private readonly md512 = new sjcl.hash.sha512();
 
     constructor(private merkleTreeService: MerkleTreeService,
+                private keyStoreService: KeyStoreService,
                 private addressService: AddressService) {
 
     }
 
-    sign(wallet: ILocalWallet, password: string, transaction: ITransaction, privateKey: string, index: number): Promise<void> {
+    /**
+     * Signs a transaction. To sign a transaction an ILocalWallet instance along with the password to decrypt its keystore must be given.
+     * Lastly an index must be given. This index refers to the Xth leaf node of the Merkle Tree where X is the index.
+     * 
+     * A promise is returned which if resolved means the 'signatureData' and 'signatureIndex' property of the transaction have been filled.
+     */
+    sign(wallet: ILocalWallet, password: string, transaction: ITransaction, index: number): Promise<void> {
+        // Extract the private key
+        let privateKey = this.keyStoreService.decryptKeyStore(wallet.keyStore, password);
+        if(!privateKey)
+            return Promise.reject("Wrong password");
+
         if(!transaction.timestamp) {
             transaction.timestamp = new Date().getTime();
         }
@@ -35,14 +50,18 @@ export class TransactionSignService implements ITransactionSignService {
             return Promise.reject("Error signing transaction!");
         }
 
-        return this.getMerkleSignature(
-            wallet, password,
-            this.transactionToString(transaction),
-            privateKey, index, transaction.inputAddress
-        ).then(
-            (signature) => {
-                transaction.signatureData = signature;
+        return this.merkleTreeService.get(wallet, password).then(
+            (merkleTree) => {
+                let signature = this.getMerkleSignature(
+                    merkleTree,
+                    this.transactionToString(transaction),
+                    privateKey, index
+                );
 
+                if(!signature)
+                    return Promise.reject("Could not compute signature");
+
+                transaction.signatureData = signature;
                 transaction.signatureIndex = index;
 
                 if(!this.isValid(transaction)) {
@@ -69,11 +88,23 @@ export class TransactionSignService implements ITransactionSignService {
         return data;
     }
 
+    /**
+     * Gets the data hash for the given transaction.
+     */
     getDataHash(transaction: ITransaction): string {
         return this.sha256Hex(this.getHashableData(transaction));
     }
 
-    isValid(transaction: ITransaction): boolean {
+    /**
+     * Returns true if the given transaction is valid. This takes into account:
+     * - A defined and correct 'dataHash' property
+     * - A valid input address has been defined
+     * - Valid output addresses have been defined
+     * - The sum of the outputs and the input are zero sum
+     * - The transaction signature is correct
+     * - TODO: check if coins can actually be spent
+     */
+    private isValid(transaction: ITransaction): boolean {
         // Make sure a dataHash is set and is not empty
         if(!transaction.dataHash)
             return false;
@@ -110,7 +141,12 @@ export class TransactionSignService implements ITransactionSignService {
         return true;
     }
 
-    transactionToString(transaction: ITransaction): string {
+    /**
+     * Converts the given transaction to a string.
+     * 
+     * The 'signatureData' and 'signatureIndex' property are ignored.
+     */
+    private transactionToString(transaction: ITransaction): string {
         // Just a dummy....
         return `
             ${ transaction.timestamp.toString() }
@@ -122,16 +158,19 @@ export class TransactionSignService implements ITransactionSignService {
         `;
     }
 
-    verifyMerkleSignature(transaction: ITransaction): boolean {
-        // Verifying the Merkle signature requires us to work up the Merkle Tree until we reach the public key at the root of the tree.
-        // Of course for the given transaction we do not have the actual Merkle Tree. Instead the transaction signer send us a part of this Merkle Tree.
-        // This part can be used to verify the authenticity of the signature. E.g. it makes it impossible to forge a fake but seemingly valid signature.
+    /**
+     * Verifies if the signature applied to the given transaction is correct.
+     * 
+     * Verifying the Merkle signature requires us to work up the Merkle Tree until we reach the public key at the root of the tree.
+     * Of course for the given transaction we do not have the actual Merkle Tree. Instead the transaction signer send us a part of this Merkle Tree.
+     * This part can be used to verify the authenticity of the signature. E.g. it makes it impossible to forge a fake but seemingly valid signature.
 
-        // We perform these steps:
-        // 1) construct the leaf node public key based on half the private keys and half the public keys we received.
-        // 2) work our way up the Merkle Tree (e.g. the authentication path) until we reach the root of the tree.
-        // 3) check if the computed root value of the Merkle Tree equals the input address of the transaction.
-
+     * We perform these steps:
+     * 1) construct the leaf node public key based on half the private keys and half the public keys we received.
+     * 2) work our way up the Merkle Tree (e.g. the authentication path) until we reach the root of the tree.
+     * 3) check if the computed root value of the Merkle Tree equals the input address of the transaction.
+     */
+    private verifyMerkleSignature(transaction: ITransaction): boolean {
         let signatureParts = transaction.signatureData.split(",");
 
         let lamportSignatures = signatureParts[0].split("::");
@@ -212,73 +251,72 @@ export class TransactionSignService implements ITransactionSignService {
         return this.addressService.addressFromPublicKey(nextRoot, layerCount) == transaction.inputAddress;
     }
 
-    getMerkleSignature(wallet: ILocalWallet, password: string, message: string, privateKey: string, index: number, address: string): Promise<string> {
-        return this.merkleTreeService.get(wallet, password).then<string>(
-            (merkleTree) => {
-                // Convert the message to a binary string. Next take the first 100 bits of this string.
-                let binaryMessage = this.sha256Binary(message).substr(0, 100);
+    /**
+     * Computes the Merkle signature for the given message.
+     */
+    private getMerkleSignature(merkleTree: MerkleTree, message: string, privateKey: string, index: number): string {
+        // Convert the message to a binary string. Next take the first 100 bits of this string.
+        let binaryMessage = this.sha256Binary(message).substr(0, 100);
 
-                // Get the lamport private key parts.
-                let lamportPrivateKeys = this.getLamportPrivateKeys(privateKey, index);
+        // Get the lamport private key parts.
+        let lamportPrivateKeys = this.getLamportPrivateKeys(privateKey, index);
 
-                // We store the lamport signature in this variable.
-                let lamportSignature = "";
+        // We store the lamport signature in this variable.
+        let lamportSignature = "";
 
-                // For each 'bit' in binaryMessage...
-                for(let i = 0; i < binaryMessage.length; i++) {
-                    let sign = binaryMessage[i];
-                    let isLastPart = i == binaryMessage.length - 1;
+        // For each 'bit' in binaryMessage...
+        for(let i = 0; i < binaryMessage.length; i++) {
+            let sign = binaryMessage[i];
+            let isLastPart = i == binaryMessage.length - 1;
 
-                    if(sign == "0") {
-                        // A zero 'bit' means we reveal the first private key.
-                        if(isLastPart) {
-                            // For the last private key pair we use SHA512 (full length).
-                            lamportSignature += lamportPrivateKeys[i * 2] + ":" + this.sha512(lamportPrivateKeys[i * 2 + 1]);
-                        }
-                        else {
-                            lamportSignature += lamportPrivateKeys[i * 2] + ":" + this.sha256Short(lamportPrivateKeys[i * 2 + 1]);
-                        }
-                    }
-                    else if(sign == "1") {
-                        // A one 'bit' means we reveal the second private key.
-                        if(isLastPart) {
-                            // For the last private key pair we use SHA512 (full length).
-                            lamportSignature += this.sha512(lamportPrivateKeys[i * 2]) + ":" + lamportPrivateKeys[i * 2 + 1];
-                        }
-                        else {
-                            lamportSignature += this.sha256Short(lamportPrivateKeys[i * 2]) + ":" + lamportPrivateKeys[i * 2 + 1];
-                        }
-                    }
-                    else {
-                        // We expect only a '0' or a '1' since the binaryMessage should be binary.
-                        // If this path is ever reached there is something seriously wrong!
-                        return Promise.reject("Binary message is not binary!");
-                    }
-
-                    if(!isLastPart) {
-                        // We use '::' as a divisor between each private key pair.
-                        lamportSignature += "::";
-                    }
+            if(sign == "0") {
+                // A zero 'bit' means we reveal the first private key.
+                if(isLastPart) {
+                    // For the last private key pair we use SHA512 (full length).
+                    lamportSignature += lamportPrivateKeys[i * 2] + ":" + this.sha512(lamportPrivateKeys[i * 2 + 1]);
                 }
-
-                // Construct the authentication path
-                let merklePath = "";
-                let authenticationPath = this.getAuthenticationPathIndexes(index, merkleTree.layers.length);
-                for(let i = 0; i < authenticationPath.length; i++) {
-                    let layerData = merkleTree.layers[i][authenticationPath[i]];
-
-                    merklePath += layerData;
-                    if(i < authenticationPath.length - 1) {
-                        merklePath += ":";
-                    }
+                else {
+                    lamportSignature += lamportPrivateKeys[i * 2] + ":" + this.sha256Short(lamportPrivateKeys[i * 2 + 1]);
                 }
-
-                return lamportSignature + "," + merklePath;
             }
-        );
+            else if(sign == "1") {
+                // A one 'bit' means we reveal the second private key.
+                if(isLastPart) {
+                    // For the last private key pair we use SHA512 (full length).
+                    lamportSignature += this.sha512(lamportPrivateKeys[i * 2]) + ":" + lamportPrivateKeys[i * 2 + 1];
+                }
+                else {
+                    lamportSignature += this.sha256Short(lamportPrivateKeys[i * 2]) + ":" + lamportPrivateKeys[i * 2 + 1];
+                }
+            }
+            else {
+                // We expect only a '0' or a '1' since the binaryMessage should be binary.
+                // If this path is ever reached there is something seriously wrong!
+                return null;
+            }
+
+            if(!isLastPart) {
+                // We use '::' as a divisor between each private key pair.
+                lamportSignature += "::";
+            }
+        }
+
+        // Construct the authentication path
+        let merklePath = "";
+        let authenticationPath = this.getAuthenticationPathIndexes(index, merkleTree.layers.length);
+        for(let i = 0; i < authenticationPath.length; i++) {
+            let layerData = merkleTree.layers[i][authenticationPath[i]];
+
+            merklePath += layerData;
+            if(i < authenticationPath.length - 1) {
+                merklePath += ":";
+            }
+        }
+
+        return lamportSignature + "," + merklePath;
     }
 
-    getAuthenticationPathIndexes(startingIndex: number, layerCount: number): number[] {
+    private getAuthenticationPathIndexes(startingIndex: number, layerCount: number): number[] {
         let authenticationPath: number[] = [];
 
         let workingIndex = startingIndex;
@@ -300,7 +338,7 @@ export class TransactionSignService implements ITransactionSignService {
         return authenticationPath;
     }
 
-    getLamportPrivateKeys(privateKey: string, index: number): string[] {
+    private getLamportPrivateKeys(privateKey: string, index: number): string[] {
         let privateKeyParts: string[] = [];
 
         // Initialize the prng and query it until we reach the required index.

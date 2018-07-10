@@ -10,7 +10,9 @@ export interface IAddressValidationResult {
 }
 
 export interface IAddressService {
-
+    addressFromPublicKey(publicKey: string, layerCount: number): string;
+    isValidAddress(address: string): IAddressValidationResult;
+    getLayerCount(address: string): number;
 }
 
 @Injectable()
