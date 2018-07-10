@@ -11,7 +11,7 @@ require('zone.js/dist/jasmine-patch');
 require('zone.js/dist/async-test');
 require('zone.js/dist/fake-async-test');
 
-var appContext = require.context('../src', true, /wallet-overview.spec.ts/); //   /\.spec\.ts/    /wallet-service.spec.ts/
+var appContext = require.context('../src', true, /\.spec\.ts/); //   /\.spec\.ts/    /wallet-service.spec.ts/
 
 appContext.keys().forEach(appContext);
 

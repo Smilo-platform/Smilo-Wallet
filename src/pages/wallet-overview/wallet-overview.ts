@@ -644,9 +644,9 @@ export class WalletOverviewPage {
       let totalCurrencies: number = 0;
       this.currenciesForDoughnutCanvasLabels = [];
       this.currenciesForDoughnutCanvas = [];
-      // if (this.doughnutChart !== undefined) {
-        // this.doughnutChart.destroy();
-      // } 
+      if (this.doughnutChart !== undefined) {
+        this.doughnutChart.destroy();
+      } 
       // Loop all balances of current wallet
       for (let y = 0; y < this.balances.length; y++) {
         let walletCurrency = this.balances[y].currency;
@@ -732,7 +732,6 @@ export class WalletOverviewPage {
         ]
       });
       confirm.present();
-      console.log("CATCH: " + error);
     });
   }
 
