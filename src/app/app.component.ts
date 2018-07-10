@@ -31,71 +31,71 @@ export class SmiloWallet {
 
   }
 
-  ngOnInit(): void {
+  ngOnInit(): Promise<void> {
     this.statusBar.styleLightContent();
-    this.platform.ready().then(() => {
-
-      if (this.platform.is("android")) {
-        // this.androidPermissions.requestPermissions([this.androidPermissions.PERMISSION.READ_EXTERNAL_STORAGE, this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE]);
-      }
+    return this.platform.ready().then(() => {
+      this.preparePermissions();
 
       this.prepareSettings();
-      
-      this.prepareTranslations();
 
       this.prepareHockeyAppIntegration();
 
       this.prepareFirstPage();
-      console.log("IN READY");
     });
   }
 
-  prepareSettings() {
+  preparePermissions(): void {
+    if (this.platform.is("android")) {
+      this.androidPermissions.requestPermissions([this.androidPermissions.PERMISSION.READ_EXTERNAL_STORAGE, this.androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE]);
+    }
+  }
+
+  prepareSettings(): Promise<void[]> {
     this.settingsService.getActiveTheme().subscribe(val => this.selectedTheme = val);
 
-    this.settingsService.getLanguageSettings().then(data => {
+    let languageSettingsPromise = this.settingsService.getLanguageSettings().then(data => {
       this.translate.setDefaultLang("en");
 
       this.translate.use(data || "en");
     });
 
-    this.settingsService.getNightModeSettings().then(data => {
+    let nightModePromise = this.settingsService.getNightModeSettings().then(data => {
       this.settingsService.setActiveTheme(data || 'light-theme');
     });
+
+    return Promise.all([languageSettingsPromise, nightModePromise]);
   }
 
-  prepareTranslations() {
-    this.translate.setDefaultLang("en");
-    this.translate.use("en");
-  }
-
-  prepareHockeyAppIntegration() {
-    this.hockeyApp.start(HOCKEY_APP_ANDROID_ID, HOCKEY_APP_IOS_ID,
-      HOCKEY_APP_AUTO_SEND_AUTO_UPDATES, HOCKEY_APP_IGNORE_ERROR_HEADER).then(
-      () => {
-        console.log("Hockey App SDK initialized");
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
-  }
-
-  prepareFirstPage() {
-    this.walletService.getAll().then(
-      (wallets) => {
-        if(wallets.length == 0) {
-          this.rootPage = LandingPage;
+  prepareHockeyAppIntegration(): Promise<void> {
+    return new Promise((resolve, reject) => { this.hockeyApp.start(HOCKEY_APP_ANDROID_ID, HOCKEY_APP_IOS_ID,
+        HOCKEY_APP_AUTO_SEND_AUTO_UPDATES, HOCKEY_APP_IGNORE_ERROR_HEADER).then(
+        () => {
+          resolve();
+        },
+        (error) => {
+          reject();
         }
-        else {
-          this.rootPage = HomePage;
+      );
+    })
+  }
+
+  prepareFirstPage(): Promise<void> {
+    return new Promise((resolve, reject) => { this.walletService.getAll().then(
+        (wallets) => {
+          if (wallets.length === 0) {
+            this.rootPage = LandingPage;
+          }
+          else {
+            this.rootPage = HomePage;
+          }
+          resolve();
+        },
+        (error) => {
+          // Something went wrong reading the crypto keys.
+          // How will we handle this? Generic error page maybe?
+          reject();
         }
-      },
-      (error) => {
-        // Something went wrong reading the crypto keys.
-        // How will we handle this? Generic error page maybe?
-        console.error(error);
-      }
-    );
+      );
+    })
   }
 }

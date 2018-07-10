@@ -2,7 +2,7 @@ import { HttpLoaderFactory, AppModule } from "./app.module";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 import { IonicModule, Platform } from "ionic-angular";
-import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
+import { TranslateLoader, TranslateModule, TranslateService } from "@ngx-translate/core";
 import { MockTranslationLoader } from "../../test-config/mocks/MockTranslationLoader";
 import { ComponentsModule } from "../components/components.module";
 import { SmiloWallet } from "./app.component";
@@ -17,6 +17,9 @@ import { SettingsService } from "../services/settings-service/settings-service";
 import { MockStatusBar } from "../../test-config/mocks/MockStatusBar";
 import { StatusBar } from "@ionic-native/status-bar";
 import { MockPlatform } from "../../test-config/mocks/MockPlatform";
+import { MockTranslateService } from "../../test-config/mocks/MockTranslateService";
+import { LandingPage } from "../pages/landing/landing";
+import { HomePage } from "../pages/home/home";
 
 describe('SmiloWallet', () => {
     let comp: SmiloWallet;
@@ -27,6 +30,7 @@ describe('SmiloWallet', () => {
     let settingsService: MockSettingService;
     let statusBar: MockStatusBar;
     let platform: MockPlatform;
+    let translate: MockTranslateService;
 
     beforeEach(async(() => {
         androidPermissions = new MockAndroidPermissions();
@@ -35,6 +39,7 @@ describe('SmiloWallet', () => {
         settingsService = new MockSettingService();
         statusBar = new MockStatusBar();
         platform = new MockPlatform();
+        translate = new MockTranslateService();
 
         TestBed.configureTestingModule({
             declarations: [SmiloWallet],
@@ -51,7 +56,8 @@ describe('SmiloWallet', () => {
                 { provide: HockeyApp, useValue: hockeyApp },
                 { provide: SettingsService, useValue: settingsService },
                 { provide: StatusBar, useValue: statusBar },
-                { provide: Platform, useValue: platform }
+                { provide: Platform, useValue: platform },
+                { provide: TranslateService, useValue: translate }
             ]
         }).compileComponents();
     }));
@@ -68,10 +74,108 @@ describe('SmiloWallet', () => {
         expect(result).toEqual(new TranslateHttpLoader(null, "assets/i18n/"));
     });
 
-    it("", () => {
+    it("should make a call to style the status bar light, prepare permissions, settings, translations, hockeyappintegration and firstpage", (done) => {
         spyOn(comp, "ngOnInit").and.callThrough();
-        spyOn(platform, "ready").and.callThrough();
+        spyOn(statusBar, "styleLightContent");
+        spyOn(comp, "preparePermissions");
+        spyOn(comp, "prepareSettings");
+        spyOn(comp, "prepareHockeyAppIntegration");
+        spyOn(comp, "prepareFirstPage");
 
-        comp.ngOnInit();
+        comp.ngOnInit().then(data => {
+            expect(statusBar.styleLightContent).toHaveBeenCalled();
+            expect(comp.preparePermissions).toHaveBeenCalled();
+            expect(comp.prepareSettings).toHaveBeenCalled();
+            expect(comp.prepareHockeyAppIntegration).toHaveBeenCalled();
+            expect(comp.prepareFirstPage).toHaveBeenCalled();
+            done();
+        });
+    });
+
+    it("should prepare the permissions for android", () => {
+        spyOn(platform, "is").and.callFake((arg) => {
+            if (arg === "android") return true; else return false;
+        });
+        spyOn(androidPermissions, "requestPermissions");
+
+        comp.preparePermissions();
+
+        expect(androidPermissions.requestPermissions).toHaveBeenCalledWith([androidPermissions.PERMISSION.READ_EXTERNAL_STORAGE, androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE]);
+    });
+
+    it("should not request android permissions", () => {
+        spyOn(platform, "is").and.returnValue(false);
+        spyOn(androidPermissions, "requestPermissions");
+
+        comp.preparePermissions();
+
+        expect(androidPermissions.requestPermissions).not.toHaveBeenCalled();
+    });
+
+    it("should set the proper default language and theme", (done) => {
+        spyOn(settingsService, "getActiveTheme").and.callThrough();
+        spyOn(settingsService, "getLanguageSettings").and.callThrough();
+        spyOn(settingsService, "setActiveTheme");
+        spyOn(translate, "setDefaultLang");
+        spyOn(translate, "use");
+
+        comp.prepareSettings().then(data => {
+            expect(settingsService.getActiveTheme).toHaveBeenCalled();
+            expect(translate.setDefaultLang).toHaveBeenCalledWith("en");
+            expect(translate.use).toHaveBeenCalledWith("en");
+            expect(settingsService.setActiveTheme).toHaveBeenCalledWith("light-theme");
+            done();
+        });
+    });
+
+    it("should call hockey start with the right arguments and return a resolved promise", (done) => {
+        spyOn(hockeyApp, "start").and.returnValue(Promise.resolve());
+
+        comp.prepareHockeyAppIntegration().then(data => {
+            expect(hockeyApp.start).toHaveBeenCalledWith(jasmine.any(String), jasmine.any(String), true, true);
+            done();
+        });
+    });
+
+    it("should call hockey start and receive a rejected promise", (done) => {
+        spyOn(hockeyApp, "start").and.returnValue(Promise.reject(""));
+
+        comp.prepareHockeyAppIntegration().then(data => {
+            // Shouldn't be here
+            expect(false).toBeTruthy();
+            done();
+        }).catch(data => {
+            expect(true).toBeTruthy();
+            done();
+        });
+    });
+
+    it("should set rootpage to homepage because there is atleast 1 wallet", (done) => {
+        comp.prepareFirstPage().then(data => {
+            expect(comp.rootPage).toBe(HomePage);
+            done();
+        });
+    });
+
+    it("should set rootpage to landingpage because there are no wallets", (done) => {
+        spyOn(walletService, "getAll").and.returnValue(Promise.resolve([]));
+
+        comp.prepareFirstPage().then(data => {
+            expect(comp.rootPage).toBe(LandingPage);
+            done();
+        });
+    });
+
+    it("should return a rejected promise and let rootpage be undefined", (done) => {
+        spyOn(walletService, "getAll").and.returnValue(Promise.reject(""));
+
+        comp.prepareFirstPage().then(data => {
+            // Should not get here
+            expect(true).toBeFalsy();
+            done();
+        }).catch(data => {
+            expect(comp.rootPage).toBeUndefined();
+            done();
+        });
     });
 });

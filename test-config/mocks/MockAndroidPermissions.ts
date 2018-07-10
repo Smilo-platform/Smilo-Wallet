@@ -1,10 +1,6 @@
 import { AndroidPermissions } from "@ionic-native/android-permissions";
 
-export class MockAndroidPermissions implements AndroidPermissions {
-    constructor() {
-        
-    }
-
+export class MockAndroidPermissions extends AndroidPermissions {
     PERMISSION: any;
     checkPermission(permission: string): Promise<any> {
         return Promise.resolve();

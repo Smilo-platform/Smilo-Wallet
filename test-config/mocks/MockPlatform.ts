@@ -25,7 +25,7 @@ export class MockPlatform extends Platform {
         
     }
     is(platformName: string): boolean {
-        return <any>{};
+        return false;
     }
     platforms(): string[] {
         return <any>{};
