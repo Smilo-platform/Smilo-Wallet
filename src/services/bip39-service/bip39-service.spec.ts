@@ -1,12 +1,14 @@
 import { BIP39Service } from "./bip39-service";
 import { MockTranslateService } from "../../../test-config/mocks/MockTranslateService";
 import { MockHttpClient } from "../../../test-config/mocks/MockHttpClient";
+import { Observable } from "rxjs/Observable";
 
 describe("BIP39Service", () => {
     let service: BIP39Service;
     let httpClient: MockHttpClient;
     let translateService: MockTranslateService;
     let forge: any;
+    let activeWordListSpy: jasmine.Spy;
 
     beforeEach(() => {
         translateService = new MockTranslateService();
@@ -22,7 +24,7 @@ describe("BIP39Service", () => {
 
     beforeEach(() => {
         // Mock the getActiveWordList function so no http calls are made.
-        spyOn(<any>service, "getActiveWordList").and.returnValue(
+        activeWordListSpy = spyOn(<any>service, "getActiveWordList").and.returnValue(
             Promise.resolve(wordList.split('\n'))
         );
     })
@@ -181,6 +183,56 @@ describe("BIP39Service", () => {
                 done();
             }
         );
+    });
+
+    it("should return a string array from a string and when already retrieved return it locally", (done) => {
+        spyOn(httpClient, "get").and.returnValue(Observable.of("word1, word2, word3"));
+        activeWordListSpy.and.callThrough();
+        (<any>service).getActiveWordList().then(data => {
+            expect(data).toEqual(['word1, word2, word3']);
+
+            (<any>service).activeWordList = data;
+
+            (<any>service).getActiveWordList().then(data => {
+                expect(data).toEqual(['word1, word2, word3']);
+                done();
+            });
+        });
+    });
+
+    it("should throw an exception because the entropy size in bits has to be divisible by 32", (done) => {
+        service.generate(15).then(data => {
+            // Should throw exception
+            expect(false).toBeTruthy();
+            done();
+        }).catch(data => {
+            expect(true).toBeTruthy();
+            done();
+        });
+    });
+
+    it("should return a specific uint8array", () => {
+        spyOn(forge.random, "getBytesSync").and.returnValue("a");
+
+        let intarray = new Uint8Array(1);
+        intarray.set([97]);
+
+        expect((<any>service).getRandomBytes(10)).toEqual(intarray);
+    });
+
+    it("should throw because the bytearray is not correct", () => {
+        expect((<any>service).toMnemonic).toThrowError();
+    });
+
+    it("should give back a specfic seed with an empty mnemonic and passphrase", () => {
+        expect(service.toSeed("")).toBe("4ed8d4b17698ddeaa1f1559f152f87b5d472f725ca86d341bd0276f1b61197e21dd5a391f9f5ed7340ff4d4513aab9cce44f9497a5e7ed85fd818876b6eb402e");
+    });
+
+    it("should return 4 spaces of u3000 when 5 words", () => {
+        (<any>service).language = "japanese";
+        let result = (<any>service).joinWords(["word1", "word2", "word3", "word4", "word5"]);
+        var count = (result.match(/\u3000/g) || []).length;
+        expect(count).toBe(4);
     });
 });
 
