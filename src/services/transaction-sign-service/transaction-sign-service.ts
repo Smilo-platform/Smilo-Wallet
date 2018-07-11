@@ -9,8 +9,6 @@ import { MerkleLamportSigner } from "../../core/signatures/MerkleLamportSigner";
 import { MerkleLamportVerifier } from "../../core/signatures/MerkleLamportVerifier";
 import { AddressHelper } from "../../core/address/AddressHelper";
 
-declare const sjcl: any;
-
 export interface ITransactionSignService {
     sign(wallet: ILocalWallet, password: string, transaction: ITransaction, index: number): Promise<void>;
     getHashableData(transaction: ITransaction): string;
@@ -24,11 +22,6 @@ export class TransactionSignService implements ITransactionSignService {
     private transactionSerializer = new TransactionSerializer();
     private addressHelper = new AddressHelper();
     private cryptoHelper = new CryptoHelper();
-
-    private readonly cs = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    
-    private readonly md256 = new sjcl.hash.sha256();
-    private readonly md512 = new sjcl.hash.sha512();
 
     constructor(private merkleTreeService: MerkleTreeService,
                 private keyStoreService: KeyStoreService) {

@@ -25,8 +25,6 @@ export class AddressHelper {
         "18": "S5"
     };
 
-    private md256 = new sjcl.hash.sha256();
-
     private cryptoHelper = new CryptoHelper();
 
     addressFromPublicKey(publicKey: string, layerCount: number): string {
