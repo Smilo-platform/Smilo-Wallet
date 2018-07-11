@@ -1,7 +1,5 @@
 import { CryptoHelper } from "../crypto/CryptoHelper";
 
-declare const sjcl: any;
-
 export declare type AddressValidationErrorType = "prefix" | "tree_root_length" | "invalid_character" | "checksum";
 
 export interface IAddressValidationResult {
