@@ -15,11 +15,6 @@ import { IonicPage, NavController, NavParams } from "ionic-angular";
 })
 export class TransferPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
-  }
-
-  ionViewDidLoad() {
-    console.log("ionViewDidLoad TransferPage");
-  }
+  constructor(public navCtrl: NavController, public navParams: NavParams) {}
 
 }
