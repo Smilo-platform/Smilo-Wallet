@@ -63,27 +63,27 @@ describe("MerkleLamportSigner", () => {
                 ],
                 merkleTree: new MerkleTree([
                     [
-                        "h5Y8vedTt03whfNJYmUDM00bExRkrIuZVMxbGLNYDSM=",
-                        "/pCTcDOekWzE9YZwQ4xHC83JUbbNMOfNkG25dQ/yoZI=", 
-                        "OfDChClZSy/N15Y31IKY9RZrQO3tzA/cw229amW0JXE=", 
-                        "o62odfgggADqujiYRMIjBfFqMmp0HPVHLYfBpeQfGTQ=", 
-                        "wHpuLagMalhAX+owv5o8i0E40VlMPRTiLiMIl5cMOnk=", 
-                        "gMu2UOcb9zbEL1b+djuY3YTJgRmHDlnx0DN4rVxd3qY=", 
-                        "jABXSFbX0AwgJ9rflJFwu0kHxK3luWr3FJCpKyndllw=", 
-                        "bUchNU+IBG8RZ2ddlq7+7AmwlIXLpNoOce+Qfq9KVKI="
+                        "MInCpFCkAy9FtdLyaOkzrCUGQr9SwBawdsuFl+fGztw=",
+                        "T0+9R9cF7s0JBndiweE4MdNObXhICiZhH1OE80LTcYI=", 
+                        "MuThec9PDdKaLJPlSaFw3weKYpOPVUuoz65V8zLk9Rw=", 
+                        "TPrnSqnVHFUAxgjuYXFzbzvzWROjZ/SlKyQTasKYLYo=", 
+                        "hvCC22ehsGD+8D0p/JiLJtrftl2oOlE4j7ICDaJOydM=", 
+                        "+5UWCyLdX6QfSMXi8Mi+2dol7vW9p1Nw542lC3O/jOk=", 
+                        "MVM6LnyQIqOxNKKayPrihan0O5LPJzbCUWD24kdK3Hk=", 
+                        "XkDU8VlRGPVtQ/fmEqRlboH+CgBvJC/Cf7FnwhlmGQg="
                     ],
                     [
-                        "8adjx5y3fXOlkqzLvb/LTSb8S5Htnzs6ITfbmoKz3Zs=",
-                        "hT3Ksf3Uzf6uzqE/oqZFMxI27pZ67CRg+o8rBrAYUHk=",
-                        "7Ss4sPbCPt1QpyUVgpHgjbb4bOErgZX4j6/o4361GHQ=",
-                        "Bi6wCoITshy8jY8JoN/eYIPk95qx1L8x2lBsFITCwNw="
+                        "wxh5iEyZ9NcoTA1HYAO0H306ydRENvLl60LvXAq0rAI=",
+                        "lQVcLuQ9bnl7txitMfkDtTs9YCuATHk534lS5tVwc0g=",
+                        "ZwlepbUdDYWoo9QR9vLFV/HXbwBaB5TPMYdxpsAvCt8=",
+                        "+7SKGMfQhSPYNe6NNPLcYmB2T4hAJZ6RlNWO3lXdKpQ="
                     ],
                     [
-                        "WSkLXusmgdkfgjl/pfKauq2PWNDODrmQrbs6TmpvSl8=",
-                        "xW9LYp4FVYwqkMuREDN+y1+wlb83BtvVJgnR0PTEVlE="
+                        "2+dr9t4+562ysmWkmNMmU3Qpjaj7Vk2657siQNMcOLM=",
+                        "2NbVkchUbqrHxILSiQlofWKk40acTCBD4ZJu9RzdLXk="
                     ],
                     [
-                        "0DbVwOouMaiGebP74WdVkLlrW95NdWIVbkwztkPxqG0="
+                        "6p7C3Q2/jvFiP8aKDSb/OXvCjZZ9UVSc7Hu/BGrCIns="
                     ]
                 ]),
                 message: "hello world", // 1011
@@ -91,7 +91,7 @@ describe("MerkleLamportSigner", () => {
                 index: 0
             },
             output: {
-                signature: "Zkr6ceBStsK/jY1R:i0p2::i0p3:yFvfFWOHDl5IV8ci::FLkoqREiltsnt0Ys:i0p6::m5lOjM+LbdPcUp+fImJcGP37+D770pepFXFg6noqr2BhVw0M+arvg5Uqr/DK+ZqgXf5jvHHklll/4Zi+vsTZZw==:i0p8,/pCTcDOekWzE9YZwQ4xHC83JUbbNMOfNkG25dQ/yoZI=:hT3Ksf3Uzf6uzqE/oqZFMxI27pZ67CRg+o8rBrAYUHk=:xW9LYp4FVYwqkMuREDN+y1+wlb83BtvVJgnR0PTEVlE="
+                signature: "Zkr6ceBStsK/jY1R:i0p2::i0p3:yFvfFWOHDl5IV8ci::FLkoqREiltsnt0Ys:i0p6::m5lOjM+LbdPcUp+fImJcGP37+D770pepFXFg6noqr2BhVw0M+arvg5Uqr/DK+ZqgXf5jvHHklll/4Zi+vsTZZw==:i0p8,T0+9R9cF7s0JBndiweE4MdNObXhICiZhH1OE80LTcYI=:lQVcLuQ9bnl7txitMfkDtTs9YCuATHk534lS5tVwc0g=:2NbVkchUbqrHxILSiQlofWKk40acTCBD4ZJu9RzdLXk="
             }
         },
         // Same as above but with different index
@@ -135,27 +135,27 @@ describe("MerkleLamportSigner", () => {
                 ],
                 merkleTree: new MerkleTree([
                     [
-                        "h5Y8vedTt03whfNJYmUDM00bExRkrIuZVMxbGLNYDSM=",
-                        "/pCTcDOekWzE9YZwQ4xHC83JUbbNMOfNkG25dQ/yoZI=", 
-                        "OfDChClZSy/N15Y31IKY9RZrQO3tzA/cw229amW0JXE=", 
-                        "o62odfgggADqujiYRMIjBfFqMmp0HPVHLYfBpeQfGTQ=", 
-                        "wHpuLagMalhAX+owv5o8i0E40VlMPRTiLiMIl5cMOnk=", 
-                        "gMu2UOcb9zbEL1b+djuY3YTJgRmHDlnx0DN4rVxd3qY=", 
-                        "jABXSFbX0AwgJ9rflJFwu0kHxK3luWr3FJCpKyndllw=", 
-                        "bUchNU+IBG8RZ2ddlq7+7AmwlIXLpNoOce+Qfq9KVKI="
+                        "MInCpFCkAy9FtdLyaOkzrCUGQr9SwBawdsuFl+fGztw=",
+                        "T0+9R9cF7s0JBndiweE4MdNObXhICiZhH1OE80LTcYI=", 
+                        "MuThec9PDdKaLJPlSaFw3weKYpOPVUuoz65V8zLk9Rw=", 
+                        "TPrnSqnVHFUAxgjuYXFzbzvzWROjZ/SlKyQTasKYLYo=", 
+                        "hvCC22ehsGD+8D0p/JiLJtrftl2oOlE4j7ICDaJOydM=", 
+                        "+5UWCyLdX6QfSMXi8Mi+2dol7vW9p1Nw542lC3O/jOk=", 
+                        "MVM6LnyQIqOxNKKayPrihan0O5LPJzbCUWD24kdK3Hk=", 
+                        "XkDU8VlRGPVtQ/fmEqRlboH+CgBvJC/Cf7FnwhlmGQg="
                     ],
                     [
-                        "8adjx5y3fXOlkqzLvb/LTSb8S5Htnzs6ITfbmoKz3Zs=",
-                        "hT3Ksf3Uzf6uzqE/oqZFMxI27pZ67CRg+o8rBrAYUHk=",
-                        "7Ss4sPbCPt1QpyUVgpHgjbb4bOErgZX4j6/o4361GHQ=",
-                        "Bi6wCoITshy8jY8JoN/eYIPk95qx1L8x2lBsFITCwNw="
+                        "wxh5iEyZ9NcoTA1HYAO0H306ydRENvLl60LvXAq0rAI=",
+                        "lQVcLuQ9bnl7txitMfkDtTs9YCuATHk534lS5tVwc0g=",
+                        "ZwlepbUdDYWoo9QR9vLFV/HXbwBaB5TPMYdxpsAvCt8=",
+                        "+7SKGMfQhSPYNe6NNPLcYmB2T4hAJZ6RlNWO3lXdKpQ="
                     ],
                     [
-                        "WSkLXusmgdkfgjl/pfKauq2PWNDODrmQrbs6TmpvSl8=",
-                        "xW9LYp4FVYwqkMuREDN+y1+wlb83BtvVJgnR0PTEVlE="
+                        "2+dr9t4+562ysmWkmNMmU3Qpjaj7Vk2657siQNMcOLM=",
+                        "2NbVkchUbqrHxILSiQlofWKk40acTCBD4ZJu9RzdLXk="
                     ],
                     [
-                        "0DbVwOouMaiGebP74WdVkLlrW95NdWIVbkwztkPxqG0="
+                        "6p7C3Q2/jvFiP8aKDSb/OXvCjZZ9UVSc7Hu/BGrCIns="
                     ]
                 ]),
                 message: "hello world", // 1011
@@ -163,7 +163,7 @@ describe("MerkleLamportSigner", () => {
                 index: 4
             },
             output: {
-                signature: "8JXWdDRRGpAyquix:i4p2::i4p3:7bNwxEvpsYenDTIB::e+e1oV/Pi+i8IZD6:i4p6::Zg+mVsWZMFwO5IY4jCKzrgk3XdIf1/JytNzna2AAxSPBPUmcl6alEVOL+x4ouHh3ffKDGysPBAkFlj1GlctEEQ==:i4p8,gMu2UOcb9zbEL1b+djuY3YTJgRmHDlnx0DN4rVxd3qY=:Bi6wCoITshy8jY8JoN/eYIPk95qx1L8x2lBsFITCwNw=:WSkLXusmgdkfgjl/pfKauq2PWNDODrmQrbs6TmpvSl8="
+                signature: "8JXWdDRRGpAyquix:i4p2::i4p3:7bNwxEvpsYenDTIB::e+e1oV/Pi+i8IZD6:i4p6::Zg+mVsWZMFwO5IY4jCKzrgk3XdIf1/JytNzna2AAxSPBPUmcl6alEVOL+x4ouHh3ffKDGysPBAkFlj1GlctEEQ==:i4p8,+5UWCyLdX6QfSMXi8Mi+2dol7vW9p1Nw542lC3O/jOk=:+7SKGMfQhSPYNe6NNPLcYmB2T4hAJZ6RlNWO3lXdKpQ=:2+dr9t4+562ysmWkmNMmU3Qpjaj7Vk2657siQNMcOLM="
             }
         }
     ];
