@@ -1,4 +1,4 @@
-import { getConfigStorageKey, getLayerStorageKeys } from "./MerkleTreeHelper";
+import { MerkleTreeHelper } from "./MerkleTreeHelper";
 
 describe("MerkleTreeHelper", () => {
     it("should return correct config storage keys", () => {
@@ -6,7 +6,7 @@ describe("MerkleTreeHelper", () => {
             id: "WALLET_ID"
         };
 
-        expect(getConfigStorageKey(<any>dummyWallet)).toBe("WALLET_ID-config");
+        expect(MerkleTreeHelper.getConfigStorageKey(<any>dummyWallet)).toBe("WALLET_ID-config");
     });
 
     it("should return correct layer storage keys", () => {
@@ -14,7 +14,7 @@ describe("MerkleTreeHelper", () => {
             id: "WALLET_ID"
         };
 
-        expect(getLayerStorageKeys(<any>dummyWallet, 4)).toEqual([
+        expect(MerkleTreeHelper.getLayerStorageKeys(<any>dummyWallet, 4)).toEqual([
             "WALLET_ID-layer-0",
             "WALLET_ID-layer-1",
             "WALLET_ID-layer-2",

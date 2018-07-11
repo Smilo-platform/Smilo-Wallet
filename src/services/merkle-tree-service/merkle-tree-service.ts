@@ -8,8 +8,8 @@ import { Platform } from "ionic-angular/platform/platform";
 import { MerkleTreeBuilder } from "../../core/merkle/MerkleTreeBuilder";
 import { MerkleTreeSerializer } from "../../core/merkle/MerkleTreeSerializer";
 import { MerkleTreeDeserializer } from "../../core/merkle/MerkleTreeDeserializer";
-import { getConfigStorageKey, getLayerStorageKeys } from "../../core/merkle/MerkleTreeHelper";
 import { IMerkleTreeConfig } from "../../core/merkle/IMerkleTreeConfig";
+import { MerkleTreeHelper } from "../../core/merkle/MerkleTreeHelper";
 
 export interface IMerkleTreeService {
     generate(wallet: IWallet, password: string, progressUpdate?: (progress: number) => void): Promise<void>;
@@ -73,12 +73,12 @@ export class MerkleTreeService implements IMerkleTreeService {
         delete this.cache[wallet.id];
 
         // Remove from disk
-        return this.storage.get(getConfigStorageKey(wallet)).then(
+        return this.storage.get(MerkleTreeHelper.getConfigStorageKey(wallet)).then(
             (config: IMerkleTreeConfig) => {
                 if(!config)
                     return Promise.resolve();
 
-                let layerKeys = getLayerStorageKeys(wallet, config.layerCount);
+                let layerKeys = MerkleTreeHelper.getLayerStorageKeys(wallet, config.layerCount);
 
                 let promises: Promise<void>[] = [];
 
@@ -99,7 +99,7 @@ export class MerkleTreeService implements IMerkleTreeService {
 
                 // Finaly remove the config
                 promises.push(
-                    this.storage.remove(getConfigStorageKey(wallet))
+                    this.storage.remove(MerkleTreeHelper.getConfigStorageKey(wallet))
                 );
 
                 return Promise.all(promises).then<void>();

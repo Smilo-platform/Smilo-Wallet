@@ -4,7 +4,7 @@ export class SeededRandom {
     private prng: any;
 
     constructor(seed) {
-        this.prng = (<any>Math).seedRandom(seed);
+        this.prng = (<any>Math).seedrandom(seed);
     }
 
     next(): number {

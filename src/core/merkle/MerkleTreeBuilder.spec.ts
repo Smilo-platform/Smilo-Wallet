@@ -3,12 +3,15 @@ import { MerkleTree } from "./MerkleTree";
 import { MockThreadPool } from "../../../test-config/mocks/MockThreadPool";
 import { SeededRandom } from "../random/SeededRandom";
 import { ILamportGeneratorThreadInput, ILamportGeneratorThreadOutput } from "./LamportGenerator";
+import { CryptoHelper } from "../crypto/CryptoHelper";
 
 describe("MerkleTreeBuilder", () => {
     let builder: MerkleTreeBuilder;
+    let cryptoHelper: CryptoHelper;
 
     beforeEach(() => {
         builder = new MerkleTreeBuilder();
+        cryptoHelper = new CryptoHelper();
     })
 
     it("should generate the Merkle Tree correctly", (done) => {
@@ -35,7 +38,7 @@ describe("MerkleTreeBuilder", () => {
     it("should generate the Merkle Tree layers correctly", () => {
         // Wrapper to make calling sha256 on Merkle Tree more pretty.
         function sha256(data: string): string {
-            return (<any>MerkleTree).sha256(data);
+            return cryptoHelper.sha256(data);
         }
 
         // Input public keys
@@ -91,6 +94,8 @@ describe("MerkleTreeBuilder", () => {
 
                 return new Uint8Array(bytes);
             });
+
+            return prng;
         });
 
         let jobInputs: ILamportGeneratorThreadInput[] = [];
@@ -124,7 +129,7 @@ describe("MerkleTreeBuilder", () => {
             }
         });
 
-        (<any>MerkleTree).generateLeafKeys("PRIVATE_KEY", 9, true).then(
+        builder.generateLeafKeys("PRIVATE_KEY", 9, true).then(
             (publicKeys) => {
                 let expectedPublicKeys: string[] = [];
                 for(let i = 0; i < 256; i++) {
@@ -138,7 +143,7 @@ describe("MerkleTreeBuilder", () => {
                 done();
             },
             (error) => {
-                expect(true).toBe(false, "Promise reject should never be called");
+                expect(true).toBe(false, "Promise reject should never be called: " + (error.message || error.toString()));
             }
         );
     });
@@ -147,7 +152,7 @@ describe("MerkleTreeBuilder", () => {
         let pool = new MockThreadPool();
 
         // Spy on the method which creates a thread pool and return our mocked version.
-        spyOn((<any>MerkleTree), "createThreadPool").and.returnValue(pool);
+        spyOn(builder, "createThreadPool").and.returnValue(pool);
 
         // Mock the random number generator
         spyOn(builder, "createPRNG").and.callFake((seed) => {
@@ -162,6 +167,8 @@ describe("MerkleTreeBuilder", () => {
 
                 return new Uint8Array(bytes);
             });
+
+            return prng;
         });
 
         let jobInputs: ILamportGeneratorThreadInput[] = [];
@@ -170,7 +177,7 @@ describe("MerkleTreeBuilder", () => {
             pool.notifyErrorListeners({}, "Some error");
         });
 
-        (<any>MerkleTree).generateLeafKeys("PRIVATE_KEY", 9, true).then(
+        builder.generateLeafKeys("PRIVATE_KEY", 9, true).then(
             (publicKeys) => {
                 expect(true).toBeFalsy("Promise resolve should never be called");
 

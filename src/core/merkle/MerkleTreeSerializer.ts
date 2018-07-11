@@ -2,9 +2,9 @@ import { MerkleTree } from "./MerkleTree";
 import { IKeyStoreService } from "../../services/key-store-service/key-store-service";
 import { MERKLE_TREE_VERSION } from "./MerkleTreeVersion";
 import { IMerkleTreeConfig } from "./IMerkleTreeConfig";
-import { getConfigStorageKey, getLayerStorageKeys } from "./MerkleTreeHelper";
 import { ILocalWallet } from "../../models/ILocalWallet";
 import { Storage } from "@ionic/storage";
+import { MerkleTreeHelper } from "./MerkleTreeHelper";
 
 export class MerkleTreeSerializer {
     serialize(merkleTree: MerkleTree, wallet: ILocalWallet, storage: Storage, keyStoreService: IKeyStoreService, password: string): Promise<void> {
@@ -16,10 +16,10 @@ export class MerkleTreeSerializer {
         };
 
         promises.push(
-            storage.set(getConfigStorageKey(wallet), config)
+            storage.set(MerkleTreeHelper.getConfigStorageKey(wallet), config)
         );
 
-        let layerStorageKeys = getLayerStorageKeys(wallet, merkleTree.layers.length);
+        let layerStorageKeys = MerkleTreeHelper.getLayerStorageKeys(wallet, merkleTree.layers.length);
         for(let i = 0; i < merkleTree.layers.length; i++) {
             let layer = merkleTree.layers[i];
 

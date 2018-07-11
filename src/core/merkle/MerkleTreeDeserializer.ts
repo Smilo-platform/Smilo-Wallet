@@ -3,14 +3,14 @@ import { IWallet } from "../../models/IWallet";
 import { IKeyStoreService } from "../../services/key-store-service/key-store-service";
 import { IKeyStore } from "../../models/IKeyStore";
 import { IMerkleTreeConfig } from "./IMerkleTreeConfig";
-import { getConfigStorageKey, getLayerStorageKeys } from "./MerkleTreeHelper";
 import { Storage } from "@ionic/storage";
+import { MerkleTreeHelper } from "./MerkleTreeHelper";
 
 export class MerkleTreeDeserializer {
     fromDisk(wallet: IWallet, storage: Storage, keyStoreService: IKeyStoreService, password: string): Promise<MerkleTree> {
         // Retrieve the config
         return storage.get(
-            getConfigStorageKey(wallet)
+            MerkleTreeHelper.getConfigStorageKey(wallet)
         ).then(
             (config: IMerkleTreeConfig) => {
                 if(!config)
@@ -20,7 +20,7 @@ export class MerkleTreeDeserializer {
 
                 let readLayerPromise = Promise.resolve();
                 let layers: string[][] = [];
-                let layerKeys: string[] = getLayerStorageKeys(wallet, layerCount);
+                let layerKeys: string[] = MerkleTreeHelper.getLayerStorageKeys(wallet, layerCount);
                 for(let i = 0; i < layerCount; i++) {
                     readLayerPromise = readLayerPromise.then(
                         () => {

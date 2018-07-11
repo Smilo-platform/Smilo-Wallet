@@ -1,7 +1,7 @@
 import { AddressHelper } from "../address/AddressHelper";
 
 export class MerkleTree {
-    private static addressHelper = new AddressHelper();
+    private addressHelper = new AddressHelper();
 
     layers: string[][];
     
@@ -10,7 +10,7 @@ export class MerkleTree {
     }
 
     getPublicKey(): string {
-        return MerkleTree.addressHelper.addressFromPublicKey(
+        return this.addressHelper.addressFromPublicKey(
             this.layers[this.layers.length - 1][0],
             this.layers.length
         );

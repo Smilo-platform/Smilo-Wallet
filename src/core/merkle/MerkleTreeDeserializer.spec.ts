@@ -1,15 +1,25 @@
 import { MerkleTreeDeserializer } from "./MerkleTreeDeserializer";
+import { MerkleTreeHelper } from "./MerkleTreeHelper";
+import { IKeyStoreService } from "../../services/key-store-service/key-store-service";
+import { Storage } from "@ionic/storage";
+import { MockKeyStoreService } from "../../../test-config/mocks/MockKeyStoreService";
+import { MerkleTree } from "./MerkleTree";
 
 describe("MerkleTreeDeserializer", () => {
     let deserializer: MerkleTreeDeserializer;
+    let storageService: Storage;
+    let keyStoreService: IKeyStoreService;
 
     beforeEach(() => {
         deserializer = new MerkleTreeDeserializer();
+        storageService = new Storage(null);
+        keyStoreService = new MockKeyStoreService();
     });
 
     it("should read the Merkle Tree from disk correctly", (done) => {
-        spyOn(MerkleTree, "getConfigStorageKey").and.returnValue("config");
-        spyOn(MerkleTree, "getLayerStorageKeys").and.returnValue(["layer1", "layer2", "layer3"]);
+        
+        spyOn(MerkleTreeHelper, "getConfigStorageKey").and.returnValue("config");
+        spyOn(MerkleTreeHelper, "getLayerStorageKeys").and.returnValue(["layer1", "layer2", "layer3"]);
         spyOn(storageService, "get").and.callFake((key: string) => {
             switch(key) {
                 case("config"):
@@ -46,7 +56,7 @@ describe("MerkleTreeDeserializer", () => {
             }
         });
 
-        MerkleTree.fromDisk(<any>{}, storageService, keyStoreService, "pass123").then(
+        deserializer.fromDisk(<any>{}, storageService, keyStoreService, "pass123").then(
             (merkleTree) => {
                 expect(merkleTree instanceof MerkleTree).toBeTruthy();
                 expect(merkleTree.layers).toEqual([
@@ -66,8 +76,8 @@ describe("MerkleTreeDeserializer", () => {
     });
 
     it("should fail when reading a Merkle Tree from disk with the wrong password", (done) => {
-        spyOn(MerkleTree, "getConfigStorageKey").and.returnValue("config");
-        spyOn(MerkleTree, "getLayerStorageKeys").and.returnValue(["layer1", "layer2", "layer3"]);
+        spyOn(MerkleTreeHelper, "getConfigStorageKey").and.returnValue("config");
+        spyOn(MerkleTreeHelper, "getLayerStorageKeys").and.returnValue(["layer1", "layer2", "layer3"]);
         spyOn(storageService, "get").and.callFake((key: string) => {
             switch(key) {
                 case("config"):
@@ -96,7 +106,7 @@ describe("MerkleTreeDeserializer", () => {
             return null;
         });
 
-        MerkleTree.fromDisk(<any>{}, storageService, keyStoreService, "wrong_password").then(
+        deserializer.fromDisk(<any>{}, storageService, keyStoreService, "wrong_password").then(
             (merkleTree) => {
                 expect(true).toBeFalsy("Promise resolve should never be called");
 
@@ -111,8 +121,8 @@ describe("MerkleTreeDeserializer", () => {
     });
 
     it("should fail when reading a Merkle Tree from disk with missing layers", (done) => {
-        spyOn(MerkleTree, "getConfigStorageKey").and.returnValue("config");
-        spyOn(MerkleTree, "getLayerStorageKeys").and.returnValue(["layer1", "layer2", "layer3"]);
+        spyOn(MerkleTreeHelper, "getConfigStorageKey").and.returnValue("config");
+        spyOn(MerkleTreeHelper, "getLayerStorageKeys").and.returnValue(["layer1", "layer2", "layer3"]);
         spyOn(storageService, "get").and.callFake((key: string) => {
             switch(key) {
                 case("config"):
@@ -146,7 +156,7 @@ describe("MerkleTreeDeserializer", () => {
             }
         });
 
-        MerkleTree.fromDisk(<any>{}, storageService, keyStoreService, "pass123").then(
+        deserializer.fromDisk(<any>{}, storageService, keyStoreService, "pass123").then(
             (merkleTree) => {
                 expect(true).toBeFalsy("Promise resolve should never be called");
 
@@ -161,7 +171,7 @@ describe("MerkleTreeDeserializer", () => {
     });
 
     it("should fail when reading a Merkle Tree with no config", (done) => {
-        spyOn(MerkleTree, "getConfigStorageKey").and.returnValue("config");
+        spyOn(MerkleTreeHelper, "getConfigStorageKey").and.returnValue("config");
         spyOn(storageService, "get").and.callFake((key: string) => {
             switch(key) {
                 case("config"):
@@ -173,7 +183,7 @@ describe("MerkleTreeDeserializer", () => {
             }
         });
 
-        MerkleTree.fromDisk(<any>{}, storageService, keyStoreService, "pass123").then(
+        deserializer.fromDisk(<any>{}, storageService, keyStoreService, "pass123").then(
             (merkleTree) => {
                 expect(true).toBeFalsy("Promise resolve should never be called");
 
