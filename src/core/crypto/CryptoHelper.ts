@@ -1,10 +1,19 @@
 declare const sjcl: any;
 
 export class CryptoHelper {
-    private md256 = new sjcl.hash.sha256();
-    private md512 = new sjcl.hash.sha512();
+    private md256;
+    private md512;
+    private isInitialized: boolean = false;
+
+    private initialize() {
+        this.md256 = new sjcl.hash.sha256();
+        this.md512 = new sjcl.hash.sha512();
+    }
 
     sha512(data: string): string {
+        if(!this.isInitialized)
+            this.initialize();
+
         this.md512.update(data);
 
         let hashedData = this.md512.finalize();
@@ -15,10 +24,16 @@ export class CryptoHelper {
     }
 
     sha256Short(data: string): string {
+        if(!this.isInitialized)
+            this.initialize();
+
         return this.sha256(data).substr(0, 16);
     }
 
     sha256Binary(data: string): string {
+        if(!this.isInitialized)
+            this.initialize();
+
         // Javascript does not have proper big integer support.
         // We therefore convert the hash to individual bytes and manually
         // convert to a bit string.
@@ -40,6 +55,9 @@ export class CryptoHelper {
     }
 
     sha256(data: string): string {
+        if(!this.isInitialized)
+            this.initialize();
+
         this.md256.update(data);
 
         let hashedData = this.md256.finalize();
@@ -50,6 +68,9 @@ export class CryptoHelper {
     }
 
     sha256Hex(data: string): string {
+        if(!this.isInitialized)
+            this.initialize();
+
         this.md256.update(data);
 
         let hashedData = this.md256.finalize();
@@ -60,6 +81,9 @@ export class CryptoHelper {
     }
 
     sha256ReturnBase32(data: string): string {
+        if(!this.isInitialized)
+            this.initialize();
+
         this.md256.update(data);
 
         let hashedData = this.md256.finalize();
