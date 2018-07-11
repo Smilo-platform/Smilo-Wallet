@@ -9,16 +9,17 @@ export class UrlService implements IUrlService {
     readonly productionBaseUrl: string = "http://api.smilo.network:8080";
     readonly developmentBaseUrl: string = "http://api.smilo.network:8080";
 
-    constructor() {
-        
-    }
+    constructor() {}
 
     getBaseUrl(): string {
-        if(isDevMode()) {
+        if (this.isDevelopment()) {
             return this.developmentBaseUrl;
-        }
-        else {
+        } else {
             return this.productionBaseUrl;
         }
+    }
+
+    isDevelopment(): boolean {
+        return isDevMode();
     }
 }
