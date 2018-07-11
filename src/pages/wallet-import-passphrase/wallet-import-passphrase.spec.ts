@@ -21,6 +21,7 @@ import { IBIP32Service, BIP32Service } from "../../services/bip32-service/bip32-
 import { MockBIP32Service } from "../../../test-config/mocks/MockBIP32Service";
 import { ComponentsModule } from "../../components/components.module";
 import { FormBuilder } from "@angular/forms";
+import { PrepareWalletPage } from "../prepare-wallet/prepare-wallet";
 
 describe("WalletImportPassphrasePage", () => {
   let comp: WalletImportPassphrasePage;
@@ -300,5 +301,17 @@ describe("WalletImportPassphrasePage", () => {
     comp.passphraseStatus.isValid = true;
 
     expect(comp.dataIsValid()).toBeTruthy("8");
+  });
+
+  it("should push the preparewalletpage on the navcontroller with the right parameters", () => {
+    spyOn(navParams, "get").and.returnValue("something");
+    spyOn(navController, "push");
+
+    comp.passphrase = "passphrase";
+    comp.walletIndex = 0;
+
+    comp.goToPrepareWalletPage(null, "pass");
+
+    expect(navController.push).toHaveBeenCalledWith(PrepareWalletPage, {wallet: null, password: 'pass', passphrase: 'passphrase', walletIndex: 0, NAVIGATION_ORIGIN: 'something'});
   });
 });
