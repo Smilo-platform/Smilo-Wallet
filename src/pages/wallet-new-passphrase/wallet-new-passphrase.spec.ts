@@ -10,14 +10,13 @@ import { MockBIP39Service } from "../../../test-config/mocks/MockBIP39Service";
 import { HttpClient } from "@angular/common/http";
 import { MockTranslateService } from "../../../test-config/mocks/MockTranslateService";
 import { ComponentsModule } from "../../components/components.module";
+import { WalletNewPasswordPage } from "../wallet-new-password/wallet-new-password";
 
 describe("WalletNewPassphrasePage", () => {
   let comp: WalletNewPassphrasePage;
   let fixture: ComponentFixture<WalletNewPassphrasePage>;
   let navController: NavController;
   let bip39Service: IBIP39Service;
-  let httpClient: HttpClient;
-  let translateService: TranslateService;
 
   beforeEach(async(() => {
     navController = new MockNavController();
@@ -203,5 +202,57 @@ describe("WalletNewPassphrasePage", () => {
 
     expect(comp.isPickedWord("eleven")).toBe(false);
     expect(comp.isPickedWord("three")).toBe(false);
+  });
+
+  it("should call initialize in the iondidviewload", () => {
+    spyOn(comp, "initialize");
+
+    comp.ionViewDidLoad();
+
+    expect(comp.initialize).toHaveBeenCalled();
+  });
+
+  it("should call shuffleWords and set the state to enterPassphrase", () => {
+    spyOn(comp, "shuffleWords");
+
+    comp.goToEnterState();
+
+    expect(comp.shuffleWords).toHaveBeenCalled();
+    expect(comp.state).toBe("enterPassphrase");
+  });
+
+  it("should call the push method with the expected arguments", () => {
+    spyOn(navController, "push");
+
+    comp.words = ["word1", "word2"];
+
+    comp.next();
+
+    expect(navController.push).toHaveBeenCalledWith(WalletNewPasswordPage, {passphrase: ["word1", "word2"]});
+  });
+
+  it("should increase clickcount and set the entered words to the words array and call validatePassphrase", () => {
+    spyOn(comp, "validatePassphrase");
+    comp.words = ["word1", "word2"];
+    comp.resetClickCount = 2;
+
+    comp.reset();
+
+    expect(comp.resetClickCount).toBe(3);
+
+    expect(comp.validatePassphrase).toHaveBeenCalled();
+    expect(comp.enteredWords).toEqual(["word1", "word2"]);
+    
+  });
+
+  it("should shuffle the words array", () => {
+    spyOn(Math, "random").and.returnValue(1);
+    spyOn(Math, "floor").and.returnValue(1);
+
+    comp.words = ["word1", "word2", "word3", "word4", "word5"];
+
+    comp.shuffleWords();
+
+    expect(comp.shuffledWords).toEqual(['word1', 'word3', 'word4', 'word5', 'word2']);
   });
 });
