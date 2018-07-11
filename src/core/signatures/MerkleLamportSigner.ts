@@ -9,12 +9,12 @@ export class MerkleLamportSigner {
     /**
      * Computes the Merkle signature for the given message.
      */
-    getSignature(merkleTree: MerkleTree, message: string, privateKey: string, index: number): string {
+    getSignature(merkleTree: MerkleTree, message: string, privateKey: string, index: number, bitCount?: number): string {
         // Convert the message to a binary string. Next take the first 100 bits of this string.
-        let binaryMessage = this.cryptoHelper.sha256Binary(message).substr(0, 100);
+        let binaryMessage = this.cryptoHelper.sha256Binary(message).substr(0, bitCount || 100);
 
         // Get the lamport private key parts.
-        let lamportPrivateKeys = this.getLamportPrivateKeys(privateKey, index);
+        let lamportPrivateKeys = this.getLamportPrivateKeys(privateKey, index, bitCount);
 
         // We store the lamport signature in this variable.
         let lamportSignature = "";
@@ -93,19 +93,19 @@ export class MerkleLamportSigner {
         return authenticationPath;
     }
 
-    private getLamportPrivateKeys(privateKey: string, index: number): string[] {
+    private getLamportPrivateKeys(privateKey: string, index: number, bitCount: number): string[] {
         let privateKeyParts: string[] = [];
 
         // Initialize the prng and query it until we reach the required index.
         let random = new SeededRandom(privateKey);
         let lamportSeed: Uint8Array;
         for(let i = 0; i <= index; i++) {
-            lamportSeed = random.getRandomBytes(100);
+            lamportSeed = random.getRandomBytes(bitCount);
         }
 
         let lamportPrng = new SeededRandom(lamportSeed);
 
-        for(let i = 0; i < 200; i++) {
+        for(let i = 0; i < bitCount * 2; i++) {
             privateKeyParts.push(this.getLamportPrivateKey(lamportPrng));
         }
 
