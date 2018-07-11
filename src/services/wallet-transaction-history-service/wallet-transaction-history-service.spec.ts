@@ -29,5 +29,15 @@ describe("WalletTransactionHistoryService", () => {
                 done();
             });
         });
-    })
+    });
+
+    it("should return an empty array because the publicKey was not found", (done) => {
+        mockedWalletTransactionHistoryService.getTransactionHistory("DOESN'T_HAVE_TO_EXIST").then(data => {
+            spyOn(httpClient, "get").and.returnValue(Observable.of(data));
+            walletTransactionHistoryService.getTransactionHistory("I DON'T EXIST").then(data => {
+                expect(data).toEqual([]);
+                done();
+            });
+        });
+    });
 });
