@@ -17,14 +17,14 @@ export class MerkleLamportVerifier {
      * 2) work our way up the Merkle Tree (e.g. the authentication path) until we reach the root of the tree.
      * 3) check if the computed root value of the Merkle Tree equals the input address of the transaction.
      */
-    verifyMerkleSignature(message: string, signature: string, index: number, layerCount: number, expectedRootAddress: string): boolean {
+    verifyMerkleSignature(message: string, signature: string, index: number, layerCount: number, expectedRootAddress: string, bitCount?: number): boolean {
         let signatureParts = signature.split(",");
 
         let lamportSignatures = signatureParts[0].split("::");
         let merkleAuthenticationPath = signatureParts[1];
 
         // Convert the transaction to a binary string. Next take the first 100 bits of this string.
-        let binaryMessage = this.cryptoHelper.sha256Binary(message).substr(0, 100);
+        let binaryMessage = this.cryptoHelper.sha256Binary(message).substr(0, bitCount || 100);
 
         // Compute the leaf node value based on the private and public parts.
         let leafKey: string = "";
@@ -60,6 +60,7 @@ export class MerkleLamportVerifier {
                 return false;
             }
         }
+
         // To get the actual leaf node value we must hash it.
         leafKey = this.cryptoHelper.sha256(leafKey);
 
@@ -94,6 +95,7 @@ export class MerkleLamportVerifier {
         // Convert the last public key to a Smilo address.
         // This address should match the input address of the transaction.
         // Otherwise we know the signature is invalid.
-        return this.addressHelper.addressFromPublicKey(nextRoot, layerCount) == expectedRootAddress
+        let rootAddress = this.addressHelper.addressFromPublicKey(nextRoot, layerCount);
+        return rootAddress == expectedRootAddress
     }
 }
