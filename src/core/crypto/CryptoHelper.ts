@@ -24,9 +24,6 @@ export class CryptoHelper {
     }
 
     sha256Short(data: string): string {
-        if(!this.isInitialized)
-            this.initialize();
-
         return this.sha256(data).substr(0, 16);
     }
 
