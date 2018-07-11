@@ -28,13 +28,13 @@ export class AddressHelper {
     private cryptoHelper = new CryptoHelper();
 
     addressFromPublicKey(publicKey: string, layerCount: number): string {
-        let preAddress = this.cryptoHelper.sha256ReturnBase32(
+        let preAddress = this.cryptoHelper.sha256Base32Short(
             publicKey
         ).substr(0, 32);
 
         let addressPrefix = this.getAddressPrefix(layerCount);
 
-        let checksum = this.cryptoHelper.sha256ReturnBase32(
+        let checksum = this.cryptoHelper.sha256Base32Short(
             addressPrefix +
             preAddress
         );
@@ -77,7 +77,7 @@ export class AddressHelper {
         }
 
         let checksum = address.substr(34);
-        let correctEnding = this.cryptoHelper.sha256ReturnBase32(
+        let correctEnding = this.cryptoHelper.sha256Base32Short(
             address.substr(0, 2) + treeRoot
         ).substr(0, 4);
 

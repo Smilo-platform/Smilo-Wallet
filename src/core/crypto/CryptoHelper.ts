@@ -77,7 +77,7 @@ export class CryptoHelper {
         return sjcl.codec.hex.fromBits(hashedData);
     }
 
-    sha256ReturnBase32(data: string): string {
+    sha256Base32Short(data: string): string {
         if(!this.isInitialized)
             this.initialize();
 
