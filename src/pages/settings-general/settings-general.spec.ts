@@ -8,6 +8,8 @@ import { MockTranslationLoader } from "../../../test-config/mocks/MockTranslatio
 import { SettingsService } from "../../services/settings-service/settings-service";
 import { MockSettingService } from "../../../test-config/mocks/MockSettingsService";
 import { ComponentsModule } from "../../components/components.module";
+import 'rxjs/add/observable/of';
+import { Observable } from "rxjs/Observable";
 
 describe("SettingsGeneralPage", () => {
   let comp: SettingsGeneralPage;
@@ -46,24 +48,54 @@ describe("SettingsGeneralPage", () => {
   it("should initialize correctly", () => {
     expect(comp.nightModeStatus).toBe(false);
     expect(comp.activeLanguage).toBeUndefined();
-  })
+    expect(comp.selectedTheme).toBeUndefined();
+  });
 
-  it("should have undefined as saved language", (done) => {
-    comp.settingsService.getLanguageSettings().then(data => {
-      expect(data).toBeUndefined();
-      done();
-    })
-  })
+  it("should change languages and set nightmode switch appropriately", (done) => {
+    let themeSpy = spyOn(settingsService, "getActiveTheme").and.returnValue(Observable.of("dark-theme"));
+    comp.nightModeStatus = false;
+    comp.selectedTheme = "dark-theme";
+    comp.ionViewDidLoad().then(data => {
+      expect(comp.activeLanguage).toBe("en");
+      expect(comp.nightModeStatus).toBeTruthy();
 
-  it("should have undefined as saved theme", (done) => {
-    comp.settingsService.getActiveTheme().subscribe(data => {
-      expect(data).toBe("light-theme");
-      done();
-    })
-  })
+      themeSpy.and.returnValue(Observable.of("light-theme"));
+      
+      spyOn(settingsService, "getLanguageSettings").and.returnValue(Promise.resolve("nl"));
 
-  it("should have en as default language after setting it in the translate module", () => {
-    comp.translate.setDefaultLang("en")
-    expect(comp.translate.getDefaultLang()).toBe("en");
-  })
+      comp.ionViewDidLoad().then(data => {
+        expect(comp.activeLanguage).toBe("nl");
+        expect(comp.nightModeStatus).toBeFalsy();
+
+        done();
+      });  
+    });
+  });
+
+  it("should handle nightModeSwitch properly", () => {
+    spyOn(settingsService, "setActiveTheme");
+    spyOn(settingsService, "saveNightModeSettings");
+
+    comp.selectedTheme = "dark-theme";
+    comp.nightModeSwitch();
+    expect(settingsService.setActiveTheme).toHaveBeenCalledWith('light-theme');
+    // It's changed to light-theme in actual implementation due to a sub on the theme
+    expect(settingsService.saveNightModeSettings).toHaveBeenCalledWith('dark-theme');
+
+    comp.selectedTheme = "light-theme";
+    comp.nightModeSwitch();
+    expect(settingsService.setActiveTheme).toHaveBeenCalledWith('dark-theme');
+    // It's changed to dark-theme in actual implementation due to a sub on the theme
+    expect(settingsService.saveNightModeSettings).toHaveBeenCalledWith('light-theme');
+  });
+
+  it("should call the translate module properly on language change", () => {
+    spyOn(comp.translate, "use");
+    spyOn(settingsService, "saveLanguageSettings");
+
+    comp.changeLanguage("en");
+
+    expect(comp.translate.use).toHaveBeenCalledWith("en");
+    expect(settingsService.saveLanguageSettings).toHaveBeenCalledWith("en");
+  });
 });
