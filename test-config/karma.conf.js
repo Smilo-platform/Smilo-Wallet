@@ -7,10 +7,10 @@ module.exports = function(config) {
 
     frameworks: ['jasmine'],
 
-    captureTimeout: 210000,
+    captureTimeout: 60000,
     browserDisconnectTolerance: 3,
-    browserDisconnectTimeout : 210000,
-    browserNoActivityTimeout : 210000,
+    browserDisconnectTimeout : 2000,
+    browserNoActivityTimeout : 10000,
 
     files: [
       {
@@ -68,10 +68,6 @@ module.exports = function(config) {
     logLevel: config.LOG_INFO,
     autoWatch: true,
     browsers: ['HeadlessChrome'],
-    captureTimeout: 210000,
-    browserDisconnectTolerance: 3, 
-    browserDisconnectTimeout : 210000,
-    browserNoActivityTimeout : 210000,
 
     customLaunchers: {
       HeadlessChrome: {
