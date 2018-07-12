@@ -73,13 +73,9 @@ module.exports = function(config) {
       HeadlessChrome: {
         base: 'ChromeHeadless',
         flags: [
-          '--no-sandbox',
-          '--disable-gpu',
           '--disable-web-security',
-          '--disable-background-timer-throttling',
-          '--disable-renderer-backgrounding',
-          '--proxy-bypass-list=*',
-          '--proxy-server=\'direct://\''
+          '--disable-gpu',
+          '--no-sandbox'
        ]
       }
     },
