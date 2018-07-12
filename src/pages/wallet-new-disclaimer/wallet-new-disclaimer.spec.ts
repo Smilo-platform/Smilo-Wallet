@@ -234,4 +234,13 @@ describe("WalletNewDisclaimerPage", () => {
       }
     );
   });
+
+  it("should return an empty promise if the finish button cannot be shown ", (done) => {
+    spyOn(comp, "canShowFinishButton").and.returnValue(false);
+
+    comp.finish().then(data => {
+      expect(data).toBeUndefined();
+      done();
+    });
+  });
 });
