@@ -75,6 +75,7 @@ module.exports = function(config) {
         flags: [
           '--no-sandbox',
           '--disable-gpu',
+          '--disable-web-security',
           '--disable-background-timer-throttling',
           '--disable-renderer-backgrounding',
           '--proxy-bypass-list=*',
