@@ -7,4 +7,8 @@ export class MockUrlService implements UrlService {
     getBaseUrl(): string {
         return "";
     }
+
+    isDevelopment(): boolean {
+        return true;
+    }
 }
