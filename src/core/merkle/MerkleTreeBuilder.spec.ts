@@ -2,7 +2,7 @@ import { MerkleTreeBuilder } from "./MerkleTreeBuilder";
 import { MerkleTree } from "./MerkleTree";
 import { MockThreadPool } from "../../../test-config/mocks/MockThreadPool";
 import { SeededRandom } from "../random/SeededRandom";
-import { ILamportGeneratorThreadInput, ILamportGeneratorThreadOutput } from "./LamportGenerator";
+import { ILamportGeneratorThreadInput, ILamportGeneratorThreadOutput, LamportGeneratorThread } from "./LamportGenerator";
 import { CryptoHelper } from "../crypto/CryptoHelper";
 
 describe("MerkleTreeBuilder", () => {
@@ -186,6 +186,78 @@ describe("MerkleTreeBuilder", () => {
             (error) => {
                 expect(error).toBe("Some error");
                 expect(pool.poolIsKilled).toBeTruthy("Thread pool should be terminated");
+
+                done();
+            }
+        );
+    });
+
+    it("should import the correct scripts on Android platforms", (done) => {
+        let pool = new MockThreadPool();
+
+        // Call through to mocked ThreadPool
+        spyOn(pool, "run").and.callThrough();
+
+        // Spy on the method which creates a thread pool and return our mocked version.
+        spyOn(builder, "createThreadPool").and.returnValue(pool);
+
+        spyOn(pool, "send").and.callFake((job: ILamportGeneratorThreadInput) => {
+            pool.notifyErrorListeners(null, "this is meant to fail");
+        });
+
+        builder.generateLeafKeys("PRIVATE_KEY", 9, true).then(
+            (publicKeys) => {
+                expect(true).toBe(false, "Promise resolve should never be called");
+
+                done();
+            },
+            (error) => {
+                // Make sure the failure was triggered by us
+                expect(error).toBe("this is meant to fail");
+
+                expect(pool.run).toHaveBeenCalledWith(
+                    LamportGeneratorThread,
+                    [
+                        `file:///android_asset/www/assets/scripts/sjcl.js`,
+                        `file:///android_asset/www/assets/scripts/seedrandom.min.js`
+                    ]
+                );
+
+                done();
+            }
+        );
+    });
+
+    it("should import the correct scripts on non-Android platforms", (done) => {
+        let pool = new MockThreadPool();
+
+        // Call through to mocked ThreadPool
+        spyOn(pool, "run").and.callThrough();
+
+        // Spy on the method which creates a thread pool and return our mocked version.
+        spyOn(builder, "createThreadPool").and.returnValue(pool);
+
+        spyOn(pool, "send").and.callFake((job: ILamportGeneratorThreadInput) => {
+            pool.notifyErrorListeners(null, "this is meant to fail");
+        });
+
+        builder.generateLeafKeys("PRIVATE_KEY", 9, false).then(
+            (publicKeys) => {
+                expect(true).toBe(false, "Promise resolve should never be called");
+
+                done();
+            },
+            (error) => {
+                // Make sure the failure was triggered by us
+                expect(error).toBe("this is meant to fail");
+
+                expect(pool.run).toHaveBeenCalledWith(
+                    LamportGeneratorThread,
+                    [
+                        `${ window.location.protocol }//${ window.location.host }/assets/scripts/sjcl.js`,
+                    `${ window.location.protocol }//${ window.location.host }/assets/scripts/seedrandom.min.js`,
+                    ]
+                );
 
                 done();
             }

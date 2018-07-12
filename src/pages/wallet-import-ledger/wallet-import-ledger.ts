@@ -15,11 +15,6 @@ import { IonicPage, NavController, NavParams } from "ionic-angular";
 })
 export class WalletImportLedgerPage {
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
-  }
-
-  ionViewDidLoad() {
-    console.log("ionViewDidLoad WalletImportLedgerPage");
-  }
+  constructor(public navCtrl: NavController, public navParams: NavParams) {}
 
 }
