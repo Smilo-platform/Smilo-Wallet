@@ -1,10 +1,15 @@
 import "seedrandom";
+import { IPRNG } from "./IPRNG";
 
-export class SeededRandom {
+export class SeededRandom implements IPRNG {
     private prng: any;
 
     constructor(seed) {
         this.prng = new (<any>Math).seedrandom(seed);
+    }
+
+    setSeed(value: any): void {
+        this.prng = new (<any>Math).seedrandom(value);
     }
 
     next(): number {
