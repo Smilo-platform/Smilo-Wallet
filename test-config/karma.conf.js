@@ -10,7 +10,7 @@ module.exports = function(config) {
     captureTimeout: 60000,
     browserDisconnectTolerance: 3,
     browserDisconnectTimeout : 2000,
-    browserNoActivityTimeout : 10000,
+    browserNoActivityTimeout : 20000,
 
     files: [
       {
