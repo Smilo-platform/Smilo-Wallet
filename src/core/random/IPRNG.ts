@@ -3,5 +3,5 @@ export interface IPRNG {
 
     next(): number;
 
-    getRandomBytes(count: number): Uint8Array;
+    getRandomBytes(count: number): Int8Array;
 }
