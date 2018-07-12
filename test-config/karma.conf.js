@@ -10,7 +10,7 @@ module.exports = function(config) {
     captureTimeout: 60000,
     browserDisconnectTolerance: 3,
     browserDisconnectTimeout : 2000,
-    browserNoActivityTimeout : 20000,
+    browserNoActivityTimeout : 10000,
 
     files: [
       {
@@ -18,7 +18,7 @@ module.exports = function(config) {
         watched: true
       },
       {
-        pattern: './src/assets/**/*',
+        pattern: './src/assets/imgs/**',
         watched: false,
         included: false,
         served: true,
@@ -75,7 +75,8 @@ module.exports = function(config) {
         flags: [
           '--disable-web-security',
           '--disable-gpu',
-          '--no-sandbox'
+          '--no-sandbox',
+          "--max_old_space_size=4096"
        ]
       }
     },
