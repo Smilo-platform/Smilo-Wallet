@@ -103,7 +103,13 @@ export class WalletImportKeystorePage {
       }
       return Promise.resolve();
     } else {
-      return this.goToPrepareWalletPage(wallet, this.password);
+      let password = "";
+      if (type === "clipboard") {
+        password = this.password;
+      } else if (type === "file") {
+        password = this.filePassword;
+      }
+      return this.goToPrepareWalletPage(wallet, password);
     }
   }
 
