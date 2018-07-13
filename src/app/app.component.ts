@@ -67,16 +67,8 @@ export class SmiloWallet {
   }
 
   prepareHockeyAppIntegration(): Promise<void> {
-    return new Promise((resolve, reject) => { this.hockeyApp.start(HOCKEY_APP_ANDROID_ID, HOCKEY_APP_IOS_ID,
-        HOCKEY_APP_AUTO_SEND_AUTO_UPDATES, HOCKEY_APP_IGNORE_ERROR_HEADER).then(
-        () => {
-          resolve();
-        },
-        (error) => {
-          reject();
-        }
-      );
-    })
+    return this.hockeyApp.start(HOCKEY_APP_ANDROID_ID, HOCKEY_APP_IOS_ID,
+        HOCKEY_APP_AUTO_SEND_AUTO_UPDATES, HOCKEY_APP_IGNORE_ERROR_HEADER);
   }
 
   prepareFirstPage(): Promise<void> {

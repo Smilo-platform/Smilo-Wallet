@@ -75,7 +75,6 @@ describe('SmiloWallet', () => {
     });
 
     it("should make a call to style the status bar light, prepare permissions, settings, translations, hockeyappintegration and firstpage", (done) => {
-        spyOn(comp, "ngOnInit").and.callThrough();
         spyOn(statusBar, "styleLightContent");
         spyOn(comp, "preparePermissions");
         spyOn(comp, "prepareSettings");
@@ -94,7 +93,7 @@ describe('SmiloWallet', () => {
 
     it("should prepare the permissions for android", () => {
         spyOn(platform, "is").and.callFake((arg) => {
-            if (arg === "android") return true; else return false;
+            return arg === "android"
         });
         spyOn(androidPermissions, "requestPermissions");
 
@@ -103,7 +102,7 @@ describe('SmiloWallet', () => {
         expect(androidPermissions.requestPermissions).toHaveBeenCalledWith([androidPermissions.PERMISSION.READ_EXTERNAL_STORAGE, androidPermissions.PERMISSION.WRITE_EXTERNAL_STORAGE]);
     });
 
-    it("should not request android permissions", () => {
+    it("should not request android permissions when not on android platform", () => {
         spyOn(platform, "is").and.returnValue(false);
         spyOn(androidPermissions, "requestPermissions");
 
@@ -133,19 +132,6 @@ describe('SmiloWallet', () => {
 
         comp.prepareHockeyAppIntegration().then(data => {
             expect(hockeyApp.start).toHaveBeenCalledWith(jasmine.any(String), jasmine.any(String), true, true);
-            done();
-        });
-    });
-
-    it("should call hockey start and receive a rejected promise", (done) => {
-        spyOn(hockeyApp, "start").and.returnValue(Promise.reject(""));
-
-        comp.prepareHockeyAppIntegration().then(data => {
-            // Shouldn't be here
-            expect(false).toBeTruthy();
-            done();
-        }).catch(data => {
-            expect(true).toBeTruthy();
             done();
         });
     });
