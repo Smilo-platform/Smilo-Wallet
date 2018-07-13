@@ -153,9 +153,33 @@ describe("SHA1PRNG", () => {
         prng = new SHA1PRNG();
     });
 
-    it("should generate correct values", () => {
+    it("should generate correct values when using a string as seed", () => {
         for(let testVector of testVectors) {
             prng.setSeed(testVector.seed);
+
+            for(let test of testVector.tests) {
+                let bytes = prng.getRandomBytes(test.byteCount);
+
+                for(let i = 0; i < bytes.length; i++) {
+                    expect(bytes[i]).toBe(test.bytes[i]);
+                }
+            }
+        }
+    });
+
+    it("should generate correctly values when using a byte array as seed", () => {
+        function toByteArray(str: string): number[] {
+            let bytes: number[] = [];
+
+            for(let i = 0; i < str.length; i++) {
+                bytes.push(str.charCodeAt(i));
+            }
+
+            return bytes;
+        }
+
+        for(let testVector of testVectors) {
+            prng.setSeed(toByteArray(testVector.seed));
 
             for(let test of testVector.tests) {
                 let bytes = prng.getRandomBytes(test.byteCount);

@@ -19,6 +19,8 @@ export class SHA1PRNG implements IPRNG {
     }
 
     setSeed(value: any): void {
+        if(Array.isArray(value))
+            value = sjcl.codec.bytes.toBits(value);
         this.md1 = new sjcl.hash.sha1();
 
         this.md1.update(value);
