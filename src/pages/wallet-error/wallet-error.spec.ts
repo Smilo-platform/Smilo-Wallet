@@ -9,7 +9,7 @@ import { SettingsGeneralPage } from "../../pages/settings-general/settings-gener
 import { WalletErrorPage } from "./wallet-error";
 import { MockViewController } from "../../../test-config/mocks/MockViewController";
 
-describe("NavHeader", () => {
+describe("WalletError", () => {
   let comp: WalletErrorPage;
   let fixture: ComponentFixture<WalletErrorPage>;
   let navController: MockNavController;
