@@ -123,7 +123,7 @@ export class MerkleTreeBuilder {
                 let keysThisIteration = Math.min(this.KEYS_PER_JOB, totalKeys - i);
 
                 // Generate seeds
-                let seeds: Uint8Array[] = [];
+                let seeds: Int8Array[] = [];
                 for(let j = 0; j < keysThisIteration; j++) {
                     seeds.push(prng.getRandomBytes(100));
                 }
