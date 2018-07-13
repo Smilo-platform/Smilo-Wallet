@@ -221,7 +221,7 @@ describe("WalletNewPassphrasePage", () => {
     expect(comp.state).toBe("enterPassphrase");
   });
 
-  it("should call the push method with the expected arguments", () => {
+  it("it should navigate to the WalletNewPasswordPage correctly", () => {
     spyOn(navController, "push");
 
     comp.words = ["word1", "word2"];
