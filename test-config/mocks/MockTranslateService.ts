@@ -5,7 +5,7 @@ import { TranslateStore } from "@ngx-translate/core/src/translate.store";
 
 export class MockTranslateService extends TranslateService {
     constructor() {
-        super(null, null, null, null, null);
+        super(null, null, null, null, null, true, true);
     }
 
     store: TranslateStore;
@@ -69,4 +69,12 @@ export class MockTranslateService extends TranslateService {
     get(key: any): any {
         return Observable.of(key);
     }
+
+    use(lang: string): Observable<any> {
+        let changeEvent: LangChangeEvent = {lang: lang, translations: null}
+        this.onLangChange.next(changeEvent);
+        return Observable.of();
+    }
+
+    
 }

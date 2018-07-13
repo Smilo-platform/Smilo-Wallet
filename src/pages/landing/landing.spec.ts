@@ -15,6 +15,7 @@ import { ComponentsModule } from "../../components/components.module";
 import { WalletImportPassphrasePage } from "../wallet-import-passphrase/wallet-import-passphrase";
 import { WalletImportPage } from "../wallet-import/wallet-import";
 import { WalletNewPage } from "../wallet-new/wallet-new";
+import { SettingsGeneralPage } from "../settings-general/settings-general";
 
 describe("LandingPage", () => {
   let comp: LandingPage;
@@ -81,5 +82,13 @@ describe("LandingPage", () => {
     comp.openRestoreBackup();
 
     expect(navController.push).toHaveBeenCalledWith(WalletImportPage, {NAVIGATION_ORIGIN: "landing"});
+  });
+
+  it("should push the settingspage on the navcontroller", () => {
+    spyOn(navController, "push");
+
+    comp.openSettingsPage();
+
+    expect(navController.push).toHaveBeenCalledWith(SettingsGeneralPage);
   });
 });

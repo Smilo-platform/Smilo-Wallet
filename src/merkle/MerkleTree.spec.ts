@@ -5,6 +5,7 @@ import { ILamportGeneratorThreadInput, ILamportGeneratorThreadOutput } from "./L
 import { MockKeyStoreService } from "../../test-config/mocks/MockKeyStoreService";
 import { Storage } from "@ionic/storage";
 import { IKeyStoreService } from "../services/key-store-service/key-store-service";
+import { ThreadPool } from "./ThreadPool";
 
 describe("MerkleTree", () => {
     let platformService: Platform;
@@ -480,5 +481,93 @@ describe("MerkleTree", () => {
                 done();
             }
         );
+    });
+
+    it("should return an object instance of threadpool", () => {
+        spyOn((<any>MerkleTree), "createThreadPool").and.callThrough();
+
+        let result = (<any>MerkleTree).createThreadPool();
+
+        expect(result instanceof ThreadPool).toBeTruthy();
+    });
+
+    it("should generate the merkle tree correctly even when the platform service returns false and the progress should be shown", (done) => {
+        let pool = new MockThreadPool();
+
+        // Whatever platform check is made we always simply return false
+        spyOn(platformService, "is").and.returnValue(false);
+        // Spy on the method which creates a thread pool and return our mocked version.
+        spyOn((<any>MerkleTree), "createThreadPool").and.returnValue(pool);
+
+        spyOn((<any>MerkleTree), "getRandomBytes").and.callFake((prng, count) => {
+            let bytes: number[] = [];
+
+            for(let i = 0; i < count; i++) {
+                bytes.push(10);
+            }
+
+            return new Uint8Array(bytes);
+        });
+
+        let jobInputs: ILamportGeneratorThreadInput[] = [];
+        spyOn(pool, "send").and.callFake((job: ILamportGeneratorThreadInput) => {
+            // We should never receive more than three jobs.
+            // This is because each job has 100 keys and we need 256 keys.
+            expect(jobInputs.length).toBeLessThan(3, "Too many jobs received");
+
+            expect(pool.poolIsKilled).toBeFalsy("Pool should not be killed before all jobs are completed");
+
+            // Store job input for later validation
+            jobInputs.push(job);
+
+            // Generate some public keys
+            let publicKeys: string[] = [];
+            for(let i = 0; i < job.count; i++) {
+                publicKeys.push((i + job.startIndex).toString());
+            }
+
+            let output: ILamportGeneratorThreadOutput = {
+                startIndex: job.startIndex,
+                publicKeys: publicKeys
+            };
+
+            // Simulate job completion
+            pool.notifyJobDoneListener({}, output);
+
+            // All jobs completed?
+            if(jobInputs.length == 3) {
+                pool.notifyFinishedListener();
+            }
+        });
+
+        (<any>MerkleTree).generateLeafKeys("PRIVATE_KEY", 9, platformService, () => {}).then(
+            (publicKeys) => {
+                let expectedPublicKeys: string[] = [];
+                for(let i = 0; i < 256; i++) {
+                    expectedPublicKeys.push(i.toString());
+                }
+
+                expect(publicKeys).toEqual(expectedPublicKeys);
+
+                expect(pool.poolIsKilled).toBeTruthy("Thread pool should be terminated");
+
+                done();
+            },
+            (error) => {
+                expect(true).toBe(false, "Promise reject should never be called");
+            }
+        );
+    });
+
+    it("should return a correct sha256 string for an empty input", () => {
+        let result = (<any>MerkleTree).sha256("");
+
+        expect(result).toBe("47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=");
+    });
+
+    it("should return an Uint8Array with length 10 which all of them are value 0", () => {
+        let result = (<any>MerkleTree).getRandomBytes(function(){}, 10);
+
+        expect(result).toEqual(new Uint8Array(10));
     });
 });
