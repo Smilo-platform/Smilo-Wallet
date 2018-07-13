@@ -16,8 +16,8 @@ export class SeededRandom implements IPRNG {
         return this.prng();
     }
 
-    getRandomBytes(count: number): Uint8Array {
-        let randomBytes = new Uint8Array(count);
+    getRandomBytes(count: number): Int8Array {
+        let randomBytes = new Int8Array(count);
 
         for(let i = 0; i < count; i++) {
             randomBytes[i] = Math.round(this.prng() * 0xFF);

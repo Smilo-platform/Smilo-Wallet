@@ -1,6 +1,6 @@
 import { IPRNG } from "./IPRNG";
 
-declare const forge: any;
+declare const sjcl;
 
 /**
  * Based on the SHA1PRNG algorithm developed by Sun.
@@ -9,24 +9,16 @@ export class SHA1PRNG implements IPRNG {
     private md1: any;
     private readonly DIGEST_SIZE: number = 20;
 
-    private state: any;
-    private remainder: any;
+    private state: Uint8Array;
+    private remainder: Uint8Array;
     private remCount: number = 0;
 
     setSeed(value: string): void {
-        this.md1 = forge.md.sha1.create();
+        this.md1 = new sjcl.hash.sha1();
 
-        this.md1.update(value, "utf8");
+        this.md1.update(value);
 
-        this.state = this.md1.digest();
-
-        let buffer = forge.util.createBuffer(this.state, "raw");
-        console.log("buffer", buffer.bytes(5));
-
-        // this.state = new Int8Array(sjcl.codec.bytes.fromBits(this.md1.finalize()));
-        // this.remCount = 0;
-
-        console.log("initial state", this.state);
+        this.state = sjcl.codec.bytes.fromBits(this.md1.finalize());
     }
 
     next(): number {
@@ -60,8 +52,8 @@ export class SHA1PRNG implements IPRNG {
         // If we need more bytes, make them.
         while (index < result.length) {
             // Step the state
-            this.md1.update(this.state, "raw");
-            output = this.forgeStringToByteBuffer(this.md1.digest());
+            this.md1.update(sjcl.codec.bytes.toBits(this.state));
+            output = sjcl.codec.bytes.fromBits(this.md1.finalize());
             this.updateState(this.state, output);
 
             // How many bytes?
@@ -82,7 +74,7 @@ export class SHA1PRNG implements IPRNG {
         return result;
     }
 
-    private updateState(state: Int8Array, output: Int8Array): void {
+    private updateState(state: Uint8Array, output: Uint8Array): void {
         let last: number = 1;
         let v: number;
         let t: number;
@@ -90,13 +82,16 @@ export class SHA1PRNG implements IPRNG {
 
         // state(n + 1) = (state(n) + output(n) + 1) % 2^160;
         for (let i = 0; i < state.length; i++) {
+            let stateByte = this.toSigned(state[i]);
+            let outputByte = this.toSigned(output[i]);
+
             // Add two bytes
-            v = state[i] + output[i] + last;
+            v = stateByte + outputByte + last;
             // Result is lower 8 bits
             t = v & 0xFF;
             // Store result. Check for state collision.
-            zf = zf || (state[i] != t);
-            state[i] = t;
+            zf = zf || (stateByte != t);
+            state[i] = this.toUnsigned(t);
             // High 8 bits are carry. Store for next iteration.
             last = v >> 8;
         }
@@ -110,16 +105,10 @@ export class SHA1PRNG implements IPRNG {
         }
     }
 
-    private forgeStringToByteBuffer(forgeString: string): Int8Array {
-        let forgeBuffer = forge.util.createBuffer(forgeString, "raw");
-
-        let bytes = [];
-        while(forgeBuffer.length() > 0) {
-            let byte = forgeBuffer.getByte();
-
-            bytes.push(byte);
-        }
-
-        return new Int8Array(bytes);
+    private toSigned(byte: number): number {
+        return (new Int8Array([byte]))[0];
+    }
+    private toUnsigned(byte: number): number {
+        return (new Uint8Array([byte]))[0];
     }
 }
