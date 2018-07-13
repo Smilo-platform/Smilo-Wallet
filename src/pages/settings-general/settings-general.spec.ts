@@ -51,20 +51,28 @@ describe("SettingsGeneralPage", () => {
     expect(comp.selectedTheme).toBeUndefined();
   });
 
-  it("should change languages and set nightmode switch appropriately", (done) => {
-    let themeSpy = spyOn(settingsService, "getActiveTheme").and.returnValue(Observable.of("dark-theme"));
-    comp.nightModeStatus = false;
-    comp.selectedTheme = "dark-theme";
+  it("should change languages appropriately", (done) => {
     comp.ionViewDidLoad().then(data => {
       expect(comp.activeLanguage).toBe("en");
-      expect(comp.nightModeStatus).toBeTruthy();
-
-      themeSpy.and.returnValue(Observable.of("light-theme"));
-      
       spyOn(settingsService, "getLanguageSettings").and.returnValue(Promise.resolve("nl"));
 
       comp.ionViewDidLoad().then(data => {
         expect(comp.activeLanguage).toBe("nl");
+        done();
+      });  
+    });
+  });
+
+  it("should set nightmode correctly", (done) => {
+    let themeSpy = spyOn(settingsService, "getActiveTheme").and.returnValue(Observable.of("dark-theme"));
+    comp.nightModeStatus = false;
+    comp.selectedTheme = "dark-theme";
+    comp.ionViewDidLoad().then(data => {
+      expect(comp.nightModeStatus).toBeTruthy();
+
+      themeSpy.and.returnValue(Observable.of("light-theme"));
+
+      comp.ionViewDidLoad().then(data => {
         expect(comp.nightModeStatus).toBeFalsy();
 
         done();
