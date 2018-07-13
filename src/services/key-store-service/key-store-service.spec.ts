@@ -115,4 +115,34 @@ describe("KeyStoreService", () => {
             expect(data).toEqual(templateKeyStore.data);
         }
     });
+
+    it("should return null because the control hash does not equal", () => {
+        spyOn(service, "generateKey");
+        spyOn(service, "getControlHash").and.returnValue("differenthash");
+
+        let result = service.decryptKeyStore(<any>{controlHash: "hash", cipherText: "text"}, "pass");
+
+        expect(result).toBeNull();
+        expect(service.generateKey).not.toHaveBeenCalled();
+    });
+
+    it("should return null because the decipher output could not be generated", () => {
+        let decipher: any = {
+            start: () => {},
+            update: () => {},
+            finish: () => {},
+            output: () => {}
+        };
+        spyOn(service, "generateKey");
+        spyOn(forge.cipher, "createDecipher").and.returnValue(decipher);
+        spyOn(decipher, "start");
+        spyOn(decipher, "output");
+        spyOn(service, "getControlHash").and.returnValue("correct");
+
+        let result = service.decryptKeyStore(<any>{controlHash: "correct", cipherText: "text", keyParams:{salt: "salt", iterations: 0, keysize: 0}, cipherParams: {iv: "iv"}}, "pass");
+
+        expect(result).toBeNull();
+        expect(service.generateKey).toHaveBeenCalled();
+        expect(decipher.output).not.toHaveBeenCalled();
+    });
 });
