@@ -1,6 +1,7 @@
 import { CryptoHelper } from "../crypto/CryptoHelper";
 import { MerkleTree } from "../merkle/MerkleTree";
-import { SeededRandom } from "../random/SeededRandom";
+import { IPRNG } from "../random/IPRNG";
+import { SHA1PRNG } from "../random/SHA1PRNG";
 
 export class MerkleLamportSigner {
     private readonly cs = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -97,13 +98,13 @@ export class MerkleLamportSigner {
         let privateKeyParts: string[] = [];
 
         // Initialize the prng and query it until we reach the required index.
-        let random = new SeededRandom(privateKey);
-        let lamportSeed: Uint8Array;
+        let random = new SHA1PRNG(privateKey);
+        let lamportSeed: Int8Array;
         for(let i = 0; i <= index; i++) {
             lamportSeed = random.getRandomBytes(bitCount);
         }
 
-        let lamportPrng = new SeededRandom(lamportSeed);
+        let lamportPrng = new SHA1PRNG(lamportSeed);
 
         for(let i = 0; i < bitCount * 2; i++) {
             privateKeyParts.push(this.getLamportPrivateKey(lamportPrng));
@@ -112,7 +113,7 @@ export class MerkleLamportSigner {
         return privateKeyParts;
     }
 
-    private getLamportPrivateKey(prng: SeededRandom): string {
+    private getLamportPrivateKey(prng: IPRNG): string {
         let length = this.cs.length - 1;
 
         return    this.cs[Math.round(prng.next() * length)] + this.cs[Math.round(prng.next() * length)] + this.cs[Math.round(prng.next() * length)] + this.cs[Math.round(prng.next() * length)] + this.cs[Math.round(prng.next() * length)]
