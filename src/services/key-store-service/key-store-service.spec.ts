@@ -126,7 +126,7 @@ describe("KeyStoreService", () => {
         expect(service.generateKey).not.toHaveBeenCalled();
     });
 
-    it("should return null because the control hash does not equal", () => {
+    it("should return null because the decipher output could not be generated", () => {
         let decipher: any = {
             start: () => {},
             update: () => {},
