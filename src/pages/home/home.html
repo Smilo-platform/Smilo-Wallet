@@ -9,16 +9,16 @@
   <ion-grid>
     <ion-row justify-content-center>
       <ion-col col-9 col-md-6 col-lg-3 col-xl-2>
-        <button ion-button full  (click)="openNewWallet()">
-          {{ 'home.buttons.new_wallet' | translate }}
+        <button ion-button full class="wallet-overview-page" (click)="openMyWallet()">
+          {{ 'home.buttons.my_wallet' | translate }}
         </button>
       </ion-col>
     </ion-row>
 
     <ion-row justify-content-center>
       <ion-col col-9 col-md-6 col-lg-3 col-xl-2>
-        <button ion-button full class="wallet-overview-page" (click)="openMyWallet()">
-          {{ 'home.buttons.my_wallet' | translate }}
+        <button ion-button full  (click)="openNewWallet()">
+          {{ 'home.buttons.new_wallet' | translate }}
         </button>
       </ion-col>
     </ion-row>
