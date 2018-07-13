@@ -1,4 +1,4 @@
-import { TranslateService, LangChangeEvent, TranslateCompiler, TranslateParser, MissingTranslationHandler, TranslateLoader } from "@ngx-translate/core";
+import { TranslateService, LangChangeEvent } from "@ngx-translate/core";
 import { Observable } from "rxjs/Observable";
 import "rxjs/add/observable/of";
 

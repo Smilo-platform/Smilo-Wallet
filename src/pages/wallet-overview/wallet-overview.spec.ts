@@ -260,7 +260,7 @@ describe("WalletOverviewPage", () => {
     expect(comp.getAvailableExchanges).toHaveBeenCalled();
   })
 
-  it("should have three correct datas after getting the wallets", (done) => {
+  it("should have three correct wallets after getting the wallets", (done) => {
     spyOn(comp, "getWalletBalance");
     comp.getAllWallets().then(() => {
       let one = getDummyWallet();
@@ -290,52 +290,49 @@ describe("WalletOverviewPage", () => {
   })
 
   it("should get two specific currency types and amounts back after getting it with mock data", (done) => {
-    comp.getAllWallets().then(data => {
-      comp.getWalletBalance("I EXIST").then(data => {
-        expect(comp.balances[0].currency).toBe("XSM");
-        expect(comp.balances[0].amount).toBe(5712);
-        expect(comp.balances[1].currency).toBe("XSP");
-        expect(comp.balances[1].amount).toBe(234);
+    comp.wallets = [getDummyWallet()];
+    comp.getWalletBalance("I EXIST").then(data => {
+      expect(comp.balances[0].currency).toBe("XSM");
+      expect(comp.balances[0].amount).toBe(5712);
+      expect(comp.balances[1].currency).toBe("XSP");
+      expect(comp.balances[1].amount).toBe(234);
 
-        done();
-      });
+      done();
     });
   });
 
   it("should contain correct data for graph", (done) => {
-    comp.getAllWallets().then(data => {
-      comp.getWalletBalance("I EXIST").then(data => {
-        comp.pickedCurrency = "USD";
-        comp.pickedExchange = "GDAX";
-        comp.setCalculatedCurrencyValue().then(data => {
-          expect(comp.currenciesForDoughnutCanvas.length).toBe(2);
-          expect(comp.currenciesForDoughnutCanvas[0]).toBe(96.06);
-          expect(comp.currenciesForDoughnutCanvas[1]).toBe(3.94);
-          expect(comp.currenciesForDoughnutCanvasLabels.length).toBe(2);
-          expect(comp.currenciesForDoughnutCanvasLabels[0]).toBe("XSM");
-          expect(comp.currenciesForDoughnutCanvasLabels[1]).toBe("XSP");
+    comp.wallets = [getDummyWallet()];
+    comp.currentWallet = comp.wallets[0];
+    comp.pickedCurrency = "USD";
+    comp.pickedExchange = "GDAX";
+    comp.balances = [{currency: "XSM", amount: 5712, valueAmount: 0}, 
+                     {currency: "XSP", amount: 234, valueAmount: 0}];
+    comp.setCalculatedCurrencyValue().then(data => {
+      expect(comp.currenciesForDoughnutCanvas.length).toBe(2);
+      expect(comp.currenciesForDoughnutCanvas[0]).toBe(96.06);
+      expect(comp.currenciesForDoughnutCanvas[1]).toBe(3.94);
+      expect(comp.currenciesForDoughnutCanvasLabels.length).toBe(2);
+      expect(comp.currenciesForDoughnutCanvasLabels[0]).toBe("XSM");
+      expect(comp.currenciesForDoughnutCanvasLabels[1]).toBe("XSP");
 
-          done();
-        });
-      });
+      done();
     });
   });
 
   it("should have five transaction histories for the wallet", (done) => {
-    comp.getAllWallets().then(data => {
-      comp.getTransactionHistory("ETm9QUJLVdJkTqRojTNqswmeAQGaofojJJ").then(data => {
-        expect(comp.transactionsHistory.length).toBe(5);
-        expect(comp.transactionsHistory).toEqual([
-          { "date": "Jun 14, 2018 18:01:44 PM", "input": "ETm9QUJLVdJkTqRojTNqswmeAQGaofojJJ", "output": "17srYd7sVwKgE5ha7ZXSBxUACjm2hMVQeH", "amount": "55", "currency": "XSM"},
-          { "date": "Jun 13, 2018 19:14:34 PM", "input": "1KkPiyNvRHsWC67KgK6AFHMWoxmcGm5d1H", "output": "ETm9QUJLVdJkTqRojTNqswmeAQGaofojJJ", "amount": "292", "currency": "XSP"},
-          { "date": "Jun 08, 2018 15:44:36 PM", "input": "1LtqTERxw4QFLCbfLgB43P1XGAWUNmk6DA", "output": "ETm9QUJLVdJkTqRojTNqswmeAQGaofojJJ", "amount": "122", "currency": "XSM"},
-          { "date": "May 28, 2018 17:22:53 PM", "input": "ETm9QUJLVdJkTqRojTNqswmeAQGaofojJJ", "output": "1AvAvNh6PjzN9jjhUNhT5DuzMPgnhM6R2u", "amount": "254", "currency": "XSM"},
-          { "date": "May 26, 2018 23:44:51 PM", "input": "ETm9QUJLVdJkTqRojTNqswmeAQGaofojJJ", "output": "13QMZULQGBodKzsAF462Dh2opf8PQawYBt", "amount": "5192", "currency": "XSP"},
-        ]);
-        done();
-      });
+    comp.getTransactionHistory("ETm9QUJLVdJkTqRojTNqswmeAQGaofojJJ").then(data => {
+      expect(comp.transactionsHistory.length).toBe(5);
+      expect(comp.transactionsHistory).toEqual([
+        { "date": "Jun 14, 2018 18:01:44 PM", "input": "ETm9QUJLVdJkTqRojTNqswmeAQGaofojJJ", "output": "17srYd7sVwKgE5ha7ZXSBxUACjm2hMVQeH", "amount": "55", "currency": "XSM"},
+        { "date": "Jun 13, 2018 19:14:34 PM", "input": "1KkPiyNvRHsWC67KgK6AFHMWoxmcGm5d1H", "output": "ETm9QUJLVdJkTqRojTNqswmeAQGaofojJJ", "amount": "292", "currency": "XSP"},
+        { "date": "Jun 08, 2018 15:44:36 PM", "input": "1LtqTERxw4QFLCbfLgB43P1XGAWUNmk6DA", "output": "ETm9QUJLVdJkTqRojTNqswmeAQGaofojJJ", "amount": "122", "currency": "XSM"},
+        { "date": "May 28, 2018 17:22:53 PM", "input": "ETm9QUJLVdJkTqRojTNqswmeAQGaofojJJ", "output": "1AvAvNh6PjzN9jjhUNhT5DuzMPgnhM6R2u", "amount": "254", "currency": "XSM"},
+        { "date": "May 26, 2018 23:44:51 PM", "input": "ETm9QUJLVdJkTqRojTNqswmeAQGaofojJJ", "output": "13QMZULQGBodKzsAF462Dh2opf8PQawYBt", "amount": "5192", "currency": "XSP"},
+      ]);
+      done();
     });
-  })
+  });
 
   it("should call initialize when the view is loaded", () => {
     spyOn(comp, "initialize");
@@ -560,12 +557,18 @@ describe("WalletOverviewPage", () => {
     expect(alert.present).toHaveBeenCalled();
   });
 
-  it("should not call platform since the datatype is not defined", () => {
-    spyOn(platform, "is");
+  it("should not copy to any platform since the dataType is not defined", () => {
+    spyOn(comp, "copyToClipboardWeb");
+    spyOn(comp, "showToastMessage");
+    spyOn(comp, "writeFileMobile");
+    spyOn(comp, "downloadTxtFileWeb");
 
     comp.export("", "data", "keystore");
 
-    expect(platform.is).not.toHaveBeenCalled();
+    expect(comp.copyToClipboardWeb).not.toHaveBeenCalled();
+    expect(comp.showToastMessage).not.toHaveBeenCalled();
+    expect(comp.writeFileMobile).not.toHaveBeenCalled();
+    expect(comp.downloadTxtFileWeb).not.toHaveBeenCalled();
   });
 
   it("should use the clipboard library to copy the files when the platform is android or ios", () => {
@@ -594,7 +597,7 @@ describe("WalletOverviewPage", () => {
     expect(comp.showToastMessage).toHaveBeenCalled();
   });
 
-  it("should export the keystore as a filename without a name", () => {
+  it("should export the file without a filename since the exportType is not a defined one", () => {
     spyOn(platform, "is").and.returnValue(false);
     spyOn(comp, "downloadTxtFileWeb");
 
@@ -605,7 +608,9 @@ describe("WalletOverviewPage", () => {
 
   it("should write the file to android storage", () => {
     comp.currentWallet = getDummyWallet();
-    spyOn(platform, "is").and.returnValue(true);
+    spyOn(platform, "is").and.callFake((value: string) => {
+      return value === "android";
+    });
     spyOn(comp, "writeFileMobile");
     // Filenative throws a warning that cordova isn't loaded in this unit test. We know it isn't; just don't show it.
     spyOn(console, "warn");
@@ -622,11 +627,8 @@ describe("WalletOverviewPage", () => {
 
   it("should write the file to ios storage", () => {
     comp.currentWallet = getDummyWallet();
-    spyOn(platform, "is").and.callFake((arg) => {
-      if (arg === "android") 
-        return false;
-      else (arg === "ios") 
-        return true;
+    spyOn(platform, "is").and.callFake((value: string) => {
+        return value === "ios";
     });
     spyOn(comp, "writeFileMobile");
     // Filenative throws a warning that cordova isn't loaded in this unit test. We know it isn't; just don't show it.
@@ -669,6 +671,7 @@ describe("WalletOverviewPage", () => {
     spyOn(fileNative, "writeFile").and.returnValue(Promise.reject(""));
     spyOn(toastController, "create").and.returnValue(toast);
     spyOn(toast, "present");
+    spyOn(comp.translations, "get").and.returnValue("");
 
     comp.writeFileMobile("location", "filename", "keystoredata", {replace: true}, "android").then(data => {
       expect(toastController.create).toHaveBeenCalledWith({
@@ -720,12 +723,20 @@ describe("WalletOverviewPage", () => {
   it("should push zero balances for XSM and XSP when the JSON is null or has no keys at all", (done) => {
     comp.currentWallet = getDummyWallet();
 
-    spyOn(walletBalancesService, "getWalletBalance").and.returnValue(Promise.resolve(null));
+    let getWalletBalanceSpy = spyOn(walletBalancesService, "getWalletBalance").and.returnValue(Promise.resolve(null));
 
     comp.getWalletBalance("").then(data => {
       expect(comp.balances[0]).toEqual({currency: "XSM", amount: 0, valueAmount: 0});
       expect(comp.balances[1]).toEqual({currency: "XSP", amount: 0, valueAmount: 0});
-      done();
+      
+      // No keys
+      getWalletBalanceSpy.and.returnValue(Promise.resolve({}));
+
+      comp.getWalletBalance("").then(data => {
+        expect(comp.balances[0]).toEqual({currency: "XSM", amount: 0, valueAmount: 0});
+        expect(comp.balances[1]).toEqual({currency: "XSP", amount: 0, valueAmount: 0});
+        done();
+      });
     });
   });
 
@@ -743,7 +754,7 @@ describe("WalletOverviewPage", () => {
     });
   });
 
-  it("should set the currencies correct for the picked exchange and picked currency and when the currency doesn't exist on the exchange it should pick the first one on the exchange", () => {
+  it("should set the currencies correct for the picked exchange and picked currency", () => {
     spyOn(comp, "setCalculatedCurrencyValue");
 
     comp.pickedExchange = "Exchange1";
@@ -761,6 +772,20 @@ describe("WalletOverviewPage", () => {
     expect(comp.setCalculatedCurrencyValue).toHaveBeenCalled();
     expect(comp.pickedCurrency).toBe("Curr3");
     expect(comp.currentExchangeCurrencies).toEqual(["Curr1", "Curr2", "Curr3", "Curr4"]);
+  });
+
+  it("should set the currency to the first one if it doesn't exist on the exchange", () => {
+    spyOn(comp, "setCalculatedCurrencyValue");
+
+    comp.pickedExchange = "Exchange1";
+    comp.pickedCurrency = "Curr3";
+    comp.availableExchanges = [
+      {"exchangeName": "Exchange1", "availableCurrencies": ["Curr1", "Curr2", "Curr3", "Curr4"]},
+      {"exchangeName": "Exchange2", "availableCurrencies": ["Curr1", "Curr2", "Curr3"]},
+      {"exchangeName": "Exchange3", "availableCurrencies": ["Curr1", "Curr2"]},
+      {"exchangeName": "Exchange4", "availableCurrencies": ["Curr1", "Curr2"]},
+      {"exchangeName": "Exchange5", "availableCurrencies": ["Curr1", "Curr2", "Curr3", "Curr4"]}
+    ];
 
     comp.pickedCurrency = "DON'T EXIST";
 
@@ -797,6 +822,10 @@ describe("WalletOverviewPage", () => {
   });
 
   it("should not try to generate the dougnut chart because needed information is missing for the chart", () => {
+    comp.currenciesForDoughnutCanvas = undefined;
+    comp.currenciesForDoughnutCanvasLabels = undefined;
+    comp.doughnutCanvas = undefined;
+
     comp.displayChart();
 
     expect(comp.doughnutChart).toBeUndefined();

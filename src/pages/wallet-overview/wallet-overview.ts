@@ -182,7 +182,8 @@ export class WalletOverviewPage {
       "wallet_overview.loading_wallet",
       "wallet_overview.currency_value_zero"
     ]).then(data => {
-      return this.translations = data;
+      this.translations = data;
+      return data;
     });
   }
   
@@ -412,7 +413,7 @@ export class WalletOverviewPage {
       this.showToastMessage(toastMessage, 2000, "bottom");
     }).catch(error => {
       let toast = this.toastCtrl.create({
-        message: "YO",
+        message: this.translations.get("wallet_overview.first_start_keystore_download"),
         position: "bottom",
         showCloseButton: true,
         closeButtonText: "Ok"
@@ -528,8 +529,8 @@ export class WalletOverviewPage {
   getAvailableExchanges(): Promise<void> {
     return this.exchangeService.getAvailableExchanges().then(data => {
       if (data.availableExchanges !== undefined) {
-        for (let i = 0; i < data.availableExchanges.length; i++) {
-          this.availableExchanges.push(data.availableExchanges[i]);
+        for (let exchange of data.availableExchanges) {
+          this.availableExchanges.push(exchange);
         }
         this.pickedExchange = this.availableExchanges[0].exchangeName;
         this.pickedCurrency = this.availableExchanges[0].availableCurrencies[0];
@@ -580,8 +581,8 @@ export class WalletOverviewPage {
           balances.push({currency: currency, amount: amount});
         }
       }
+      this.balances = balances;
       if (this.currentWallet !== undefined) {
-        this.balances = balances;
         this.setCalculatedCurrencyValue();
       }
     }).catch(data => {
@@ -662,13 +663,12 @@ export class WalletOverviewPage {
           if (currencyFromApi === walletCurrency && currencyToApi === this.pickedCurrency) {
             currentCurrencyValue = walletCurrencyAmount * valueApi;
             found = true;
-          }
-          // So there was no direct price found for the current wallet currency
-          if (i === prices.length -1 && !found) {
+          } else if (i === prices.length -1) {
             let alternatePrice = prices.find(price => price.currencyFrom === currencyToApi && price.currencyTo === this.pickedCurrency);
             if (currencyToApi === this.pickedCurrency) {
               alternatePrice = 1;
               currentCurrencyValue = alternatePrice * walletCurrencyAmount;
+              found = true;
             } else if (alternatePrice === undefined) {
               if (y === 0) {
                 const alert = this.alertCtrl.create({
@@ -681,8 +681,8 @@ export class WalletOverviewPage {
             } else {
               alternatePrice = alternatePrice.value;
               currentCurrencyValue = alternatePrice * valueApi * walletCurrencyAmount;
+              found = true;
             }
-            found = true;
           }
           if (found) {
             totalValue += currentCurrencyValue;
