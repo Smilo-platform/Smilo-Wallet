@@ -7,10 +7,10 @@ module.exports = function(config) {
 
     frameworks: ['jasmine'],
 
-    captureTimeout: 210000,
+    captureTimeout: 60000,
     browserDisconnectTolerance: 3,
-    browserDisconnectTimeout : 210000,
-    browserNoActivityTimeout : 210000,
+    browserDisconnectTimeout : 2000,
+    browserNoActivityTimeout : 10000,
 
     files: [
       {
@@ -18,7 +18,7 @@ module.exports = function(config) {
         watched: true
       },
       {
-        pattern: './src/assets/**/*',
+        pattern: './src/assets/imgs/**',
         watched: false,
         included: false,
         served: true,
@@ -68,21 +68,15 @@ module.exports = function(config) {
     logLevel: config.LOG_INFO,
     autoWatch: true,
     browsers: ['HeadlessChrome'],
-    captureTimeout: 210000,
-    browserDisconnectTolerance: 3, 
-    browserDisconnectTimeout : 210000,
-    browserNoActivityTimeout : 210000,
 
     customLaunchers: {
       HeadlessChrome: {
         base: 'ChromeHeadless',
         flags: [
-          '--no-sandbox',
+          '--disable-web-security',
           '--disable-gpu',
-          '--disable-background-timer-throttling',
-          '--disable-renderer-backgrounding',
-          '--proxy-bypass-list=*',
-          '--proxy-server=\'direct://\''
+          '--no-sandbox',
+          "--max_old_space_size=4096"
        ]
       }
     },

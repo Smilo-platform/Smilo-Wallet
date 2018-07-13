@@ -1,5 +1,7 @@
 # Smilo Wallet
 
+This repo contains the source code for the Smilo mobile wallet.
+
 ## Project dependencies
 
 This project relies on the following dependencies:
