@@ -9,7 +9,7 @@ import { SettingsGeneralPage } from "../../pages/settings-general/settings-gener
 import { PasswordExplanationPage } from "./password-explanation";
 import { MockViewController } from "../../../test-config/mocks/MockViewController";
 
-describe("NavHeader", () => {
+describe("PasswordExplanationPage", () => {
   let comp: PasswordExplanationPage;
   let fixture: ComponentFixture<PasswordExplanationPage>;
   let viewController: MockViewController;
