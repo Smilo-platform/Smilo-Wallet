@@ -13,7 +13,12 @@ export class SHA1PRNG implements IPRNG {
     private remainder: Uint8Array;
     private remCount: number = 0;
 
-    setSeed(value: string): void {
+    constructor(seed?: any) {
+        if(seed)
+            this.setSeed(seed);
+    }
+
+    setSeed(value: any): void {
         this.md1 = new sjcl.hash.sha1();
 
         this.md1.update(value);
