@@ -5,34 +5,34 @@ describe("LamportGenerator", () => {
         let input: ILamportGeneratorThreadInput = {
             startIndex: 1337,
             seeds: [
-                new Uint8Array([
+                new Int8Array([
                     1, 2, 3, 4, 5, 6, 7, 8, 9, 10
                 ]),
-                new Uint8Array([
+                new Int8Array([
                     1, 2, 3, 4, 5, 6, 7, 8, 9, 10
                 ]),
-                new Uint8Array([
+                new Int8Array([
                     1, 2, 3, 4, 5, 6, 7, 8, 9, 10
                 ]),
-                new Uint8Array([
+                new Int8Array([
                     1, 2, 3, 4, 5, 6, 7, 8, 9, 10
                 ]),
-                new Uint8Array([
+                new Int8Array([
                     1, 2, 3, 4, 5, 6, 7, 8, 9, 10
                 ]),
-                new Uint8Array([
+                new Int8Array([
                     1, 2, 3, 4, 5, 6, 7, 8, 9, 10
                 ]),
-                new Uint8Array([
+                new Int8Array([
                     1, 2, 3, 4, 5, 6, 7, 8, 9, 10
                 ]),
-                new Uint8Array([
+                new Int8Array([
                     1, 2, 3, 4, 5, 6, 7, 8, 9, 10
                 ]),
-                new Uint8Array([
+                new Int8Array([
                     1, 2, 3, 4, 5, 6, 7, 8, 9, 10
                 ]),
-                new Uint8Array([
+                new Int8Array([
                     1, 2, 3, 4, 5, 6, 7, 8, 9, 10
                 ])
             ],
