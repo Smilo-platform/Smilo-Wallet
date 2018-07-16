@@ -1,4 +1,4 @@
-import { IThreadPool } from "../../src/merkle/ThreadPool";
+import { IThreadPool } from "../../src/core/merkle/ThreadPool";
 
 export class MockThreadPool implements IThreadPool {
     errorListeners: Function[] = [];

@@ -51,6 +51,7 @@ import { WalletBalanceService } from "../services/wallet-balance-service/wallet-
 import { UrlService } from "../services/url-service/url-service";
 import { WalletExtraImportPageModule } from "../pages/wallet-extra-import/wallet-extra-import.module";
 import { WalletExtraImportPage } from "../pages/wallet-extra-import/wallet-extra-import";
+import { TransactionSignService } from "../services/transaction-sign-service/transaction-sign-service";
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, "assets/i18n/");
@@ -124,6 +125,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     WalletTransactionHistoryService,
     HockeyApp,
     MerkleTreeService,
+    TransactionSignService,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

@@ -89,7 +89,7 @@ export function LamportGeneratorThread(input: ILamportGeneratorThreadInput, done
         }
     
         private getLamportPrivateKey(): string {
-            let length = this.CS.length;
+            let length = this.CS.length - 1;
     
             return    this.CS[Math.round(this.prng() * length)] + this.CS[Math.round(this.prng() * length)] + this.CS[Math.round(this.prng() * length)] + this.CS[Math.round(this.prng() * length)] + this.CS[Math.round(this.prng() * length)]
                     + this.CS[Math.round(this.prng() * length)] + this.CS[Math.round(this.prng() * length)] + this.CS[Math.round(this.prng() * length)] + this.CS[Math.round(this.prng() * length)] + this.CS[Math.round(this.prng() * length)]

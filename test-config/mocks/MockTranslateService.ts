@@ -26,9 +26,6 @@ export class MockTranslateService extends TranslateService {
     getDefaultLang(): string {
         return "";
     }
-    use(lang: string): Observable<any> {
-        return Observable.of("");
-    }
     getTranslation(lang: string): Observable<any> {
         return Observable.of("");
     }
