@@ -25,4 +25,8 @@ describe("UrlService", () => {
         expect(urlService.getBaseUrl()).toBe("http://api.smilo.network:8080");
     });
 
+    it("should return true when checking for devmode", () => {
+        expect(urlService.isDevelopment()).toBeTruthy();
+    });
+
 });
