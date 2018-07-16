@@ -32,7 +32,7 @@ describe("WalletTransactionHistoryService", () => {
     });
 
     it("should return an empty array because the publicKey was not found", (done) => {
-        spyOn(httpClient, "get").and.returnValue(Observable.of([]));
+        spyOn(httpClient, "get").and.returnValue(Observable.of([""]));
         walletTransactionHistoryService.getTransactionHistory("I DON'T EXIST").then(data => {
             expect(data).toEqual([]);
             done();
