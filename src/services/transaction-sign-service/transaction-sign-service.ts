@@ -3,25 +3,21 @@ import { ITransaction } from "../../models/ITransaction";
 import { MerkleTreeService } from "../merkle-tree-service/merkle-tree-service";
 import { ILocalWallet } from "../../models/ILocalWallet";
 import { KeyStoreService } from "../key-store-service/key-store-service";
-import { TransactionSerializer } from "../../core/transactions/TransactionSerializer";
-import { CryptoHelper } from "../../core/crypto/CryptoHelper";
+import { TransactionHelper } from "../../core/transactions/TransactionHelper";
 import { MerkleLamportSigner } from "../../core/signatures/MerkleLamportSigner";
 import { MerkleLamportVerifier } from "../../core/signatures/MerkleLamportVerifier";
 import { AddressHelper } from "../../core/address/AddressHelper";
 
 export interface ITransactionSignService {
     sign(wallet: ILocalWallet, password: string, transaction: ITransaction, index: number): Promise<void>;
-    getHashableData(transaction: ITransaction): string;
-    getDataHash(transaction: ITransaction): string;
 }
 
 @Injectable()
 export class TransactionSignService implements ITransactionSignService {
     private merkleLamportSigner = new MerkleLamportSigner();
     private merkleLamportVerifier = new MerkleLamportVerifier();
-    private transactionSerializer = new TransactionSerializer();
+    private transactionHelper = new TransactionHelper();
     private addressHelper = new AddressHelper();
-    private cryptoHelper = new CryptoHelper();
 
     constructor(private merkleTreeService: MerkleTreeService,
                 private keyStoreService: KeyStoreService) {
@@ -55,7 +51,7 @@ export class TransactionSignService implements ITransactionSignService {
             (merkleTree) => {
                 let signature = this.merkleLamportSigner.getSignature(
                     merkleTree,
-                    this.transactionSerializer.transactionToString(transaction),
+                    this.transactionHelper.transactionToString(transaction),
                     privateKey, index
                 );
 
@@ -73,30 +69,6 @@ export class TransactionSignService implements ITransactionSignService {
     }
 
     /**
-     * Returns the data, as a single string, which can be hashed into
-     * the 'dataHash' property of the given transaction.
-     * @param transaction 
-     */
-    getHashableData(transaction: ITransaction): string {
-        let data = "";
-
-        data += `${ transaction.timestamp }:${ transaction.assetId }:${ transaction.inputAddress }:${ transaction.inputAmount }:${ transaction.fee }`;
-
-        for(let output of transaction.transactionOutputs) {
-            data += `:${ output.outputAddress }:${ output.outputAmount }`;
-        }
-
-        return data;
-    }
-
-    /**
-     * Gets the data hash for the given transaction.
-     */
-    getDataHash(transaction: ITransaction): string {
-        return this.cryptoHelper.sha256Hex(this.getHashableData(transaction));
-    }
-
-    /**
      * Returns true if the given transaction is valid. This takes into account:
      * - A defined and correct 'dataHash' property
      * - A valid input address has been defined
@@ -111,7 +83,7 @@ export class TransactionSignService implements ITransactionSignService {
             return false;
 
         // Make sure the dataHash is correct
-        if(transaction.dataHash != this.getDataHash(transaction))
+        if(transaction.dataHash != this.transactionHelper.getDataHash(transaction))
             return false;
 
         // Make sure the input address is correct
@@ -135,7 +107,7 @@ export class TransactionSignService implements ITransactionSignService {
 
         // Make sure the signature is correct
         if(!this.merkleLamportVerifier.verifyMerkleSignature(
-            this.transactionSerializer.transactionToString(transaction),
+            this.transactionHelper.transactionToString(transaction),
             transaction.signatureData,
             transaction.signatureIndex,
             this.addressHelper.getLayerCount(transaction.inputAddress),
