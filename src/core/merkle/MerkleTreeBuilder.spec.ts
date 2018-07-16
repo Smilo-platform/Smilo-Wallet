@@ -4,6 +4,7 @@ import { MockThreadPool } from "../../../test-config/mocks/MockThreadPool";
 import { SeededRandom } from "../random/SeededRandom";
 import { ILamportGeneratorThreadInput, ILamportGeneratorThreadOutput, LamportGeneratorThread } from "./LamportGenerator";
 import { CryptoHelper } from "../crypto/CryptoHelper";
+import { ThreadPool } from "./ThreadPool";
 
 describe("MerkleTreeBuilder", () => {
     let builder: MerkleTreeBuilder;
@@ -262,5 +263,24 @@ describe("MerkleTreeBuilder", () => {
                 done();
             }
         );
+    });
+
+    it("should call the progress listener and in this case instantly return 0.99", (done) => {
+        let pool = new MockThreadPool();
+        spyOn(builder, "createThreadPool").and.returnValue(pool);
+
+        spyOn(pool, "send").and.callFake((job: ILamportGeneratorThreadInput) => {
+            pool.notifyJobDoneListener({}, "");
+            pool.notifyFinishedListener();
+        });
+
+        builder.generateLeafKeys("PRIVATE_KEY", 2, true, (e) => {
+            expect(e).toBe(0.99);
+            done();
+        });
+    });
+
+    it("should return an object of class ThreadPool", () => {
+        expect(builder.createThreadPool() instanceof ThreadPool).toBeTruthy();
     });
 });
