@@ -24,7 +24,7 @@ describe("SeededRandom", () => {
         }
     });
 
-    it("should current a correct amount of random bytes", () => {
+    it("should return a correct amount of random bytes", () => {
         let bytes = prng.getRandomBytes(100);
 
         expect(bytes.length).toBe(100);

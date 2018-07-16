@@ -5,17 +5,17 @@ import { IExchangePrice } from "../../src/models/IExchangePrice";
 export class MockExchangesService implements IExchangesService {
     
     getAvailableExchanges() {
-        return new Promise(resolve => { resolve({"availableExchanges": [
+        return Promise.resolve({"availableExchanges": [
             {"exchange": "Bitmex", "availableCurrencies": ["USD", "ETH", "BTC", "XSM"]},
             {"exchange": "GDAX", "availableCurrencies": ["USD", "BTC", "XSM"]},
             {"exchange": "CexIO", "availableCurrencies": ["USD", "XSM"]},
             {"exchange": "Kraken", "availableCurrencies": ["USD", "XSM"]},
             {"exchange": "Coinbase", "availableCurrencies": ["USD", "ETH", "BTC", "XSM"]}
-        ]})});
+        ]});
     }
 
     getPrices(currency: string, exchange: string): Promise<IExchangePrice[]> {
-        return new Promise(resolve => { resolve([
+        return Promise.resolve([
             {"exchange": "Bitmex", "currencyFrom": "XSM", "currencyTo": "USD", "value": 0.25},
             {"exchange": "Bitmex", "currencyFrom": "XSM", "currencyTo": "ETH", "value": 0.0003},
             {"exchange": "Bitmex", "currencyFrom": "XSM", "currencyTo": "BTC", "value": 0.00003},
@@ -35,6 +35,6 @@ export class MockExchangesService implements IExchangesService {
             {"exchange": "Coinbase", "currencyFrom": "XSM", "currencyTo": "ETH", "value": 0.0002},
             {"exchange": "Coinbase", "currencyFrom": "XSM", "currencyTo": "BTC", "value": 0.00002},
             {"exchange": "Coinbase", "currencyFrom": "XSP", "currencyTo": "XSM", "value": 0.1}
-        ])});
+        ]);
     }
 }
