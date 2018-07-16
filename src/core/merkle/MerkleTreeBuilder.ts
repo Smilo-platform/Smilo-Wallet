@@ -1,8 +1,9 @@
 import { IThreadPool, ThreadPool } from "./ThreadPool";
 import { LamportGeneratorThread, ILamportGeneratorThreadOutput, ILamportGeneratorThreadInput } from "./LamportGenerator";
-import { SeededRandom } from "../random/SeededRandom";
 import { CryptoHelper } from "../crypto/CryptoHelper";
 import { MerkleTree } from "./MerkleTree";
+import { IPRNG } from "../random/IPRNG";
+import { SHA1PRNG } from "../random/SHA1PRNG";
 
 export class MerkleTreeBuilder {
     private readonly KEYS_PER_JOB = 100;
@@ -45,8 +46,8 @@ export class MerkleTreeBuilder {
         return new ThreadPool();
     }
 
-    createPRNG(seed): SeededRandom {
-        return new SeededRandom(seed);
+    createPRNG(seed): IPRNG {
+        return new SHA1PRNG(seed);
     }
 
     generateLeafKeys(privateKey: string, layerCount: number, isAndroid: boolean, progressUpdate?: (progress: number) => void): Promise<string[]> {
@@ -125,7 +126,9 @@ export class MerkleTreeBuilder {
                 // Generate seeds
                 let seeds: Int8Array[] = [];
                 for(let j = 0; j < keysThisIteration; j++) {
-                    seeds.push(prng.getRandomBytes(100));
+                    let seed = prng.getRandomBytes(100);
+
+                    seeds.push(seed);
                 }
 
                 // Prepare job input
