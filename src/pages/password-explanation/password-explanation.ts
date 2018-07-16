@@ -7,9 +7,7 @@ import { IonicPage, ViewController } from "ionic-angular";
   templateUrl: "password-explanation.html",
 })
 export class PasswordExplanationPage {
-  constructor(private viewCtrl: ViewController) {
-
-  }
+  constructor(private viewCtrl: ViewController) {}
 
   dismiss() {
     this.viewCtrl.dismiss();

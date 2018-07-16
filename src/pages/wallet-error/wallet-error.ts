@@ -8,7 +8,6 @@ import { ViewController } from "ionic-angular/navigation/view-controller";
   templateUrl: "wallet-error.html",
 })
 export class WalletErrorPage {
-
   error: string;
 
   constructor(private navParams: NavParams,
