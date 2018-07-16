@@ -114,12 +114,12 @@ export class MerkleLamportSigner {
     }
 
     private getLamportPrivateKey(prng: IPRNG): string {
-        let length = this.cs.length - 1;
+        let length = this.cs.length;
 
-        return    this.cs[Math.round(prng.next() * length)] + this.cs[Math.round(prng.next() * length)] + this.cs[Math.round(prng.next() * length)] + this.cs[Math.round(prng.next() * length)] + this.cs[Math.round(prng.next() * length)]
-                + this.cs[Math.round(prng.next() * length)] + this.cs[Math.round(prng.next() * length)] + this.cs[Math.round(prng.next() * length)] + this.cs[Math.round(prng.next() * length)] + this.cs[Math.round(prng.next() * length)]
-                + this.cs[Math.round(prng.next() * length)] + this.cs[Math.round(prng.next() * length)] + this.cs[Math.round(prng.next() * length)] + this.cs[Math.round(prng.next() * length)] + this.cs[Math.round(prng.next() * length)]
-                + this.cs[Math.round(prng.next() * length)] + this.cs[Math.round(prng.next() * length)] + this.cs[Math.round(prng.next() * length)] + this.cs[Math.round(prng.next() * length)] + this.cs[Math.round(prng.next() * length)];
+        return    this.cs[prng.nextInt(length)] + this.cs[prng.nextInt(length)] + this.cs[prng.nextInt(length)] + this.cs[prng.nextInt(length)] + this.cs[prng.nextInt(length)]
+                + this.cs[prng.nextInt(length)] + this.cs[prng.nextInt(length)] + this.cs[prng.nextInt(length)] + this.cs[prng.nextInt(length)] + this.cs[prng.nextInt(length)]
+                + this.cs[prng.nextInt(length)] + this.cs[prng.nextInt(length)] + this.cs[prng.nextInt(length)] + this.cs[prng.nextInt(length)] + this.cs[prng.nextInt(length)]
+                + this.cs[prng.nextInt(length)] + this.cs[prng.nextInt(length)] + this.cs[prng.nextInt(length)] + this.cs[prng.nextInt(length)] + this.cs[prng.nextInt(length)];
 
     }
 }
