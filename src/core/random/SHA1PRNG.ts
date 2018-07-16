@@ -19,8 +19,31 @@ export class SHA1PRNG implements IPRNG {
     }
 
     setSeed(value: any): void {
+        if(value instanceof Uint8Array) {
+            // Convert int arrays back to a normal number array
+            let convertedValue: number[] = [];
+
+            for(let i = 0; i < value.length; i++) {
+                convertedValue[i] = value[i];
+            }
+
+            value = convertedValue;
+        }
+        else if(value instanceof Int8Array) {
+            // Convert int arrays back to a normal number array
+            let convertedValue: number[] = [];
+
+            for(let i = 0; i < value.length; i++) {
+                convertedValue[i] = this.toUnsigned(value[i]);
+            }
+
+            value = convertedValue;
+        }
+
+        // If we get an array encode it to an SJCL word array
         if(Array.isArray(value))
             value = sjcl.codec.bytes.toBits(value);
+
         this.md1 = new sjcl.hash.sha1();
 
         this.md1.update(value);
@@ -28,10 +51,38 @@ export class SHA1PRNG implements IPRNG {
         this.state = sjcl.codec.bytes.fromBits(this.md1.finalize());
     }
 
-    next(): number {
+    private next(bits: number): number {
+        let numBytes = Math.floor((bits + 7) / 8);
+        let next = 0;
+
+        let bytes = this.getRandomBytes(numBytes);
+        for(let i = 0; i < numBytes; i++) {
+            next = (next << 8) + (bytes[i] & 0xFF);
+        }
+
+        return next >>> (numBytes * 8 - bits);
+    }
+
+    nextSingle(): number {
         // Grab one byte and then divide it by its max value.
         // Effectively this will clamp the byte between 0 and 1.
-        return this.getRandomBytes(1)[0] / 0xFF;
+        return this.toUnsigned(this.getRandomBytes(1)[0]) / 0xFF;
+    }
+
+    nextInt(bound: number): number {
+        let r = this.next(31);
+        let m = bound - 1;
+
+        if((bound & m) == 0) {
+            r = ((bound * r) >> 31);
+        }
+        else {
+            for(let u = r; u - (r = u % bound) + m < 0; u = this.next(31)) {
+                // Do nothing
+            }
+        }
+
+        return r;
     }
 
     getRandomBytes(count: number): Int8Array {
@@ -113,9 +164,12 @@ export class SHA1PRNG implements IPRNG {
     }
 
     private toSigned(byte: number): number {
-        return (new Int8Array([byte]))[0];
+        return (byte > 0x7F) ? byte - 0x100 : byte;
+        // return byte - 255;
+        // return (new Int8Array([byte]))[0];
     }
     private toUnsigned(byte: number): number {
-        return (new Uint8Array([byte]))[0];
+        return byte & 255;
+        // return (new Uint8Array([byte]))[0];
     }
 }

@@ -1,17 +1,23 @@
 import { SHA1PRNG } from "./SHA1PRNG";
 
-interface SHA1PRNGTestVector {
-    seed: string;
+interface SHA1PRNGGetRandomBytesTestVector {
+    seed: string | Int8Array;
     tests: {
         byteCount: number;
         bytes: number[]
     }[];
 }
 
+interface SHA1PRNGNextIntTestVector {
+    seed: string | Int8Array;
+    bound: number;
+    expectedValues: number[];
+}
+
 describe("SHA1PRNG", () => {
     let prng: SHA1PRNG;
 
-    let testVectors: SHA1PRNGTestVector[] = [
+    let getRandomBytesTestVectors: SHA1PRNGGetRandomBytesTestVector[] = [
         {
             seed: "PRIVATE_KEY",
             tests: [
@@ -146,6 +152,193 @@ describe("SHA1PRNG", () => {
                     ]
                 }
             ]
+        },
+        {
+            seed: new Int8Array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
+            tests: [
+                {
+                    byteCount: 25,
+                    bytes: [
+                        35, -4, -93, 117, 43, 
+                        -20, -24, -81, -3, 4, 
+                        -121, -95, 96, -112, 20, 
+                        46, -66, 16, -85, 33, 
+                        57, -48, -97, 65, -74
+                    ]
+                },
+                {
+                    byteCount: 25,
+                    bytes: [
+                        -11, 86, -90, -50, -92, 
+                        -2, 21, -27, 83, -106, 
+                        37, 39, -25, 93, -35, 
+                        19, -43, -55, -9, 15, 
+                        -41, 64, -2, -48, -72
+                    ]
+                },
+                {
+                    byteCount: 25,
+                    bytes: [
+                        -46, 38, -29, 115, 94, 
+                        82, 9, 41, 8, -118, 
+                        -98, -55, 86, 102, -15, 
+                        -54, 82, 116, 5, 105, 
+                        -23, -46, -84, 83, 76
+                    ]
+                },
+                {
+                    byteCount: 25,
+                    bytes: [
+                        79, 7, -66, -72, 124, 
+                        27, -78, -41, -55, 120, 
+                        -73, 106, 124, -63, 1, 
+                        -6, 91, -30, 22, 7, 
+                        94, 56, 12, 113, 7
+                    ]
+                }
+            ]
+        },
+        {
+            seed: new Int8Array([0, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10]),
+            tests: [
+                {
+                    byteCount: 25,
+                    bytes: [
+                        118, -25, 5, -71, 21, 
+                        -29, 3, 63, -120, -1, 
+                        -112, 69, 120, 83, -118, 
+                        -4, 118, 110, 105, 4, 
+                        -121, 92, 105, -18, -115
+                    ]
+                },
+                {
+                    byteCount: 25,
+                    bytes: [
+                        116, -37, 110, -91, -21, 
+                        -40, 34, 71, -18, -115, 
+                        3, -30, -11, 79, 90, 
+                        34, 66, -14, 65, -12, 
+                        -84, 75, -66, -126, -54
+                    ]
+                },
+                {
+                    byteCount: 25,
+                    bytes: [
+                        88, 95, 29, 107, 64, 
+                        -56, 36, -81, -24, 50, 
+                        -22, -81, -32, 96, 114, 
+                        94, -24, 108, 83, -61, 
+                        -61, -39, -55, -11, -16
+                    ]
+                },
+                {
+                    byteCount: 25,
+                    bytes: [
+                        -84, 75, -38, 115, 87, 
+                        102, 14, -109, -96, 105, 
+                        -128, -94, -77, 116, 37, 
+                        -20, 84, 29, 6, 112, 
+                        -36, -121, -68, 34, -7
+                    ]
+                }
+            ]
+        },
+        {
+            seed: new Int8Array([-108,-67,-50,-66,25,8,60,-30,-95,-7,89,-3,2,-7,100,-57,-81,76,-4,41,63,-10,61,42,48,-83,-37,-83,49,72,79,44,110,-81,-54,-117,35,93,-100,-68,-75,12,105,-111,-27,-97,31,-96,6,120,112,-5,17,31,51,59,120,77,110,46,-106,-74,-21,77,109,118,-80,-96,-27,40,66,26,-76,-3,-126,5,38,-37,-83,-99,-93,76,-68,10,96,-64,-32,117,55,-122,117,109,-22,114,-43,-95,-104,54,68,-85]),
+            tests: [
+                {
+                    byteCount: 25,
+                    bytes: [
+                        12, -93, 81, 82, -42, 
+                        127, -34, 55, 28, 120, 
+                        -95, -57, 18, -60, 9, 
+                        13, -88, -13, -3, 86, 
+                        -114, 37, -97, -3, 95
+                    ]
+                },
+                {
+                    byteCount: 25,
+                    bytes: [
+                        32, -81, -83, -44, -6, 
+                        -80, 42, -19, 40, -66, 
+                        44, -60, 57, -126, -43, 
+                        88, 72, 109, 95, -30, 
+                        54, -42, -25, -35, -120
+                    ]
+                },
+                {
+                    byteCount: 25,
+                    bytes: [
+                        -37, 108, 42, 106, 11, 
+                        -44, -63, -45, -91, 40, 
+                        68, 88, -105, -24, 23, 
+                        70, -6, -124, -99, -33, 
+                        -88, 10, 94, -37, 105
+                    ]
+                },
+                {
+                    byteCount: 25,
+                    bytes: [
+                        -55, -86, -35, -89, -19, 
+                        -74, 120, -7, 72, 5, 
+                        -37, -114, 100, -2, 20, 
+                        92, 7, -36, 120, 52, 
+                        -56, -2, -67, 97, 25
+                    ]
+                }
+            ]
+        }
+    ];
+
+    let nextIntTestVectors: SHA1PRNGNextIntTestVector[] = [
+        {
+            seed: "test",
+            bound: 100,
+            expectedValues: [
+                99, 37, 38, 47, 44, 
+                61, 66, 22, 5, 66, 
+                76, 92, 69, 1, 99, 
+                94, 4, 13, 86, 18, 
+                41, 54, 82, 68, 77
+            ]
+        },
+        {
+            seed: "PRIVATE_KEY",
+            bound: 1000,
+            expectedValues: [
+                362, 135, 975, 902, 347, 
+                943, 413, 451, 254, 427, 
+                811, 636, 358, 956, 48, 
+                634, 103, 809, 577, 446, 
+                420, 114, 592, 682, 886
+            ]
+        },
+        {
+            seed: "SOME_BIG_IMPORTANT_SEED",
+            bound: 10000,
+            expectedValues: [
+                4572, 8716, 2021, 9800, 7541, 
+                4265, 9693, 8589, 6437, 2053, 
+                7151, 7964, 5341, 1330, 2860, 
+                5964, 1479, 8618, 2029, 4617, 
+                3746, 3010, 31, 39, 2717
+            ]
+        },
+        {
+            seed: "mumbo jumbo dumbo",
+            bound: 100000,
+            expectedValues: [
+                61979, 41889, 16030, 66407, 44076, 
+                66503, 17365, 71231, 22465, 23502, 
+                42376, 93887, 50855, 22118, 75634, 
+                3191, 24972, 29727, 33494, 10547, 
+                74732, 59907, 11973, 11035, 61292
+            ]
+        },
+        {
+            seed: new Int8Array([-108,-67,-50,-66,25,8,60,-30,-95,-7,89,-3,2,-7,100,-57,-81,76,-4,41,63,-10,61,42,48,-83,-37,-83,49,72,79,44,110,-81,-54,-117,35,93,-100,-68,-75,12,105,-111,-27,-97,31,-96,6,120,112,-5,17,31,51,59,120,77,110,46,-106,-74,-21,77,109,118,-80,-96,-27,40,66,26,-76,-3,-126,5,38,-37,-83,-99,-93,76,-68,10,96,-64,-32,117,55,-122,117,109,-22,114,-43,-95,-104,54,68,-85]),
+            bound: 30,
+            expectedValues: [19, 1, 21, 20, 15]
         }
     ];
 
@@ -153,9 +346,22 @@ describe("SHA1PRNG", () => {
         prng = new SHA1PRNG();
     });
 
-    it("should generate correct values when using a string as seed", () => {
-        for(let testVector of testVectors) {
-            prng.setSeed(testVector.seed);
+    it("should generate correct values for getRandomBytes", () => {
+        function toByteArray(str: string): Int8Array {
+            let bytes: number[] = [];
+
+            for(let i = 0; i < str.length; i++) {
+                bytes.push(str.charCodeAt(i));
+            }
+
+            return new Int8Array(bytes);
+        }
+
+        for(let testVector of getRandomBytesTestVectors) {
+            let seed = testVector.seed;
+            if(!(seed instanceof Int8Array))
+                seed = toByteArray(seed);
+            prng.setSeed(seed);
 
             for(let test of testVector.tests) {
                 let bytes = prng.getRandomBytes(test.byteCount);
@@ -167,26 +373,25 @@ describe("SHA1PRNG", () => {
         }
     });
 
-    it("should generate correctly values when using a byte array as seed", () => {
-        function toByteArray(str: string): number[] {
+    it("should generate correct values for nextInt", () => {
+        function toByteArray(str: string): Int8Array {
             let bytes: number[] = [];
 
             for(let i = 0; i < str.length; i++) {
                 bytes.push(str.charCodeAt(i));
             }
 
-            return bytes;
+            return new Int8Array(bytes);
         }
 
-        for(let testVector of testVectors) {
-            prng.setSeed(toByteArray(testVector.seed));
-
-            for(let test of testVector.tests) {
-                let bytes = prng.getRandomBytes(test.byteCount);
-
-                for(let i = 0; i < bytes.length; i++) {
-                    expect(bytes[i]).toBe(test.bytes[i]);
-                }
+        for(let testVector of nextIntTestVectors) {
+            let seed = testVector.seed;
+            if(!(seed instanceof Int8Array))
+                seed = toByteArray(seed);
+            prng.setSeed(seed);
+            
+            for(let value of testVector.expectedValues) {
+                expect(prng.nextInt(testVector.bound)).toBe(value);
             }
         }
     });

@@ -8,10 +8,19 @@ describe("SeededRandom", () => {
     });
 
     it("should return a correct single random value", () => {
-        for(let i = 0; i < 1000; i++) {
-            let rand = prng.next();
+        for(let i = 0; i < 10000; i++) {
+            let rand = prng.nextSingle();
             expect(rand).toBeGreaterThanOrEqual(0);
             expect(rand).toBeLessThanOrEqual(1);
+        }
+    });
+
+    it("should return a correct next int value", () => {
+        for(let i = 0; i < 10000; i++) {
+            let rand = prng.nextInt(100);
+
+            expect(rand).toBeGreaterThanOrEqual(0);
+            expect(rand).toBeLessThan(100);
         }
     });
 

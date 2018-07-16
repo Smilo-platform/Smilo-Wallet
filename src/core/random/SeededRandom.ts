@@ -12,8 +12,12 @@ export class SeededRandom implements IPRNG {
         this.prng = new (<any>Math).seedrandom(value);
     }
 
-    next(): number {
+    nextSingle(): number {
         return this.prng();
+    }
+
+    nextInt(bound: number): number {
+        return Math.round(this.nextSingle() * (bound - 1));
     }
 
     getRandomBytes(count: number): Int8Array {
