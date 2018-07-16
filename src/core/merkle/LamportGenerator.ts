@@ -179,12 +179,9 @@ export function LamportGeneratorThread(input: ILamportGeneratorThreadInput, done
     
         private toSigned(byte: number): number {
             return (byte > 0x7F) ? byte - 0x100 : byte;
-            // return byte - 255;
-            // return (new Int8Array([byte]))[0];
         }
         private toUnsigned(byte: number): number {
             return byte & 255;
-            // return (new Uint8Array([byte]))[0];
         }
     }
 
@@ -215,15 +212,9 @@ export function LamportGeneratorThread(input: ILamportGeneratorThreadInput, done
                 // Prepare prng
                 this.prng = new SHA1PRNG(seed);
 
-                // console.log("-------- NEW SEED --------");
-                // console.log(seed);
-
                 this.publicKeys.push(
                     this.sha256(this.getLamportPublicKey())
                 );
-
-                // console.log("---- PUBLIC KEY ----");
-                // console.log(this.publicKeys[this.publicKeys.length - 1]);
             }
         }
     
@@ -273,14 +264,10 @@ export function LamportGeneratorThread(input: ILamportGeneratorThreadInput, done
         private getLamportPrivateKey(): string {
             let length = this.CS.length;
     
-            let privateKey =    this.CS[this.prng.nextInt(length)] + this.CS[this.prng.nextInt(length)] + this.CS[this.prng.nextInt(length)] + this.CS[this.prng.nextInt(length)] + this.CS[this.prng.nextInt(length)]
+            return    this.CS[this.prng.nextInt(length)] + this.CS[this.prng.nextInt(length)] + this.CS[this.prng.nextInt(length)] + this.CS[this.prng.nextInt(length)] + this.CS[this.prng.nextInt(length)]
                     + this.CS[this.prng.nextInt(length)] + this.CS[this.prng.nextInt(length)] + this.CS[this.prng.nextInt(length)] + this.CS[this.prng.nextInt(length)] + this.CS[this.prng.nextInt(length)]
                     + this.CS[this.prng.nextInt(length)] + this.CS[this.prng.nextInt(length)] + this.CS[this.prng.nextInt(length)] + this.CS[this.prng.nextInt(length)] + this.CS[this.prng.nextInt(length)]
                     + this.CS[this.prng.nextInt(length)] + this.CS[this.prng.nextInt(length)] + this.CS[this.prng.nextInt(length)] + this.CS[this.prng.nextInt(length)] + this.CS[this.prng.nextInt(length)];
-
-            // console.log(privateKey);
-
-            return privateKey;
         }
     
         private sha256Short(data: string): string {
