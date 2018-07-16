@@ -228,7 +228,7 @@ export class WalletOverviewPage {
    * Open the transfer page
    */
   openTransferPage(): void {
-    this.navCtrl.push(TransferPage);
+    this.navCtrl.push(TransferPage, {"currentWallet": this.currentWallet, "currentWalletBalance": this.balances});
   }
 
   /**

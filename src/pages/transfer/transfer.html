@@ -2,6 +2,48 @@
     <smilo-nav-header titleTranslationKey="transfer.nav-bar-title"></smilo-nav-header>
 </ion-header>
 
-<ion-content padding>
-
+<ion-content padding *ngIf="fromWallet">
+    <ion-grid>
+        <ion-row justify-content-center>
+            <ion-col col-12 col-xl-6>
+                <ion-card>
+                    <h1>1. Enter address</h1>
+                    <ion-card-header>
+                        <div>
+                            <p class="inputInfo">FROM</p>
+                            <p class="fromAddress">{{ fromWallet.publicKey }}</p>
+                        </div>
+                        <ion-icon class="transfer-icon" name="swap"></ion-icon>
+                        <div>
+                            <p class="inputInfo">TO</p>
+                            <ion-input class="toAddress" type="text" placeholder="enter address (publickey)" [(ngModel)]="toPublicKey"></ion-input> 
+                        </div>                       
+                    </ion-card-header>
+                </ion-card>
+                <ion-card>
+                    <h1>2. Select currency</h1>
+                    <ion-card-header>   
+                        <ion-item>
+                            <ion-select class="choose-currency" [(ngModel)]="chosenCurrency" interface="action-sheet">
+                                <ion-option *ngFor="let balance of balances" [value]="balance.currency">{{ balance.currency }}</ion-option>
+                            </ion-select> 
+                        </ion-item>     
+                    </ion-card-header>
+                </ion-card>
+                <ion-card>
+                    <h1>3. Enter amount</h1>
+                    <ion-card-header>   
+                        <p class="inputInfo">{{ chosenCurrency }}</p>
+                        <ion-input class="amount" type="text" placeholder="enter amount" [(ngModel)]="amount"></ion-input>     
+                    </ion-card-header>
+                </ion-card>
+                <ion-card>
+                    <ion-card-header> 
+                        <p *ngIf="errorMessage" class="transfer-error-message">{{ errorMessage }}</p>
+                        <button class="transfer-button" ion-button (click)="transfer()" ion-button full>Transfer</button>
+                    </ion-card-header>
+                </ion-card>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
 </ion-content>
