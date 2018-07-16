@@ -205,7 +205,7 @@ describe("WalletImportKeystorePage", () => {
     expect(keyStoreService.decryptKeyStore).toHaveBeenCalledWith(comp.keyStore, "pass123");
   });
 
-  it("should perform the import correctly when all data is entered correctly", (done) => {
+  it("should perform the import to clipboard correctly when all data is entered correctly", (done) => {
     let dummyWallet: ILocalWallet = <any>{};
     comp.password = "pass123";
     
@@ -214,6 +214,29 @@ describe("WalletImportKeystorePage", () => {
     spyOn(comp, "goToPrepareWalletPage").and.returnValue(Promise.resolve());
 
     comp.importByClipboard().then(
+      () => {
+        expect(comp.goToPrepareWalletPage).toHaveBeenCalledWith(dummyWallet, "pass123");
+
+        done();
+      },
+      (error) => {
+        // This path should never be reached!
+        expect(true).toBeFalsy("Promise reject should not be called");
+
+        done();
+      }
+    );
+  });
+
+  it("should perform the import to file correctly when all data is entered correctly", (done) => {
+    let dummyWallet: ILocalWallet = <any>{};
+    comp.filePassword = "pass123";
+    
+    spyOn(comp, "keystoreFileDataIsValid").and.returnValue(true);
+    spyOn(comp, "prepareWallet").and.returnValue(dummyWallet);
+    spyOn(comp, "goToPrepareWalletPage").and.returnValue(Promise.resolve());
+
+    comp.importByFile().then(
       () => {
         expect(comp.goToPrepareWalletPage).toHaveBeenCalledWith(dummyWallet, "pass123");
 
