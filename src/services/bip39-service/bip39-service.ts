@@ -274,9 +274,7 @@ export class BIP39Service implements IBIP39Service {
      * Convert the given mnemonic phrase and an optional password
      * into a seed for a random generator.
      */
-    toSeed(mnemonic: string, passphrase?: string): string {
-        passphrase = passphrase || "";
-
+    toSeed(mnemonic: string, passphrase: string = ""): string {
         mnemonic = this.joinWords(this.splitWords(mnemonic)); // removes duplicate blanks
         var mnemonicNormalized = this.normalizeString(mnemonic);
         passphrase = this.normalizeString(passphrase)
