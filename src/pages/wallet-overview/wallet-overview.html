@@ -14,7 +14,7 @@
                     </ion-item>
                 </ion-list>
             </ion-col>
-            <ion-col class="wallet-info-col" *ngIf="currentWallet" col-xl-3>
+            <ion-col col-12 col-xl-3 class="wallet-info-col" *ngIf="currentWallet">
                 <div>
                     <h4 class="wallet-overview-header margin-header">{{ 'wallet_overview.wallet_info' | translate }}</h4>
                     <ion-icon (click)="refreshWalletBalance()" class="refresh" name="refresh-circle"></ion-icon>

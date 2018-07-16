@@ -97,10 +97,9 @@ export class KeyStoreService implements IKeyStoreService {
         decipher.start({iv: keyStore.cipherParams.iv});
 
         decipher.update(forge.util.createBuffer(keyStore.cipherText));
-        if(decipher.finish()) {
+        if (decipher.finish()) {
             return decipher.output.toString("utf8");
-        }
-        else {
+        } else {
             // Failed to decrypt
             return null;
         }

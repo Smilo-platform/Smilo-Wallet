@@ -23,22 +23,22 @@ export class SettingsGeneralPage {
   constructor(public navCtrl: NavController, 
               public navParams: NavParams, 
               public translate: TranslateService,
-              public settingsService: SettingsService) {
+              public settingsService: SettingsService) {}
+
+  ionViewDidLoad(): Promise<void> {
     this.settingsService.getActiveTheme().subscribe(val => this.selectedTheme = <ThemeType>val);
     if (this.selectedTheme === "dark-theme") {
       this.nightModeStatus = true;
+    } else {
+      this.nightModeStatus = false;
     }
-    this.settingsService.getLanguageSettings().then(data => {
-      if (data === null) {
+    return this.settingsService.getLanguageSettings().then(data => {
+      if (data === undefined) {
         this.activeLanguage = "en";
       } else {
         this.activeLanguage = data;
       }
     });
-  }
-
-  ionViewDidLoad() {
-    
   }
 
   nightModeSwitch(): void {
