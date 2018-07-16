@@ -28,7 +28,7 @@ export class AddressHelper {
     addressFromPublicKey(publicKey: string, layerCount: number): string {
         let preAddress = this.cryptoHelper.sha256Base32Short(
             publicKey
-        ).substr(0, 32);
+        );
 
         let addressPrefix = this.getAddressPrefix(layerCount);
 
