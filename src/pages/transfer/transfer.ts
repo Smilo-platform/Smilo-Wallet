@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { IonicPage, NavController, NavParams } from "ionic-angular";
+import { IonicPage, NavParams } from "ionic-angular";
 import { IWallet } from "../../models/IWallet";
 import { IBalance } from "../../models/IBalance";
 import { TransactionSignService } from "../../services/transaction-sign-service/transaction-sign-service";
@@ -7,6 +7,7 @@ import { ILocalWallet } from "../../models/ILocalWallet";
 import { ITransaction } from "../../models/ITransaction";
 import { ITransactionOutput } from "../../models/ITransactionOutput";
 import { TransactionHelper } from "../../core/transactions/TransactionHelper";
+import { TransferTransactionService } from "../../services/transfer-transaction-service/transfer-transaction";
 
 /**
  * Generated class for the TransferPage page.
@@ -28,12 +29,13 @@ export class TransferPage {
   chosenCurrencyAmount: number;
   amount: number;
   errorMessage: string;
+  successMessage: string;
   enoughFunds: boolean;
   password: string;
 
-  constructor(public navCtrl: NavController, 
-              public navParams: NavParams,
-              public transactionSignService: TransactionSignService) {}
+  constructor(private navParams: NavParams,
+              private transactionSignService: TransactionSignService,
+              private transferTransactionService: TransferTransactionService) {}
 
   ionViewDidLoad(): void {
     this.fromWallet = this.navParams.get("currentWallet");
@@ -89,32 +91,51 @@ export class TransferPage {
   }
 
   transfer(): void {
+    this.successMessage = "";
+    this.errorMessage = "";
     if(this.canTransfer()) {
-
-      this.sendTransaction();
+      this.successMessage = "Signing the transaction...";
+      let index = 0;
+      let transactionHelper = new TransactionHelper();
+      let transactionOutputs = [<ITransactionOutput>{outputAddress: this.toPublicKey, outputAmount: Number(this.amount)}]
+      let transaction: ITransaction = {   
+        timestamp: Math.floor(Date.now() / 1000),
+        inputAddress: this.fromWallet.publicKey,
+        fee: 0,
+        assetId: "0",
+        inputAmount: Number(this.amount),
+        transactionOutputs: transactionOutputs
+      }
+      transaction.dataHash = transactionHelper.getDataHash(transaction);
+      this.transactionSignService.sign(this.fromWallet as ILocalWallet, 
+                                        this.password, 
+                                        transaction, 
+                                        index).then(data => {
+        console.log("Sign transaction succes: ");
+        console.log(data);
+        this.successMessage = "Successfully signed the transaction, sending to the blockchain...";
+        this.sendTransaction(transaction);
+      }).catch(error => { 
+        console.log("Sign transaction fail: ");
+        console.log(error);
+        this.errorMessage = "Could not sign the transaction. Please check your information.";
+        this.successMessage = "";
+      });
     } 
   }
 
-  sendTransaction(): void {
-    let index = 0;
-    let transactionHelper = new TransactionHelper();
-    let transactionOutputs = [<ITransactionOutput>{outputAddress: this.toPublicKey, outputAmount: Number(this.amount)}]
-    let transaction: ITransaction = {   
-      timestamp: Math.floor(Date.now() / 1000),
-      inputAddress: this.fromWallet.publicKey,
-      fee: 0,
-      assetId: "0",
-      inputAmount: Number(this.amount),
-      transactionOutputs: transactionOutputs
-    }
-    transaction.dataHash = transactionHelper.getDataHash(transaction);
-    this.transactionSignService.sign(this.fromWallet as ILocalWallet, 
-                                      this.password, 
-                                      transaction, 
-                                      index).then(data => {
-      console.log("Transaction succes: " + data);
-    }).catch(data => { 
-      console.log(data);
+  sendTransaction(transaction: ITransaction): void {
+    this.transferTransactionService.sendTransaction(transaction).then(data => {
+      console.log("Send transaction success");
+      this.successMessage = "Successfully sent " + this.amount + " " + this.chosenCurrency + " to " + this.toPublicKey;
+      this.toPublicKey = "";
+      this.amount = null;
+      this.enoughFunds = undefined;
+      this.password = "";
+    }).catch(data => {
+      console.log("Send transaction fail");
+      this.errorMessage = "Couldn't send your transaction to the blockchain, please try again later...";
+      this.successMessage = "";
     });
   }
 }

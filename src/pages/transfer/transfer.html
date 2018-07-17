@@ -5,7 +5,7 @@
 <ion-content padding *ngIf="fromWallet">
     <ion-grid>
         <ion-row justify-content-center>
-            <ion-col col-12 col-xl-6>
+            <ion-col col-12 col-xl-4>
                 <ion-card>
                     <h1>1. Enter address</h1>
                     <ion-card-header>
@@ -13,10 +13,9 @@
                             <p class="inputInfo greenBorder">FROM</p>
                             <p class="fromAddress biggerText">{{ fromWallet.publicKey }}</p>
                         </div>
-                        <ion-icon class="transfer-icon" name="swap"></ion-icon>
                         <div>
-                            <p class="inputInfo" [ngClass]="{'whiteBorder': toPublicKey === undefined, 'greenBorder': toPublicKey !== undefined && toPublicKey.length > 0}">TO</p>
-                            <ion-input class="toAddress biggerText paddingTop" type="text" placeholder="enter address (publickey)" [(ngModel)]="toPublicKey"></ion-input> 
+                            <p class="inputInfo" [ngClass]="{'neutralBorder': toPublicKey === undefined, 'greenBorder': toPublicKey !== undefined && toPublicKey.length > 0}">TO</p>
+                            <ion-input class="toAddress biggerText padding" type="text" placeholder="enter address (publickey)" [(ngModel)]="toPublicKey"></ion-input> 
                         </div>                       
                     </ion-card-header>
                 </ion-card>
@@ -33,20 +32,21 @@
                 <ion-card>
                     <h1>3. Enter amount</h1>
                     <ion-card-header>   
-                        <p class="inputInfo" [ngClass]="{'greenBorder': enoughFunds, 'redBorder': !enoughFunds, 'whiteBorder': enoughFunds === undefined }">{{ chosenCurrency }} / {{ chosenCurrencyAmount  }}</p>
-                        <ion-input class="biggerText paddingTop" type="number" [(ngModel)]="amount" (ngModelChange)="onAmountChanged()" placeholder="enter amount"></ion-input>  
+                        <p class="inputInfo" [ngClass]="{'greenBorder': enoughFunds, 'redBorder': !enoughFunds, 'neutralBorder': enoughFunds === undefined }">{{ chosenCurrency }} / {{ chosenCurrencyAmount  }}</p>
+                        <ion-input class="biggerText padding" type="number" [(ngModel)]="amount" (ngModelChange)="onAmountChanged()" placeholder="enter amount"></ion-input>  
                     </ion-card-header>
                 </ion-card>
                 <ion-card>
                     <h1>4. Enter password to sign</h1>
                     <ion-card-header>   
-                        <p class="inputInfo" [ngClass]="{'whiteBorder': password === undefined, 'greenBorder': password !== undefined && password.length > 0}">INPUT HIDDEN</p>
-                        <ion-input class="biggerText paddingTop" type="password" [(ngModel)]="password" placeholder="enter password"></ion-input>  
+                        <p class="inputInfo" [ngClass]="{'neutralBorder': password === undefined, 'greenBorder': password !== undefined && password.length > 0}">INPUT HIDDEN</p>
+                        <ion-input class="biggerText padding" type="password" [(ngModel)]="password" placeholder="enter password"></ion-input>  
                     </ion-card-header>
                 </ion-card>
                 <ion-card>
                     <ion-card-header> 
                         <p *ngIf="errorMessage" class="transfer-error-message">{{ errorMessage }}</p>
+                        <p *ngIf="successMessage" class="transfer-success-message">{{ successMessage }}</p>
                         <button class="transfer-button" ion-button (click)="transfer()" ion-button full>Transfer</button>
                     </ion-card-header>
                 </ion-card>
