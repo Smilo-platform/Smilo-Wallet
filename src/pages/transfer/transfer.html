@@ -45,9 +45,35 @@
                 </ion-card>
                 <ion-card>
                     <ion-card-header> 
-                        <p *ngIf="errorMessage" class="transfer-error-message">{{ errorMessage }}</p>
-                        <p *ngIf="successMessage" class="transfer-success-message">{{ successMessage }}</p>
-                        <button class="transfer-button" ion-button (click)="transfer()" ion-button full>Transfer</button>
+                        <div class="main-loader-div" *ngIf="successMessage">
+                            <p class="transfer-success-message">{{ successMessage }}</p>
+                            <div class="loader">
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                            </div>
+                        </div>
+                        <div class="main-loader-div" *ngIf="errorMessage">
+                            <p class="transfer-error-message">{{ errorMessage }}</p>
+                            <div class="errorloader">
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                            </div>
+                        </div>
+                        <button [disabled]="!transferButtonEnabled" class="transfer-button" ion-button (click)="transfer()" ion-button full>Transfer</button>
                     </ion-card-header>
                 </ion-card>
             </ion-col>

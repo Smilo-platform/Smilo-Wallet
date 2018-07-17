@@ -11,7 +11,6 @@ export class TransferTransactionService implements ITransferTransactionService {
     constructor(private http: HttpClient) {}
 
     sendTransaction(transaction: ITransaction): Promise<Object> {
-        let body = {transaction: transaction};
-        return this.http.post("", body).toPromise();
+        return this.http.post("", transaction).toPromise();
     }
 }

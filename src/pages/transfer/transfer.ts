@@ -32,12 +32,15 @@ export class TransferPage {
   successMessage: string;
   enoughFunds: boolean;
   password: string;
+  transferButtonEnabled: boolean;
 
   constructor(private navParams: NavParams,
               private transactionSignService: TransactionSignService,
               private transferTransactionService: TransferTransactionService) {}
 
   ionViewDidLoad(): void {
+    this.errorMessage = "This is a test string to test the error message";
+    this.transferButtonEnabled = true;
     this.fromWallet = this.navParams.get("currentWallet");
     this.balances = this.navParams.get("currentWalletBalance");
     for (let currency of this.balances) { // DELETE later just for testing
@@ -93,12 +96,20 @@ export class TransferPage {
   transfer(): void {
     this.successMessage = "";
     this.errorMessage = "";
+    this.transferButtonEnabled = false;
     if(this.canTransfer()) {
-      this.successMessage = "Signing the transaction...";
+      this.signTransaction();
+    } else {
+      this.transferButtonEnabled = true;
+    }
+  }
+
+  signTransaction(): void {
+    this.successMessage = "Signing the transaction...";
       let index = 0;
       let transactionHelper = new TransactionHelper();
       let transactionOutputs = [<ITransactionOutput>{outputAddress: this.toPublicKey, outputAmount: Number(this.amount)}]
-      let transaction: ITransaction = {   
+      let transaction: ITransaction = {
         timestamp: Math.floor(Date.now() / 1000),
         inputAddress: this.fromWallet.publicKey,
         fee: 0,
@@ -112,16 +123,15 @@ export class TransferPage {
                                         transaction, 
                                         index).then(data => {
         console.log("Sign transaction succes: ");
-        console.log(data);
         this.successMessage = "Successfully signed the transaction, sending to the blockchain...";
         this.sendTransaction(transaction);
-      }).catch(error => { 
+      }).catch(error => {
         console.log("Sign transaction fail: ");
         console.log(error);
         this.errorMessage = "Could not sign the transaction. Please check your information.";
         this.successMessage = "";
+        this.transferButtonEnabled = true;
       });
-    } 
   }
 
   sendTransaction(transaction: ITransaction): void {
@@ -132,10 +142,12 @@ export class TransferPage {
       this.amount = null;
       this.enoughFunds = undefined;
       this.password = "";
+      this.transferButtonEnabled = true;
     }).catch(data => {
       console.log("Send transaction fail");
       this.errorMessage = "Couldn't send your transaction to the blockchain, please try again later...";
       this.successMessage = "";
+      this.transferButtonEnabled = true;
     });
   }
 }

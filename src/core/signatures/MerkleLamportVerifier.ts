@@ -96,6 +96,8 @@ export class MerkleLamportVerifier {
         // This address should match the input address of the transaction.
         // Otherwise we know the signature is invalid.
         let rootAddress = this.addressHelper.addressFromPublicKey(nextRoot, layerCount);
+        console.log("Rootaddress: " + rootAddress);
+        console.log("Expectedrootaddress: " + expectedRootAddress);
         return rootAddress == expectedRootAddress
     }
 }
