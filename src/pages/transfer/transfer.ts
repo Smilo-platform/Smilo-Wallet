@@ -39,7 +39,6 @@ export class TransferPage {
               private transferTransactionService: TransferTransactionService) {}
 
   ionViewDidLoad(): void {
-    this.errorMessage = "This is a test string to test the error message";
     this.transferButtonEnabled = true;
     this.fromWallet = this.navParams.get("currentWallet");
     this.balances = this.navParams.get("currentWalletBalance");
