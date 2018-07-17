@@ -159,7 +159,7 @@ describe("CryptoHelper", () => {
         }
     });
     
-    it("should not call initialize if it has been initialized already", () => {
+    it("should set isInitialized to true if it hasn't been initialized yet", () => {
         spyOn(cryptoHelper, <any>"initialize").and.callThrough();
         spyOn(sjcl.codec.base64, "fromBits");
         spyOn(sjcl.codec.bytes, "fromBits").and.returnValue("");
