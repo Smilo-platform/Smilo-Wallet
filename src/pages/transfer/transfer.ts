@@ -54,6 +54,7 @@ export class TransferPage {
     for (let currency of this.balances) {
       if (currency.currency === this.chosenCurrency) {
         this.chosenCurrencyAmount = currency.amount;
+        this.onAmountChanged();
         return true;
       }
     }
@@ -82,8 +83,14 @@ export class TransferPage {
     }
   }
 
+  resetTransferState() {
+    this.errorMessage = "";
+    this.successMessage = "";
+  }
+
   onAmountChanged(): void {
-    if (this.amount.toString() === "") {
+    this.resetTransferState();
+    if (this.amount === undefined || this.amount.toString() === "") {
       this.enoughFunds = undefined;
     } else if (this.amount <= this.chosenCurrencyAmount) {
       this.enoughFunds = true;
@@ -93,8 +100,7 @@ export class TransferPage {
   }
 
   transfer(): void {
-    this.successMessage = "";
-    this.errorMessage = "";
+    this.resetTransferState();
     this.transferButtonEnabled = false;
     if(this.canTransfer()) {
       this.signTransaction();
