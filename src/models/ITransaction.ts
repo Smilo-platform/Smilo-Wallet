@@ -1,7 +1,13 @@
+import { ITransactionOutput } from "./ITransactionOutput";
+
 export interface ITransaction {
-     date: string;
-     input: string;
-     output: string;
-     amount: string;
-     currency: string;
+    timestamp: number;
+    inputAddress: string;
+    fee: number;
+    signatureData?: string;
+    signatureIndex?: number;
+    dataHash?: string;
+    assetId: string;
+    inputAmount: number;
+    transactionOutputs: ITransactionOutput[];
 }

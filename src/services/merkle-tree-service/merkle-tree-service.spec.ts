@@ -2,7 +2,11 @@ import { MerkleTreeService } from "./merkle-tree-service";
 import { MockKeyStoreService } from "../../../test-config/mocks/MockKeyStoreService";
 import { Platform } from "ionic-angular/platform/platform";
 import { Storage } from "@ionic/storage";
-import { MerkleTree } from "../../merkle/MerkleTree";
+import { MerkleTree } from "../../core/merkle/MerkleTree";
+import { MerkleTreeBuilder } from "../../core/merkle/MerkleTreeBuilder";
+import { MerkleTreeSerializer } from "../../core/merkle/MerkleTreeSerializer";
+import { MerkleTreeDeserializer } from "../../core/merkle/MerkleTreeDeserializer";
+import { MerkleTreeHelper } from "../../core/merkle/MerkleTreeHelper";
 
 describe("MerkleTreeService", () => {
     let service: MerkleTreeService;
@@ -11,12 +15,23 @@ describe("MerkleTreeService", () => {
     let storageService: Storage;
     let platformService: Platform;
 
+    let builder: MerkleTreeBuilder;
+    let serializer: MerkleTreeSerializer;
+    let deserializer: MerkleTreeDeserializer;
+
     beforeEach(() => {
         keyStoreService = new MockKeyStoreService();
         storageService = new Storage(null);
         platformService = new Platform();
 
         service = new MerkleTreeService(keyStoreService, storageService, platformService);
+    });
+
+    beforeEach(() => {
+        // Read some private properties :O
+        builder = (<any>service).merkleTreeBuilder;
+        serializer = (<any>service).merkleTreeSerializer;
+        deserializer = (<any>service).merkleTreeDeserializer;
     });
 
     it("should be initialized correctly", () => {
@@ -33,8 +48,9 @@ describe("MerkleTreeService", () => {
         };
 
         spyOn(keyStoreService, "decryptKeyStore").and.returnValue("PRIVATE_KEY");
-        spyOn(MerkleTree, "generate").and.returnValue(Promise.resolve(dummyMerkleTree));
-        spyOn(dummyMerkleTree, "serialize").and.returnValue(Promise.resolve());
+        spyOn(builder, "generate").and.returnValue(Promise.resolve(dummyMerkleTree));
+        spyOn(serializer, "serialize").and.returnValue(Promise.resolve());
+        spyOn(platformService, "is").and.returnValue(true);
 
         service.generate(<any>dummyWallet, "pass123").then(
             () => {
@@ -44,15 +60,15 @@ describe("MerkleTreeService", () => {
                 });
 
                 // Expect generate function to be called correctly
-                expect(MerkleTree.generate).toHaveBeenCalledWith("PRIVATE_KEY", 14, platformService, undefined);
+                expect(builder.generate).toHaveBeenCalledWith("PRIVATE_KEY", 14, true, undefined);
 
                 // Expect Merkle Tree to be serialized
-                expect(dummyMerkleTree.serialize).toHaveBeenCalledWith("WALLET_ID", storageService, keyStoreService, "pass123");
+                expect(serializer.serialize).toHaveBeenCalledWith(dummyMerkleTree, dummyWallet, storageService, keyStoreService, "pass123");
 
                 done();
             },
             (error) => {
-                expect(true).toBe(false, "Promise reject should never be called");
+                expect(true).toBe(false, "Promise reject should never be called: " + (error.message || error.toString()));
                 done();
             }
         );
@@ -64,7 +80,7 @@ describe("MerkleTreeService", () => {
         };
 
         spyOn(keyStoreService, "decryptKeyStore").and.returnValue(null);
-        spyOn(MerkleTree, "generate").and.returnValue(Promise.resolve(null));
+        spyOn(builder, "generate").and.returnValue(Promise.resolve(null));
 
         service.generate(<any>dummyWallet, "pass123").then(
             () => {
@@ -73,7 +89,8 @@ describe("MerkleTreeService", () => {
                 done();
             },
             (error) => {
-                expect(MerkleTree.generate).not.toHaveBeenCalled();
+                expect(error).toBe("Could not decrypt keystore");
+                expect(builder.generate).not.toHaveBeenCalled();
 
                 done();
             }
@@ -88,12 +105,12 @@ describe("MerkleTreeService", () => {
 
         (<any>service).cache["WALLET_ID"] = dummyMerkleTree;
 
-        spyOn(MerkleTree, "fromDisk");
+        spyOn(deserializer, "fromDisk");
 
         service.get(<any>dummyWallet, "pass123").then(
             (merkleTree) => {
                 expect(merkleTree).toBe(<any>dummyMerkleTree);
-                expect(MerkleTree.fromDisk).not.toHaveBeenCalled();
+                expect(deserializer.fromDisk).not.toHaveBeenCalled();
 
                 done();
             }
@@ -106,12 +123,12 @@ describe("MerkleTreeService", () => {
             id: "WALLET_ID"
         };
 
-        spyOn(MerkleTree, "fromDisk").and.returnValue(Promise.resolve(dummyMerkleTree));
+        spyOn(deserializer, "fromDisk").and.returnValue(Promise.resolve(dummyMerkleTree));
 
         service.get(<any>dummyWallet, "pass123").then(
             (merkleTree) => {
                 expect(merkleTree).toBe(<any>dummyMerkleTree);
-                expect(MerkleTree.fromDisk).toHaveBeenCalled();
+                expect(deserializer.fromDisk).toHaveBeenCalled();
 
                 done();
             }
@@ -119,7 +136,7 @@ describe("MerkleTreeService", () => {
     });
 
     it("should reject the promise when a Merkle Tree was not found on disk or cache", (done) => {
-        spyOn(MerkleTree, "fromDisk").and.returnValue(Promise.reject("Not found on disk"));
+        spyOn(deserializer, "fromDisk").and.returnValue(Promise.reject("Not found on disk"));
 
         let dummyWallet = {
             id: "WALLET_ID"
@@ -146,8 +163,8 @@ describe("MerkleTreeService", () => {
 
         (<any>service).cache["WALLET_ID"] = dummyMerkleTree;
 
-        spyOn(MerkleTree, "getConfigStorageKey").and.returnValue("config-storagekey");
-        spyOn(MerkleTree, "getLayerStorageKeys").and.returnValue([
+        spyOn(MerkleTreeHelper, "getConfigStorageKey").and.returnValue("config-storagekey");
+        spyOn(MerkleTreeHelper, "getLayerStorageKeys").and.returnValue([
             "layer1-storagekey",
             "layer2-storagekey",
             "layer3-storagekey",
@@ -212,8 +229,8 @@ describe("MerkleTreeService", () => {
 
         (<any>service).cache["WALLET_ID"] = dummyMerkleTree;
 
-        spyOn(MerkleTree, "getConfigStorageKey").and.returnValue("config-storagekey");
-        spyOn(MerkleTree, "getLayerStorageKeys").and.returnValue([
+        spyOn(MerkleTreeHelper, "getConfigStorageKey").and.returnValue("config-storagekey");
+        spyOn(MerkleTreeHelper, "getLayerStorageKeys").and.returnValue([
             "layer1-storagekey",
             "layer2-storagekey",
             "layer3-storagekey",
@@ -286,7 +303,7 @@ describe("MerkleTreeService", () => {
 
         (<any>service).cache["WALLET_ID"] = dummyMerkleTree;
 
-        spyOn(MerkleTree, "getConfigStorageKey").and.returnValue("config-storagekey");
+        spyOn(MerkleTreeHelper, "getConfigStorageKey").and.returnValue("config-storagekey");
 
         spyOn(storageService, "get").and.callFake((key) => {
             // Return null because the config could not be found

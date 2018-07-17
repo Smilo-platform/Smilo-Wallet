@@ -1,4 +1,4 @@
-import { MerkleTree } from "../../src/merkle/MerkleTree";
+import { MerkleTree } from "../../src/core/merkle/MerkleTree";
 
 export class MockMerkleTree extends MerkleTree {
     constructor() {

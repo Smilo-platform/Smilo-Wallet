@@ -26,8 +26,8 @@ export interface IThreadPool {
 export class ThreadPool implements IThreadPool {
     private pool: any;
 
-    constructor() {
-        this.pool = new Pool();
+    constructor(numberOfThreads?: number) {
+        this.pool = new Pool(numberOfThreads);
     }
 
     run(thread: Function, scripts?: string[]) {

@@ -1,6 +1,6 @@
 import { IMerkleTreeService } from "../../src/services/merkle-tree-service/merkle-tree-service";
 import { IWallet } from "../../src/models/IWallet";
-import { MerkleTree } from "../../src/merkle/MerkleTree";
+import { MerkleTree } from "../../src/core/merkle/MerkleTree";
 import { MockMerkleTree } from "./MockMerkleTree";
 
 export class MockMerkleTreeService implements IMerkleTreeService {
