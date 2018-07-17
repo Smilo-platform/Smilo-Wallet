@@ -17,14 +17,14 @@ export class MerkleLamportVerifier {
      * 2) work our way up the Merkle Tree (e.g. the authentication path) until we reach the root of the tree.
      * 3) check if the computed root value of the Merkle Tree equals the input address of the transaction.
      */
-    verifyMerkleSignature(message: string, signature: string, index: number, layerCount: number, expectedRootAddress: string, bitCount?: number): boolean {
+    verifyMerkleSignature(message: string, signature: string, index: number, layerCount: number, expectedRootAddress: string, bitCount: number = 100): boolean {
         let signatureParts = signature.split(",");
 
         let lamportSignatures = signatureParts[0].split("::");
         let merkleAuthenticationPath = signatureParts[1];
 
         // Convert the transaction to a binary string. Next take the first 100 bits of this string.
-        let binaryMessage = this.cryptoHelper.sha256Binary(message).substr(0, bitCount || 100);
+        let binaryMessage = this.cryptoHelper.sha256Binary(message).substr(0, bitCount);
 
         // Compute the leaf node value based on the private and public parts.
         let leafKey: string = "";

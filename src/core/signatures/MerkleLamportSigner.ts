@@ -10,9 +10,9 @@ export class MerkleLamportSigner {
     /**
      * Computes the Merkle signature for the given message.
      */
-    getSignature(merkleTree: MerkleTree, message: string, privateKey: string, index: number, bitCount?: number): string {
+    getSignature(merkleTree: MerkleTree, message: string, privateKey: string, index: number, bitCount: number = 100): string {
         // Convert the message to a binary string. Next take the first 100 bits of this string.
-        let binaryMessage = this.cryptoHelper.sha256Binary(message).substr(0, bitCount || 100);
+        let binaryMessage = this.cryptoHelper.sha256Binary(message).substr(0, bitCount);
 
         // Get the lamport private key parts.
         let lamportPrivateKeys = this.getLamportPrivateKeys(privateKey, index, bitCount);
