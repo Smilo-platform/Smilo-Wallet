@@ -2,7 +2,7 @@ import { ITransferTransactionService } from "../../src/services/transfer-transac
 import { ITransaction } from "../../src/models/ITransaction";
 
 export class MockTransferTransactionService implements ITransferTransactionService {
-    sendTransaction(transaction: ITransaction): Promise<Object> {
-        return Promise.resolve(new Object());
+    sendTransaction(transaction: ITransaction): Promise<ITransaction> {
+        return Promise.resolve(null);
     }
 }
