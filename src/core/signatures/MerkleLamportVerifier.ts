@@ -68,10 +68,16 @@ export class MerkleLamportVerifier {
         // we can reconstruct the root node of the Merkle Tree.
         // With this root node we can verify if this transaction was
         // signed with the original Merkle Tree.
+
+        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        // WARNING: we do not actually reconstruct the root node.
+        // Instead we reconstruct the second to last layer.
+        // We do this because this is 'in line' with core.
+        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         let path = merkleAuthenticationPath.split(":");
         let nextRoot: string = leafKey;
         let workingIndex = index;
-        for(let i = 0; i < layerCount - 1; i++) {
+        for(let i = 0; i < layerCount - 2; i++) {
             let publicKey: string;
             let otherPublicKey = path[i];
             if(workingIndex % 2 == 0) {
@@ -95,9 +101,13 @@ export class MerkleLamportVerifier {
         // Convert the last public key to a Smilo address.
         // This address should match the input address of the transaction.
         // Otherwise we know the signature is invalid.
-        let rootAddress = this.addressHelper.addressFromPublicKey(nextRoot, layerCount);
-        console.log("Rootaddress: " + rootAddress);
-        console.log("Expectedrootaddress: " + expectedRootAddress);
+        let combinedHashes: string;
+        if(workingIndex % 2 == 0)
+            combinedHashes = nextRoot + path[path.length - 1];
+        else
+            combinedHashes = path[path.length - 1] + nextRoot;
+
+        let rootAddress = this.addressHelper.addressFromPublicKey(combinedHashes, layerCount);
         return rootAddress == expectedRootAddress
     }
 }

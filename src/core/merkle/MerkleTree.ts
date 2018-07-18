@@ -11,7 +11,7 @@ export class MerkleTree {
 
     getPublicKey(): string {
         return this.addressHelper.addressFromPublicKey(
-            this.layers[this.layers.length - 1][0],
+            this.layers[this.layers.length - 2][0] + this.layers[this.layers.length - 2][1],
             this.layers.length
         );
     }
