@@ -15,7 +15,7 @@
                         </div>
                         <div>
                             <p class="inputInfo" [ngClass]="{'neutralBorder': toPublicKey === undefined, 'greenBorder': toPublicKey !== undefined && toPublicKey.length > 0}">TO</p>
-                            <ion-input class="toAddress biggerText padding" type="text" placeholder="enter address (publickey)" [(ngModel)]="toPublicKey"></ion-input> 
+                            <ion-input class="toAddress biggerText padding" type="text" placeholder="enter address (publickey)" (ngModelChange)="resetTransferState()" [(ngModel)]="toPublicKey"></ion-input> 
                         </div>                       
                     </ion-card-header>
                 </ion-card>
@@ -40,7 +40,7 @@
                     <h1>4. Enter password to sign</h1>
                     <ion-card-header>   
                         <p class="inputInfo" [ngClass]="{'neutralBorder': password === undefined, 'greenBorder': password !== undefined && password.length > 0}">INPUT HIDDEN</p>
-                        <ion-input class="biggerText padding" type="password" [(ngModel)]="password" placeholder="enter password"></ion-input>  
+                        <ion-input class="biggerText padding" type="password" (ngModelChange)="resetTransferState()" [(ngModel)]="password" placeholder="enter password"></ion-input>  
                     </ion-card-header>
                 </ion-card>
                 <ion-card>

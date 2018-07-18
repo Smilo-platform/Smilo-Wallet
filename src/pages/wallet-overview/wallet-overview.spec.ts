@@ -347,7 +347,7 @@ describe("WalletOverviewPage", () => {
 
     comp.openTransferPage();
 
-    expect(navController.push).toHaveBeenCalledWith(TransferPage);
+    expect(navController.push).toHaveBeenCalledWith(TransferPage, jasmine.any(Object));
   })
 
   it("should call balance and history after refreshing the wallet", () => {
