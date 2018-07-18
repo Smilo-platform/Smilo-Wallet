@@ -6,10 +6,18 @@ smilo-logo {
 
         .logo {
             max-height: $smilo-logo-max-height;
+            margin-top: 20px;
         }
 
         .title {
             margin-top: 10px;
         }
+    }
+
+    .sub-title {
+        font-size: 14px;
+        font-weight: 400;
+        padding-bottom: 20px;
+        text-align: center;
     }
 }
