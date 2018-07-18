@@ -427,34 +427,6 @@ describe("WalletOverviewPage", () => {
     expect(toast.present).toHaveBeenCalled();
   });
 
-  it("should call a create and present error modal after getting the available exchanges list with a rejected promise", (done) => {
-    let alert: MockAlert = new MockAlert();
-    spyOn(exchangeService, "getAvailableExchanges").and.returnValue(Promise.reject(""));
-    spyOn(comp, "getAvailableExchanges").and.callThrough();
-    spyOn(alertController, "create").and.returnValue(alert);
-    spyOn(alert, "present");
-
-    comp.getAvailableExchanges().then(data => {
-      expect(alertController.create).toHaveBeenCalled();
-      expect(alert.present).toHaveBeenCalled();
-      done();
-    });
-  });
-
-  it("should call a create and present error modal after getting the wallets with a rejected promise", (done) => {
-    let alert: MockAlert = new MockAlert();
-    spyOn(walletService, "getAll").and.returnValue(Promise.reject(""));
-    spyOn(comp, "getAllWallets").and.callThrough();
-    spyOn(alertController, "create").and.returnValue(alert);
-    spyOn(alert, "present");
-
-    comp.getAllWallets().then(data => {
-      expect(alertController.create).toHaveBeenCalled();
-      expect(alert.present).toHaveBeenCalled();
-      done();
-    });
-  });
-
   it("should trigger the subscribe of the language change and call retrieveTranslations to retrieve the translations of the selected language", (done) => {
     spyOn(comp, "retrieveTranslations");
 
@@ -695,31 +667,6 @@ describe("WalletOverviewPage", () => {
     });
   });
 
-  it("should show an alert and retry button when the transaction history could not be retrieved", (done) => {
-    let alert = new MockAlert();
-
-    spyOn(transactionHistoryService, "getTransactionHistory").and.returnValue(Promise.reject([]));
-    spyOn(alertController, "create").and.returnValue(alert);
-    spyOn(alert, "present");
-
-    comp.getTransactionHistory("").then(data => {
-      expect(alertController.create).toHaveBeenCalled();
-      expect(alert.present).toHaveBeenCalled();
-      done();
-    });
-  });
-
-  it("should show a retry modal for the exchanges when the request returns an empty OK response", (done) => {
-    spyOn(exchangeService, "getAvailableExchanges").and.returnValue(Promise.resolve([]));
-    spyOn(comp, "getAvailableExchanges").and.callThrough();
-    spyOn(comp, "presentExchangesRetryButton");
-
-    comp.getAvailableExchanges().then(data => {
-      expect(comp.presentExchangesRetryButton).toHaveBeenCalled();
-      done();
-    });
-  });
-
   it("should push zero balances for XSM and XSP when the JSON is null or has no keys at all", (done) => {
     comp.currentWallet = getDummyWallet();
 
@@ -737,20 +684,6 @@ describe("WalletOverviewPage", () => {
         expect(comp.balances[1]).toEqual({currency: "XSP", amount: 0, valueAmount: 0});
         done();
       });
-    });
-  });
-
-  it("should show a retry modal when retrieving the balances has failed", (done) => {
-    let alert = new MockAlert();
-
-    spyOn(walletBalancesService, "getWalletBalance").and.returnValue(Promise.reject(""));
-    spyOn(alertController, "create").and.returnValue(alert);
-    spyOn(alert, "present");
-
-    comp.getWalletBalance("").then(data => {
-      expect(alertController.create).toHaveBeenCalled();
-      expect(alert.present).toHaveBeenCalled();
-      done();
     });
   });
 
