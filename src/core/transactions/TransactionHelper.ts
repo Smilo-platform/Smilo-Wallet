@@ -4,8 +4,13 @@ import { CryptoHelper } from "../crypto/CryptoHelper";
 export class TransactionHelper {
     private cryptoHelper = new CryptoHelper();
 
+    /**
+     * Converts the given transaction to a string. This string formatted transaction
+     * can be used as the base for signing a transaction.
+     * @param transaction 
+     */
     transactionToString(transaction: ITransaction): string {
-        return this.getHashableData(transaction);
+        return this.getHashableData(transaction) + ";" + transaction.dataHash;
     }
 
     /**
@@ -22,13 +27,13 @@ export class TransactionHelper {
             data += `;${ output.outputAddress };${ output.outputAmount }`;
         }
 
-        return `${ data };${ transaction.fee };`; // dataHash should be appended at the end?
+        return `${ data };${ transaction.fee }`;
     }
 
     /**
      * Gets the data hash for the given transaction.
      */
     getDataHash(transaction: ITransaction): string {
-        return this.cryptoHelper.sha256Hex(this.getHashableData(transaction));
+        return this.cryptoHelper.sha256Hex(this.getHashableData(transaction)).toUpperCase();
     }
 }
