@@ -4,7 +4,14 @@
 
 for file in src/assets/scripts/webworker/***/*
 do
-    sed -i '' '/export/d' $file
-    sed -i '' '/import/d' $file
-    sed -i '' '/var SHA1PRNG = prng.SHA1PRNG;/d' $file
+    if [ $(uname -s) = "Darwin" ]
+    then
+        sed -i '' '/export/d' $file
+        sed -i '' '/import/d' $file
+        sed -i '' '/var SHA1PRNG = prng.SHA1PRNG;/d' $file
+    else
+        sed -i '/export/d' $file
+        sed -i '/import/d' $file
+        sed -i '/var SHA1PRNG = prng.SHA1PRNG;/d' $file
+    fi
 done
