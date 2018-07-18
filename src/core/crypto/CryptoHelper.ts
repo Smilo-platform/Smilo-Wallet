@@ -8,6 +8,7 @@ export class CryptoHelper {
     private initialize() {
         this.md256 = new sjcl.hash.sha256();
         this.md512 = new sjcl.hash.sha512();
+        this.isInitialized = true;
     }
 
     sha512(data: string): string {

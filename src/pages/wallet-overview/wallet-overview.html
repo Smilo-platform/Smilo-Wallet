@@ -115,6 +115,11 @@
                             <ion-icon class="export-privatekey-wallet" name="key" item-end></ion-icon>
                             <ion-label>{{ 'wallet_overview.export_privatekey' | translate }}</ion-label>
                         </button>
+
+                        <button ion-item (click)="copyPublicKey()">
+                            <ion-icon class="copy-publickey" name="copy" item-end></ion-icon>
+                            <ion-label>Copy publickey</ion-label>
+                        </button>
                     
                         <button ion-item (click)="deleteWallet()">
                             <ion-icon class="delete-wallet" name="trash" item-end></ion-icon>

@@ -313,6 +313,15 @@ export class WalletOverviewPage {
     }
   }
 
+  copyPublicKey(): void {
+    if (this.platform.is("android") || this.platform.is("ios")) {
+      this.clipboard.copy(this.currentWallet.publicKey);
+    } else {
+      this.copyToClipboardWeb(this.currentWallet.publicKey);
+    }
+    this.showToastMessage("Copied publickey (" + this.currentWallet.publicKey + ") to clipboard", 3000, "bottom");
+  }
+
   /**
    * Exports the wallet
    * @param dataType Either file or clipboard

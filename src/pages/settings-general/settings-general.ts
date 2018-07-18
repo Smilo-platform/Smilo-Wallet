@@ -33,7 +33,7 @@ export class SettingsGeneralPage {
       this.nightModeStatus = false;
     }
     return this.settingsService.getLanguageSettings().then(data => {
-      if (data === undefined) {
+      if (data === null || data === undefined) {
         this.activeLanguage = "en";
       } else {
         this.activeLanguage = data;

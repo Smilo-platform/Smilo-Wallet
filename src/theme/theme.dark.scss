@@ -123,11 +123,10 @@
 
   .button {
     background-color: #1B79A9;
-  }
-
-  .button:hover {
-    background-color: #1B79A9 !important;
-    opacity: 0.8;
+    border: 1px solid #fff;
+    &:hover {
+      opacity: 0.8;
+    }
   }
 
   .item-radio-checked.item {
