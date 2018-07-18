@@ -6,16 +6,16 @@ export class MerkleLamportVerifier {
     private addressHelper = new AddressHelper();
 
     /**
-     * Verifies if the signature applied to the given transaction is correct.
+     * Verifies if the signature applied to the given message is correct.
      * 
      * Verifying the Merkle signature requires us to work up the Merkle Tree until we reach the public key at the root of the tree.
-     * Of course for the given transaction we do not have the actual Merkle Tree. Instead the transaction signer send us a part of this Merkle Tree.
+     * Of course for the given message we do not have the actual Merkle Tree. Instead the message signer send us a part of this Merkle Tree.
      * This part can be used to verify the authenticity of the signature. E.g. it makes it impossible to forge a fake but seemingly valid signature.
 
      * We perform these steps:
      * 1) construct the leaf node public key based on half the private keys and half the public keys we received.
      * 2) work our way up the Merkle Tree (e.g. the authentication path) until we reach the root of the tree.
-     * 3) check if the computed root value of the Merkle Tree equals the input address of the transaction.
+     * 3) check if the computed root value of the Merkle Tree equals the input address of the message.
      */
     verifyMerkleSignature(message: string, signature: string, index: number, layerCount: number, expectedRootAddress: string, bitCount: number = 100): boolean {
         let signatureParts = signature.split(",");
