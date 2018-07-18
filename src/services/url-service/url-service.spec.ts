@@ -9,14 +9,14 @@ describe("UrlService", () => {
     });
 
     it("should initialize correctly", () => {
-        expect(urlService.developmentBaseUrl).toBe("http://api.smilo.network:8080");
+        expect(urlService.developmentBaseUrl).toBe("http://localhost:8090");
         expect(urlService.productionBaseUrl).toBe("http://api.smilo.network:8080");
     });
 
     it("should return the development url when devmode is on", () => {
         spyOn(urlService, "isDevelopment").and.returnValue(true);
 
-        expect(urlService.getBaseUrl()).toBe("http://api.smilo.network:8080");
+        expect(urlService.getBaseUrl()).toBe("http://localhost:8090");
     });
 
     it("should return the productionbase url when devmode is off", () => {
