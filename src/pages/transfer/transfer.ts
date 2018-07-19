@@ -118,7 +118,7 @@ export class TransferPage {
         timestamp: Math.floor(Date.now() / 1000),
         inputAddress: this.fromWallet.publicKey,
         fee: 0,
-        assetId: "0",
+        assetId: "000x00123",
         inputAmount: Number(this.amount),
         transactionOutputs: transactionOutputs
       }
