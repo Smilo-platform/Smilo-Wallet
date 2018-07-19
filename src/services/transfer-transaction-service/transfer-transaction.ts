@@ -14,7 +14,7 @@ export class TransferTransactionService implements ITransferTransactionService {
 
     sendTransaction(transaction: ITransaction): Promise<ITransaction> {
         return this.http.post<ITransaction>(
-            `${ this.urlService.getBaseUrl() }/transaction`, 
+            `${ this.urlService.getBaseUrl() }/tx`, 
             transaction
         ).toPromise();
     }
