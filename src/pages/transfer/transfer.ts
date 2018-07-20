@@ -190,7 +190,7 @@ export class TransferPage {
     let transactionHelper = new TransactionHelper();
     let transactionOutputs = [<ITransactionOutput>{outputAddress: this.toPublicKey, outputAmount: Number(this.amount)}]
     let transaction: ITransaction = {
-      timestamp: Math.floor(Date.now() / 1000),
+      timestamp: Math.floor(Date.now()),
       inputAddress: this.fromWallet.publicKey,
       fee: 0,
       assetId: "000x00123",
@@ -209,6 +209,9 @@ export class TransferPage {
                                      transaction, 
                                      index).then(() => {
         this.successMessage = this.translations.get("transfer.signing_success");
+        let index = this.balances.indexOf(this.balances.find(x => x.currency === this.chosenCurrency));
+        this.balances[index].amount -= this.amount;
+        this.chosenCurrencyAmount = this.balances[index].amount;
       }).catch(data => {
         this.errorMessage = this.translations.get("transfer.signing_failed");
         this.successMessage = "";
