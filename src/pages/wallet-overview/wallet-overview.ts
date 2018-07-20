@@ -20,6 +20,7 @@ import { IBalance } from "../../models/IBalance";
 import { ExchangesService } from "../../services/exchanges-service/exchanges-service";
 import { WalletTransactionHistoryService } from "../../services/wallet-transaction-history-service/wallet-transaction-history-service";
 import { WalletBalanceService } from "../../services/wallet-balance-service/wallet-balance-service";
+import { AddressService } from "../../services/address-service/address-service";
 
 /**
  * Generated class for the WalletOverviewPage page.
@@ -153,7 +154,8 @@ export class WalletOverviewPage {
               private keyStoreService: KeyStoreService,
               private exchangeService: ExchangesService,
               private transactionHistoryService: WalletTransactionHistoryService,
-              private walletBalancesService: WalletBalanceService) {
+              private walletBalancesService: WalletBalanceService,
+              private addressService: AddressService) {
 
   }
 
@@ -181,7 +183,9 @@ export class WalletOverviewPage {
       "wallet_overview.yes_delete",
       "wallet_overview.delete_wallet",
       "wallet_overview.loading_wallet",
-      "wallet_overview.currency_value_zero"
+      "wallet_overview.currency_value_zero",
+      "wallet_overview.copied_public_key",
+      "wallet_overview.copy_public_key"
     ]).then(data => {
       this.translations = data;
       return data;
@@ -247,7 +251,7 @@ export class WalletOverviewPage {
    * Open the transfer page
    */
   openTransferPage(): void {
-    this.navCtrl.push(TransferPage);
+    this.navCtrl.push(TransferPage, {currentWallet: this.currentWallet, currentWalletBalance: this.balances});
   }
 
   /**
@@ -337,7 +341,11 @@ export class WalletOverviewPage {
     } else {
       this.copyToClipboardWeb(this.currentWallet.publicKey);
     }
-    this.showToastMessage("Copied publickey (" + this.currentWallet.publicKey + ") to clipboard", 3000, "bottom");
+    this.translateService.get("wallet_overview.copied_public_key", {publicKey: this.currentWallet.publicKey}).subscribe(
+      (translation) => {
+        this.showToastMessage(translation, 3000, "bottom");
+      }
+    ); 
   }
 
   /**
@@ -547,24 +555,35 @@ export class WalletOverviewPage {
       content: this.translations.get("wallet_overview.loading_wallet")
     });
     this.loading.present();
-    return this.walletBalancesService.getWalletBalance(publicKey).then(data => {
-      let json = JSON.parse(JSON.stringify(data));
-      let balances = [];
-      if (json === null || Object.keys(json).length === 0) {
-        balances.push({currency: "XSM", amount: Number(0), valueAmount: Number(0)});
-        balances.push({currency: "XSP", amount: Number(0), valueAmount: Number(0)});
-      } else {
-        for (let i = 0; i < json.storedCoins.length; i++) {
-          let currency: string = json.storedCoins[i].currency;
-          let amount: number = json.storedCoins[i].amount;
-          balances.push({currency: currency, amount: amount});
-        }
-      }
-      this.balances = balances;
-      if (this.currentWallet !== undefined) {
+    return this.addressService.get(publicKey).then(
+      (address) => {
+        this.balances = [
+          {
+            currency: "XSM", amount: address.balances["000x00123"], valueAmount: address.balances["000x00123"]
+          },
+          {
+            currency: "XSP", amount: 0, valueAmount: 0
+          }
+        ];
+        
         this.setCalculatedCurrencyValue();
+      },
+      (error) => {
+        const confirm = this.alertCtrl.create({
+          title: this.translations.get("wallet_overview.error"),
+          message: this.translations.get("wallet_overview.error_retrieving_data"),
+          buttons: [
+            {
+              text: this.translations.get("wallet_overview.click_retry"),
+              handler: () => {
+                this.getWalletBalance(publicKey);
+              }
+            }
+          ]
+        });
+        confirm.present();
       }
-    });
+    );
   }
 
   /**

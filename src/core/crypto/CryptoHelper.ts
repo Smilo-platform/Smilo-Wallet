@@ -45,8 +45,15 @@ export class CryptoHelper {
 
         let bitString = "";
 
-        for(let byte of bytes) {
-            bitString += byte.toString(2);
+        for(let i = 0; i < bytes.length; i++) {
+            let byte = bytes[i];
+            let bits:string = byte.toString(2);
+
+            // Pad with exta zeros if needed
+            if(i > 0)
+                bitString += (<any>bits).padStart(8, "0");
+            else
+                bitString += bits;
         }
 
         return bitString;

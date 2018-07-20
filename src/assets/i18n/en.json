@@ -81,7 +81,28 @@
         }
     },
     "transfer": {
-        "nav-bar-title": "Transfer"
+        "nav-bar-title": "Transfer",
+        "enter_address": "1. Enter address",
+        "from": "FROM",
+        "to": "TO",
+        "select_currency": "2. Select currency",
+        "enter_amount": "3. Enter amount",
+        "enter_password": "4. Enter password to sign",
+        "transfer": "Transfer",
+        "input_hidden": "INPUT HIDDEN",
+        "placeholder_enter_address": "enter address (publickey)",
+        "placeholder_enter_amount": "enter amount",
+        "placeholder_enter_password": "enter password",
+        "empty_public_key": "The publickey to send is empty",
+        "empty_amount": "The amount is empty",
+        "empty_password_field": "Password field is empty",
+        "not_enough_funds": "Not enough funds",
+        "own_wallet": "Can't send to own wallet",
+        "signing_transaction": "Signing the transaction...",
+        "signing_success": "Successfully signed the transaction, sending to the blockchain...",
+        "signing_failed": "Could not sign the transaction. Please check your information.",
+        "sent_success": "Successfully sent {{ amount }} {{ chosenCurrency }} to {{ toPublicKey }}",
+        "sent_failed": "Couldn't send your transaction to the blockchain. Please check your information."
     },
     "wallet_import_ledger": {
         "nav-bar-title": "Wallet Import Ledger"
@@ -122,7 +143,9 @@
         "transactions_history": "Transactions history",
         "no_transactions_history": "No transactions on this wallet",
         "copied_to_clipboard": "Copied {{ export_type }} to clipboard!",
-        "delete_wallet_confirmation": "Are you <b>sure</b> you want to delete wallet {{ wallet_name }} ({{ publickey }})?"
+        "delete_wallet_confirmation": "Are you <b>sure</b> you want to delete wallet {{ wallet_name }} ({{ publickey }})?",
+        "copied_public_key": "Copied publickey {{ publicKey }} to clipboard",
+        "copy_public_key": "Copy publickey"
     },
     "password": {
         "nav-bar-title": "Password",

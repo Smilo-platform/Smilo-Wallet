@@ -65,15 +65,23 @@
   }
 
   .item-select {
-    color: #999;
+    color: #fff;
+  }
+
+  ion-item {
+    background-color: transparent;
+  }
+
+  .item-inner {
+    border-bottom: transparent !important;
   }
 
   .label {
-    color: #999;
+    color: #fff !important;
   }
 
   .select-icon-inner {
-    color: #1B79A9;
+    color: #1B79A9 !important;
   }
 
   .radio-checked { 
@@ -140,5 +148,4 @@
   .smilo-button {
     background-color: #1B79A9;
   }
-  
 }  

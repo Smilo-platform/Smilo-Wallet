@@ -6,16 +6,16 @@ export class MerkleLamportVerifier {
     private addressHelper = new AddressHelper();
 
     /**
-     * Verifies if the signature applied to the given transaction is correct.
+     * Verifies if the signature applied to the given message is correct.
      * 
      * Verifying the Merkle signature requires us to work up the Merkle Tree until we reach the public key at the root of the tree.
-     * Of course for the given transaction we do not have the actual Merkle Tree. Instead the transaction signer send us a part of this Merkle Tree.
+     * Of course for the given message we do not have the actual Merkle Tree. Instead the message signer send us a part of this Merkle Tree.
      * This part can be used to verify the authenticity of the signature. E.g. it makes it impossible to forge a fake but seemingly valid signature.
 
      * We perform these steps:
      * 1) construct the leaf node public key based on half the private keys and half the public keys we received.
      * 2) work our way up the Merkle Tree (e.g. the authentication path) until we reach the root of the tree.
-     * 3) check if the computed root value of the Merkle Tree equals the input address of the transaction.
+     * 3) check if the computed root value of the Merkle Tree equals the input address of the message.
      */
     verifyMerkleSignature(message: string, signature: string, index: number, layerCount: number, expectedRootAddress: string, bitCount: number = 100): boolean {
         let signatureParts = signature.split(",");
@@ -68,10 +68,16 @@ export class MerkleLamportVerifier {
         // we can reconstruct the root node of the Merkle Tree.
         // With this root node we can verify if this transaction was
         // signed with the original Merkle Tree.
+
+        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        // WARNING: we do not actually reconstruct the root node.
+        // Instead we reconstruct the second to last layer.
+        // We do this because this is 'in line' with core.
+        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         let path = merkleAuthenticationPath.split(":");
         let nextRoot: string = leafKey;
         let workingIndex = index;
-        for(let i = 0; i < layerCount - 1; i++) {
+        for(let i = 0; i < layerCount - 2; i++) {
             let publicKey: string;
             let otherPublicKey = path[i];
             if(workingIndex % 2 == 0) {
@@ -95,7 +101,13 @@ export class MerkleLamportVerifier {
         // Convert the last public key to a Smilo address.
         // This address should match the input address of the transaction.
         // Otherwise we know the signature is invalid.
-        let rootAddress = this.addressHelper.addressFromPublicKey(nextRoot, layerCount);
+        let combinedHashes: string;
+        if(workingIndex % 2 == 0)
+            combinedHashes = nextRoot + path[path.length - 1];
+        else
+            combinedHashes = path[path.length - 1] + nextRoot;
+
+        let rootAddress = this.addressHelper.addressFromPublicKey(combinedHashes, layerCount);
         return rootAddress == expectedRootAddress
     }
 }
