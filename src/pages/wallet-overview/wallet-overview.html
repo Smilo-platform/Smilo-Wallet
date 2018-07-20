@@ -80,7 +80,7 @@
                             <ion-avatar item-start>
                                 <ion-icon class="transaction-swap" name="swap"></ion-icon>
                             </ion-avatar>
-                            <p class="transaction-date">{{ (transaction.timestamp * 1000) | date:short }}</p>
+                            <p class="transaction-date">{{ transaction.timestamp | date:medium }}</p>
                             <h2 class="transaction-from">{{ transaction.inputAddress }}</h2>
                             <div class="transaction-list-div-amount">
                                 <ion-icon [ngClass]="{'greenColor': transaction.inputAddress !== currentWallet.publicKey, 

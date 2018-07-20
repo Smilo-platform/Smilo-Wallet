@@ -13,6 +13,6 @@ export class WalletTransactionHistoryService implements IWalletTransactionHistor
                 private urlService: UrlService) {}
 
     getTransactionHistory(publicKey: string): Promise<ITransaction[]> {
-        return this.http.get<ITransaction[]>("http://localhost:8090" + "/address/tx/" + publicKey).toPromise();
+        return this.http.get<ITransaction[]>(this.urlService.getBaseUrl() + "/address/tx/" + publicKey).toPromise();
     }
 }
