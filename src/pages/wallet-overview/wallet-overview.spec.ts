@@ -350,9 +350,13 @@ describe("WalletOverviewPage", () => {
   it("should open the transfer page correctly", () => {
     spyOn(navController, "push");
 
+    comp.currentWallet = getDummyWallet();
+    comp.balances = [{currency: "XSM", amount: 550, valueAmount: 0.25}, 
+                     {currency: "XSP", amount: 4723, valueAmount: 0.025}];
+
     comp.openTransferPage();
 
-    expect(navController.push).toHaveBeenCalledWith(TransferPage, jasmine.any(Object));
+    expect(navController.push).toHaveBeenCalledWith(TransferPage, {currentWallet: getDummyWallet(), currentWalletBalance: comp.balances});
   })
 
   it("should call balance and history after refreshing the wallet", () => {

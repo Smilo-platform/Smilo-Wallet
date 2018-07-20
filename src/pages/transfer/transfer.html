@@ -7,20 +7,20 @@
         <ion-row justify-content-center>
             <ion-col col-12 col-xl-4>
                 <ion-card>
-                    <h1>1. Enter address</h1>
+                    <h1>{{ 'transfer.enter_address' | translate }}</h1>
                     <ion-card-header>
                         <div>
-                            <p class="inputInfo greenBorder">FROM</p>
+                            <p class="inputInfo greenBorder">{{ 'transfer.from' | translate }}</p>
                             <p class="fromAddress biggerText">{{ fromWallet.publicKey }}</p>
                         </div>
                         <div>
-                            <p class="inputInfo" [ngClass]="{'neutralBorder': toPublicKey === undefined, 'greenBorder': toPublicKey !== undefined && toPublicKey.length > 0}">TO</p>
-                            <ion-input class="toAddress biggerText padding" type="text" placeholder="enter address (publickey)" (ngModelChange)="resetTransferState()" [(ngModel)]="toPublicKey"></ion-input> 
+                            <p class="inputInfo" [ngClass]="{'neutralBorder': toPublicKey === undefined, 'greenBorder': toPublicKey !== undefined && toPublicKey.length > 0}">{{ 'transfer.to' | translate }}</p>
+                            <ion-input class="toAddress biggerText padding" type="text" placeholder="{{ 'transfer.placeholder_enter_address' | translate }}" (ngModelChange)="resetTransferState()" [(ngModel)]="toPublicKey"></ion-input> 
                         </div>                       
                     </ion-card-header>
                 </ion-card>
                 <ion-card>
-                    <h1>2. Select currency</h1>
+                    <h1>{{ 'transfer.select_currency' | translate }}</h1>
                     <ion-card-header>   
                         <ion-item>
                             <ion-select class="choose-currency" [(ngModel)]="chosenCurrency" (ionChange)="setChosenCurrencyAmount()" interface="action-sheet">
@@ -30,17 +30,17 @@
                     </ion-card-header>
                 </ion-card>
                 <ion-card>
-                    <h1>3. Enter amount</h1>
+                    <h1>{{ 'transfer.enter_amount' | translate }}</h1>
                     <ion-card-header>   
                         <p class="inputInfo" [ngClass]="{'greenBorder': enoughFunds, 'redBorder': !enoughFunds, 'neutralBorder': enoughFunds === undefined }">{{ chosenCurrency }} / {{ chosenCurrencyAmount  }}</p>
-                        <ion-input class="biggerText padding" type="number" [(ngModel)]="amount" (ngModelChange)="onAmountChanged()" placeholder="enter amount"></ion-input>  
+                        <ion-input class="biggerText padding" type="number" [(ngModel)]="amount" (ngModelChange)="onAmountChanged()" placeholder="{{ 'transfer.placeholder_enter_amount' | translate }}"></ion-input>  
                     </ion-card-header>
                 </ion-card>
                 <ion-card>
-                    <h1>4. Enter password to sign</h1>
+                    <h1>{{ 'transfer.enter_password' | translate }}</h1>
                     <ion-card-header>   
-                        <p class="inputInfo" [ngClass]="{'neutralBorder': password === undefined, 'greenBorder': password !== undefined && password.length > 0}">INPUT HIDDEN</p>
-                        <ion-input class="biggerText padding" type="password" (ngModelChange)="resetTransferState()" [(ngModel)]="password" placeholder="enter password"></ion-input>  
+                        <p class="inputInfo" [ngClass]="{'neutralBorder': password === undefined, 'greenBorder': password !== undefined && password.length > 0}">{{ 'transfer.input_hidden' | translate }}</p>
+                        <ion-input class="biggerText padding" type="password" (ngModelChange)="resetTransferState()" [(ngModel)]="password" placeholder="{{ 'transfer.placeholder_enter_password' | translate }}"></ion-input>  
                     </ion-card-header>
                 </ion-card>
                 <ion-card>
@@ -73,7 +73,7 @@
                                 <div></div>
                             </div>
                         </div>
-                        <button [disabled]="!transferButtonEnabled" class="transfer-button" ion-button (click)="transfer()" ion-button full>Transfer</button>
+                        <button [disabled]="!transferButtonEnabled" class="transfer-button" ion-button (click)="transfer()" ion-button full>{{ 'transfer.transfer' | translate }}</button>
                     </ion-card-header>
                 </ion-card>
             </ion-col>

@@ -99,36 +99,43 @@ export class TransferPage {
     this.resetTransferState();
     this.transferButtonEnabled = false;
     if(this.canTransfer()) {
-      this.signTransaction();
+      let transaction = this.createTransaction();
+      this.signTransaction(transaction).then(
+        (success) => {
+          this.sendTransaction(transaction);
+        }
+      );
     } else {
       this.transferButtonEnabled = true;
     }
   }
 
-  signTransaction(): void {
+  createTransaction(): ITransaction {
+    let transactionHelper = new TransactionHelper();
+    let transactionOutputs = [<ITransactionOutput>{outputAddress: this.toPublicKey, outputAmount: Number(this.amount)}]
+    let transaction: ITransaction = {
+      timestamp: Math.floor(Date.now() / 1000),
+      inputAddress: this.fromWallet.publicKey,
+      fee: 0,
+      assetId: "000x00123",
+      inputAmount: Number(this.amount),
+      transactionOutputs: transactionOutputs
+    }
+    transaction.dataHash = transactionHelper.getDataHash(transaction);
+    return transaction;
+  }
+
+  signTransaction(transaction: ITransaction): Promise<void> {
     this.successMessage = "Signing the transaction...";
-      let index = 0;
-      let transactionHelper = new TransactionHelper();
-      let transactionOutputs = [<ITransactionOutput>{outputAddress: this.toPublicKey, outputAmount: Number(this.amount)}]
-      let transaction: ITransaction = {
-        timestamp: Math.floor(Date.now() / 1000),
-        inputAddress: this.fromWallet.publicKey,
-        fee: 0,
-        assetId: "000x00123",
-        inputAmount: Number(this.amount),
-        transactionOutputs: transactionOutputs
-      }
-      transaction.dataHash = transactionHelper.getDataHash(transaction);
-      this.transactionSignService.sign(this.fromWallet as ILocalWallet, 
-                                        this.password, 
-                                        transaction, 
-                                        index).then(data => {
-        console.log("Sign transaction succes: ");
-        this.successMessage = "Successfully signed the transaction, sending to the blockchain...";
-        this.sendTransaction(transaction);
-      }).catch(error => {
-        console.log("Sign transaction fail: ");
-        console.log(error);
+    let index = 0;
+    return this.transactionSignService.sign(this.fromWallet as ILocalWallet, 
+                                     this.password, 
+                                     transaction, 
+                                     index).then(
+      (data) => {
+        this.successMessage = "Successfully signed the transaction, sending to the blockchain..."; 
+      },
+      (error) => {
         this.errorMessage = "Could not sign the transaction. Please check your information.";
         this.successMessage = "";
         this.transferButtonEnabled = true;
@@ -136,19 +143,19 @@ export class TransferPage {
   }
 
   sendTransaction(transaction: ITransaction): void {
-    this.transferTransactionService.sendTransaction(transaction).then(data => {
-      console.log("Send transaction success");
-      this.successMessage = "Successfully sent " + this.amount + " " + this.chosenCurrency + " to " + this.toPublicKey;
-      this.toPublicKey = "";
-      this.amount = null;
-      this.enoughFunds = undefined;
-      this.password = "";
-      this.transferButtonEnabled = true;
-    }).catch(data => {
-      console.log("Send transaction fail");
-      this.errorMessage = "Couldn't send your transaction to the blockchain, please try again later...";
-      this.successMessage = "";
-      this.transferButtonEnabled = true;
+    this.transferTransactionService.sendTransaction(transaction).then(
+      (data) => {
+        this.successMessage = "Successfully sent " + this.amount + " " + this.chosenCurrency + " to " + this.toPublicKey;
+        this.toPublicKey = "";
+        this.amount = null;
+        this.enoughFunds = undefined;
+        this.password = "";
+        this.transferButtonEnabled = true;
+      (error) => {
+        this.errorMessage = "Couldn't send your transaction to the blockchain, please try again later...";
+        this.successMessage = "";
+        this.transferButtonEnabled = true;
+      }
     });
   }
 }

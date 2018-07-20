@@ -81,7 +81,18 @@
         }
     },
     "transfer": {
-        "nav-bar-title": "Transfer"
+        "nav-bar-title": "Transfer",
+        "enter_address": "1. Enter address",
+        "from": "FROM",
+        "to": "TO",
+        "select_currency": "2. Select currency",
+        "enter_amount": "3. Enter amount",
+        "enter_password": "4. Enter password to sign",
+        "transfer": "Transfer",
+        "input_hidden": "INPUT HIDDEN",
+        "placeholder_enter_address": "enter address (publickey)",
+        "placeholder_enter_amount": "enter amount",
+        "placeholder_enter_password": "enter password"
     },
     "wallet_import_ledger": {
         "nav-bar-title": "Wallet Import Ledger"

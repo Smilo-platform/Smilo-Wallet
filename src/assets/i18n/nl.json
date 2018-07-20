@@ -252,7 +252,18 @@
         }
     },
     "transfer": {
-        "nav-bar-title": "Overmaken"
+        "nav-bar-title": "Overmaken",
+        "enter_address": "1. Voer address in",
+        "from": "VAN",
+        "to": "NAAR",
+        "select_currency": "2. Kies valuta",
+        "enter_amount": "3. Voer een bedrag in",
+        "enter_password": "4. Voer het wachtwoord in om te ondertekenen",
+        "transfer": "Overmaken",
+        "input_hidden": "INVOER VERBORGEN",
+        "placeholder_enter_address": "voer het adres in (publickey)",
+        "placeholder_enter_amount": "voer een bedrag in",
+        "placeholder_enter_password": "voer wachtwoord in"
     },
     "wallet_import_ledger": {
         "nav-bar-title": "Ledger"
