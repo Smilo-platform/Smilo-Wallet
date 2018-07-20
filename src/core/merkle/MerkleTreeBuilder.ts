@@ -1,5 +1,5 @@
 import { IThreadPool, ThreadPool } from "./ThreadPool";
-import { LamportGeneratorThread, ILamportGeneratorThreadOutput, ILamportGeneratorThreadInput } from "./LamportGenerator";
+import { LamportGeneratorThread, ILamportGeneratorThreadOutput, ILamportGeneratorThreadInput } from "./LamportGeneratorThread";
 import { CryptoHelper } from "../crypto/CryptoHelper";
 import { MerkleTree } from "./MerkleTree";
 import { IPRNG } from "../random/IPRNG";
@@ -60,7 +60,9 @@ export class MerkleTreeBuilder {
                 // Android requires the scripts to be loaded as shown below.
                 scripts = [
                     `file:///android_asset/www/assets/scripts/sjcl.js`,
-                    `file:///android_asset/www/assets/scripts/seedrandom.min.js`
+                    `file:///android_asset/www/assets/scripts/seedrandom.min.js`,
+                    `file:///android_asset/www/assets/scripts/webworker/random/SHA1PRNG.js`,
+                    `file:///android_asset/www/assets/scripts/webworker/merkle/LamportGenerator.js`
                 ];
             }
             else {
@@ -68,6 +70,8 @@ export class MerkleTreeBuilder {
                 scripts = [
                     `${ window.location.protocol }//${ window.location.host }/assets/scripts/sjcl.js`,
                     `${ window.location.protocol }//${ window.location.host }/assets/scripts/seedrandom.min.js`,
+                    `${ window.location.protocol }//${ window.location.host }/assets/scripts/webworker/random/SHA1PRNG.js`,
+                    `${ window.location.protocol }//${ window.location.host }/assets/scripts/webworker/merkle/LamportGenerator.js`
                 ];
             }
 

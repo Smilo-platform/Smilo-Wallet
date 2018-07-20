@@ -1,7 +1,5 @@
 import { MerkleTree } from "./MerkleTree";
 import { Platform } from "ionic-angular/platform/platform";
-import { MockThreadPool } from "../../../test-config/mocks/MockThreadPool";
-import { ILamportGeneratorThreadInput, ILamportGeneratorThreadOutput } from "./LamportGenerator";
 import { MockKeyStoreService } from "../../../test-config/mocks/MockKeyStoreService";
 import { Storage } from "@ionic/storage";
 import { IKeyStoreService } from "../../services/key-store-service/key-store-service";

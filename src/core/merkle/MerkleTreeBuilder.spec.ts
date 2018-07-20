@@ -2,7 +2,7 @@ import { MerkleTreeBuilder } from "./MerkleTreeBuilder";
 import { MerkleTree } from "./MerkleTree";
 import { MockThreadPool } from "../../../test-config/mocks/MockThreadPool";
 import { SeededRandom } from "../random/SeededRandom";
-import { ILamportGeneratorThreadInput, ILamportGeneratorThreadOutput, LamportGeneratorThread } from "./LamportGenerator";
+import { ILamportGeneratorThreadInput, ILamportGeneratorThreadOutput, LamportGeneratorThread } from "./LamportGeneratorThread";
 import { CryptoHelper } from "../crypto/CryptoHelper";
 import { ThreadPool } from "./ThreadPool";
 
@@ -220,7 +220,9 @@ describe("MerkleTreeBuilder", () => {
                     LamportGeneratorThread,
                     [
                         `file:///android_asset/www/assets/scripts/sjcl.js`,
-                        `file:///android_asset/www/assets/scripts/seedrandom.min.js`
+                        `file:///android_asset/www/assets/scripts/seedrandom.min.js`,
+                        `file:///android_asset/www/assets/scripts/webworker/random/SHA1PRNG.js`,
+                        `file:///android_asset/www/assets/scripts/webworker/merkle/LamportGenerator.js`
                     ]
                 );
 
@@ -256,7 +258,9 @@ describe("MerkleTreeBuilder", () => {
                     LamportGeneratorThread,
                     [
                         `${ window.location.protocol }//${ window.location.host }/assets/scripts/sjcl.js`,
-                    `${ window.location.protocol }//${ window.location.host }/assets/scripts/seedrandom.min.js`,
+                        `${ window.location.protocol }//${ window.location.host }/assets/scripts/seedrandom.min.js`,
+                        `${ window.location.protocol }//${ window.location.host }/assets/scripts/webworker/random/SHA1PRNG.js`,
+                        `${ window.location.protocol }//${ window.location.host }/assets/scripts/webworker/merkle/LamportGenerator.js`
                     ]
                 );
 
