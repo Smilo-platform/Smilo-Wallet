@@ -3,8 +3,12 @@ import { IAddress } from "../../models/IAddress";
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { UrlService } from "../url-service/url-service";
 
+export interface IAddressService {
+    get(address: string): Promise<IAddress>;
+}
+
 @Injectable()
-export class AddressService {
+export class AddressService implements IAddressService {
     constructor(private httpClient: HttpClient,
                 private urlService: UrlService) {
 
