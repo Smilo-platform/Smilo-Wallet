@@ -45,4 +45,5 @@ resources/*.md5
 src/assets/scripts/bitcoinjs-lib.js
 
 # Web worker libraries are auto generated
-src/assets/scripts/webworker
+src/assets/scripts/LamportGenerator.js
+src/assets/scripts/SHA1PRNG.js
