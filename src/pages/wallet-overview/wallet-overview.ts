@@ -182,7 +182,9 @@ export class WalletOverviewPage {
       "wallet_overview.yes_delete",
       "wallet_overview.delete_wallet",
       "wallet_overview.loading_wallet",
-      "wallet_overview.currency_value_zero"
+      "wallet_overview.currency_value_zero",
+      "wallet_overview.copied_public_key",
+      "wallet_overview.copy_public_key"
     ]).then(data => {
       this.translations = data;
       return data;
@@ -321,7 +323,11 @@ export class WalletOverviewPage {
     } else {
       this.copyToClipboardWeb(this.currentWallet.publicKey);
     }
-    this.showToastMessage("Copied publickey (" + this.currentWallet.publicKey + ") to clipboard", 3000, "bottom");
+    this.translateService.get("wallet_overview.copied_public_key", {publicKey: this.currentWallet.publicKey}).subscribe(
+      (translation) => {
+        this.showToastMessage(translation, 3000, "bottom");
+      }
+    ); 
   }
 
   /**

@@ -92,7 +92,7 @@
         "settings": "Instellingen",
         "show_funds": "Laat fondsen zien",
         "backup_wallet": "Backup",
-        "delete_wallet": "Delete wallet",
+        "delete_wallet": "Verwijder wallet",
         "choose_exchange": "Kies exchange",
         "transactions_history": "Transacties historie",
         "no_transactions_history": "Geen transacties op deze wallet",
@@ -116,7 +116,9 @@
         "loading_wallet": "Wallet laden...",
         "click_retry": "Klik hier om opnieuw te proberen",
         "copied_to_clipboard": "De {{ export_type }} gekopieerd naar het klembord!",
-        "delete_wallet_confirmation": "Weet je <b>zeker</b> dat je wallet {{ wallet_name }} wilt verwijderen ({{ publickey }})?`"
+        "delete_wallet_confirmation": "Weet je <b>zeker</b> dat je wallet {{ wallet_name }} wilt verwijderen ({{ publickey }})?`",
+        "copied_public_key": "Publickey {{ publicKey }} naar klembord gekopieerd",
+        "copy_public_key": "Kopieer publickey"
     },
     "password": {
         "nav-bar-title": "Wachtwoord",
@@ -263,7 +265,17 @@
         "input_hidden": "INVOER VERBORGEN",
         "placeholder_enter_address": "voer het adres in (publickey)",
         "placeholder_enter_amount": "voer een bedrag in",
-        "placeholder_enter_password": "voer wachtwoord in"
+        "placeholder_enter_password": "voer wachtwoord in",
+        "empty_public_key": "De publickey die moet worden verzonden, is leeg",
+        "empty_amount": "Het bedrag is leeg",
+        "empty_password_field": "Wachtwoordveld is leeg",
+        "not_enough_funds": "Niet genoeg funds",
+        "own_wallet": "Je kan niet naar een eigen portemonnee sturen",
+        "signing_transaction": "Ondertekening van de transactie...",
+        "signing_success": "De transactie succesvol ondertekend, verzenden naar de blockchain...",
+        "signing_failed": "Kan de transactie niet ondertekenen. Controleer de ingevoerde informatie.",
+        "sent_success": "Succesvol {{ amount }} {{ chosenCurrency }} verzonden naar {{ toPublicKey }}",
+        "sent_failed": "De transactie kan niet naar de blockchain verzonden worden. Controleer de informatie."
     },
     "wallet_import_ledger": {
         "nav-bar-title": "Ledger"
