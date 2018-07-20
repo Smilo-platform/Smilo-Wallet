@@ -139,6 +139,7 @@ export class WalletOverviewPage {
    * Current wallet balances
    */
   balances: IBalance[];
+  initialized = false;
 
   constructor(private navCtrl: NavController, 
               private platform: Platform,
@@ -195,10 +196,27 @@ export class WalletOverviewPage {
    * Returns a promise when initialization is done
    */
   initialize(): Promise<void> {
-    this.getAndSubscribeToTranslations();
     return Promise.all([
       this.getAllWallets(), 
-      this.getAvailableExchanges()]).then<void>();
+      this.getAvailableExchanges()]).then(
+      (data) => { this.initialized = true; }, 
+      (error) => {
+        console.log("ERROR!");
+        this.loading.dismiss();
+        const confirm = this.alertCtrl.create({
+          title: this.translations.get("wallet_overview.error"),
+          message: this.translations.get("wallet_overview.error_retrieving_data"),
+          buttons: [
+            {
+              text: this.translations.get("wallet_overview.click_retry"),
+              handler: () => {
+                this.initialize();
+              }
+            }
+          ]
+        });
+        confirm.present();
+    });
   }
 
   getAndSubscribeToTranslations(): void {
@@ -212,6 +230,7 @@ export class WalletOverviewPage {
    * Called whenever the view is loaded
    */
   ionViewDidLoad(): void {
+    this.getAndSubscribeToTranslations();
     this.initialize();
   }
   
@@ -239,8 +258,7 @@ export class WalletOverviewPage {
    * Helper method to refresh the current wallet information
    */
   refreshWalletBalance(): void {
-    this.getWalletBalance(this.currentWallet.publicKey);
-    this.getTransactionHistory(this.currentWallet.publicKey);
+    this.refreshWalletInfo();
   }
 
   /**
@@ -499,20 +517,6 @@ export class WalletOverviewPage {
         this.noTransactionHistoryVisibility = "shown";
         this.transactionHistoryVisibility = "hidden";
       }
-    }).catch(error => {
-      const confirm = this.alertCtrl.create({
-        title: this.translations.get("wallet_overview.error"),
-        message: this.translations.get("wallet_overview.error_retrieving_data"),
-        buttons: [
-          {
-            text: this.translations.get("wallet_overview.click_retry"),
-            handler: () => {
-              this.getTransactionHistory(publicKey);
-            }
-          }
-        ]
-      });
-      confirm.present();
     });
   }
 
@@ -523,20 +527,6 @@ export class WalletOverviewPage {
     return this.walletService.getAll().then(data => {
       this.wallets = data;
       this.currentWallet = this.wallets[0];
-    }).catch(error => {
-      const confirm = this.alertCtrl.create({
-        title: this.translations.get("wallet_overview.error"),
-        message: this.translations.get("wallet_overview.error_retrieving_data"),
-        buttons: [
-          {
-            text: this.translations.get("wallet_overview.click_retry"),
-            handler: () => {
-              this.getAllWallets();
-            }
-          }
-        ]
-      });
-      confirm.present();
     });
   }
 
@@ -552,28 +542,8 @@ export class WalletOverviewPage {
         this.pickedExchange = this.availableExchanges[0].exchangeName;
         this.pickedCurrency = this.availableExchanges[0].availableCurrencies[0];
         this.currentExchangeCurrencies = this.availableExchanges[0].availableCurrencies;
-      } else {
-        this.presentExchangesRetryButton();
-      }
-    }).catch(error => {
-      this.presentExchangesRetryButton();
+      } 
     });
-  }
-
-  presentExchangesRetryButton(): void {
-    const confirm = this.alertCtrl.create({
-      title: this.translations.get("wallet_overview.error"),
-      message: this.translations.get("wallet_overview.error_retrieving_data"),
-      buttons: [
-        {
-          text: this.translations.get("wallet_overview.click_retry"),
-          handler: () => {
-            this.getAvailableExchanges();
-          }
-        }
-      ]
-    });
-    confirm.present();
   }
   
   /**
@@ -585,7 +555,6 @@ export class WalletOverviewPage {
       content: this.translations.get("wallet_overview.loading_wallet")
     });
     this.loading.present();
-
     return this.addressService.get(publicKey).then(
       (address) => {
         this.balances = [
@@ -733,20 +702,6 @@ export class WalletOverviewPage {
       if (this.loading !== undefined) {
         this.loading.dismiss();
       } 
-    }).catch(error => {
-      const confirm = this.alertCtrl.create({
-        title: this.translations.get("wallet_overview.error"),
-        message: this.translations.get("wallet_overview.error_retrieving_data"),
-        buttons: [
-          {
-            text: this.translations.get("wallet_overview.click_retry"),
-            handler: () => {
-              this.setCalculatedCurrencyValue();
-            }
-          }
-        ]
-      });
-      confirm.present();
     });
   }
 
@@ -761,8 +716,30 @@ export class WalletOverviewPage {
    * Whenever the current wallet is changed
    */
   onWalletChanged() {
-    this.getWalletBalance(this.currentWallet.publicKey);
-    this.getTransactionHistory(this.currentWallet.publicKey); 
+    this.refreshWalletInfo();
+  }
+
+  refreshWalletInfo() {
+    let promiseBalance = this.getWalletBalance(this.currentWallet.publicKey);
+    let promiseTransaction = this.getTransactionHistory(this.currentWallet.publicKey);
+    Promise.all([promiseBalance, promiseTransaction]).catch(data => {
+      if (this.initialized) {
+        this.loading.dismiss();
+        const confirm = this.alertCtrl.create({
+          title: this.translations.get("wallet_overview.error"),
+          message: this.translations.get("wallet_overview.error_retrieving_data"),
+          buttons: [
+            {
+              text: this.translations.get("wallet_overview.click_retry"),
+              handler: () => {
+                this.onWalletChanged();
+              }
+            }
+          ]
+        });
+        confirm.present();
+      }
+    });
   }
   
   /**

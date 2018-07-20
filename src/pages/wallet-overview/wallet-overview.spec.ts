@@ -436,34 +436,6 @@ describe("WalletOverviewPage", () => {
     expect(toast.present).toHaveBeenCalled();
   });
 
-  it("should call a create and present error modal after getting the available exchanges list with a rejected promise", (done) => {
-    let alert: MockAlert = new MockAlert();
-    spyOn(exchangeService, "getAvailableExchanges").and.returnValue(Promise.reject(""));
-    spyOn(comp, "getAvailableExchanges").and.callThrough();
-    spyOn(alertController, "create").and.returnValue(alert);
-    spyOn(alert, "present");
-
-    comp.getAvailableExchanges().then(data => {
-      expect(alertController.create).toHaveBeenCalled();
-      expect(alert.present).toHaveBeenCalled();
-      done();
-    });
-  });
-
-  it("should call a create and present error modal after getting the wallets with a rejected promise", (done) => {
-    let alert: MockAlert = new MockAlert();
-    spyOn(walletService, "getAll").and.returnValue(Promise.reject(""));
-    spyOn(comp, "getAllWallets").and.callThrough();
-    spyOn(alertController, "create").and.returnValue(alert);
-    spyOn(alert, "present");
-
-    comp.getAllWallets().then(data => {
-      expect(alertController.create).toHaveBeenCalled();
-      expect(alert.present).toHaveBeenCalled();
-      done();
-    });
-  });
-
   it("should trigger the subscribe of the language change and call retrieveTranslations to retrieve the translations of the selected language", (done) => {
     spyOn(comp, "retrieveTranslations");
 

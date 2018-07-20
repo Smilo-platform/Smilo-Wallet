@@ -14,7 +14,7 @@
                     </ion-item>
                 </ion-list>
             </ion-col>
-            <ion-col col-12 col-xl-3 class="wallet-info-col" *ngIf="currentWallet">
+            <ion-col col-12 col-xl-3 class="wallet-info-col" *ngIf="currentWallet && initialized">
                 <div>
                     <h4 class="wallet-overview-header margin-header">{{ 'wallet_overview.wallet_info' | translate }}</h4>
                     <ion-icon (click)="refreshWalletBalance()" class="refresh" name="refresh-circle"></ion-icon>
@@ -73,7 +73,7 @@
                     </ion-card-content>
                 </ion-card>
             </ion-col>
-            <ion-col col-12 col-xl-3>
+            <ion-col col-12 col-xl-3 *ngIf="initialized">
                 <h4 class="margin-header">{{ 'wallet_overview.transactions_history' | translate }}</h4>
                     <ion-list class="transaction-list hidden" [@visibilityChanged]="transactionHistoryVisibility">
                         <ion-item *ngFor="let transaction of transactionsHistory">
