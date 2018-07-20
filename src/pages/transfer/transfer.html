@@ -15,7 +15,9 @@
                         </div>
                         <div>
                             <p class="inputInfo" [ngClass]="{'neutralBorder': toPublicKey === undefined, 'greenBorder': toPublicKey !== undefined && toPublicKey.length > 0}">{{ 'transfer.to' | translate }}</p>
-                            <ion-input class="toAddress biggerText padding" type="text" placeholder="{{ 'transfer.placeholder_enter_address' | translate }}" (ngModelChange)="resetTransferState()" [(ngModel)]="toPublicKey"></ion-input> 
+                            <ion-item>
+                                <ion-input class="toAddress biggerText padding" type="text" placeholder="{{ 'transfer.placeholder_enter_address' | translate }}" (ngModelChange)="resetTransferState()" [(ngModel)]="toPublicKey"></ion-input> 
+                            </ion-item>
                         </div>                       
                     </ion-card-header>
                 </ion-card>
@@ -33,14 +35,18 @@
                     <h1>{{ 'transfer.enter_amount' | translate }}</h1>
                     <ion-card-header>   
                         <p class="inputInfo" [ngClass]="{'greenBorder': enoughFunds, 'redBorder': !enoughFunds, 'neutralBorder': enoughFunds === undefined }">{{ chosenCurrency }} / {{ chosenCurrencyAmount  }}</p>
-                        <ion-input class="biggerText padding" type="number" [(ngModel)]="amount" (ngModelChange)="onAmountChanged()" placeholder="{{ 'transfer.placeholder_enter_amount' | translate }}"></ion-input>  
+                        </ion-item>
+                            <ion-input class="biggerText padding" type="number" [(ngModel)]="amount" (ngModelChange)="onAmountChanged()" placeholder="{{ 'transfer.placeholder_enter_amount' | translate }}"></ion-input>  
+                        </ion-item>
                     </ion-card-header>
                 </ion-card>
                 <ion-card>
                     <h1>{{ 'transfer.enter_password' | translate }}</h1>
                     <ion-card-header>   
                         <p class="inputInfo" [ngClass]="{'neutralBorder': password === undefined, 'greenBorder': password !== undefined && password.length > 0}">{{ 'transfer.input_hidden' | translate }}</p>
-                        <ion-input class="biggerText padding" type="password" (ngModelChange)="resetTransferState()" [(ngModel)]="password" placeholder="{{ 'transfer.placeholder_enter_password' | translate }}"></ion-input>  
+                        </ion-item>
+                            <ion-input class="biggerText padding" type="password" (ngModelChange)="resetTransferState()" [(ngModel)]="password" placeholder="{{ 'transfer.placeholder_enter_password' | translate }}"></ion-input>  
+                        </ion-item>
                     </ion-card-header>
                 </ion-card>
                 <ion-card>
