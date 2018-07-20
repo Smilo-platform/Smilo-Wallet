@@ -33,6 +33,7 @@ export class TransferPage {
   enoughFunds: boolean;
   password: string;
   transferButtonEnabled: boolean;
+  doneLoading: boolean;
 
   constructor(private navParams: NavParams,
               private transactionSignService: TransactionSignService,
@@ -40,6 +41,7 @@ export class TransferPage {
 
   ionViewDidLoad(): void {
     this.transferButtonEnabled = true;
+    this.doneLoading = false;
     this.fromWallet = this.navParams.get("currentWallet");
     this.balances = this.navParams.get("currentWalletBalance");
     this.chosenCurrency = this.balances[0].currency;
@@ -80,6 +82,7 @@ export class TransferPage {
   }
 
   resetTransferState() {
+    this.doneLoading = false;
     this.errorMessage = "";
     this.successMessage = "";
   }
@@ -151,6 +154,7 @@ export class TransferPage {
         this.enoughFunds = undefined;
         this.password = "";
         this.transferButtonEnabled = true;
+        this.doneLoading = true;
       (error) => {
         this.errorMessage = "Couldn't send your transaction to the blockchain, please try again later...";
         this.successMessage = "";
