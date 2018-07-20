@@ -676,31 +676,6 @@ describe("WalletOverviewPage", () => {
     });
   });
 
-  it("should show an alert and retry button when the transaction history could not be retrieved", (done) => {
-    let alert = new MockAlert();
-
-    spyOn(transactionHistoryService, "getTransactionHistory").and.returnValue(Promise.reject([]));
-    spyOn(alertController, "create").and.returnValue(alert);
-    spyOn(alert, "present");
-
-    comp.getTransactionHistory("").then(data => {
-      expect(alertController.create).toHaveBeenCalled();
-      expect(alert.present).toHaveBeenCalled();
-      done();
-    });
-  });
-
-  it("should show a retry modal for the exchanges when the request returns an empty OK response", (done) => {
-    spyOn(exchangeService, "getAvailableExchanges").and.returnValue(Promise.resolve([]));
-    spyOn(comp, "getAvailableExchanges").and.callThrough();
-    spyOn(comp, "presentExchangesRetryButton");
-
-    comp.getAvailableExchanges().then(data => {
-      expect(comp.presentExchangesRetryButton).toHaveBeenCalled();
-      done();
-    });
-  });
-
   it("should load the balances correctly", (done) => {
     comp.currentWallet = getDummyWallet();
 
