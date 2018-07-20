@@ -42,10 +42,6 @@ export class TransferPage {
     this.transferButtonEnabled = true;
     this.fromWallet = this.navParams.get("currentWallet");
     this.balances = this.navParams.get("currentWalletBalance");
-    for (let currency of this.balances) { // DELETE later just for testing
-      let random = Math.floor(Math.random() * 9999); 
-      currency.amount = random;
-    }
     this.chosenCurrency = this.balances[0].currency;
     this.chosenCurrencyAmount = this.balances[0].amount;
   }
