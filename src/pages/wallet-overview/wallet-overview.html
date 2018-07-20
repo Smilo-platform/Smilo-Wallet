@@ -80,17 +80,17 @@
                             <ion-avatar item-start>
                                 <ion-icon class="transaction-swap" name="swap"></ion-icon>
                             </ion-avatar>
-                            <p class="transaction-date">{{ transaction.date }}</p>
-                            <h2 class="transaction-from">{{ transaction.input }}</h2>
+                            <p class="transaction-date">{{ transaction.timestamp | date:medium }}</p>
+                            <h2 class="transaction-from">{{ transaction.inputAddress }}</h2>
                             <div class="transaction-list-div-amount">
-                                <ion-icon [ngClass]="{'greenColor': transaction.input !== currentWallet.publicKey, 
-                                                     'redColor': transaction.input === currentWallet.publicKey }"
+                                <ion-icon [ngClass]="{'greenColor': transaction.inputAddress !== currentWallet.publicKey, 
+                                                     'redColor': transaction.inputAddress === currentWallet.publicKey }"
                                           class="transaction-arrow" 
-                                          [name]="transaction.input !== currentWallet.publicKey ? 'arrow-forward' :'arrow-back'">
+                                          [name]="transaction.inputAddress !== currentWallet.publicKey ? 'arrow-forward' :'arrow-back'">
                                 </ion-icon>
-                                <h3 class="transaction-list-amount">{{ transaction.amount }} {{ transaction.currency }}</h3>
+                                <h3 class="transaction-list-amount">{{ transaction.outputTotal }} XSM</h3>
                             </div>
-                            <p class="transaction-to">{{ transaction.output }}</p>
+                            <p class="transaction-to">{{ transaction.transactionOutputs[0].outputAddress }}</p>
                         </ion-item>
                     </ion-list>
                     <ion-card class="no-transactions-card" [@visibilityChanged]="noTransactionHistoryVisibility">
