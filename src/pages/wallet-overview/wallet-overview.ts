@@ -194,7 +194,10 @@ export class WalletOverviewPage {
   initialize(): Promise<void> {
     return Promise.all([
       this.getAllWallets(), 
-      this.getAvailableExchanges()]).then(data => { this.initialized = true; }).catch(data => {
+      this.getAvailableExchanges()]).then(
+      (data) => { this.initialized = true; }, 
+      (error) => {
+        console.log("ERROR!");
         this.loading.dismiss();
         const confirm = this.alertCtrl.create({
           title: this.translations.get("wallet_overview.error"),
