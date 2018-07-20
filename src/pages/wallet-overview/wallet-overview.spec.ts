@@ -1,20 +1,17 @@
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 import { WalletOverviewPage } from "./wallet-overview";
-import { IonicModule, NavController, NavParams, ToastController, Toast, Alert, LoadingController, Loading, AlertController, Platform} from "ionic-angular/index";
+import { IonicModule, NavController, NavParams, ToastController, LoadingController, AlertController, Platform} from "ionic-angular/index";
 import { MockNavController } from "../../../test-config/mocks/MockNavController";
 import { MockNavParams } from "../../../test-config/mocks/MockNavParams";
 import { TranslateModule, TranslateLoader, TranslateService } from "@ngx-translate/core";
 import { MockTranslationLoader } from "../../../test-config/mocks/MockTranslationLoader";
 import { WalletService, IWalletService } from "../../services/wallet-service/wallet-service";
-import { Storage } from "@ionic/storage";
 import { MockWalletService } from "../../../test-config/mocks/MockWalletService";
 import { LandingPage } from "../landing/landing";
 import { MockToastController } from "../../../test-config/mocks/MockToastController";
-import { MockLoading } from "../../../test-config/mocks/MockLoading";
 import { MockLoadingController } from "../../../test-config/mocks/MockLoadingController";
 import { MockAlertController } from "../../../test-config/mocks/MockAlertController";
 import { MockAlert } from "../../../test-config/mocks/MockAlert";
-import { IBalance } from "../../models/IBalance";
 import { ComponentsModule } from "../../components/components.module";
 import { Clipboard } from "@ionic-native/clipboard";
 import { File as FileNative} from "@ionic-native/file";
@@ -37,15 +34,18 @@ import { ILocalWallet } from "../../models/ILocalWallet";
 import { MockTranslateService } from "../../../test-config/mocks/MockTranslateService";
 import { MockPlatform } from "../../../test-config/mocks/MockPlatform";
 import { ElementRef } from "@angular/core";
+import { MockAddressService } from "../../../test-config/mocks/MockAddressService";
+import { AddressService } from "../../services/address-service/address-service";
+import { IAddress } from "../../models/IAddress";
 
 describe("WalletOverviewPage", () => {
   let comp: WalletOverviewPage;
   let fixture: ComponentFixture<WalletOverviewPage>;
-  let navController: NavController;
-  let toastController: ToastController;
+  let navController: MockNavController;
+  let toastController: MockToastController;
   let walletService: IWalletService;
-  let loadingController: LoadingController;
-  let alertController: AlertController;
+  let loadingController: MockLoadingController;
+  let alertController: MockAlertController;
   let clipBoard: Clipboard;
   let fileNative: FileNative;
   let bulkTranslateService: BulkTranslateService;
@@ -55,6 +55,7 @@ describe("WalletOverviewPage", () => {
   let walletBalancesService: IWalletBalanceService;
   let translateService: MockTranslateService;
   let platform: MockPlatform;
+  let addressService: MockAddressService;
 
   beforeEach(async(() => {
     navController = new MockNavController();
@@ -71,6 +72,7 @@ describe("WalletOverviewPage", () => {
     walletBalancesService = new MockWalletBalanceService();
     translateService = new MockTranslateService();
     platform = new MockPlatform();
+    addressService = new MockAddressService();
 
     TestBed.configureTestingModule({
       declarations: [WalletOverviewPage],
@@ -97,7 +99,8 @@ describe("WalletOverviewPage", () => {
         { provide: WalletBalanceService, useValue: walletBalancesService },
         { provide: WalletService, useValue: walletService },
         { provide: TranslateService, useValue: translateService },
-        { provide: Platform, useValue: platform }
+        { provide: Platform, useValue: platform },
+        { provide: AddressService, useValue: addressService }
       ]
     }).compileComponents();
   }));
@@ -226,14 +229,6 @@ describe("WalletOverviewPage", () => {
     expect(comp.currentWallet).toBeUndefined();
   })
 
-  it("should return undefined data after getting the wallet currencies because the wallet does not exist", (done) => {
-    comp.getWalletBalance("I DON'T EXIST").then(data => {
-      expect(data).toBeUndefined();
-
-      done();
-    });
-  })
-
   it("should return undefined data after calculating the picked currency values because there is no picked currency", (done) => {
     comp.setCalculatedCurrencyValue().then(data => {
       expect(data).toBeUndefined();
@@ -290,12 +285,22 @@ describe("WalletOverviewPage", () => {
   })
 
   it("should get two specific currency types and amounts back after getting it with mock data", (done) => {
+    let dummyAddress: IAddress = {
+      publickey: "PUBLIC_KEY",
+      balances: {
+        "000x00123": 1000
+      },
+      signatureCount: -1
+    };
+
+    spyOn(addressService, "get").and.returnValue(Promise.resolve(dummyAddress));
+
     comp.wallets = [getDummyWallet()];
     comp.getWalletBalance("I EXIST").then(data => {
       expect(comp.balances[0].currency).toBe("XSM");
-      expect(comp.balances[0].amount).toBe(5712);
+      expect(comp.balances[0].amount).toBe(1000);
       expect(comp.balances[1].currency).toBe("XSP");
-      expect(comp.balances[1].amount).toBe(234);
+      expect(comp.balances[1].amount).toBe(0);
 
       done();
     });
@@ -720,30 +725,31 @@ describe("WalletOverviewPage", () => {
     });
   });
 
-  it("should push zero balances for XSM and XSP when the JSON is null or has no keys at all", (done) => {
+  it("should load the balances correctly", (done) => {
     comp.currentWallet = getDummyWallet();
 
-    let getWalletBalanceSpy = spyOn(walletBalancesService, "getWalletBalance").and.returnValue(Promise.resolve(null));
+    let dummyAddress: IAddress = {
+      publickey: "PUBLIC_KEY",
+      balances: {
+        "000x00123": 1000
+      },
+      signatureCount: -1
+    };
+
+    spyOn(addressService, "get").and.returnValue(Promise.resolve(dummyAddress));
 
     comp.getWalletBalance("").then(data => {
-      expect(comp.balances[0]).toEqual({currency: "XSM", amount: 0, valueAmount: 0});
+      expect(comp.balances[0]).toEqual({currency: "XSM", amount: 1000, valueAmount: 1000});
       expect(comp.balances[1]).toEqual({currency: "XSP", amount: 0, valueAmount: 0});
-      
-      // No keys
-      getWalletBalanceSpy.and.returnValue(Promise.resolve({}));
 
-      comp.getWalletBalance("").then(data => {
-        expect(comp.balances[0]).toEqual({currency: "XSM", amount: 0, valueAmount: 0});
-        expect(comp.balances[1]).toEqual({currency: "XSP", amount: 0, valueAmount: 0});
-        done();
-      });
+      done();
     });
   });
 
   it("should show a retry modal when retrieving the balances has failed", (done) => {
     let alert = new MockAlert();
 
-    spyOn(walletBalancesService, "getWalletBalance").and.returnValue(Promise.reject(""));
+    spyOn(addressService, "get").and.returnValue(Promise.reject(""));
     spyOn(alertController, "create").and.returnValue(alert);
     spyOn(alert, "present");
 
