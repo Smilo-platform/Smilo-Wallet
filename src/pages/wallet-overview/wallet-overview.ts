@@ -491,7 +491,6 @@ export class WalletOverviewPage {
         this.noTransactionHistoryVisibility = "shown";
         this.transactionHistoryVisibility = "hidden";
       }
-      console.log(data);
     }).catch(error => {
       const confirm = this.alertCtrl.create({
         title: this.translations.get("wallet_overview.error"),

@@ -3,16 +3,19 @@ import { MockHttpClient } from "../../../test-config/mocks/MockHttpClient";
 import { MockWalletTransactionHistoryService } from "../../../test-config/mocks/MockWalletTransactionHistoryService";
 import { Observable } from "rxjs/Observable";
 import "rxjs/add/observable/of";
+import { UrlService } from "../url-service/url-service";
 
 describe("WalletTransactionHistoryService", () => {
     let walletTransactionHistoryService: WalletTransactionHistoryService;
     let httpClient: MockHttpClient;
+    let urlService: UrlService;
     let mockedWalletTransactionHistoryService: MockWalletTransactionHistoryService;
 
     beforeEach(() => {
         httpClient = new MockHttpClient();
         mockedWalletTransactionHistoryService = new MockWalletTransactionHistoryService();
-        walletTransactionHistoryService = new WalletTransactionHistoryService(httpClient);
+        urlService = new UrlService();
+        walletTransactionHistoryService = new WalletTransactionHistoryService(httpClient, urlService);
     });
 
     it("should return a specific set of transactions", (done) => {
@@ -32,7 +35,7 @@ describe("WalletTransactionHistoryService", () => {
     });
 
     it("should return an empty array because the publicKey was not found", (done) => {
-        spyOn(httpClient, "get").and.returnValue(Observable.of([""]));
+        spyOn(httpClient, "get").and.returnValue(Observable.of([]));
         walletTransactionHistoryService.getTransactionHistory("I DON'T EXIST").then(data => {
             expect(data).toEqual([]);
             done();
