@@ -35,7 +35,7 @@
                     <h1>{{ 'transfer.enter_amount' | translate }}</h1>
                     <ion-card-header>   
                         <p class="inputInfo" [ngClass]="{'greenBorder': enoughFunds, 'redBorder': !enoughFunds, 'neutralBorder': enoughFunds === undefined }">{{ chosenCurrency }} / {{ chosenCurrencyAmount  }}</p>
-                        </ion-item>
+                        <ion-item>
                             <ion-input class="biggerText padding" type="number" [(ngModel)]="amount" (ngModelChange)="onAmountChanged()" placeholder="{{ 'transfer.placeholder_enter_amount' | translate }}"></ion-input>  
                         </ion-item>
                     </ion-card-header>
@@ -44,7 +44,7 @@
                     <h1>{{ 'transfer.enter_password' | translate }}</h1>
                     <ion-card-header>   
                         <p class="inputInfo" [ngClass]="{'neutralBorder': password === undefined, 'greenBorder': password !== undefined && password.length > 0}">{{ 'transfer.input_hidden' | translate }}</p>
-                        </ion-item>
+                        <ion-item>
                             <ion-input class="biggerText padding" type="password" (ngModelChange)="resetTransferState()" [(ngModel)]="password" placeholder="{{ 'transfer.placeholder_enter_password' | translate }}"></ion-input>  
                         </ion-item>
                     </ion-card-header>
