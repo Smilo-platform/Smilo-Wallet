@@ -1,5 +1,5 @@
 export interface IAddress {
     publickey: string;
-    contractBalanceMap: {[index: string]: number};
+    balances: {[index: string]: number};
     signatureCount: number;
 }

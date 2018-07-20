@@ -21,7 +21,7 @@ export class AddressService {
                     // This is not a true error, we simply return an empty wallet object.
                     let emptyAddress: IAddress = {
                         publickey: address,
-                        contractBalanceMap: {
+                        balances: {
                             "000x00123": 0
                         },
                         signatureCount: -1

@@ -584,7 +584,7 @@ export class WalletOverviewPage {
       (address) => {
         this.balances = [
           {
-            currency: "XSM", amount: address.contractBalanceMap["000x00123"], valueAmount: address.contractBalanceMap["000x00123"]
+            currency: "XSM", amount: address.balances["000x00123"], valueAmount: address.balances["000x00123"]
           },
           {
             currency: "XSP", amount: 0, valueAmount: 0
