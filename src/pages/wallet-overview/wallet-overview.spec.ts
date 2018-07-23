@@ -662,7 +662,7 @@ describe("WalletOverviewPage", () => {
   });
 
   it("should show that there are no transactions if it returns an empty array", (done) => {
-    spyOn(transactionHistoryService, "getTransactionHistory").and.returnValue(Promise.resolve([]));
+    spyOn(transactionHistoryService, "getTransactionHistory").and.returnValue(Promise.resolve({transactions: []}));
 
     comp.getTransactionHistory("").then(data => {
       expect(comp.noTransactionHistoryVisibility).toBe("shown");
