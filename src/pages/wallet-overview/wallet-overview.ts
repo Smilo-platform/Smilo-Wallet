@@ -507,7 +507,7 @@ export class WalletOverviewPage {
    */
   getTransactionHistory(publicKey: string): Promise<void> {
     return this.transactionHistoryService.getTransactionHistory(publicKey).then(data => {
-      this.transactionsHistory = data;
+      this.transactionsHistory = data.transactions;
       if (this.transactionsHistory.length > 0) {
         this.noTransactionHistoryVisibility = "hidden";
         this.transactionHistoryVisibility = "shown";
