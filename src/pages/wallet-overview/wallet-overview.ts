@@ -19,7 +19,6 @@ import { TranslateService } from "@ngx-translate/core";
 import { IBalance } from "../../models/IBalance";
 import { ExchangesService } from "../../services/exchanges-service/exchanges-service";
 import { WalletTransactionHistoryService } from "../../services/wallet-transaction-history-service/wallet-transaction-history-service";
-import { WalletBalanceService } from "../../services/wallet-balance-service/wallet-balance-service";
 import { AddressService } from "../../services/address-service/address-service";
 
 /**
@@ -154,7 +153,6 @@ export class WalletOverviewPage {
               private keyStoreService: KeyStoreService,
               private exchangeService: ExchangesService,
               private transactionHistoryService: WalletTransactionHistoryService,
-              private walletBalancesService: WalletBalanceService,
               private addressService: AddressService) {
 
   }
@@ -567,21 +565,6 @@ export class WalletOverviewPage {
         ];
         
         this.setCalculatedCurrencyValue();
-      },
-      (error) => {
-        const confirm = this.alertCtrl.create({
-          title: this.translations.get("wallet_overview.error"),
-          message: this.translations.get("wallet_overview.error_retrieving_data"),
-          buttons: [
-            {
-              text: this.translations.get("wallet_overview.click_retry"),
-              handler: () => {
-                this.getWalletBalance(publicKey);
-              }
-            }
-          ]
-        });
-        confirm.present();
       }
     );
   }
