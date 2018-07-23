@@ -220,9 +220,7 @@ describe("MerkleTreeBuilder", () => {
                     LamportGeneratorThread,
                     [
                         `file:///android_asset/www/assets/scripts/sjcl.js`,
-                        `file:///android_asset/www/assets/scripts/seedrandom.min.js`,
-                        `file:///android_asset/www/assets/scripts/webworker/random/SHA1PRNG.js`,
-                        `file:///android_asset/www/assets/scripts/webworker/merkle/LamportGenerator.js`
+                        `file:///android_asset/www/assets/scripts/seedrandom.min.js`
                     ]
                 );
 
@@ -258,9 +256,7 @@ describe("MerkleTreeBuilder", () => {
                     LamportGeneratorThread,
                     [
                         `${ window.location.protocol }//${ window.location.host }/assets/scripts/sjcl.js`,
-                        `${ window.location.protocol }//${ window.location.host }/assets/scripts/seedrandom.min.js`,
-                        `${ window.location.protocol }//${ window.location.host }/assets/scripts/webworker/random/SHA1PRNG.js`,
-                        `${ window.location.protocol }//${ window.location.host }/assets/scripts/webworker/merkle/LamportGenerator.js`
+                        `${ window.location.protocol }//${ window.location.host }/assets/scripts/seedrandom.min.js`
                     ]
                 );
 
