@@ -28,6 +28,8 @@ import { MockKeyStoreService } from "../../../test-config/mocks/MockKeyStoreServ
 import { IWalletExtraImportDismissData, WalletExtraImportPage } from "../wallet-extra-import/wallet-extra-import";
 import { ILocalWallet } from "../../models/ILocalWallet";
 import { IKeyStore } from "../../models/IKeyStore";
+import { MockSettingService } from "../../../test-config/mocks/MockSettingsService";
+import { SettingsService } from "../../services/settings-service/settings-service";
 
 describe("PrepareWalletPage", () => {
   let comp: PrepareWalletPage;
@@ -44,6 +46,7 @@ describe("PrepareWalletPage", () => {
   let bip32Service: IBIP32Service;
   let bip39Service: IBIP39Service;
   let keyStoreService: IKeyStoreService;
+  let settingService: MockSettingService;
 
   beforeEach(async(() => {
     walletService = new MockWalletService();
@@ -57,6 +60,7 @@ describe("PrepareWalletPage", () => {
     bip32Service = new MockBIP32Service();
     bip39Service = new MockBIP39Service();
     keyStoreService = new MockKeyStoreService();
+    settingService = new MockSettingService();
 
     TestBed.configureTestingModule({
       declarations: [PrepareWalletPage],
@@ -77,7 +81,8 @@ describe("PrepareWalletPage", () => {
         { provide: ModalController, useValue: modalController },
         { provide: BIP32Service, useValue: bip32Service },
         { provide: BIP39Service, useValue: bip39Service },
-        { provide: KeyStoreService, useValue: keyStoreService }
+        { provide: KeyStoreService, useValue: keyStoreService },
+        { provide: SettingsService, useValue: settingService }
       ]
     }).compileComponents();
 
@@ -306,6 +311,7 @@ describe("PrepareWalletPage", () => {
   it("should handle finalize correctly when a passphrase was defined and the user does not want to import another wallet", (done) => {
     comp.passphrase = "PASSPHRASE";
     comp.walletIndex = 10;
+    comp.selectedTheme = "light-theme";
 
     let mockModal = new MockModal();
     let dummyWallet: ILocalWallet = <any>{};
@@ -329,7 +335,8 @@ describe("PrepareWalletPage", () => {
         expect(modalController.create).toHaveBeenCalledWith(WalletExtraImportPage, {
           nextIndex: 11
         }, {
-          enableBackdropDismiss: false
+          enableBackdropDismiss: false,
+          cssClass: "light-theme"
         });
         expect(mockModal.present).toHaveBeenCalled();
 
@@ -351,6 +358,7 @@ describe("PrepareWalletPage", () => {
   it("should handle finalize correctly when a passphrase was defined and the user wants to import another wallet", (done) => {
     comp.passphrase = "PASSPHRASE";
     comp.walletIndex = 10;
+    comp.selectedTheme = "light-theme";
 
     let mockModal = new MockModal();
     let dummyWallet: ILocalWallet = <any>{};
@@ -376,7 +384,8 @@ describe("PrepareWalletPage", () => {
         expect(modalController.create).toHaveBeenCalledWith(WalletExtraImportPage, {
           nextIndex: 11
         }, {
-          enableBackdropDismiss: false
+          enableBackdropDismiss: false,
+          cssClass: "light-theme"
         });
         expect(mockModal.present).toHaveBeenCalled();
 

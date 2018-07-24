@@ -7,6 +7,7 @@ import { PasswordExplanationPage } from "../password-explanation/password-explan
 import { KeyStoreService } from "../../services/key-store-service/key-store-service";
 import { IPasswordValidationResult, PasswordService } from "../../services/password-service/password-service";
 import { PrepareWalletPage } from "../prepare-wallet/prepare-wallet";
+import { SettingsService, ThemeType } from "../../services/settings-service/settings-service";
 
 @IonicPage()
 @Component({
@@ -20,13 +21,15 @@ export class WalletImportPrivatekeyPage {
   password: string = "";
   confirmedPassword: string = "";
   passwordStatus: IPasswordValidationResult;
+  selectedTheme: ThemeType;
 
   constructor(private navCtrl: NavController,
               private navParams: NavParams,
               private walletService: WalletService,
               private modalController: ModalController,
               private keyStoreService: KeyStoreService,
-              private passwordService: PasswordService) {
+              private passwordService: PasswordService,
+              private settingsService: SettingsService) {
   }
 
   import(): Promise<void> {
@@ -37,6 +40,10 @@ export class WalletImportPrivatekeyPage {
     else {
       return Promise.reject("");
     }
+  }
+
+  ngOnInit(): void {
+    this.settingsService.getActiveTheme().subscribe(val => this.selectedTheme = val);
   }
 
   goToPrepareWalletPage(wallet: ILocalWallet, password: string) {
@@ -70,7 +77,7 @@ export class WalletImportPrivatekeyPage {
   }
   
   showPasswordExplanation() {
-    let modal = this.modalController.create(PasswordExplanationPage);
+    let modal = this.modalController.create(PasswordExplanationPage, undefined, { cssClass: this.selectedTheme });
 
     modal.present();
   }

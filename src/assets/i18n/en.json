@@ -238,6 +238,7 @@
     "about": {
         "nav-bar-title": "About",
         "title": "ABOUT SMILO",
+        "paragraph1_title": "Smilo Platform",
         "paragraph1": "Since the release of Ethereum in 2015, there have been several projects which are able to host smart contracts and decentralized applications, however none of the platforms are able to host both public and private smart contracts.",
         "paragraph2": "What is needed, is an open source, hybrid blockchain based computing platform. A platform featuring hybrid transactions, hybrid smart contracts and hybrid decentralized applications. This is where the Smilo Platform comes into play.",
         "paragraph3": "Smilo combines the public and private features of the blockchain within its core. Not only can we provide options for public and private transactions, but we also provide public and private smart contracts and decentralized applications.",
@@ -246,12 +247,13 @@
     },
     "faq": {
         "nav-bar-title": "FAQ",
+        "general": "General",
         "question1": "What is a SmiloWallet?",
         "answer1": "Smilo's web wallet is a free, open-source, client-side interface. You remain in full control of your keys and your funds. We cannot recover your funds or freeze your account if you visit a phishing site or lose your private key.",
         "question2": "Is the SmiloWallet a bank?",
         "answer2": "No, the SmiloWallet is not a bank. The SmiloWallet is just an interface which allows you to communicate with Smilo’s blockchain network. When you create an account on SmiloWallet, you are generating a cryptographic set of numbers: your private key and your public key (address). The handling of your keys happens entirely on your computer, inside your browser. We never transmit, receive or store your private key, password, or other account information.",
         "question3": "How secure is it?",
-        "answer3": "",
+        "answer3": "The SmiloWallet will never send your private keys or encrypted keystore files across the network. They will be stored locally on your device. Even if an attacker were to gain access to your devices local storage, they would still need your Smilo password in order to gain access to your funds.",
         "question4": "How can I trust the SmiloWallet?",
         "answer4": "The SmiloWallet source code is available on Github for anyone to verify. We serve the wallet over SSL (https) which eliminates the possibility of tampering with the code between our servers and your browser. Still not sure? Download the latest standalone release on our Github releases page and run the SmiloWallet locally. Alternatively, you can build directly from the source.",
         "question5": "What if I lose my private key or forget my encrypted Keystore file’s password?",

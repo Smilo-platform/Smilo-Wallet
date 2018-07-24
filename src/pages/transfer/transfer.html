@@ -6,82 +6,53 @@
     <ion-grid>
         <ion-row justify-content-center>
             <ion-col col-12 col-xl-4>
-                <ion-card>
-                    <h1>{{ 'transfer.enter_address' | translate }}</h1>
-                    <ion-card-header>
-                        <div>
-                            <p class="inputInfo greenBorder">{{ 'transfer.from' | translate }}</p>
-                            <p class="fromAddress biggerText">{{ fromWallet.publicKey }}</p>
-                        </div>
-                        <div>
-                            <p class="inputInfo" [ngClass]="{'neutralBorder': toPublicKey === undefined, 'greenBorder': toPublicKey !== undefined && toPublicKey.length > 0}">{{ 'transfer.to' | translate }}</p>
-                            <ion-item>
-                                <ion-input class="toAddress biggerText padding" type="text" placeholder="{{ 'transfer.placeholder_enter_address' | translate }}" (ngModelChange)="resetTransferState()" [(ngModel)]="toPublicKey"></ion-input> 
-                            </ion-item>
-                        </div>                       
-                    </ion-card-header>
-                </ion-card>
-                <ion-card>
-                    <h1>{{ 'transfer.select_currency' | translate }}</h1>
-                    <ion-card-header>   
-                        <ion-item>
-                            <ion-select class="choose-currency" [(ngModel)]="chosenCurrency" (ionChange)="setChosenCurrencyAmount()" interface="action-sheet">
-                                <ion-option *ngFor="let balance of balances" [value]="balance.currency">{{ balance.currency }}</ion-option>
-                            </ion-select> 
-                        </ion-item>     
-                    </ion-card-header>
-                </ion-card>
-                <ion-card>
-                    <h1>{{ 'transfer.enter_amount' | translate }}</h1>
-                    <ion-card-header>   
-                        <p class="inputInfo" [ngClass]="{'greenBorder': enoughFunds, 'redBorder': !enoughFunds, 'neutralBorder': enoughFunds === undefined }">{{ chosenCurrency }} / {{ chosenCurrencyAmount  }}</p>
-                        <ion-item>
-                            <ion-input class="biggerText padding" type="number" [(ngModel)]="amount" (ngModelChange)="onAmountChanged()" placeholder="{{ 'transfer.placeholder_enter_amount' | translate }}"></ion-input>  
-                        </ion-item>
-                    </ion-card-header>
-                </ion-card>
-                <ion-card>
-                    <h1>{{ 'transfer.enter_password' | translate }}</h1>
-                    <ion-card-header>   
-                        <p class="inputInfo" [ngClass]="{'neutralBorder': password === undefined, 'greenBorder': password !== undefined && password.length > 0}">{{ 'transfer.input_hidden' | translate }}</p>
-                        <ion-item>
-                            <ion-input class="biggerText padding" type="password" (ngModelChange)="resetTransferState()" [(ngModel)]="password" placeholder="{{ 'transfer.placeholder_enter_password' | translate }}"></ion-input>  
-                        </ion-item>
-                    </ion-card-header>
-                </ion-card>
-                <ion-card>
-                    <ion-card-header> 
-                        <div class="main-loader-div" *ngIf="successMessage">
-                            <p class="transfer-success-message">{{ successMessage }}</p>
-                            <div class="loader" *ngIf="!doneLoading">
-                                <div></div>
-                                <div></div>
-                                <div></div>
-                                <div></div>
-                                <div></div>
-                                <div></div>
-                                <div></div>
-                                <div></div>
-                                <div></div>
-                            </div>
-                        </div>
-                        <div class="main-loader-div" *ngIf="errorMessage">
-                            <p class="transfer-error-message">{{ errorMessage }}</p>
-                            <div class="errorloader">
-                                <div></div>
-                                <div></div>
-                                <div></div>
-                                <div></div>
-                                <div></div>
-                                <div></div>
-                                <div></div>
-                                <div></div>
-                                <div></div>
-                            </div>
-                        </div>
-                        <button [disabled]="!transferButtonEnabled" class="transfer-button" ion-button (click)="transfer()" ion-button full>{{ 'transfer.transfer' | translate }}</button>
-                    </ion-card-header>
-                </ion-card>
+                <h1 class="no-padding-top">{{ 'transfer.enter_address' | translate }}</h1>
+                <ion-item class="input-bottom-border">
+                    <ion-input class="toAddress biggerText padding" type="text" placeholder="{{ 'transfer.placeholder_enter_address' | translate }}" (ngModelChange)="resetTransferState()" [(ngModel)]="toPublicKey"></ion-input> 
+                </ion-item>
+                <h1>{{ 'transfer.select_currency' | translate }}</h1>
+                <ion-item class="input-bottom-border no-border">
+                    <ion-select class="choose-currency" [(ngModel)]="chosenCurrency" (ionChange)="setChosenCurrencyAmount()" interface="action-sheet">
+                        <ion-option *ngFor="let balance of balances" [value]="balance.currency">{{ balance.currency }}</ion-option>
+                    </ion-select> 
+                </ion-item>     
+                <h1>{{ 'transfer.enter_amount' | translate }}</h1>
+                <ion-item class="input-bottom-border">
+                    <ion-input class="biggerText padding" type="number" [(ngModel)]="amount" (ngModelChange)="onAmountChanged()" placeholder="{{ 'transfer.placeholder_enter_amount' | translate }}"></ion-input>  
+                </ion-item>
+                <h1>{{ 'transfer.enter_password' | translate }}</h1>
+                <ion-item class="input-bottom-border">
+                    <ion-input class="biggerText padding" type="password" (ngModelChange)="resetTransferState()" [(ngModel)]="password" placeholder="{{ 'transfer.placeholder_enter_password' | translate }}"></ion-input>  
+                </ion-item>
+                <div class="main-loader-div" *ngIf="successMessage">
+                    <p class="transfer-success-message">{{ successMessage }}</p>
+                    <div class="loader" *ngIf="!doneLoading">
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </div>
+                </div>
+                <div class="main-loader-div" *ngIf="errorMessage">
+                    <p class="transfer-error-message">{{ errorMessage }}</p>
+                    <div class="errorloader">
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </div>
+                </div>
+                <button [disabled]="!transferButtonEnabled" class="transfer-button" ion-button (click)="transfer()" ion-button full>{{ 'transfer.transfer' | translate }}</button>
             </ion-col>
         </ion-row>
     </ion-grid>

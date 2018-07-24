@@ -4,7 +4,7 @@ import { HomePage } from "../pages/home/home";
 import { TranslateService } from "@ngx-translate/core";
 import { LandingPage } from "../pages/landing/landing";
 import { WalletService } from "../services/wallet-service/wallet-service";
-import { SettingsService } from "../services/settings-service/settings-service";
+import { SettingsService, ThemeType } from "../services/settings-service/settings-service";
 import { HockeyApp } from "ionic-hockeyapp";
 import { AndroidPermissions } from '@ionic-native/android-permissions';
 import { StatusBar } from '@ionic-native/status-bar';
@@ -19,7 +19,7 @@ const HOCKEY_APP_IGNORE_ERROR_HEADER = true;
 })
 export class SmiloWallet {
   rootPage: any;
-  selectedTheme: string;
+  selectedTheme: ThemeType;
 
   constructor(private platform: Platform, 
               private androidPermissions: AndroidPermissions,

@@ -6,13 +6,13 @@
 
 <ion-content padding>
   <ion-grid *ngIf="!importAnotherWallet">
-    <ion-row>
+    <ion-row class="margin-top-min">
       <ion-col text-center>
         {{ 'wallet_extra_import.description1' | translate }}
       </ion-col>
     </ion-row>
 
-    <ion-row justify-content-center>
+    <ion-row justify-content-center class="margin-top-max">
       <ion-col text-center>
         <button ion-button (click)="yes()">
           {{ 'wallet_extra_import.buttons.yes' | translate }}
@@ -27,7 +27,7 @@
     </ion-row>
   </ion-grid>
 
-  <ion-grid *ngIf="importAnotherWallet">
+  <ion-grid *ngIf="importAnotherWallet" col-12 col-md-9 col-lg-6 col-xl-9>
     <ion-row>
       <ion-col text-center>
         {{ 'wallet_extra_import.description2' | translate }}
@@ -35,29 +35,33 @@
     </ion-row>
 
     <form [formGroup]="form">
-      <ion-row>
-        <ion-col>
-          <ion-item>
-            <ion-label stacked>
-              {{ 'wallet_extra_import.wallet_name' | translate }}
-            </ion-label>
-            <ion-input [(ngModel)]="walletName"
-                      formControlName="walletName"></ion-input>
-          </ion-item>
-        </ion-col>
-      </ion-row>
+      <ion-card>
+        <ion-card-header class="no-left-top-padding">
+          <ion-row>
+            <ion-col>
+              <ion-item>
+                <ion-label stacked>
+                  {{ 'wallet_extra_import.wallet_name' | translate }}
+                </ion-label>
+                <ion-input [(ngModel)]="walletName"
+                          formControlName="walletName"></ion-input>
+              </ion-item>
+            </ion-col>
+          </ion-row>
 
-      <ion-row>
-          <ion-col>
-            <ion-item>
-              <ion-label stacked>
-                {{ 'wallet_extra_import.wallet_index' | translate }}
-              </ion-label>
-              <ion-input [(ngModel)]="nextIndex"
-                        formControlName="nextIndex"></ion-input>
-            </ion-item>
-          </ion-col>
-      </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-item>
+                <ion-label stacked>
+                    {{ 'wallet_extra_import.wallet_index' | translate }}
+                </ion-label>
+                <ion-input [(ngModel)]="nextIndex"
+                           formControlName="nextIndex"></ion-input>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+        </ion-card-header>
+      </ion-card>
     </form>
 
     <ion-row justify-content-center>

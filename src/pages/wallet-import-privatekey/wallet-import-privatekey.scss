@@ -6,4 +6,21 @@ page-wallet-import-privatekey {
             cursor: pointer;
         }
     }
+
+    .password-explanation {
+        height: 30px;
+        margin-top: 20px;
+        text-align: center;
+        display: block;
+        color: #488aff !important;
+    }
+
+    ion-textarea textarea {
+        resize: none;
+    }
+
+    .content-div {
+        text-align: center;
+        margin-top: 20px;
+    }
 }

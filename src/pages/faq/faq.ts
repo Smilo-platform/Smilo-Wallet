@@ -7,6 +7,26 @@ import { IonicPage } from "ionic-angular";
   templateUrl: "faq.html",
 })
 export class FaqPage {
+  items: any = [];
 
-  constructor() {}
+  constructor() {
+    this.items = [
+      {expanded: false},
+      {expanded: false},
+      {expanded: false},
+      {expanded: false},
+      {expanded: false}
+    ];
+  }
+
+  expandItem(item){
+    this.items.map((listItem) => {
+      if(item == listItem){
+        listItem.expanded = !listItem.expanded;
+      } else {
+        listItem.expanded = false;
+      }
+      return listItem;
+    });
+  }
 }

@@ -40,11 +40,25 @@ $smilo-logo-max-height: 100px;
     color: white;
 }
 
+ion-list ion-item:last-child .item-inner {
+    box-shadow: none;
+    border: none !important;
+}
+
+ion-list button:last-child .item-inner {
+    box-shadow: none;
+    border: none !important;
+}
+
 .delete-button {
     color: red !important;
     .alert-wrapper {
         background-color: red !important;
     }
+}
+
+h1 {
+    font-weight: 400;
 }
 
 .settings-nav-bar {

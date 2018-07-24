@@ -74,30 +74,6 @@
                 </ion-card>
             </ion-col>
             <ion-col col-12 col-xl-3 *ngIf="initialized">
-                <h4 class="margin-header">{{ 'wallet_overview.transactions_history' | translate }}</h4>
-                    <ion-list class="transaction-list hidden" [@visibilityChanged]="transactionHistoryVisibility">
-                        <ion-item *ngFor="let transaction of transactionsHistory">
-                            <ion-avatar item-start>
-                                <ion-icon class="transaction-swap" name="swap"></ion-icon>
-                            </ion-avatar>
-                            <p class="transaction-date">{{ transaction.timestamp | date:medium }}</p>
-                            <h2 class="transaction-from">{{ transaction.inputAddress }}</h2>
-                            <div class="transaction-list-div-amount">
-                                <ion-icon [ngClass]="{'greenColor': transaction.inputAddress !== currentWallet.publicKey, 
-                                                     'redColor': transaction.inputAddress === currentWallet.publicKey }"
-                                          class="transaction-arrow" 
-                                          [name]="transaction.inputAddress !== currentWallet.publicKey ? 'arrow-forward' :'arrow-back'">
-                                </ion-icon>
-                                <h3 class="transaction-list-amount">{{ transaction.outputTotal }} XSM</h3>
-                            </div>
-                            <p class="transaction-to">{{ transaction.transactionOutputs[0].outputAddress }}</p>
-                        </ion-item>
-                    </ion-list>
-                    <ion-card class="no-transactions-card" [@visibilityChanged]="noTransactionHistoryVisibility">
-                        <ion-card-header>
-                            <p>{{ 'wallet_overview.no_transactions_history' | translate }}</p>
-                        </ion-card-header>
-                    </ion-card>
                 <h4 class="margin-header">{{ 'wallet_overview.settings' | translate }}</h4>
                 <ion-card class="settings-card">
                     <ion-list>
@@ -126,6 +102,34 @@
                             <ion-label>{{ 'wallet_overview.delete_wallet' | translate }}</ion-label>
                         </button>  
                     </ion-list>
+                </ion-card>
+                <h4 class="margin-header">{{ 'wallet_overview.transactions_history' | translate }}</h4>
+                <ion-card class="transaction-list hidden" [@visibilityChanged]="transactionHistoryVisibility">
+                    <ion-card-header class="transaction-list-header">
+                        <ion-list>
+                            <ion-item *ngFor="let transaction of transactionsHistory">
+                                <ion-avatar item-start>
+                                    <ion-icon class="transaction-swap" name="swap"></ion-icon>
+                                </ion-avatar>
+                                <p class="transaction-date">{{ transaction.timestamp | date:medium }}</p>
+                                <h2 class="transaction-from">{{ transaction.inputAddress }}</h2>
+                                <div class="transaction-list-div-amount">
+                                    <ion-icon [ngClass]="{'greenColor': transaction.inputAddress !== currentWallet.publicKey, 
+                                                        'redColor': transaction.inputAddress === currentWallet.publicKey }"
+                                            class="transaction-arrow" 
+                                            [name]="transaction.inputAddress !== currentWallet.publicKey ? 'arrow-back' :'arrow-forward'">
+                                    </ion-icon>
+                                    <h3 class="transaction-list-amount">{{ transaction.outputTotal }} XSM</h3>
+                                </div>
+                                <p class="transaction-to">{{ transaction.transactionOutputs[0].outputAddress }}</p>
+                            </ion-item>
+                        </ion-list>
+                    </ion-card-header>
+                </ion-card>
+                <ion-card class="no-transactions-card" [@visibilityChanged]="noTransactionHistoryVisibility">
+                    <ion-card-header>
+                        <p>{{ 'wallet_overview.no_transactions_history' | translate }}</p>
+                    </ion-card-header>
                 </ion-card>
             </ion-col>
         </ion-row>

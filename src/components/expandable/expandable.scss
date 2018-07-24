@@ -1,0 +1,14 @@
+expandable {
+ 
+    .expand-wrapper {
+        padding: 1em 1.6em 1em 1.6em;
+        margin-top: 10px;
+        white-space: normal;
+    }  
+ 
+    .collapsed {
+        height: 0 !important;
+        padding: 0;
+    }
+ 
+}
