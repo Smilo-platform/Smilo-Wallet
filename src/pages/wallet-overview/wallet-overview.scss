@@ -198,6 +198,11 @@ page-wallet-overview {
     .button {
         border: none !important;
     }
+
+    .is-pending {
+        float: right;
+        color: gray !important;
+    }
 }
 
 .dark-theme {

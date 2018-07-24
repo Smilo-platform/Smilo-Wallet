@@ -140,6 +140,12 @@ export class WalletOverviewPage {
   balances: IBalance[];
   initialized = false;
 
+  /**
+   * The scheduler timer interval. We store this value so we can
+   * clear the interval at a later time.
+   */
+  interval: NodeJS.Timer;
+
   constructor(private navCtrl: NavController, 
               private platform: Platform,
               private walletService: WalletService,
@@ -155,6 +161,18 @@ export class WalletOverviewPage {
               private transactionHistoryService: WalletTransactionHistoryService,
               private addressService: AddressService) {
 
+  }
+
+  // Schedules an interval which will update the data.
+  scheduleRefreshInterval() {
+    this.interval = setInterval(() => this.refreshWalletBalance(), 1000);
+  }
+
+  /**
+   * Clears the scheduled update interval.
+   */
+  clearRefreshInterval() {
+    clearInterval(this.interval);
   }
 
   /**
@@ -230,6 +248,14 @@ export class WalletOverviewPage {
   ionViewDidLoad(): void {
     this.getAndSubscribeToTranslations();
     this.initialize();
+    this.scheduleRefreshInterval();
+  }
+
+  /**
+   * Called when the user leaves this view.
+   */
+  ionViewDidLeave(): void {
+    this.clearRefreshInterval();
   }
   
   /**
@@ -253,9 +279,11 @@ export class WalletOverviewPage {
   }
 
   /**
-   * Helper method to refresh the current wallet information
+   * Helper method to refresh the current wallet information.
+   * 
+   * An optional boolean can be passed to this function. If true no loading indicators will be shown.
    */
-  refreshWalletBalance(): void {
+  refreshWalletBalance(silent: boolean = false): void {
     this.refreshWalletInfo();
   }
 
@@ -702,9 +730,9 @@ export class WalletOverviewPage {
     this.refreshWalletInfo();
   }
 
-  refreshWalletInfo() {
-    let promiseBalance = this.getWalletBalance(this.currentWallet.publicKey);
-    let promiseTransaction = this.getTransactionHistory(this.currentWallet.publicKey);
+  refreshWalletInfo(silent: boolean = false) {
+    let promiseBalance = this.getWalletBalance(this.currentWallet.publicKey, silent);
+    let promiseTransaction = this.getTransactionHistory(this.currentWallet.publicKey, silent);
     Promise.all([promiseBalance, promiseTransaction]).catch(data => {
       if (this.initialized) {
         this.loading.dismiss();
