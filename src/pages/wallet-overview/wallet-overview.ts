@@ -139,6 +139,7 @@ export class WalletOverviewPage {
    */
   balances: IBalance[];
   initialized = false;
+  loadingModalOpen = false;
 
   constructor(private navCtrl: NavController, 
               private platform: Platform,
@@ -199,8 +200,7 @@ export class WalletOverviewPage {
       this.getAvailableExchanges()]).then(
       (data) => { this.initialized = true; }, 
       (error) => {
-        console.log("ERROR!");
-        this.loading.dismiss();
+        this.dismissLoadingModal();
         const confirm = this.alertCtrl.create({
           title: this.translations.get("wallet_overview.error"),
           message: this.translations.get("wallet_overview.error_retrieving_data"),
@@ -552,6 +552,7 @@ export class WalletOverviewPage {
     this.loading = this.loadingCtrl.create({
       content: this.translations.get("wallet_overview.loading_wallet")
     });
+    this.loadingModalOpen = true;
     this.loading.present();
     return this.addressService.get(publicKey).then(
       (address) => {
@@ -601,9 +602,7 @@ export class WalletOverviewPage {
         this.currentWallet === undefined || 
         this.pickedExchange === undefined ||
         this.balances === undefined) {
-      if (this.loading !== undefined) {
-        this.loading.dismiss();
-      }
+        this.dismissLoadingModal();
       return Promise.resolve();
     }
     return this.exchangeService.getPrices(this.pickedCurrency, this.pickedExchange).then(data => {
@@ -682,9 +681,7 @@ export class WalletOverviewPage {
       if (this.doughnutChart !== undefined) {
         this.legendList = this.doughnutChart.generateLegend();
       }
-      if (this.loading !== undefined) {
-        this.loading.dismiss();
-      } 
+      this.dismissLoadingModal();
     });
   }
 
@@ -698,8 +695,15 @@ export class WalletOverviewPage {
   /**
    * Whenever the current wallet is changed
    */
-  onWalletChanged() {
+  onWalletChanged(): void {
     this.refreshWalletInfo();
+  }
+
+  dismissLoadingModal(): void {
+    if (this.loading !== undefined && this.loadingModalOpen) {
+      this.loadingModalOpen = false;
+      this.loading.dismiss();
+    }
   }
 
   refreshWalletInfo() {
@@ -707,7 +711,7 @@ export class WalletOverviewPage {
     let promiseTransaction = this.getTransactionHistory(this.currentWallet.publicKey);
     Promise.all([promiseBalance, promiseTransaction]).catch(data => {
       if (this.initialized) {
-        this.loading.dismiss();
+        this.dismissLoadingModal();
         const confirm = this.alertCtrl.create({
           title: this.translations.get("wallet_overview.error"),
           message: this.translations.get("wallet_overview.error_retrieving_data"),
