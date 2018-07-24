@@ -23,10 +23,8 @@ import { KeyStoreService, IKeyStoreService } from "../../services/key-store-serv
 import { MockKeyStoreService } from "../../../test-config/mocks/MockKeyStoreService";
 import { IExchangesService, ExchangesService } from "../../services/exchanges-service/exchanges-service";
 import { IWalletTransactionHistoryService, WalletTransactionHistoryService } from "../../services/wallet-transaction-history-service/wallet-transaction-history-service";
-import { IWalletBalanceService, WalletBalanceService } from "../../services/wallet-balance-service/wallet-balance-service";
 import { MockExchangesService } from "../../../test-config/mocks/MockExchangesSevice";
 import { MockWalletTransactionHistoryService } from "../../../test-config/mocks/MockWalletTransactionHistoryService";
-import { MockWalletBalanceService } from "../../../test-config/mocks/MockWalletBalanceService";
 import { TransferPage } from "../transfer/transfer";
 import { IWallet } from "../../models/IWallet";
 import { MockToast } from "../../../test-config/mocks/MockToast";
@@ -52,7 +50,6 @@ describe("WalletOverviewPage", () => {
   let keystoreService: IKeyStoreService;
   let exchangeService: IExchangesService;
   let transactionHistoryService: IWalletTransactionHistoryService;
-  let walletBalancesService: IWalletBalanceService;
   let translateService: MockTranslateService;
   let platform: MockPlatform;
   let addressService: MockAddressService;
@@ -69,7 +66,6 @@ describe("WalletOverviewPage", () => {
     keystoreService = new MockKeyStoreService();
     exchangeService = new MockExchangesService();
     transactionHistoryService = new MockWalletTransactionHistoryService();
-    walletBalancesService = new MockWalletBalanceService();
     translateService = new MockTranslateService();
     platform = new MockPlatform();
     addressService = new MockAddressService();
@@ -96,7 +92,6 @@ describe("WalletOverviewPage", () => {
         { provide: KeyStoreService, useValue: keystoreService },
         { provide: ExchangesService, useValue: exchangeService },
         { provide: WalletTransactionHistoryService, useValue: transactionHistoryService },
-        { provide: WalletBalanceService, useValue: walletBalancesService },
         { provide: WalletService, useValue: walletService },
         { provide: TranslateService, useValue: translateService },
         { provide: Platform, useValue: platform },
@@ -667,7 +662,7 @@ describe("WalletOverviewPage", () => {
   });
 
   it("should show that there are no transactions if it returns an empty array", (done) => {
-    spyOn(transactionHistoryService, "getTransactionHistory").and.returnValue(Promise.resolve([]));
+    spyOn(transactionHistoryService, "getTransactionHistory").and.returnValue(Promise.resolve({transactions: []}));
 
     comp.getTransactionHistory("").then(data => {
       expect(comp.noTransactionHistoryVisibility).toBe("shown");
@@ -693,20 +688,6 @@ describe("WalletOverviewPage", () => {
       expect(comp.balances[0]).toEqual({currency: "XSM", amount: 1000, valueAmount: 1000});
       expect(comp.balances[1]).toEqual({currency: "XSP", amount: 0, valueAmount: 0});
 
-      done();
-    });
-  });
-
-  it("should show a retry modal when retrieving the balances has failed", (done) => {
-    let alert = new MockAlert();
-
-    spyOn(addressService, "get").and.returnValue(Promise.reject(""));
-    spyOn(alertController, "create").and.returnValue(alert);
-    spyOn(alert, "present");
-
-    comp.getWalletBalance("").then(data => {
-      expect(alertController.create).toHaveBeenCalled();
-      expect(alert.present).toHaveBeenCalled();
       done();
     });
   });

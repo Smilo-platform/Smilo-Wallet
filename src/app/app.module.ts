@@ -47,7 +47,6 @@ import { BulkTranslateService } from "../services/bulk-translate-service/bulk-tr
 import { WalletImportPassphrasePageModule } from "../pages/wallet-import-passphrase/wallet-import-passphrase.module";
 import { ExchangesService } from "../services/exchanges-service/exchanges-service";
 import { WalletTransactionHistoryService } from "../services/wallet-transaction-history-service/wallet-transaction-history-service";
-import { WalletBalanceService } from "../services/wallet-balance-service/wallet-balance-service";
 import { UrlService } from "../services/url-service/url-service";
 import { WalletExtraImportPageModule } from "../pages/wallet-extra-import/wallet-extra-import.module";
 import { WalletExtraImportPage } from "../pages/wallet-extra-import/wallet-extra-import";
@@ -124,7 +123,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     BIP32Service,
     TransferTransactionService,
     Clipboard,
-    WalletBalanceService,
     WalletTransactionHistoryService,
     HockeyApp,
     MerkleTreeService,
