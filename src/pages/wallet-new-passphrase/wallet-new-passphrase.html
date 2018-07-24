@@ -57,8 +57,8 @@
       <ion-col col-12 col-md-6 col-lg-6 col-xl-4>
           <div class="passphrase-box shuffled-box">
             <div class="passphrase-content">
-              <div class="word" *ngFor="let word of shuffledWords" (click)="pickWord(word)">
-                <span [ngClass]="{'is-picked': isPickedWord(word)}">
+              <div class="word" *ngFor="let word of shuffledWords; let i = index" (click)="pickWordIndex(i)">
+                <span [ngClass]="{'is-picked': isPickedWordIndex(i)}">
                   {{ word }}
                 </span>
               </div>
@@ -69,9 +69,9 @@
       <ion-col col-12 col-md-6 col-lg-6 col-xl-4>
         <div class="passphrase-box entered-box">
           <div class="passphrase-content">
-            <div class="word" *ngFor="let word of enteredWords" (click)="unpickWord(word)">
+            <div class="word" *ngFor="let enteredIndex of enteredIndices" (click)="unpickWordIndex(enteredIndex)">
               <span>
-                {{ word }}
+                {{ shuffledWords[enteredIndex] }}
               </span>
             </div>
           </div>
@@ -84,7 +84,7 @@
         text-center 
         col-12 col-md-6 col-lg-6 col-xl-4
         offset-md-6 offset-lg-6 offset-xl-6>
-        <span class="passphrase-error" *ngIf="!passphraseIsValid && enteredWords.length == words.length">
+        <span class="passphrase-error" *ngIf="!passphraseIsValid && enteredIndices.length == words.length">
           {{ 'passphrase.enter.passphrase_error' | translate }}
         </span>
       </ion-col>

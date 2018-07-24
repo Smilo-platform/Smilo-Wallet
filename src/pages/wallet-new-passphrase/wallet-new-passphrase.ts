@@ -14,7 +14,7 @@ export class WalletNewPassphrasePage {
 
   words: string[] = [];
   shuffledWords: string[] = [];
-  enteredWords: string[] = [];
+  enteredIndices: number[] = [];
 
   passphraseIsValid: boolean = false;
 
@@ -35,7 +35,7 @@ export class WalletNewPassphrasePage {
   initialize(): Promise<void> {
     return this.bip39Service.generate(256).then(
       (phrase) => {
-        this.words = phrase.split(" ")
+        this.words = phrase.split(" ");
       }
     );
   }
@@ -63,14 +63,19 @@ export class WalletNewPassphrasePage {
    * Resets the entered words collection.
    */
   reset() {
-    this.enteredWords = [];
+    this.enteredIndices = [];
 
     // This code should only be allowed to run in development environment!
     // It allows testers to click the reset button three times
     // to quickly fill the passphrase box.
     this.resetClickCount++;
     if(this.resetClickCount % 3 == 0 && isDevMode()) {
-      this.enteredWords = this.words.slice();
+      this.enteredIndices = [];
+      for(let word of this.words) {
+        let index = this.shuffledWords.indexOf(word);
+
+        this.enteredIndices.push(index);
+      }
       this.validatePassphrase();
     }
   }
@@ -83,7 +88,7 @@ export class WalletNewPassphrasePage {
 
     for(let i = 0; i < this.words.length; i++) {
       let originalWord = this.words[i];
-      let enteredWord = this.enteredWords[i];
+      let enteredWord = this.shuffledWords[this.enteredIndices[i]];
 
       if(originalWord != enteredWord) {
         // Passphrase was not entered correctly
@@ -96,37 +101,41 @@ export class WalletNewPassphrasePage {
   }
 
   /**
-   * Picks the given words and adds it to the entered words collection.
+   * Picks the given word index and adds it to the entered word indices collection.
    * @param word 
    */
-  pickWord(word: string) {
+  pickWordIndex(index: number) {
     // Extra check to prevent clicking on already clicked words.
-    if(this.isPickedWord(word))
+    if(this.isPickedWordIndex(index))
       return;
 
-    this.enteredWords.push(word);
+    this.enteredIndices.push(index);
 
-    if(this.enteredWords.length == this.words.length) {
+    if(this.enteredIndices.length == this.words.length) {
       this.validatePassphrase();
     }
   }
 
   /**
-   * Undos a picked word.
-   * @param word 
+   * Undos a picked word index.
+   * @param index 
    */
-  unpickWord(word: string) {
+  unpickWordIndex(index: number) {
     // Make sure the word was actually picked
-    if(!this.isPickedWord(word))
+    if(!this.isPickedWordIndex(index))
       return;
 
-    let index = this.enteredWords.indexOf(word);
+    let arrayIndex = this.enteredIndices.indexOf(index);
 
-    this.enteredWords.splice(index, 1);
+    this.enteredIndices.splice(arrayIndex, 1);
   }
 
-  isPickedWord(word: string): boolean {
-    return this.enteredWords.indexOf(word) != -1;
+  /**
+   * Returns true if the given word index was already picked by the user.
+   * @param index 
+   */
+  isPickedWordIndex(index: number): boolean {
+    return this.enteredIndices.indexOf(index) != -1;
   }
 
   /**
