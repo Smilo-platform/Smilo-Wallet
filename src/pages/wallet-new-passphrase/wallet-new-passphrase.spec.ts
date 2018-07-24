@@ -15,7 +15,7 @@ import { WalletNewPasswordPage } from "../wallet-new-password/wallet-new-passwor
 describe("WalletNewPassphrasePage", () => {
   let comp: WalletNewPassphrasePage;
   let fixture: ComponentFixture<WalletNewPassphrasePage>;
-  let navController: NavController;
+  let navController: MockNavController;
   let bip39Service: IBIP39Service;
 
   beforeEach(async(() => {
@@ -49,7 +49,7 @@ describe("WalletNewPassphrasePage", () => {
   it("should be constructed correctly", () => {
     expect(comp.words).toEqual([]);
     expect(comp.shuffledWords).toEqual([]);
-    expect(comp.enteredWords).toEqual([]);
+    expect(comp.enteredIndices).toEqual([]);
     expect(comp.passphraseIsValid).toBe(false);
 
     expect(comp.state).toBe("showPassphrase");
@@ -77,11 +77,11 @@ describe("WalletNewPassphrasePage", () => {
   });
 
   it("should clear the entered words when reset is called", () => {
-    comp.enteredWords = ["some", "more", "words"];
+    comp.enteredIndices = [0, 1, 2];
 
     comp.reset();
 
-    expect(comp.enteredWords.length).toBe(0);
+    expect(comp.enteredIndices.length).toBe(0);
   });
 
   it("should validate a correctly entered passphrase correctly", () => {
@@ -90,9 +90,14 @@ describe("WalletNewPassphrasePage", () => {
       "seven", "eight", "nine", "ten", "eleven", "twelve"
     ];
 
-    comp.enteredWords = [
-      "one", "two", "three", "four", "five", "six",
-      "seven", "eight", "nine", "ten", "eleven", "twelve"
+    comp.shuffledWords = [
+      "twelve", "eleven", "ten", "nine", "eight", "seven",
+      "six", "five", "four", "three", "two", "one"
+    ];
+
+    comp.enteredIndices = [
+      11, 10, 9, 8, 7, 6,
+      5, 4, 3, 2, 1, 0
     ];
 
     comp.validatePassphrase();
@@ -106,9 +111,14 @@ describe("WalletNewPassphrasePage", () => {
       "seven", "eight", "nine", "ten", "eleven", "twelve"
     ];
 
-    comp.enteredWords = [
-      "twelve", "two", "three", "four", "five", "six",
-      "seven", "eight", "nine", "ten", "eleven", "one"
+    comp.shuffledWords = [
+      "twelve", "eleven", "ten", "nine", "eight", "seven",
+      "six", "five", "four", "three", "two", "one"
+    ];
+
+    comp.enteredIndices = [
+      1, 2, 3, 4, 5, 6, 
+      7, 8, 9, 10, 11, 12
     ];
 
     comp.validatePassphrase();
@@ -117,57 +127,57 @@ describe("WalletNewPassphrasePage", () => {
   });
 
   it("should add a picked word to the entered words array if it was not yet added", () => {
-    comp.pickWord("one");
+    comp.pickWordIndex(3);
 
-    expect(comp.enteredWords).toEqual(["one"]);
+    expect(comp.enteredIndices).toEqual([3]);
 
-    comp.pickWord("twelve");
+    comp.pickWordIndex(5);
 
-    expect(comp.enteredWords).toEqual(["one", "twelve"]);
+    expect(comp.enteredIndices).toEqual([3, 5]);
 
-    comp.pickWord("three");
+    comp.pickWordIndex(2);
 
-    expect(comp.enteredWords).toEqual(["one", "twelve", "three"]);
+    expect(comp.enteredIndices).toEqual([3, 5, 2]);
   });
 
   it("should not add a picked word to the entered words array if it was already added", () => {
-    comp.enteredWords = ["one", "twelve", "three"];
+    comp.enteredIndices = [5, 7, 1];
 
-    comp.pickWord("one");
+    comp.pickWordIndex(7);
 
-    expect(comp.enteredWords).toEqual(["one", "twelve", "three"]);
+    expect(comp.enteredIndices).toEqual([5, 7, 1]);
 
-    comp.pickWord("twelve");
+    comp.pickWordIndex(1);
 
-    expect(comp.enteredWords).toEqual(["one", "twelve", "three"]);
+    expect(comp.enteredIndices).toEqual([5, 7, 1]);
 
-    comp.pickWord("three");
+    comp.pickWordIndex(5);
 
-    expect(comp.enteredWords).toEqual(["one", "twelve", "three"]);
+    expect(comp.enteredIndices).toEqual([5, 7, 1]);
   });
 
   it("should unpick a picked word correctly", () => {
-    comp.enteredWords = ["one", "two", "three"];
+    comp.enteredIndices = [5, 7, 1];
 
-    comp.unpickWord("one");
+    comp.unpickWordIndex(7);
 
-    expect(comp.enteredWords).toEqual(["two", "three"]);
+    expect(comp.enteredIndices).toEqual([5, 1]);
 
-    comp.unpickWord("three");
+    comp.unpickWordIndex(5);
 
-    expect(comp.enteredWords).toEqual(["two"]);
+    expect(comp.enteredIndices).toEqual([1]);
   });
 
   it("should not unpick a word which was never picked", () => {
-    comp.enteredWords = ["one", "two", "three"];
+    comp.enteredIndices = [5, 7, 1];
 
-    comp.unpickWord("twelve");
+    comp.unpickWordIndex(8);
 
-    expect(comp.enteredWords).toEqual(["one", "two", "three"]);
+    expect(comp.enteredIndices).toEqual([5, 7, 1]);
 
-    comp.unpickWord("elevent");
+    comp.unpickWordIndex(11);
 
-    expect(comp.enteredWords).toEqual(["one", "two", "three"]);
+    expect(comp.enteredIndices).toEqual([5, 7, 1]);
   });
 
   it("should validate the passphrase once 12 words have been picked", () => {
@@ -178,30 +188,30 @@ describe("WalletNewPassphrasePage", () => {
 
     spyOn(comp, "validatePassphrase");
 
-    comp.pickWord("one");
-    comp.pickWord("two");
-    comp.pickWord("three");
-    comp.pickWord("four");
-    comp.pickWord("five");
-    comp.pickWord("six");
-    comp.pickWord("seven");
-    comp.pickWord("eight");
-    comp.pickWord("nine");
-    comp.pickWord("ten");
-    comp.pickWord("eleven");
-    comp.pickWord("twelve");
+    comp.pickWordIndex(1);
+    comp.pickWordIndex(2);
+    comp.pickWordIndex(3);
+    comp.pickWordIndex(4);
+    comp.pickWordIndex(5);
+    comp.pickWordIndex(6);
+    comp.pickWordIndex(7);
+    comp.pickWordIndex(8);
+    comp.pickWordIndex(9);
+    comp.pickWordIndex(10);
+    comp.pickWordIndex(11);
+    comp.pickWordIndex(12);
 
     expect(comp.validatePassphrase).toHaveBeenCalledTimes(1);
   });
 
   it("should correctly detect when a word has already been picked", () => {
-    comp.enteredWords = ["one", "two", "twelve"];
+    comp.enteredIndices = [5, 7, 1];
 
-    expect(comp.isPickedWord("one")).toBe(true);
-    expect(comp.isPickedWord("twelve")).toBe(true);
+    expect(comp.isPickedWordIndex(1)).toBe(true);
+    expect(comp.isPickedWordIndex(7)).toBe(true);
 
-    expect(comp.isPickedWord("eleven")).toBe(false);
-    expect(comp.isPickedWord("three")).toBe(false);
+    expect(comp.isPickedWordIndex(12)).toBe(false);
+    expect(comp.isPickedWordIndex(3)).toBe(false);
   });
 
   it("should call initialize in the iondidviewload", () => {
@@ -234,6 +244,7 @@ describe("WalletNewPassphrasePage", () => {
   it("should increase clickcount and set the entered words to the words array and call validatePassphrase", () => {
     spyOn(comp, "validatePassphrase");
     comp.words = ["word1", "word2"];
+    comp.shuffledWords = ["word2", "word1"];
     comp.resetClickCount = 2;
 
     comp.reset();
@@ -241,8 +252,7 @@ describe("WalletNewPassphrasePage", () => {
     expect(comp.resetClickCount).toBe(3);
 
     expect(comp.validatePassphrase).toHaveBeenCalled();
-    expect(comp.enteredWords).toEqual(["word1", "word2"]);
-    
+    expect(comp.enteredIndices).toEqual([1, 0]);
   });
 
   it("should shuffle the words array", () => {
