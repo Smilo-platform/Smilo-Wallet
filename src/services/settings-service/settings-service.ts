@@ -22,17 +22,17 @@ export interface ISettingsService {
 
 @Injectable()
 export class SettingsService {
-    readonly theme: BehaviorSubject<string>;
+    readonly theme: BehaviorSubject<ThemeType>;
 
     constructor(private storage: Storage) {
-        this.theme = new BehaviorSubject('light-theme');
+        this.theme = new BehaviorSubject(<ThemeType>'light-theme');
     }
     
     setActiveTheme(val): void {
         this.theme.next(val);
     }
  
-    getActiveTheme(): Observable<string> {
+    getActiveTheme(): Observable<ThemeType> {
         return this.theme.asObservable();
     }
 

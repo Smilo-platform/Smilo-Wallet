@@ -218,16 +218,18 @@
         "paragraph2": "Wat nodig is, is een open source, hybride op blockchain gebaseerde gegevensverwerkingsplatform. Een platform met hybride transacties, hybride smart contracts en hybride gedecentraliseerde applicaties. Hier komt het Smilo-platform om de hoek kijken.",
         "paragraph3": "Smilo combineert de publieke en private functies van de blockchain in zijn kern. We kunnen niet alleen opties bieden voor publieke en private transacties, maar we bieden ook openbare en private smart contracts en gedecentraliseerde applicaties.",
         "paragraph4_title": "Smilo's unieke kracht",
-        "paragraph4": "De combinatie van hybride smart contracts, -transacties en -gedecentraliseerde applicaties, samen met transparantie, privacy en anonimiteit, en de verbinding met real-life applicaties."
+        "paragraph4": "De combinatie van hybride smart contracts, -transacties en -gedecentraliseerde applicaties, samen met transparantie, privacy en anonimiteit, en de verbinding met real-life applicaties.",
+        "paragraph1_title": "Smilo Platform"
     },
     "faq": {
         "nav-bar-title": "FAQ",
+        "general": "Algemeen",
         "question1": "Wat is een SmiloWallet?",
         "answer1": "Smilo's web wallet is een gratis, open-source interface aan de clientzijde. Je behoudt de volledige controle over jouw sleutels en jouw tegoeden. We kunnen jouw geld niet terugkrijgen of jouw account niet blokkeren als je een phishing-site bezoekt of jouw privésleutel kwijtraakt.",
         "question2": "Is de SmiloWallet een bank?",
         "answer2": "Nee, de SmiloWallet is geen bank. De SmiloWallet is slechts een interface waarmee je kunt communiceren met het blockchain-netwerk van Smilo. Wanneer je een account maakt op SmiloWallet, genereer je een cryptografische reeks cijfers: jouw privésleutel en jouw openbare sleutel (adres). De bediening van jouw sleutels gebeurt volledig op jouw computer, in jouw browser. We zullen nooit jouw persoonlijke sleutel, wachtwoord of andere accountinformatie verzenden, ontvangen of opslaan.",
         "question3": "Hoe veilig is het?",
-        "answer3": "",
+        "answer3": "De SmiloWallet zal nooit jouw persoonlijke sleutels of versleutelde keystore-bestanden over het netwerk verzenden. Ze worden lokaal op uw apparaat opgeslagen. Zelfs als een aanvaller toegang zou hebben tot de lokale opslag van je apparaten, dan zou hij je Smilo-wachtwoord nog steeds nodig hebben om toegang te krijgen tot je funds.",
         "question4": "Hoe kan ik de SmiloWallet vertrouwen?",
         "answer4": "De SmiloWallet-broncode is beschikbaar op Github en kan door iedereen worden geverifieerd. We serveren de wallet via SSL (https), waardoor er geen mogelijkheid meer is om de code tussen onze servers en jouw browser te wijzigen. Nog steeds niet zeker? Download de nieuwste stand-alone versie op onze Github-pagina's en voer de SmiloWallet lokaal uit. Je kunt ook rechtstreeks vanuit de bron bouwen.",
         "question5": "Wat als ik mijn privésleutel verlies of het wachtwoord van mijn gecodeerde Keystore-bestand vergeet?",

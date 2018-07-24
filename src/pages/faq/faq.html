@@ -4,68 +4,17 @@
 
 <ion-content>
   <ion-grid>
-    <!-- Question 1 -->
     <ion-row justify-content-center>
-      <ion-col col-xs-12 col-md-9 col-xl-6 class="question-header">
-        {{ 'faq.question1' | translate }}
-      </ion-col>
-    </ion-row>
-
-    <ion-row justify-content-center>
-      <ion-col col-xs-12 col-md-9 col-xl-6 [innerHTML]="'faq.answer1' | translate">
-
-      </ion-col>
-    </ion-row>
-
-    <!-- Question 2 -->
-    <ion-row justify-content-center>
-      <ion-col col-xs-12 col-md-9 col-xl-6 class="question-header">
-        {{ 'faq.question2' | translate }}
-      </ion-col>
-    </ion-row>
-
-    <ion-row justify-content-center>
-      <ion-col col-xs-12 col-md-9 col-xl-6 [innerHTML]="'faq.answer2' | translate">
-
-      </ion-col>
-    </ion-row>
-
-    <!-- Question 3 -->
-    <ion-row justify-content-center>
-      <ion-col col-xs-12 col-md-9 col-xl-6 class="question-header">
-        {{ 'faq.question3' | translate }}
-      </ion-col>
-    </ion-row>
-
-    <ion-row justify-content-center>
-      <ion-col col-xs-12 col-md-9 col-xl-6 [innerHTML]="'faq.answer3' | translate">
-
-      </ion-col>
-    </ion-row>
-
-    <!-- Question 4 -->
-    <ion-row justify-content-center>
-      <ion-col col-xs-12 col-md-9 col-xl-6 class="question-header">
-        {{ 'faq.question4' | translate }}
-      </ion-col>
-    </ion-row>
-
-    <ion-row justify-content-center>
-      <ion-col col-xs-12 col-md-9 col-xl-6 [innerHTML]="'faq.answer4' | translate">
-
-      </ion-col>
-    </ion-row>
-
-    <!-- Question 5 -->
-    <ion-row justify-content-center>
-      <ion-col col-xs-12 col-md-9 col-xl-6 class="question-header">
-        {{ 'faq.question5' | translate }}
-      </ion-col>
-    </ion-row>
-
-    <ion-row justify-content-center>
-      <ion-col col-xs-12 col-md-9 col-xl-6 [innerHTML]="'faq.answer5' | translate">
-
+      <ion-col col-xs-12 col-md-9 col-xl-3 >
+        <h1 class="faq-header">{{ 'faq.general'| translate }}</h1>
+        <button (click)="expandItem(item)" ion-item *ngFor="let item of items; let i = index">
+          <div class="question-header">
+            <a>{{i + 1}}. {{ 'faq.question' + (i + 1) | translate }}</a>
+          </div>
+          <expandable [expanded]="item.expanded">
+            <p [innerHTML]="'faq.answer' + (i + 1) | translate"></p>
+          </expandable>
+        </button>
       </ion-col>
     </ion-row>
   </ion-grid>

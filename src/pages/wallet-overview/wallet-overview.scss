@@ -93,10 +93,6 @@ page-wallet-overview {
         float: left;
     }
 
-    .funds-overview {
-        min-height: 287px;
-    }
-
     .ion-ios-settings {
         top: 9px !important;
     }
@@ -129,8 +125,8 @@ page-wallet-overview {
     }
 
     .transaction-swap {
-        font-size: 35px;
-        margin-top: 16px;
+        font-size: 28px;
+        margin-top: 23px;
     }
 
     .transaction-date {
@@ -159,6 +155,9 @@ page-wallet-overview {
 
     .transaction-from {
         margin-top: 8px;
+        white-space: nowrap;
+        overflow: hidden !important;
+        text-overflow: ellipsis;
     }
 
     .transaction-list-amount {
@@ -176,7 +175,8 @@ page-wallet-overview {
         margin-top: 1px;
         max-height: 418px;
         overflow: scroll;
-        border: 1px #000026 solid;
+        margin: 0;
+        width: 100%;
     }
 
     .greenColor {
@@ -185,5 +185,27 @@ page-wallet-overview {
 
     .redColor {
         color: red !important;
+    }
+
+    .transaction-list-header {
+        padding: 0px;
+    }
+
+    .transaction-list-header ion-list ion-item ion-avatar {
+        margin: 0 !important;
+    }
+
+    .button {
+        border: none !important;
+    }
+}
+
+.dark-theme {
+    .transaction-from {
+        color: #fff;
+    }
+
+    .transaction-list-amount {
+        color: #fff;
     }
 }

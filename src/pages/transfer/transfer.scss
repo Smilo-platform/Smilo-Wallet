@@ -1,9 +1,10 @@
 page-transfer {
     .fromAddress {
-        margin: 13px 8px;
-        padding-top: 18px;
+        margin-top: 12px;
+        margin-bottom: 16px;
         user-select: text;
-        font-size: 16px;
+        font-style: italic;
+        font-size: 14px !important;
         white-space: nowrap;
         overflow: hidden !important;
         text-overflow: ellipsis;
@@ -32,7 +33,6 @@ page-transfer {
     }
 
     h1 {
-        padding-left: 20px;
         padding-top: 20px;
         font-size: 20px !important;
     }
@@ -72,14 +72,6 @@ page-transfer {
         z-index: 1;
     }
 
-    .greenBorder {
-        border: 4px solid green !important;
-    }
-
-    .redBorder {
-        border: 4px solid red !important;
-    }
-
     .biggerText {
         font-size: 16px;
     }
@@ -90,6 +82,7 @@ page-transfer {
     }
 
     .transfer-button {
+        margin-top: 30px;
         font-size: 16px;
         height: 40px;
     }
@@ -97,6 +90,7 @@ page-transfer {
     .main-loader-div {
         min-height: 100px;
         position: relative;
+        margin-top: 30px;
     }
 
     .errorloader {
@@ -194,6 +188,17 @@ page-transfer {
         100% { transform: scale(0.0); }
     }
 
+    .transfer-button {
+        border: none !important;
+    }
+
+    .no-padding-top {
+        padding-top: 0 !important;
+    }
+
+    .no-border .item-inner {
+        box-shadow: none;
+    }
 }
 
 .dark-theme {
@@ -203,15 +208,5 @@ page-transfer {
 
     .inputInfo {
         border: 4px #fff solid;
-    }
-
-    .neutralBorder {
-        border: 4px solid #fff !important;
-    }
-}
-
-.light-theme {
-    .neutralBorder {
-        border: 4px solid #000 !important;
     }
 }

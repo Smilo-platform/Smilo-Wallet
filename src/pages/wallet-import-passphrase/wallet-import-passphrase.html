@@ -4,9 +4,9 @@
 
 <ion-content padding>
   <ion-grid>
-    <form [formGroup]="form">
-      <ion-row justify-content-center>
-        <ion-col col-xs-12 col-md-9 col-lg-5>
+    <ion-row justify-content-center>
+      <ion-col col-xs-12 col-md-9 col-lg-5>
+        <form [formGroup]="form">
           <ion-item>
             <ion-label stacked>
               {{ 'import_passphrase.instruction' | translate }}
@@ -14,15 +14,11 @@
             <ion-textarea rows="3"
                         formControlName="passphrase"
                         [(ngModel)]="passphrase" 
-                        (ionBlur)="onPassphraseChanged()"
+                        (ionChange)="onPassphraseChanged()"
                         class="passphrase-input"
                         [placeholder]="'import_passphrase.passphrase_hint' | translate"></ion-textarea>
           </ion-item>
-        </ion-col>
-      </ion-row>
-  
-      <ion-row justify-content-center>
-        <ion-col col-xs-12 col-md-9 col-lg-5>
+
           <ion-item>
             <ion-label stacked>
               {{ 'import_passphrase.password_instruction' | translate }}
@@ -33,11 +29,7 @@
                         [(ngModel)]="password" 
                         (ionChange)="onPasswordChanged()"></ion-input>
           </ion-item>
-        </ion-col>
-      </ion-row>
-  
-      <ion-row justify-content-center>
-        <ion-col col-xs-12 col-md-9 col-lg-5>
+
           <ion-item>
             <ion-label stacked>
               {{ 'import_passphrase.password_confirm_instruction' | translate }}
@@ -48,11 +40,7 @@
                         [(ngModel)]="passwordConfirm" 
                         (ionChange)="onPasswordChanged()"></ion-input>
           </ion-item>
-        </ion-col>
-      </ion-row>
-  
-      <ion-row justify-content-center>
-        <ion-col col-xs-12 col-md-9 col-lg-5>
+
           <ion-item>
             <ion-label stacked>
               {{ 'import_passphrase.wallet_name' | translate }}
@@ -61,65 +49,51 @@
                         formControlName="walletName"
                         [(ngModel)]="walletName"></ion-input>
           </ion-item>
-        </ion-col>
-      </ion-row>
-  
-      <ion-row justify-content-center *ngIf="showAdvanced">
-        <ion-col col-xs-12 col-md-9 col-lg-5>
-          <ion-item>
-            <ion-label stacked>
-              {{ 'import_passphrase.wallet_index' | translate }}
-            </ion-label>
-            <ion-input class="name-input" 
-                        formControlName="walletIndex"
-                        class="wallet-index-input"
-                        [(ngModel)]="walletIndex"></ion-input>
-          </ion-item>
-        </ion-col>
-      </ion-row>
-    </form>
 
-    <ion-row>
-      <ion-col text-center>
-        <span *ngIf="passwordStatus && passwordStatus.type != 'success'" 
-              [ngClass]="{'error-box': passwordStatus.type == 'error', 'warning-box': passwordStatus.type == 'warning'}" 
-              class="password-message-box">
-          {{ passwordStatus.message }}
-        </span>
-      </ion-col>
-    </ion-row>
+          <div *ngIf="showAdvanced">
+            <ion-item>
+              <ion-label stacked>
+                {{ 'import_passphrase.wallet_index' | translate }}
+              </ion-label>
+              <ion-input class="name-input" 
+                          formControlName="walletIndex"
+                          class="wallet-index-input"
+                          [(ngModel)]="walletIndex"></ion-input>
+            </ion-item>
+          </div>
+        </form>
 
-    <ion-row>
-      <ion-col text-center>
-        <span *ngIf="passphraseStatus && !passphraseStatus.isValid"
-              [ngClass]="{'error-box': passphraseStatus.isBlocking, 'warning-box': !passphraseStatus.isBlocking}" 
-              class="error-box passphrase-message-box">
-          {{ passphraseStatus.errorMessage }}
-        </span>
-      </ion-col>
-    </ion-row>
-    
-    <ion-row *ngIf="!form.controls.walletIndex.valid">
-      <ion-col text-center>
-        <span class="wallet-index-message-box error-box">
-            {{ 'import_passphrase.errors.wallet_index' | translate }}
-        </span>
-      </ion-col>
-    </ion-row>
+        <div class="content-div" *ngIf="passwordStatus && passwordStatus.type != 'success'">
+          <span [ngClass]="{'error-box': passwordStatus.type == 'error', 'warning-box': passwordStatus.type == 'warning'}" 
+                class="password-message-box">
+            {{ passwordStatus.message }}
+          </span>
+        </div>
 
-    <ion-row>
-      <ion-col text-center>
-        <button ion-button small class="show-advanced-button" (click)="walletIndex = 0; showAdvanced = !showAdvanced">
-          {{ 'import_passphrase.buttons.advanced' | translate }}
-        </button>
-      </ion-col>
-    </ion-row>
+        <div class="content-div" *ngIf="passphraseStatus && !passphraseStatus.isValid">
+          <span [ngClass]="{'error-box': passphraseStatus.isBlocking, 'warning-box': !passphraseStatus.isBlocking}" 
+                class="error-box passphrase-message-box">
+            {{ passphraseStatus.errorMessage }}
+          </span>
+        </div>
 
-    <ion-row justify-content-center>
-      <ion-col text-center>
-        <button ion-button *ngIf="dataIsValid()" class="import-button" (click)="import()">
-          {{ 'import_passphrase.buttons.import' | translate }}
-        </button>
+        <div class="content-div" *ngIf="!form.controls.walletIndex.valid">
+          <span class="wallet-index-message-box error-box">
+              {{ 'import_passphrase.errors.wallet_index' | translate }}
+          </span>
+        </div>
+
+        <div class="content-div">
+          <button ion-button small class="show-advanced-button" (click)="walletIndex = 0; showAdvanced = !showAdvanced">
+            {{ 'import_passphrase.buttons.advanced' | translate }}
+          </button>
+        </div>
+
+        <div class="content-div">
+          <button ion-button *ngIf="dataIsValid()" class="import-button" (click)="import()">
+            {{ 'import_passphrase.buttons.import' | translate }}
+          </button>
+        </div>
       </ion-col>
     </ion-row>
   </ion-grid>

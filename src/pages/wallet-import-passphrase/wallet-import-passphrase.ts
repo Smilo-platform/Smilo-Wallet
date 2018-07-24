@@ -53,11 +53,15 @@ export class WalletImportPassphrasePage {
   }
 
   onPassphraseChanged(): Promise<void> {
-    return this.bip39Service.check(this.passphrase).then(
-      (valid) => {
-        this.passphraseStatus = valid;
-      }
-    );
+    if (this.passphrase.length > 0) {
+      return this.bip39Service.check(this.passphrase).then(
+        (valid) => {
+          this.passphraseStatus = valid;
+        }
+      );
+    } else {
+      this.passphraseStatus = undefined;
+    }
   }
 
   dataIsValid(): boolean {

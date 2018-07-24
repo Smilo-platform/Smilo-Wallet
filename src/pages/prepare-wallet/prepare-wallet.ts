@@ -13,6 +13,7 @@ import { WalletExtraImportPage, IWalletExtraImportDismissData } from "../wallet-
 import { BIP39Service } from "../../services/bip39-service/bip39-service";
 import { BIP32Service } from "../../services/bip32-service/bip32-service";
 import { KeyStoreService } from "../../services/key-store-service/key-store-service";
+import { ThemeType, SettingsService } from "../../services/settings-service/settings-service";
 
 @IonicPage()
 @Component({
@@ -64,6 +65,8 @@ export class PrepareWalletPage {
 
   unregisterBackButtonAction: Function;
 
+  selectedTheme: ThemeType;
+
   constructor(private navCtrl: NavController, 
               private navParams: NavParams,
               private merkleTreeService: MerkleTreeService,
@@ -75,7 +78,8 @@ export class PrepareWalletPage {
               private platform: Platform,
               private bip39Service: BIP39Service,
               private bip32Service: BIP32Service,
-              private keyStoreService: KeyStoreService) {
+              private keyStoreService: KeyStoreService,
+              private settingsService: SettingsService) {
     
   }
 
@@ -85,6 +89,10 @@ export class PrepareWalletPage {
     // Register for the back button action. On iOS this will simply never get called.
     // The returned value is a function we can call to unregister for the back button.
     this.unregisterBackButtonAction = this.platform.registerBackButtonAction(this.onBackButtonClicked, 101);
+  }
+
+  ngOnInit(): void {
+    this.settingsService.getActiveTheme().subscribe(val => this.selectedTheme = val);
   }
 
   ionViewDidLeave() {
@@ -195,7 +203,8 @@ export class PrepareWalletPage {
       let modal = this.modalController.create(WalletExtraImportPage, {
         nextIndex: this.walletIndex + 1
       }, {
-        enableBackdropDismiss: false
+        enableBackdropDismiss: false,
+        cssClass: this.selectedTheme
       });
 
       promptPromise = new Promise((resolve, reject) => {

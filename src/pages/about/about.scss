@@ -1,11 +1,27 @@
 page-about {
-    .title {
-        font-weight: bold;
+    .contentTitle {
+        padding-bottom: 5px;
+        width: 100%;
+        padding-left: 10px;
+    }
+
+    p {
+        font-size: 16px;
     }
 }
 
 .dark-theme {
     .scroll-content {
         color: white;
+    }
+
+    .contentTitle {
+        border-bottom: 1px solid #fff;
+    }
+}
+
+.light-theme {
+    .contentTitle {
+        border-bottom: 1px solid #000;
     }
 }
