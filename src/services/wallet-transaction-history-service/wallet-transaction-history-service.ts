@@ -12,7 +12,9 @@ export class WalletTransactionHistoryService implements IWalletTransactionHistor
     constructor(private http: HttpClient,
                 private urlService: UrlService) {}
 
-    getTransactionHistory(publicKey: string): Promise<ITransactionList> {
-        return this.http.get<ITransactionList>(this.urlService.getBaseUrl() + "/address/tx/" + publicKey).toPromise();
+    getTransactionHistory(publicKey: string, skip: number = 0, take: number = 32, isDescending: boolean = false): Promise<ITransactionList> {
+        return this.http.get<ITransactionList>(
+            `${ this.urlService.getBaseUrl() }/address/tx/${ publicKey }?skip=${ skip }&take=${ take }&isdescending=${ isDescending }`
+        ).toPromise();
     }
 }
