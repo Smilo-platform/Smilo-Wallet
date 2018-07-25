@@ -361,7 +361,7 @@ describe("WalletOverviewPage", () => {
     comp.currentWallet = <IWallet>{};
     comp.currentWallet.publicKey = "";
 
-    comp.refreshWalletBalance();
+    comp.refreshWalletInfo();
 
     expect(comp.getWalletBalance).toHaveBeenCalled();
     expect(comp.getTransactionHistory).toHaveBeenCalled();
@@ -739,7 +739,7 @@ describe("WalletOverviewPage", () => {
     comp.currentWallet = getDummyWallet();
     comp.onWalletChanged();
 
-    expect(comp.getWalletBalance).toHaveBeenCalledWith("S5NEKHPKXS7F75IVKGVS4A56U4FF6VM5U4YF64");
+    expect(comp.getWalletBalance).toHaveBeenCalledWith("S5NEKHPKXS7F75IVKGVS4A56U4FF6VM5U4YF64", true);
     expect(comp.getTransactionHistory).toHaveBeenCalledWith("S5NEKHPKXS7F75IVKGVS4A56U4FF6VM5U4YF64");
   });
 

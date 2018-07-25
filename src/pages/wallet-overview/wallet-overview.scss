@@ -199,9 +199,14 @@ page-wallet-overview {
         border: none !important;
     }
 
-    .is-pending {
+    .transaction-state {
         float: right;
+    }
+    .is-pending {
         color: gray !important;
+    }
+    .is-confirmed {
+        color: green !important;
     }
 }
 

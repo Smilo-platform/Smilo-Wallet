@@ -118,7 +118,9 @@
         "copied_to_clipboard": "De {{ export_type }} gekopieerd naar het klembord!",
         "delete_wallet_confirmation": "Weet je <b>zeker</b> dat je wallet {{ wallet_name }} wilt verwijderen ({{ publickey }})?`",
         "copied_public_key": "Publickey {{ publicKey }} naar klembord gekopieerd",
-        "copy_public_key": "Kopieer publickey"
+        "copy_public_key": "Kopieer publickey",
+        "pending": "In afwachting...",
+        "confirmed": "Bevestigd"
     },
     "password": {
         "nav-bar-title": "Wachtwoord",
