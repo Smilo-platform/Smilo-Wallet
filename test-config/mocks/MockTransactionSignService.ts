@@ -3,7 +3,7 @@ import { ITransaction } from "../../src/models/ITransaction";
 import { ILocalWallet } from "../../src/models/ILocalWallet";
 
 export class MockTransactionSignService implements ITransactionSignService {
-    sign(wallet: ILocalWallet, password: string, transaction: ITransaction, index: number): Promise<void> {
+    sign(wallet: ILocalWallet, password: string, transaction: ITransaction): Promise<void> {
         return Promise.resolve();
     }
 }
