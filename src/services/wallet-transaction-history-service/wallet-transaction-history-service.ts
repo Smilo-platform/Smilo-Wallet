@@ -1,6 +1,5 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { ITransaction } from "../../models/ITransaction";
 import { UrlService } from "../url-service/url-service";
 import { ITransactionList } from "../../models/ITransactionList";
 
