@@ -203,11 +203,9 @@ export class TransferPage {
 
   signTransaction(transaction: ITransaction): Promise<void> {
     this.successMessage = this.translations.get("transfer.signing_transaction");
-    let index = 0;
     return this.transactionSignService.sign(this.fromWallet as ILocalWallet, 
                                      this.password, 
-                                     transaction, 
-                                     index).then(() => {
+                                     transaction).then(() => {
         this.successMessage = this.translations.get("transfer.signing_success");
         let index = this.balances.indexOf(this.balances.find(x => x.currency === this.chosenCurrency));
         this.balances[index].amount -= this.amount;

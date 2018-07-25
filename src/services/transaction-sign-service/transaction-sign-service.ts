@@ -7,9 +7,11 @@ import { TransactionHelper } from "../../core/transactions/TransactionHelper";
 import { MerkleLamportSigner } from "../../core/signatures/MerkleLamportSigner";
 import { MerkleLamportVerifier } from "../../core/signatures/MerkleLamportVerifier";
 import { AddressHelper } from "../../core/address/AddressHelper";
+import { AddressService } from "../address-service/address-service";
+import { WalletService } from "../wallet-service/wallet-service";
 
 export interface ITransactionSignService {
-    sign(wallet: ILocalWallet, password: string, transaction: ITransaction, index: number): Promise<void>;
+    sign(wallet: ILocalWallet, password: string, transaction: ITransaction): Promise<void>;
 }
 
 @Injectable()
@@ -20,7 +22,9 @@ export class TransactionSignService implements ITransactionSignService {
     private addressHelper = new AddressHelper();
 
     constructor(private merkleTreeService: MerkleTreeService,
-                private keyStoreService: KeyStoreService) {
+                private keyStoreService: KeyStoreService,
+                private addressService: AddressService,
+                private walletService: WalletService) {
 
     }
 
@@ -30,7 +34,7 @@ export class TransactionSignService implements ITransactionSignService {
      * 
      * A promise is returned which if resolved means the 'signatureData' and 'signatureIndex' property of the transaction have been filled.
      */
-    sign(wallet: ILocalWallet, password: string, transaction: ITransaction, index: number): Promise<void> {
+    sign(wallet: ILocalWallet, password: string, transaction: ITransaction): Promise<void> {
         // Extract the private key
         let privateKey = this.keyStoreService.decryptKeyStore(wallet.keyStore, password);
         if(!privateKey)
@@ -47,23 +51,50 @@ export class TransactionSignService implements ITransactionSignService {
             return Promise.reject("Error signing transaction!");
         }
 
-        return this.merkleTreeService.get(wallet, password).then(
-            (merkleTree) => {
-                let signature = this.merkleLamportSigner.getSignature(
-                    merkleTree,
-                    this.transactionHelper.transactionToString(transaction),
-                    privateKey, index
+        // First get the next signature index
+        return this.getNextSignatureIndex(wallet).then(
+            (index) => {
+                // Next retrieve the Merkle Tree
+                return this.merkleTreeService.get(wallet, password).then(
+                    (merkleTree) => {
+                        // Sign the transaction!
+                        let signature = this.merkleLamportSigner.getSignature(
+                            merkleTree,
+                            this.transactionHelper.transactionToString(transaction),
+                            privateKey, index
+                        );
+        
+                        if(!signature)
+                            return Promise.reject("Could not compute signature");
+        
+                        transaction.signatureData = signature;
+                        transaction.signatureIndex = index;
+        
+                        if(!this.isValid(transaction)) {
+                            return Promise.reject("Transaction not valid");
+                        }
+
+                        // Write used signature index back to disk
+                        wallet.signatureIndex = index + 1;
+                        
+                        return this.walletService.store(wallet);
+                    }
                 );
+            }
+        );
+    }
 
-                if(!signature)
-                    return Promise.reject("Could not compute signature");
-
-                transaction.signatureData = signature;
-                transaction.signatureIndex = index;
-
-                if(!this.isValid(transaction)) {
-                    return Promise.reject("Transaction not valid");
-                }
+    private getNextSignatureIndex(wallet: ILocalWallet): Promise<number> {
+        return this.addressService.get(wallet.publicKey).then(
+            (address) => {
+                if(wallet.signatureIndex > address.signatureCount)
+                    return wallet.signatureIndex; // Use wallet signature index because it is higher
+                else
+                    return address.signatureCount; // Use API signature index because it is higher (most likely transactions for this wallet have been signed on other devices)
+            },
+            (error) => {
+                // Address could not be found, simply return 0
+                return 0;
             }
         );
     }
