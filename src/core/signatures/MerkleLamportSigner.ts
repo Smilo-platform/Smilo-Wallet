@@ -20,6 +20,9 @@ export class MerkleLamportSigner {
         // We store the lamport signature in this variable.
         let lamportSignature = "";
 
+        // Make sure index 'wraps around'
+        index = index % merkleTree.layers[0].length;
+
         // For each 'bit' in binaryMessage...
         for(let i = 0; i < binaryMessage.length; i++) {
             let sign = binaryMessage[i];
