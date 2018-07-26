@@ -1,4 +1,5 @@
 import { LamportGeneratorThread, ILamportGeneratorThreadInput } from "./LamportGeneratorThread";
+import { LamportGenerator } from "./LamportGenerator";
 
 describe("LamportGeneratorThread", () => {
     it("call the callback function", () => {
@@ -39,9 +40,14 @@ describe("LamportGeneratorThread", () => {
             count: 10
         };
 
+        // Mock the WebWorker global scope
+        let webWorkerScope = {
+            LamportGenerator: LamportGenerator
+        }
+
         let callbackSpy = jasmine.createSpy("callback", () => {});
 
-        LamportGeneratorThread(input, callbackSpy);
+        LamportGeneratorThread.call(webWorkerScope, input, callbackSpy);
 
         expect(callbackSpy).toHaveBeenCalled();
     });
