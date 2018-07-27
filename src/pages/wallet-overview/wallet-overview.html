@@ -77,11 +77,6 @@
                 <h4 class="margin-header">{{ 'wallet_overview.settings' | translate }}</h4>
                 <ion-card class="settings-card">
                     <ion-list>
-                        <button ion-item>
-                            <ion-label>{{ 'wallet_overview.show_funds' | translate }}</ion-label>
-                            <ion-toggle class="show-funds" [(ngModel)]="showFundsStatus" (ngModelChange)="fundsSwitch()" color="secondary"></ion-toggle>
-                        </button>
-                    
                         <button ion-item (click)="exportModal('keystore')">
                             <ion-icon class="export-keystore-wallet" name="filing" item-end></ion-icon>
                             <ion-label>{{ 'wallet_overview.export_keystore' | translate }}</ion-label>

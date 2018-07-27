@@ -20,6 +20,7 @@ import { IBalance } from "../../models/IBalance";
 import { ExchangesService } from "../../services/exchanges-service/exchanges-service";
 import { WalletTransactionHistoryService } from "../../services/wallet-transaction-history-service/wallet-transaction-history-service";
 import { AddressService } from "../../services/address-service/address-service";
+import { SettingsService } from "../../services/settings-service/settings-service";
 
 /**
  * Generated class for the WalletOverviewPage page.
@@ -43,8 +44,7 @@ export interface IWriteOptions {
   animations: [
     trigger("visibilityChanged", [
       state("shown", style({ opacity: 1 })),
-      state("hidden", style({ opacity: 0 , display: "none"})),
-      transition("* => *", animate("500ms"))
+      state("hidden", style({ opacity: 0 , display: "none"}))
     ])
   ]
 })
@@ -157,6 +157,7 @@ export class WalletOverviewPage {
               private alertCtrl: AlertController,
               private toastCtrl: ToastController,
               private loadingCtrl: LoadingController,
+              private settingsService: SettingsService,
               private clipboard: Clipboard,
               private fileNative: FileNative,
               private keyStoreService: KeyStoreService,
@@ -246,11 +247,24 @@ export class WalletOverviewPage {
     this.retrieveTranslations();
   }
 
+  getAndSubscribeToFundsSwitch(): void {
+    this.settingsService.getFundsSwitchStatus().subscribe(data => {
+      if (data) {
+        this.walletFundsVisibility = "shown";
+        this.walletFundsVisibilityTransferButton = "hidden";
+      } else {
+        this.walletFundsVisibility = "hidden";
+        this.walletFundsVisibilityTransferButton = "shown";
+      }
+    })
+  }
+
   /**
    * Called whenever the view is loaded
    */
   ionViewDidLoad(): void {
     this.getAndSubscribeToTranslations();
+    this.getAndSubscribeToFundsSwitch();
     this.initialize();
   }
 
@@ -266,19 +280,6 @@ export class WalletOverviewPage {
    */
   ionViewDidLeave(): void {
     this.clearRefreshInterval();
-  }
-  
-  /**
-   * Called when pressing the funds switch
-   */
-  fundsSwitch(): void {
-    if (this.walletFundsVisibility === "shown") {
-      this.walletFundsVisibility = "hidden";
-      this.walletFundsVisibilityTransferButton = "shown";
-    } else if (this.walletFundsVisibility === "hidden") {
-      this.walletFundsVisibility = "shown";
-      this.walletFundsVisibilityTransferButton = "hidden";
-    }
   }
 
   /**

@@ -34,6 +34,7 @@
     },
     "settings_page": {
         "nav-bar-title": "Settings",
+        "show_funds": "Show funds",
         "headers": {
             "visual": "Visual",
             "security": "Security",
@@ -131,7 +132,6 @@
         "funds_hidden": "Your wallet funds are hidden.",
         "transfer": "Transfer",
         "settings": "Settings",
-        "show_funds": "Show funds",
         "backup_wallet": "Backup wallet",
         "delete_wallet": "Delete wallet",
         "choose_exchange": "Choose exchange",

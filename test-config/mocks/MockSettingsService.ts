@@ -3,6 +3,15 @@ import { Observable } from "rxjs/Observable";
 import { Subscriber } from "rxjs";
 
 export class MockSettingService implements ISettingsService {
+    getFundsSwitchSettings(): Promise<any> {
+        return Promise.resolve();
+    }
+    getFundsSwitchStatus(): Observable<boolean> {
+        return Observable.of(true);
+    }
+    setFundsSwitchStatus(val: any): void {
+       
+    }
     setActiveTheme(val: any): void {
 
     }

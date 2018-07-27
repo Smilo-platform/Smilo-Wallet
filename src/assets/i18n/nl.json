@@ -34,6 +34,7 @@
     },
     "settings_page": {
         "nav-bar-title": "Instellingen",
+        "show_funds": "Laat fondsen zien",
         "headers": {
             "visual": "Visueel",
             "security": "Beveiliging",
@@ -90,7 +91,6 @@
         "funds_hidden": "Jouw fondsen zijn verborgen",
         "transfer": "Overmaken",
         "settings": "Instellingen",
-        "show_funds": "Laat fondsen zien",
         "backup_wallet": "Backup",
         "delete_wallet": "Verwijder wallet",
         "choose_exchange": "Kies exchange",

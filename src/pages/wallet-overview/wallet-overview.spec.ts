@@ -35,6 +35,8 @@ import { ElementRef } from "@angular/core";
 import { MockAddressService } from "../../../test-config/mocks/MockAddressService";
 import { AddressService } from "../../services/address-service/address-service";
 import { IAddress } from "../../models/IAddress";
+import { MockSettingService } from "../../../test-config/mocks/MockSettingsService";
+import { SettingsService } from "../../services/settings-service/settings-service";
 
 describe("WalletOverviewPage", () => {
   let comp: WalletOverviewPage;
@@ -53,6 +55,7 @@ describe("WalletOverviewPage", () => {
   let translateService: MockTranslateService;
   let platform: MockPlatform;
   let addressService: MockAddressService;
+  let settingsService: MockSettingService;
 
   beforeEach(async(() => {
     navController = new MockNavController();
@@ -69,6 +72,7 @@ describe("WalletOverviewPage", () => {
     translateService = new MockTranslateService();
     platform = new MockPlatform();
     addressService = new MockAddressService();
+    settingsService = new MockSettingService();
 
     TestBed.configureTestingModule({
       declarations: [WalletOverviewPage],
@@ -95,7 +99,8 @@ describe("WalletOverviewPage", () => {
         { provide: WalletService, useValue: walletService },
         { provide: TranslateService, useValue: translateService },
         { provide: Platform, useValue: platform },
-        { provide: AddressService, useValue: addressService }
+        { provide: AddressService, useValue: addressService },
+        { provide: SettingsService, useValue: settingsService }
       ]
     }).compileComponents();
   }));
@@ -126,40 +131,11 @@ describe("WalletOverviewPage", () => {
     expect(comp.balances).toBeUndefined();
   })
 
-  it("should have visibility hidden after switching visibility", () => {
-    comp.walletFundsVisibility = "shown";
-    comp.walletFundsVisibilityTransferButton = "hidden";
-
-    comp.fundsSwitch();
-
-    expect(comp.walletFundsVisibility).toBe("hidden");
-    expect(comp.walletFundsVisibilityTransferButton).toBe("shown");
-  });
-
-  it("should have the funds visiblity to shown after they were invisible", () => {
-    comp.walletFundsVisibility = "hidden";
-
-    comp.fundsSwitch();
-
-    expect(comp.walletFundsVisibility).toBe("shown");
-    expect(comp.walletFundsVisibilityTransferButton).toBe("hidden");
-  });
-
-  it("shouldn't change any values since walletFundsVisibility is not hidden or shown", () => {
-    comp.walletFundsVisibility = <any>"val1";
-    comp.walletFundsVisibilityTransferButton = <any>"val2";
-
-    comp.fundsSwitch();
-
-    expect(comp.walletFundsVisibility).toEqual(<any>"val1");
-    expect(comp.walletFundsVisibilityTransferButton).toEqual(<any>"val2");
-  });
-
   it("should present an alert when deleting a wallet", (done) => {
     comp.initialize().then(data => {
       let alert = new MockAlert();
 
-      spyOn(alertController, "create").and.returnValue(alert)
+      spyOn(alertController, "create").and.returnValue(alert);
       spyOn(alert, "present");
 
       comp.deleteWallet();

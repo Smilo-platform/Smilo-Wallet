@@ -63,7 +63,13 @@ export class SmiloWallet {
       this.settingsService.setActiveTheme(data || 'light-theme');
     });
 
-    return Promise.all([languageSettingsPromise, nightModePromise]);
+    let fundsSwitchPromise = this.settingsService.getFundsSwitchSettings().then(data => {
+      let status = true;
+      if (data !== null) status = data;
+      this.settingsService.setFundsSwitchStatus(status);
+    })
+
+    return Promise.all([languageSettingsPromise, nightModePromise, fundsSwitchPromise]);
   }
 
   prepareHockeyAppIntegration(): Promise<void> {

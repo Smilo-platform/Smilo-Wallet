@@ -17,6 +17,7 @@ import { SettingsService, ThemeType } from "../../services/settings-service/sett
 })
 export class SettingsGeneralPage {
   nightModeStatus: boolean = false;
+  showFundsStatus: boolean;
   activeLanguage: string;
   selectedTheme: ThemeType;
 
@@ -32,6 +33,9 @@ export class SettingsGeneralPage {
     } else {
       this.nightModeStatus = false;
     }
+    this.settingsService.getFundsSwitchStatus().subscribe(val => {
+      this.showFundsStatus = val
+    });
     return this.settingsService.getLanguageSettings().then(data => {
       if (data === null || data === undefined) {
         this.activeLanguage = "en";
@@ -48,6 +52,19 @@ export class SettingsGeneralPage {
       this.settingsService.setActiveTheme('dark-theme');
     }
     this.settingsService.saveNightModeSettings(this.selectedTheme);
+  }
+
+  /**
+   * Called when pressing the funds switch
+   */
+  fundsSwitch(): void {
+    if (this.showFundsStatus) {
+      this.settingsService.setFundsSwitchStatus(true);
+      this.settingsService.saveFundsSwitchSettings(true);
+    } else {
+      this.settingsService.setFundsSwitchStatus(false);
+      this.settingsService.saveFundsSwitchSettings(false);
+    }
   }
 
   changeLanguage(language): void {
