@@ -45,7 +45,7 @@ Or directly run the project using:
 ionic cordova run android
 ```
 
-#### Building a release version
+#### Building a release version on Android
 
 Use the following command to build a release ready version for Android:
 
@@ -55,10 +55,28 @@ npm run release:android
 
 The build APK can be found at `release/android.apk`.
 
-This command will use the script found at `scripts/build-android.sh` to build a release ready APK.
+This command will use the script found at `scripts/release-android.sh` to build a release ready APK.
 
 For this command to work the environment variable `SMILO_WALLET_KEYSTORE_LOCATION` is expected to be defined.
 This variable should point to the location where the keystore used to sign the app is located.
+
+### Uploading a test version to Hockey App for Android
+
+We use [Hockey App](https://www.hockeyapp.net) for internal testing. To build a release version and upload to Hockey App use the following command:
+
+```
+npm run upload-hockey-app:android
+```
+
+For this to work the environment variable `HOCKEY_APP_TOKEN` is expected to be available.
+
+### Building & uploading a test version to Hockey App for Android
+
+To build and upload at the same time
+
+```
+npm run release-upload-hockey-app:android
+```
 
 ### Building and running on iOS
 
@@ -76,19 +94,37 @@ Or directly run the project using:
 ionic cordova run ios
 ```
 
-#### Building a release version
+#### Building a release version on iOS
 
-TODO
+Use the following command to build a release ready version for Android:
 
-### Uploading a test version to Hockey App
+```
+npm run release:ios
+```
+
+The build IPA can be found at `release/Smilo Wallet.ipa`.
+
+This command will use the script found at `scripts/release-ios.sh` to build a release ready IPA.
+
+For this command to work it is expected that the development certificate is downloaded from the Apple Developer portal.
+
+### Uploading a test version to Hockey App for iOS
 
 We use [Hockey App](https://www.hockeyapp.net) for internal testing. To build a release version and upload to Hockey App use the following command:
 
 ```
-npm run upload:hockey-app
+npm run upload-hockey-app:ios
 ```
 
 For this to work the environment variable `HOCKEY_APP_TOKEN` is expected to be available.
+
+### Building & uploading a test version to Hockey App for iOS
+
+To build and upload at the same time
+
+```
+npm run release-upload-hockey-app:ios
+```
 
 ## Testing the project
 

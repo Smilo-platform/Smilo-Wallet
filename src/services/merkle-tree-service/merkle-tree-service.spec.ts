@@ -60,7 +60,7 @@ describe("MerkleTreeService", () => {
                 });
 
                 // Expect generate function to be called correctly
-                expect(builder.generate).toHaveBeenCalledWith("PRIVATE_KEY", 14, true, undefined);
+                expect(builder.generate).toHaveBeenCalledWith("PRIVATE_KEY", 14, true, true, undefined);
 
                 // Expect Merkle Tree to be serialized
                 expect(serializer.serialize).toHaveBeenCalledWith(dummyMerkleTree, dummyWallet, storageService, keyStoreService, "pass123");
