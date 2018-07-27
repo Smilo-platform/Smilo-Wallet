@@ -3,7 +3,7 @@ import { IAvailableExchange } from "../../src/models/IAvailableExchange";
 import { IExchangePrice } from "../../src/models/IExchangePrice";
 
 export class MockExchangesService implements IExchangesService {
-    
+ 
     getAvailableExchanges() {
         return Promise.resolve({"availableExchanges": [
             {"exchange": "Bitmex", "availableCurrencies": ["USD", "ETH", "BTC", "XSM"]},
