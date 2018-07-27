@@ -68,7 +68,9 @@ export class MerkleTreeBuilder {
                 // iOS requires the scripts to be loaded as shown below.
                 scripts = [
                     `${ window.location.href.replace("/index.html", "") }/assets/scripts/sjcl.js`,
-                    `${ window.location.href.replace("/index.html", "") }/assets/scripts/seedrandom.min.js`
+                    `${ window.location.href.replace("/index.html", "") }/assets/scripts/seedrandom.min.js`,
+                    `${ window.location.href.replace("/index.html", "") }/assets/scripts/SHA1PRNG.js`,
+                    `${ window.location.href.replace("/index.html", "") }/assets/scripts/LamportGenerator.js`
                 ];
             } else {
                 // Web requires the scripts to be loaded as shown below.
