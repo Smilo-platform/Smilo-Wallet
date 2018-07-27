@@ -179,43 +179,46 @@ export class TransferPage {
 
     transfer(): void {
         this.resetTransferState();
-        if (this.canTransfer()) {
-            this.isTransferring = true;
-            this.statusMessage = this.translations.get("transfer.signing_transaction");
+        
+        this.isTransferring = true;
+        this.statusMessage = this.translations.get("transfer.signing_transaction");
 
-            let transaction = this.createTransaction();
+        let transaction = this.createTransaction();
 
-            this.signTransaction(transaction).then(
-                () => this.transferTransactionService.sendTransaction(transaction)
-            ).then(
-                () => {
-                    // Transaction send!
-                    this.translateService.get("transfer.sent_success", { amount: this.amount, chosenCurrency: this.chosenCurrency, toPublicKey: this.toPublicKey }).subscribe(
-                        (translation) => {
-                            // Status message should notify user of success
-                            this.statusMessage = translation
+        this.signTransaction(transaction).then(
+            () => this.transferTransactionService.sendTransaction(transaction)
+        ).then(
+            () => {
+                // Transaction send!
+                this.translateService.get("transfer.sent_success", { amount: this.amount, chosenCurrency: this.chosenCurrency, toPublicKey: this.toPublicKey }).subscribe(
+                    (translation) => {
+                        // Status message should notify user of success
+                        this.statusMessage = translation
 
-                            // Reset page properties
-                            this.errorMessage = "";
-                            this.toPublicKey = "";
-                            this.amount = null;
-                            this.enoughFunds = undefined;
-                            this.password = "";
-                            this.isTransferring = false;
+                        // Reset input forms
+                        this.toPublicKey = "";
+                        this.amount = null;
+                        this.enoughFunds = undefined;
+                        this.password = "";
 
-                            let index = this.balances.indexOf(this.balances.find(x => x.currency === this.chosenCurrency));
-                            this.balances[index].amount -= this.amount;
-                            this.chosenCurrencyAmount = this.balances[index].amount;
-                        }
-                    );
-                },
-                (error) => {
-                    // Something went wrong!
-                    this.errorMessage = this.translations.get("transfer.signing_failed");
-                    this.statusMessage = "";
-                }
-            )
-        }
+                        let index = this.balances.indexOf(this.balances.find(x => x.currency === this.chosenCurrency));
+                        this.balances[index].amount -= this.amount;
+                        this.chosenCurrencyAmount = this.balances[index].amount;
+                    }
+                );
+            },
+            (error) => {
+                // Something went wrong!
+                console.error(error);
+                this.errorMessage = this.translations.get("transfer.signing_failed");
+                this.statusMessage = "";
+            }
+        ).then(
+            () => {
+                // We are no longer transferring
+                this.isTransferring = false;
+            }
+        )
     }
 
     createTransaction(): ITransaction {
