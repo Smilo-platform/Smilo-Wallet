@@ -28,4 +28,4 @@ xcodebuild archive \
 xcodebuild -exportArchive \
             -archivePath "./exported_archive.xcarchive" \
             -exportPath "../../release" \
-            -exportOptionsPlist "./ExportOptions.plist"
+            -exportOptionsPlist "../../ExportOptions.plist"
