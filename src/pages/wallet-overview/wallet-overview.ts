@@ -139,6 +139,15 @@ export class WalletOverviewPage {
    */
   balances: IBalance[];
   initialized = false;
+  loadingModalOpen = false;
+
+  private readonly refreshIntervalTime: number = 2500;
+
+  /**
+   * The scheduler timer interval. We store this value so we can
+   * clear the interval at a later time.
+   */
+  interval: any;
 
   constructor(private navCtrl: NavController, 
               private platform: Platform,
@@ -155,6 +164,20 @@ export class WalletOverviewPage {
               private transactionHistoryService: WalletTransactionHistoryService,
               private addressService: AddressService) {
 
+  }
+
+  /**
+   * Schedules an interval which will periodically update the balance of the active wallet.
+   */
+  scheduleRefreshInterval() {
+    this.interval = setInterval(() => this.refreshWalletInfo(true), this.refreshIntervalTime);
+  }
+
+  /**
+   * Clears the scheduled update interval.
+   */
+  clearRefreshInterval() {
+    clearInterval(this.interval);
   }
 
   /**
@@ -199,8 +222,7 @@ export class WalletOverviewPage {
       this.getAvailableExchanges()]).then(
       (data) => { this.initialized = true; }, 
       (error) => {
-        console.log("ERROR!");
-        this.loading.dismiss();
+        this.dismissLoadingModal();
         const confirm = this.alertCtrl.create({
           title: this.translations.get("wallet_overview.error"),
           message: this.translations.get("wallet_overview.error_retrieving_data"),
@@ -231,6 +253,20 @@ export class WalletOverviewPage {
     this.getAndSubscribeToTranslations();
     this.initialize();
   }
+
+  /**
+   * Called when the user enters this view.
+   */
+  ionViewDidEnter(): void {
+    this.scheduleRefreshInterval();
+  }
+
+  /**
+   * Called when the user leaves this view.
+   */
+  ionViewDidLeave(): void {
+    this.clearRefreshInterval();
+  }
   
   /**
    * Called when pressing the funds switch
@@ -250,13 +286,6 @@ export class WalletOverviewPage {
    */
   openTransferPage(): void {
     this.navCtrl.push(TransferPage, {currentWallet: this.currentWallet, currentWalletBalance: this.balances});
-  }
-
-  /**
-   * Helper method to refresh the current wallet information
-   */
-  refreshWalletBalance(): void {
-    this.refreshWalletInfo();
   }
 
   /**
@@ -506,7 +535,7 @@ export class WalletOverviewPage {
    * @param publicKey 
    */
   getTransactionHistory(publicKey: string): Promise<void> {
-    return this.transactionHistoryService.getTransactionHistory(publicKey).then(data => {
+    return this.transactionHistoryService.getTransactionHistory(publicKey, 0, 10, true).then(data => {
       this.transactionsHistory = data.transactions;
       if (this.transactionsHistory.length > 0) {
         this.noTransactionHistoryVisibility = "hidden";
@@ -548,11 +577,7 @@ export class WalletOverviewPage {
    * Retrieve the wallet balance
    * @param publicKey The public key of the wallet to retrieve the balance
    */
-  getWalletBalance(publicKey: string): Promise<void> {
-    this.loading = this.loadingCtrl.create({
-      content: this.translations.get("wallet_overview.loading_wallet")
-    });
-    this.loading.present();
+  getWalletBalance(publicKey: string, silent?: boolean): Promise<void> {
     return this.addressService.get(publicKey).then(
       (address) => {
         this.balances = [
@@ -564,7 +589,7 @@ export class WalletOverviewPage {
           }
         ];
         
-        this.setCalculatedCurrencyValue();
+        this.setCalculatedCurrencyValue(silent);
       }
     );
   }
@@ -596,16 +621,15 @@ export class WalletOverviewPage {
   /**
    * Set the currency values calculated on the exchange, currency and amount of coins
    */
-  setCalculatedCurrencyValue(): Promise<void> {
+  setCalculatedCurrencyValue(animated?: boolean): Promise<void> {
     if (this.pickedCurrency === undefined || 
         this.currentWallet === undefined || 
         this.pickedExchange === undefined ||
         this.balances === undefined) {
-      if (this.loading !== undefined) {
-        this.loading.dismiss();
-      }
+      // Nothing to do
       return Promise.resolve();
     }
+
     return this.exchangeService.getPrices(this.pickedCurrency, this.pickedExchange).then(data => {
       let prices = JSON.parse(JSON.stringify(data));
       let totalValue: number = 0;
@@ -615,6 +639,7 @@ export class WalletOverviewPage {
       if (this.doughnutChart !== undefined) {
         this.doughnutChart.destroy();
       } 
+
       // Loop all balances of current wallet
       for (let y = 0; y < this.balances.length; y++) {
         let walletCurrency = this.balances[y].currency;
@@ -678,13 +703,10 @@ export class WalletOverviewPage {
         }
       }
       this.totalCurrentCurrencyValue = Number(totalValue.toFixed(this.getFixedNumbers()));
-      this.displayChart(); // Android Emulator rip
+      this.displayChart(animated); // Android Emulator rip
       if (this.doughnutChart !== undefined) {
         this.legendList = this.doughnutChart.generateLegend();
       }
-      if (this.loading !== undefined) {
-        this.loading.dismiss();
-      } 
     });
   }
 
@@ -698,37 +720,73 @@ export class WalletOverviewPage {
   /**
    * Whenever the current wallet is changed
    */
-  onWalletChanged() {
+  onWalletChanged(): void {
     this.refreshWalletInfo();
   }
 
-  refreshWalletInfo() {
-    let promiseBalance = this.getWalletBalance(this.currentWallet.publicKey);
-    let promiseTransaction = this.getTransactionHistory(this.currentWallet.publicKey);
-    Promise.all([promiseBalance, promiseTransaction]).catch(data => {
-      if (this.initialized) {
-        this.loading.dismiss();
-        const confirm = this.alertCtrl.create({
-          title: this.translations.get("wallet_overview.error"),
-          message: this.translations.get("wallet_overview.error_retrieving_data"),
-          buttons: [
-            {
-              text: this.translations.get("wallet_overview.click_retry"),
-              handler: () => {
-                this.onWalletChanged();
-              }
-            }
-          ]
-        });
-        confirm.present();
-      }
+  /**
+   * Presents the loading modal to the user.
+   */
+  openLoadingModal(): void {
+    // Dismiss any other loading modals.
+    this.dismissLoadingModal();
+
+    this.loading = this.loadingCtrl.create({
+      content: this.translations.get("wallet_overview.loading_wallet")
     });
+    this.loadingModalOpen = true;
+    this.loading.present();
+  }
+
+  dismissLoadingModal(): void {
+    if (this.loading !== undefined && this.loadingModalOpen) {
+      this.loadingModalOpen = false;
+      this.loading.dismiss();
+    }
+  }
+
+  refreshWalletInfo(silent: boolean = false) {
+    if(!silent)
+      this.openLoadingModal();
+
+    let promiseBalance = this.getWalletBalance(this.currentWallet.publicKey, !silent);
+    let promiseTransaction = this.getTransactionHistory(this.currentWallet.publicKey);
+
+    Promise.all([
+      promiseBalance,
+      promiseTransaction
+    ]).catch(
+      (error) => {
+        // Something went wrong!
+        if (this.initialized && !silent) {
+          // Failed to update wallet info. Show an error message to the user.
+          const confirm = this.alertCtrl.create({
+            title: this.translations.get("wallet_overview.error"),
+            message: this.translations.get("wallet_overview.error_retrieving_data"),
+            buttons: [
+              {
+                text: this.translations.get("wallet_overview.click_retry"),
+                handler: () => {
+                  this.refreshWalletInfo();
+                }
+              }
+            ]
+          });
+          confirm.present();
+        }
+      }
+    ).then(
+      () => {
+        // Dismiss loading modal whether it failed or succeeded.
+        this.dismissLoadingModal();
+      }
+    )
   }
   
   /**
    * Show the distribution chart. False when chart could not be drawn
    */
-  displayChart(): void {
+  displayChart(animated: boolean = true): void {
     if (this.currenciesForDoughnutCanvas !== undefined && 
         this.currenciesForDoughnutCanvasLabels !== undefined && 
         this.doughnutCanvas !== undefined) {
@@ -753,6 +811,9 @@ export class WalletOverviewPage {
           labels: this.currenciesForDoughnutCanvasLabels
         },
         options: {
+          animation: {
+            duration: animated ? 500 : 0
+          },
           legend: {
             display: false
           },

@@ -198,6 +198,16 @@ page-wallet-overview {
     .button {
         border: none !important;
     }
+
+    .transaction-state {
+        float: right;
+    }
+    .is-pending {
+        color: gray !important;
+    }
+    .is-confirmed {
+        color: green !important;
+    }
 }
 
 .dark-theme {

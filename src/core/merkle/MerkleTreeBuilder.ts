@@ -60,7 +60,9 @@ export class MerkleTreeBuilder {
                 // Android requires the scripts to be loaded as shown below.
                 scripts = [
                     `file:///android_asset/www/assets/scripts/sjcl.js`,
-                    `file:///android_asset/www/assets/scripts/seedrandom.min.js`
+                    `file:///android_asset/www/assets/scripts/seedrandom.min.js`,
+                    `file:///android_asset/www/assets/scripts/SHA1PRNG.js`,
+                    `file:///android_asset/www/assets/scripts/LamportGenerator.js`
                 ];
             } else if (isIos) {
                 scripts = [
@@ -71,7 +73,9 @@ export class MerkleTreeBuilder {
                 // Web & ios is easy.
                 scripts = [
                     `${ window.location.protocol }//${ window.location.host }/assets/scripts/sjcl.js`,
-                    `${ window.location.protocol }//${ window.location.host }/assets/scripts/seedrandom.min.js`
+                    `${ window.location.protocol }//${ window.location.host }/assets/scripts/seedrandom.min.js`,
+                    `${ window.location.protocol }//${ window.location.host }/assets/scripts/SHA1PRNG.js`,
+                    `${ window.location.protocol }//${ window.location.host }/assets/scripts/LamportGenerator.js`
                 ];
             }
 

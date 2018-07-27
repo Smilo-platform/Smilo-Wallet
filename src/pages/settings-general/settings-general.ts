@@ -26,7 +26,7 @@ export class SettingsGeneralPage {
               public settingsService: SettingsService) {}
 
   ionViewDidLoad(): Promise<void> {
-    this.settingsService.getActiveTheme().subscribe(val => this.selectedTheme = <ThemeType>val);
+    this.settingsService.getActiveTheme().subscribe(val => this.selectedTheme = val);
     if (this.selectedTheme === "dark-theme") {
       this.nightModeStatus = true;
     } else {
