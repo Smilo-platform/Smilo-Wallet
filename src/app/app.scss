@@ -36,6 +36,14 @@ $smilo-logo-max-height: 100px;
     }
 }
 
+.toggle-checked .toggle-icon {
+    background-color: #5ea1e5 !important; 
+}
+
+.toggle-checked .toggle-inner {
+    background-color: #1B79A9 !important;
+}
+
 .back-button {
     color: white;
 }
