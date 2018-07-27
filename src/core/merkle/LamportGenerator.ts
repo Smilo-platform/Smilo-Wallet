@@ -1,12 +1,4 @@
-// We have to import the SHA1PRNG in a special way!
-// Because this code is ultimately run in a webworker it won't really have access to the SHA1PRNG we imported here.
-// Instead a javascript file will be imported by the webworker containing the SHA1PRNG implementation.
-// Now if we would just say `import { SHA1PRNG } from "../random/SHA1PRNG"` Typescript/Webpack would
-// internally rename the SHA1PRNG library to something like `WEBPACK___BLABLABLA_SHA1PRNG` which obviously
-// is not the name of the SHA1PRNG script the webworker will import.
-// Using this simple trick we enforce the class name SHA1PRNG stays SHA1PRNG.
-import * as prng from "../random/SHA1PRNG";
-const SHA1PRNG = prng.SHA1PRNG;
+import { SHA1PRNG } from "../random/SHA1PRNG";
 
 declare const sjcl: any;
 
@@ -19,7 +11,7 @@ export class LamportGenerator {
 
     private readonly md256: any;
     private readonly md512: any;
-    private prng: prng.SHA1PRNG;
+    private prng: SHA1PRNG;
 
     constructor(seeds: Int8Array[], count: number) {
         this.seeds = seeds;
