@@ -16,7 +16,7 @@ import { MockBulkTranslateService } from "../../../test-config/mocks/MockBulkTra
 describe("TransferPage", () => {
   let comp: TransferPage;
   let fixture: ComponentFixture<TransferPage>;
-  let navController: NavController;
+  let navController: MockNavController;
   let navParams: MockNavParams;
   let transactionSignService: MockTransactionSignService;
   let transferTransactionService: MockTransferTransactionService;

@@ -24,9 +24,10 @@
                 <ion-item class="input-bottom-border">
                     <ion-input class="biggerText padding" type="password" (ngModelChange)="resetTransferState()" [(ngModel)]="password" placeholder="{{ 'transfer.placeholder_enter_password' | translate }}"></ion-input>  
                 </ion-item>
-                <div class="main-loader-div" *ngIf="successMessage">
-                    <p class="transfer-success-message">{{ successMessage }}</p>
-                    <div class="loader" *ngIf="!doneLoading">
+
+                <div class="main-loader-div" *ngIf="statusMessage">
+                    <p class="transfer-success-message">{{ statusMessage }}</p>
+                    <div class="loader" *ngIf="isTransferring">
                         <div></div>
                         <div></div>
                         <div></div>
@@ -40,19 +41,8 @@
                 </div>
                 <div class="main-loader-div" *ngIf="errorMessage">
                     <p class="transfer-error-message">{{ errorMessage }}</p>
-                    <div class="errorloader">
-                        <div></div>
-                        <div></div>
-                        <div></div>
-                        <div></div>
-                        <div></div>
-                        <div></div>
-                        <div></div>
-                        <div></div>
-                        <div></div>
-                    </div>
                 </div>
-                <button [disabled]="!transferButtonEnabled" class="transfer-button" ion-button (click)="transfer()" ion-button full>{{ 'transfer.transfer' | translate }}</button>
+                <button [disabled]="!canTransfer()" *ngIf="!isTransferring" class="transfer-button" ion-button (click)="transfer()" ion-button full>{{ 'transfer.transfer' | translate }}</button>
             </ion-col>
         </ion-row>
     </ion-grid>

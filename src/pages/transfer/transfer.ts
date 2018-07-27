@@ -20,221 +20,233 @@ import { BulkTranslateService } from "../../services/bulk-translate-service/bulk
 
 @IonicPage()
 @Component({
-  selector: "page-transfer",
-  templateUrl: "transfer.html",
+    selector: "page-transfer",
+    templateUrl: "transfer.html",
 })
 export class TransferPage {
-  /**
-   * The wallet to transfer from
-   */
-  fromWallet: IWallet;
-  /**
-   * The public key (address) to transfer to
-   */
-  toPublicKey: string;
-  /**
-   * The balances of the current wallet
-   */
-  balances: IBalance[];
-  /**
-   * The currency to send
-   */
-  chosenCurrency: string;
-  /**
-   * The amount of the chosen currency
-   */
-  chosenCurrencyAmount: number;
-  /**
-   * The amount of the currency to send
-   */
-  amount: number;
-  /**
-   * The error message to show if there is any
-   */
-  errorMessage: string;
-  /**
-   * The success message to show if there is any
-   */
-  successMessage: string;
-  /**
-   * Check for enough funds on the current wallet and currency
-   */
-  enoughFunds: boolean;
-  /**
-   * The password for signing the transaction
-   */
-  password: string;
-  /**
-   * To disable and enable the transfer button in the async requests
-   */
-  transferButtonEnabled: boolean;
-  /**
-   * To show and hide the success loader animation
-   */
-  doneLoading: boolean;
+    /**
+     * The wallet to transfer from
+     */
+    fromWallet: IWallet;
+    /**
+     * The public key (address) to transfer to
+     */
+    toPublicKey: string;
+    /**
+     * The balances of the current wallet
+     */
+    balances: IBalance[];
+    /**
+     * The currency to send
+     */
+    chosenCurrency: string;
+    /**
+     * The amount of the chosen currency
+     */
+    chosenCurrencyAmount: number;
+    /**
+     * The amount of the currency to send
+     */
+    amount: number;
+    /**
+     * The error message to show if there is any
+     */
+    errorMessage: string;
+    /**
+     * The status message to show if there is any
+     */
+    statusMessage: string;
+    /**
+     * Check for enough funds on the current wallet and currency
+     */
+    enoughFunds: boolean;
+    /**
+     * The password for signing the transaction
+     */
+    password: string;
+    /**
+     * True if a transfer is currently in process.
+     */
+    isTransferring: boolean;
     /**
    * List of translations set programmatically
    */
-  translations: Map<string, string> = new Map<string, string>();
+    translations: Map<string, string> = new Map<string, string>();
 
-  constructor(private navParams: NavParams,
-              private transactionSignService: TransactionSignService,
-              private transferTransactionService: TransferTransactionService,
-              private translateService: TranslateService,
-              private bulkTranslateService: BulkTranslateService) {}
+    constructor(private navParams: NavParams,
+        private transactionSignService: TransactionSignService,
+        private transferTransactionService: TransferTransactionService,
+        private translateService: TranslateService,
+        private bulkTranslateService: BulkTranslateService) { }
 
-  ionViewDidLoad(): void {
-    this.getAndSubscribeToTranslations();
-    this.transferButtonEnabled = true;
-    this.doneLoading = false;
-    this.fromWallet = this.navParams.get("currentWallet");
-    this.balances = this.navParams.get("currentWalletBalance");
-    this.chosenCurrency = this.balances[0].currency;
-    this.chosenCurrencyAmount = this.balances[0].amount;
-  }
+    ionViewDidLoad(): void {
+        this.getAndSubscribeToTranslations();
 
-  getAndSubscribeToTranslations(): void {
-    this.translateService.onLangChange.subscribe(data => {
-      this.retrieveTranslations();
-    });
-    this.retrieveTranslations();
-  }
+        this.isTransferring = false;
+        this.fromWallet = this.navParams.get("currentWallet");
+        this.balances = this.navParams.get("currentWalletBalance");
+        this.chosenCurrency = this.balances[0].currency;
+        this.chosenCurrencyAmount = this.balances[0].amount;
+    }
+
+    getAndSubscribeToTranslations(): void {
+        this.translateService.onLangChange.subscribe(data => {
+            this.retrieveTranslations();
+        });
+        this.retrieveTranslations();
+    }
 
     /**
    * Gets the translations to set programmatically
    */
-  retrieveTranslations(): Promise<Map<string, string>> {
-    return this.bulkTranslateService.getTranslations([
-      "transfer.empty_public_key",
-      "transfer.empty_amount",
-      "transfer.not_enough_funds",
-      "transfer.own_wallet",
-      "transfer.empty_password_field",
-      "transfer.signing_transaction",
-      "transfer.signing_success",
-      "transfer.signing_failed",
-      "transfer.sent_success",
-      "transfer.sent_failed"
-    ]).then(data => {
-      this.translations = data;
-      return data;
-    });
-  }
-
-  setChosenCurrencyAmount(): boolean {
-    for (let currency of this.balances) {
-      if (currency.currency === this.chosenCurrency) {
-        this.chosenCurrencyAmount = currency.amount;
-        this.onAmountChanged();
-        return true;
-      }
+    retrieveTranslations(): Promise<Map<string, string>> {
+        return this.bulkTranslateService.getTranslations([
+            "transfer.empty_public_key",
+            "transfer.empty_amount",
+            "transfer.not_enough_funds",
+            "transfer.own_wallet",
+            "transfer.empty_password_field",
+            "transfer.signing_transaction",
+            "transfer.signing_success",
+            "transfer.signing_failed",
+            "transfer.sent_success",
+            "transfer.sent_failed"
+        ]).then(data => {
+            this.translations = data;
+            return data;
+        });
     }
-    return false;
-  }
 
-  canTransfer(): boolean {
-    if (this.toPublicKey === undefined || this.toPublicKey === "") {
-      this.errorMessage = this.translations.get("transfer.empty_public_key");
-      return false;
-    } else if (this.amount === undefined || this.amount.toString() === "") {
-      this.errorMessage = this.translations.get("transfer.empty_amount");
-      return false;
-    } else if (!this.enoughFunds) {
-      this.errorMessage = this.translations.get("transfer.not_enough_funds");
-      return false;
-    } else if (this.toPublicKey === this.fromWallet.publicKey) {
-      this.errorMessage = this.translations.get("transfer.own_wallet");
-      return false;
-    } else if (this.password === undefined || this.password === "") {
-      this.errorMessage = this.translations.get("transfer.empty_password_field");
-      return false;
-    } else {
-      this.errorMessage = "";
-      return true;
-    }
-  }
-
-  resetTransferState() {
-    this.doneLoading = false;
-    this.errorMessage = "";
-    this.successMessage = "";
-  }
-
-  onAmountChanged(): void {
-    this.resetTransferState();
-    if (this.amount === undefined || this.amount.toString() === "") {
-      this.enoughFunds = undefined;
-    } else if (this.amount <= this.chosenCurrencyAmount) {
-      this.enoughFunds = true;
-    } else {
-      this.enoughFunds = false;
-    }
-  }
-
-  transfer(): void {
-    this.resetTransferState();
-    this.transferButtonEnabled = false;
-    if(this.canTransfer()) {
-      let transaction = this.createTransaction();
-      this.signTransaction(transaction).then(
-        (success) => {
-          this.sendTransaction(transaction);
+    setChosenCurrencyAmount(): boolean {
+        for (let currency of this.balances) {
+            if (currency.currency === this.chosenCurrency) {
+                this.chosenCurrencyAmount = currency.amount;
+                this.onAmountChanged();
+                return true;
+            }
         }
-      );
-    } else {
-      this.transferButtonEnabled = true;
+        return false;
     }
-  }
 
-  createTransaction(): ITransaction {
-    let transactionHelper = new TransactionHelper();
-    let transactionOutputs = [<ITransactionOutput>{outputAddress: this.toPublicKey, outputAmount: Number(this.amount)}]
-    let transaction: ITransaction = {
-      timestamp: Math.floor(Date.now()),
-      inputAddress: this.fromWallet.publicKey,
-      fee: 0,
-      assetId: "000x00123",
-      inputAmount: Number(this.amount),
-      transactionOutputs: transactionOutputs
+    canTransfer(): boolean {
+        // Check if public key is set
+        if (!this.toPublicKey || this.toPublicKey === "") {
+            return false;
+        }
+
+        // Check if amount is set
+        if (!this.amount || this.amount.toString() === "") {
+            return false;
+        } 
+
+        // Check if user has enough funds
+        if (!this.enoughFunds) {
+            return false;
+        } 
+
+        // Make sure we are not sending to our own wallet
+        if (this.toPublicKey === this.fromWallet.publicKey) {
+            return false;
+        } 
+
+        // Make sure password has been entered
+        if (this.password === undefined || this.password === "") {
+            return false;
+        } 
+        
+        return true;
     }
-    transaction.dataHash = transactionHelper.getDataHash(transaction);
-    return transaction;
-  }
 
-  signTransaction(transaction: ITransaction): Promise<void> {
-    this.successMessage = this.translations.get("transfer.signing_transaction");
-    return this.transactionSignService.sign(this.fromWallet as ILocalWallet, 
-                                     this.password, 
-                                     transaction).then(() => {
-        this.successMessage = this.translations.get("transfer.signing_success");
-        let index = this.balances.indexOf(this.balances.find(x => x.currency === this.chosenCurrency));
-        this.balances[index].amount -= this.amount;
-        this.chosenCurrencyAmount = this.balances[index].amount;
-      }).catch(data => {
-        this.errorMessage = this.translations.get("transfer.signing_failed");
-        this.successMessage = "";
-        this.transferButtonEnabled = true;
-      });
-  }
+    resetTransferState() {
+        this.isTransferring = false;
+        this.errorMessage = "";
+        this.statusMessage = "";
+    }
 
-  sendTransaction(transaction: ITransaction): void {
-    this.transferTransactionService.sendTransaction(transaction).then(() => {
-        this.translateService.get("transfer.sent_success", {amount: this.amount, chosenCurrency: this.chosenCurrency, toPublicKey: this.toPublicKey}).subscribe(
-          (translation) => {
-            this.errorMessage = "";
-            this.successMessage = translation
-            this.toPublicKey = "";
-            this.amount = null;
+    onAmountChanged(): void {
+        this.resetTransferState();
+
+        if (this.amount === undefined || this.amount.toString() === "") {
             this.enoughFunds = undefined;
-            this.password = "";
-            this.transferButtonEnabled = true;
-            this.doneLoading = true;  
-           } 
+        } 
+        else if (this.amount <= this.chosenCurrencyAmount) {
+            this.enoughFunds = true;
+        } 
+        else {
+            this.enoughFunds = false;
+        }
+    }
+
+    transfer(): void {
+        this.resetTransferState();
+        
+        this.isTransferring = true;
+        this.statusMessage = this.translations.get("transfer.signing_transaction");
+
+        let transaction = this.createTransaction();
+
+        this.signTransaction(transaction).then(
+            () => this.transferTransactionService.sendTransaction(transaction)
+        ).then(
+            () => {
+                // Transaction send!
+                this.translateService.get("transfer.sent_success", { amount: this.amount, chosenCurrency: this.chosenCurrency, toPublicKey: this.toPublicKey }).subscribe(
+                    (translation) => {
+                        // Status message should notify user of success
+                        this.statusMessage = translation
+
+                        // Reset input forms
+                        this.toPublicKey = "";
+                        this.amount = null;
+                        this.enoughFunds = undefined;
+                        this.password = "";
+
+                        let index = this.balances.indexOf(this.balances.find(x => x.currency === this.chosenCurrency));
+                        this.balances[index].amount -= this.amount;
+                        this.chosenCurrencyAmount = this.balances[index].amount;
+                    }
+                );
+            },
+            (error) => {
+                // Something went wrong!
+                console.error(error);
+                this.errorMessage = this.translations.get("transfer.signing_failed");
+                this.statusMessage = "";
+            }
+        ).then(
+            () => {
+                // We are no longer transferring
+                this.isTransferring = false;
+            }
+        )
+    }
+
+    createTransaction(): ITransaction {
+        let transactionHelper = new TransactionHelper();
+
+        let transaction: ITransaction = {
+            timestamp: new Date().getTime(),
+            inputAddress: this.fromWallet.publicKey,
+            fee: 0,
+            assetId: "000x00123",
+            inputAmount: Number(this.amount),
+            transactionOutputs: [
+                { 
+                    outputAddress: this.toPublicKey, 
+                    outputAmount: Number(this.amount) 
+                }
+            ]
+        }
+        transaction.dataHash = transactionHelper.getDataHash(transaction);
+
+        return transaction;
+    }
+
+    signTransaction(transaction: ITransaction): Promise<void> {
+        return this.transactionSignService.sign(
+            this.fromWallet as ILocalWallet,
+            this.password,
+            transaction
         );
-    }).catch(() => {
-      this.errorMessage = this.translations.get("transfer.sent_failed");
-      this.successMessage = "";
-      this.transferButtonEnabled = true;
-    });
-  }
+    }
 }
