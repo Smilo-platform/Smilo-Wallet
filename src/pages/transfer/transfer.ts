@@ -192,9 +192,11 @@ export class TransferPage {
                     // Transaction send!
                     this.translateService.get("transfer.sent_success", { amount: this.amount, chosenCurrency: this.chosenCurrency, toPublicKey: this.toPublicKey }).subscribe(
                         (translation) => {
-                            // Reset properties
-                            this.errorMessage = "";
+                            // Status message should notify user of success
                             this.statusMessage = translation
+
+                            // Reset page properties
+                            this.errorMessage = "";
                             this.toPublicKey = "";
                             this.amount = null;
                             this.enoughFunds = undefined;
@@ -220,7 +222,7 @@ export class TransferPage {
         let transactionHelper = new TransactionHelper();
 
         let transaction: ITransaction = {
-            timestamp: Math.floor(Date.now()),
+            timestamp: new Date().getTime(),
             inputAddress: this.fromWallet.publicKey,
             fee: 0,
             assetId: "000x00123",
