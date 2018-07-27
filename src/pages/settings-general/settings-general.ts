@@ -60,10 +60,8 @@ export class SettingsGeneralPage {
   fundsSwitch(): void {
     if (this.showFundsStatus) {
       this.settingsService.setFundsSwitchStatus(true);
-      this.settingsService.saveFundsSwitchSettings(true);
     } else {
       this.settingsService.setFundsSwitchStatus(false);
-      this.settingsService.saveFundsSwitchSettings(false);
     }
   }
 

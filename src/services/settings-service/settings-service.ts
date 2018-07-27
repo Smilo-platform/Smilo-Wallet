@@ -46,6 +46,7 @@ export class SettingsService {
 
     setFundsSwitchStatus(val): void {
         this.fundsSwitch.next(val);
+        this.saveFundsSwitchSettings(val);
     }
 
     getFundsSwitchStatus(): Observable<boolean> {
@@ -60,7 +61,7 @@ export class SettingsService {
         return this.storage.set("language", language);
     }
 
-    saveFundsSwitchSettings(status: boolean): Promise<any> {
+    private saveFundsSwitchSettings(status: boolean): Promise<any> {
         return this.storage.set("fundsswitch", status);
     }
 
