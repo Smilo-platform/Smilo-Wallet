@@ -77,27 +77,27 @@
                 <h4 class="margin-header">{{ 'wallet_overview.settings' | translate }}</h4>
                 <ion-card class="settings-card">
                     <ion-list>
-                        <button ion-item>
+                        <button detail-none ion-item>
                             <ion-label>{{ 'wallet_overview.show_funds' | translate }}</ion-label>
                             <ion-toggle class="show-funds" [(ngModel)]="showFundsStatus" (ngModelChange)="fundsSwitch()" color="secondary"></ion-toggle>
                         </button>
                     
-                        <button ion-item (click)="exportModal('keystore')">
+                        <button detail-none ion-item (click)="exportModal('keystore')">
                             <ion-icon class="export-keystore-wallet" name="filing" item-end></ion-icon>
                             <ion-label>{{ 'wallet_overview.export_keystore' | translate }}</ion-label>
                         </button>
 
-                        <button ion-item (click)="exportModal('privatekey')">
+                        <button detail-none ion-item (click)="exportModal('privatekey')">
                             <ion-icon class="export-privatekey-wallet" name="key" item-end></ion-icon>
                             <ion-label>{{ 'wallet_overview.export_privatekey' | translate }}</ion-label>
                         </button>
 
-                        <button ion-item (click)="copyPublicKey()">
+                        <button detail-none ion-item (click)="copyPublicKey()">
                             <ion-icon class="copy-publickey" name="copy" item-end></ion-icon>
                             <ion-label>{{ 'wallet_overview.copy_public_key' | translate }}</ion-label>
                         </button>
                     
-                        <button ion-item (click)="deleteWallet()">
+                        <button detail-none ion-item (click)="deleteWallet()">
                             <ion-icon class="delete-wallet" name="trash" item-end></ion-icon>
                             <ion-label>{{ 'wallet_overview.delete_wallet' | translate }}</ion-label>
                         </button>  

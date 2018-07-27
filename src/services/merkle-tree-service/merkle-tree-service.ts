@@ -40,7 +40,7 @@ export class MerkleTreeService implements IMerkleTreeService {
             return Promise.reject("Could not decrypt keystore");
 
         // Start generating the Merkle Tree
-        return this.merkleTreeBuilder.generate(privateKey, 14, this.platform.is("android"), progressUpdate).then(
+        return this.merkleTreeBuilder.generate(privateKey, 14, this.platform.is("android"), this.platform.is("ios"), progressUpdate).then(
             (merkleTree) => {
                 // Cache Merkle Tree
                 this.cache[wallet.id] = merkleTree;

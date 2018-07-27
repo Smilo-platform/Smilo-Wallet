@@ -10,8 +10,8 @@ export class MerkleTreeBuilder {
 
     private cryptoHelper = new CryptoHelper();
 
-    generate(privateKey: string, layerCount: number, isAndroid: boolean, progressUpdate?: (progress: number) => void): Promise<MerkleTree> {
-        return this.generateLeafKeys(privateKey, layerCount, isAndroid, progressUpdate).then(
+    generate(privateKey: string, layerCount: number, isAndroid: boolean, isIos: boolean, progressUpdate?: (progress: number) => void): Promise<MerkleTree> {
+        return this.generateLeafKeys(privateKey, layerCount, isAndroid, isIos, progressUpdate).then(
             (publicKeys) => {
                 return new MerkleTree(this.generateLayers(publicKeys, layerCount));
             }
@@ -50,7 +50,7 @@ export class MerkleTreeBuilder {
         return new SHA1PRNG(seed);
     }
 
-    generateLeafKeys(privateKey: string, layerCount: number, isAndroid: boolean, progressUpdate?: (progress: number) => void): Promise<string[]> {
+    generateLeafKeys(privateKey: string, layerCount: number, isAndroid: boolean, isIos:boolean, progressUpdate?: (progress: number) => void): Promise<string[]> {
         return new Promise((resolve, reject) => {
             let totalKeys = Math.pow(2, layerCount - 1);
 
@@ -64,9 +64,14 @@ export class MerkleTreeBuilder {
                     `file:///android_asset/www/assets/scripts/SHA1PRNG.js`,
                     `file:///android_asset/www/assets/scripts/LamportGenerator.js`
                 ];
-            }
-            else {
-                // Web & ios is easy.
+            } else if (isIos) {
+                // iOS requires the scripts to be loaded as shown below.
+                scripts = [
+                    `${ window.location.href.replace("/index.html", "") }/assets/scripts/sjcl.js`,
+                    `${ window.location.href.replace("/index.html", "") }/assets/scripts/seedrandom.min.js`
+                ];
+            } else {
+                // Web requires the scripts to be loaded as shown below.
                 scripts = [
                     `${ window.location.protocol }//${ window.location.host }/assets/scripts/sjcl.js`,
                     `${ window.location.protocol }//${ window.location.host }/assets/scripts/seedrandom.min.js`,

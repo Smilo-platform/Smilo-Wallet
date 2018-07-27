@@ -21,7 +21,7 @@ describe("MerkleTreeBuilder", () => {
         spyOn(builder, "generateLeafKeys").and.returnValue(Promise.resolve(["1", "2", "3", "4"]));
         spyOn(builder, "generateLayers").and.returnValue(layers);
 
-        builder.generate("PRIVATE_KEY", 2, true).then(
+        builder.generate("PRIVATE_KEY", 2, true, true).then(
             (merkleTree) => {
                 expect(merkleTree instanceof MerkleTree).toBeTruthy();
                 expect(merkleTree.layers).toBe(layers);
@@ -130,7 +130,7 @@ describe("MerkleTreeBuilder", () => {
             }
         });
 
-        builder.generateLeafKeys("PRIVATE_KEY", 9, true).then(
+        builder.generateLeafKeys("PRIVATE_KEY", 9, true, false).then(
             (publicKeys) => {
                 let expectedPublicKeys: string[] = [];
                 for(let i = 0; i < 256; i++) {
@@ -178,7 +178,7 @@ describe("MerkleTreeBuilder", () => {
             pool.notifyErrorListeners({}, "Some error");
         });
 
-        builder.generateLeafKeys("PRIVATE_KEY", 9, true).then(
+        builder.generateLeafKeys("PRIVATE_KEY", 9, true, false).then(
             (publicKeys) => {
                 expect(true).toBeFalsy("Promise resolve should never be called");
 
@@ -206,7 +206,7 @@ describe("MerkleTreeBuilder", () => {
             pool.notifyErrorListeners(null, "this is meant to fail");
         });
 
-        builder.generateLeafKeys("PRIVATE_KEY", 9, true).then(
+        builder.generateLeafKeys("PRIVATE_KEY", 9, true, false).then(
             (publicKeys) => {
                 expect(true).toBe(false, "Promise resolve should never be called");
 
@@ -244,7 +244,7 @@ describe("MerkleTreeBuilder", () => {
             pool.notifyErrorListeners(null, "this is meant to fail");
         });
 
-        builder.generateLeafKeys("PRIVATE_KEY", 9, false).then(
+        builder.generateLeafKeys("PRIVATE_KEY", 9, false, false).then(
             (publicKeys) => {
                 expect(true).toBe(false, "Promise resolve should never be called");
 
@@ -278,7 +278,7 @@ describe("MerkleTreeBuilder", () => {
             pool.notifyFinishedListener();
         });
 
-        builder.generateLeafKeys("PRIVATE_KEY", 2, true, (e) => {
+        builder.generateLeafKeys("PRIVATE_KEY", 2, true, true, (e) => {
             expect(e).toBe(0.99);
             done();
         });
