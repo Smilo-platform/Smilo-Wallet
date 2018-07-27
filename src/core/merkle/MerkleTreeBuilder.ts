@@ -65,12 +65,13 @@ export class MerkleTreeBuilder {
                     `file:///android_asset/www/assets/scripts/LamportGenerator.js`
                 ];
             } else if (isIos) {
+                // iOS requires the scripts to be loaded as shown below.
                 scripts = [
                     `${ window.location.href.replace("/index.html", "") }/assets/scripts/sjcl.js`,
                     `${ window.location.href.replace("/index.html", "") }/assets/scripts/seedrandom.min.js`
                 ];
             } else {
-                // Web & ios is easy.
+                // Web requires the scripts to be loaded as shown below.
                 scripts = [
                     `${ window.location.protocol }//${ window.location.host }/assets/scripts/sjcl.js`,
                     `${ window.location.protocol }//${ window.location.host }/assets/scripts/seedrandom.min.js`,

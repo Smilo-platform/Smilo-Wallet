@@ -70,7 +70,7 @@ npm run upload-hockey-app:android
 
 For this to work the environment variable `HOCKEY_APP_TOKEN` is expected to be available.
 
-### Building & uploading a test version to Hockey App for iOS
+### Building & uploading a test version to Hockey App for Android
 
 To build and upload at the same time
 
