@@ -3,10 +3,10 @@ set -e
 # Ensure translations are complete
 npm run validate-translations:ci
 
-# Build the project
+# # Build the project
 ionic cordova build ios --prod --release --aot
 
-# Create the release directory if it does not exists
+# # Create the release directory if it does not exists
 mkdir -p ./release
 
 cd ./platforms/ios
@@ -21,6 +21,11 @@ cd ./platforms/ios
 xcodebuild archive \
            -target "Smilo Wallet" \
            -scheme "Smilo Wallet" \
-           -configuration Release clean archive
+           -archivePath "./exported_archive" \
+           -configuration archive
 
-# Upload to Hockey App?
+# Export it as .ipa
+xcodebuild -exportArchive \
+            -archivePath "./exported_archive.xcarchive" \
+            -exportPath "../../release" \
+            -exportOptionsPlist "./ExportOptions.plist"

@@ -10,7 +10,7 @@ import { AndroidPermissions } from '@ionic-native/android-permissions';
 import { StatusBar } from '@ionic-native/status-bar';
 
 const HOCKEY_APP_ANDROID_ID = "551bfde014ca4620996d78a376671a01";
-const HOCKEY_APP_IOS_ID = "";
+const HOCKEY_APP_IOS_ID = "7bd562fbce34466bb7efb63b63c86080";
 const HOCKEY_APP_AUTO_SEND_AUTO_UPDATES = true;
 const HOCKEY_APP_IGNORE_ERROR_HEADER = true;
 
