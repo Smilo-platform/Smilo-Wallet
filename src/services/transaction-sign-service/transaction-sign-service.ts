@@ -96,6 +96,11 @@ export class TransactionSignService implements ITransactionSignService {
                 // Address could not be found, simply return 0
                 return 0;
             }
+        ).then(
+            (index) => {
+                // Ensure we return a non-negative index
+                return index < 0 ? 0 : index;
+            }
         );
     }
 

@@ -9,14 +9,14 @@
               <h4 class="margin-top">{{ 'settings_page.headers.visual' | translate }}</h4>
 
               <ion-list radio-group>
-                <button ion-item>
-                        <ion-label>{{ 'settings_page.show_funds' | translate }}</ion-label>
-                        <ion-toggle class="show-funds" [(ngModel)]="showFundsStatus" (ngModelChange)="fundsSwitch()" color="secondary"></ion-toggle>
-                </button>
-                 <ion-item>
-                        <ion-label>{{ 'settings_page.text.night_mode' | translate }}</ion-label>
-                        <ion-toggle class="nightModeToggle" [(ngModel)]="nightModeStatus" (ionChange)="nightModeSwitch()" color="secondary"></ion-toggle>
-                    </ion-item>
+                <ion-item>
+                    <ion-label>{{ 'settings_page.show_funds' | translate }}</ion-label>
+                    <ion-toggle class="show-funds" [(ngModel)]="showFundsStatus" (ngModelChange)="fundsSwitch()" color="secondary"></ion-toggle>
+                </ion-item>
+                <ion-item>
+                    <ion-label>{{ 'settings_page.text.night_mode' | translate }}</ion-label>
+                    <ion-toggle class="nightModeToggle" [(ngModel)]="nightModeStatus" (ionChange)="nightModeSwitch()" color="secondary"></ion-toggle>
+                </ion-item>
               </ion-list>
 
               <h4 class="margin-top">{{ 'settings_page.headers.language' | translate }}</h4>
