@@ -3,7 +3,7 @@ import { IonicPage, NavController, LoadingController, Loading, Alert, Platform }
 import { Chart } from "chart.js";
 import { WalletService } from "../../services/wallet-service/wallet-service";
 import { AlertController } from "ionic-angular";
-import { trigger, state, style, animate, transition } from "@angular/animations";
+import { trigger, state, style } from "@angular/animations";
 import { LandingPage } from "../landing/landing";
 import { ToastController } from "ionic-angular";
 import { IWallet } from "../../models/IWallet";

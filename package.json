@@ -24,6 +24,7 @@
     "postinstall": "npm run compile-bitcoin-js-wrapper && npm run compile-web-worker-lib",
     "validate-translations": "node ./scripts/translation_checker.js",
     "validate-translations:ci": "node ./scripts/translation_checker.js --ci",
+    "generate-sha256-hash": "node ./scripts/generate-inline-script-hash.js",
     "compile-web-worker-lib": "tsc --p tsconfig.webworker.json && ./scripts/prepare-webworker-lib.sh",
     "compile-bitcoin-js-wrapper": "browserify ./bitcoin-js-wrapper/wrapper.js --standalone bitcoinjs > ./src/assets/scripts/bitcoinjs-lib.js"
   },
@@ -95,6 +96,7 @@
     "sw-toolbox": "3.6.0",
     "threads": "^0.11.0",
     "ts-node": "^6.0.5",
+    "xmlhttprequest": "^1.8.0",
     "zone.js": "0.8.26"
   },
   "devDependencies": {

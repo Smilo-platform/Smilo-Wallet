@@ -75,10 +75,10 @@ export class MerkleTreeBuilder {
             } else {
                 // Web requires the scripts to be loaded as shown below.
                 scripts = [
-                    `${ window.location.protocol }//${ window.location.host }/assets/scripts/sjcl.js`,
-                    `${ window.location.protocol }//${ window.location.host }/assets/scripts/seedrandom.min.js`,
-                    `${ window.location.protocol }//${ window.location.host }/assets/scripts/SHA1PRNG.js`,
-                    `${ window.location.protocol }//${ window.location.host }/assets/scripts/LamportGenerator.js`
+                    `${ window.location.protocol }//${ window.location.host }/www/assets/scripts/sjcl.js`,
+                    `${ window.location.protocol }//${ window.location.host }/www/assets/scripts/seedrandom.min.js`,
+                    `${ window.location.protocol }//${ window.location.host }/www/assets/scripts/SHA1PRNG.js`,
+                    `${ window.location.protocol }//${ window.location.host }/www/assets/scripts/LamportGenerator.js`
                 ];
             }
 

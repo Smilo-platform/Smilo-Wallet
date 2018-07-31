@@ -5,7 +5,6 @@ import { IBalance } from "../../models/IBalance";
 import { TransactionSignService } from "../../services/transaction-sign-service/transaction-sign-service";
 import { ILocalWallet } from "../../models/ILocalWallet";
 import { ITransaction } from "../../models/ITransaction";
-import { ITransactionOutput } from "../../models/ITransactionOutput";
 import { TransactionHelper } from "../../core/transactions/TransactionHelper";
 import { TransferTransactionService } from "../../services/transfer-transaction-service/transfer-transaction";
 import { TranslateService } from "@ngx-translate/core";

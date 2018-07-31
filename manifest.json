@@ -1,0 +1,17 @@
+{
+    "manifest_version": 2,
+    "name": "Smilo Platform: Wallet",
+    "description": "Smilo Platform Wallet allowing you to create, import, export wallets, see your funds and send funds.",
+    "version": "1.0",
+    "background": {
+        "scripts": [
+            "popup.js"
+        ]
+    },
+    "browser_action": {
+        "default_popup": "popup.html",
+        "default_icon": "./www/assets/icon/favicon.png"
+    },
+    "permissions": [],
+    "content_security_policy": "script-src 'unsafe-eval' 'sha256-IGgUqf2i9eKZ1qu+Vn0Xn7PByjosM462r6rvjUxLGVw='"
+}
