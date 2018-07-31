@@ -22,44 +22,24 @@ export class WalletTransactionHistoryService implements IWalletTransactionHistor
         ).toPromise().then(
             (result) => {
                 // Convert string big integer to true big number
-                let promises: Promise<void>[] = [];
-
                 for(let transaction of result.transactions) {
-                    promises.push(this.prepareTransaction(transaction));
+                    this.prepareTransaction(transaction);
                 }
 
-                return Promise.all(promises).then(
-                    () => result
-                );
+                return result;
             }
         );
     }
 
-    private prepareTransaction(transaction: ITransaction): Promise<void> {
-        let promises: Promise<void>[] = [
-            this.assetService.prepareBigNumber(<any>transaction.fee, "000x00123").then(
-                (big) => {
-                    transaction.fee = big;
-                }
-            ),
-            this.assetService.prepareBigNumber(<any>transaction.inputAmount, transaction.assetId).then(
-                (big) => {
-                    transaction.inputAmount = big;
-                }
-            )
-        ];
+    private prepareTransaction(transaction: ITransaction): void {
+        transaction.fee = this.assetService.prepareBigNumber(<any>transaction.fee, "000x00123");
+        transaction.inputAmount = this.assetService.prepareBigNumber(<any>transaction.inputAmount, "000x00123");
         
         transaction.transactionOutputs.forEach(
-            output => promises.push(this.prepareTransactionOutput(transaction.assetId, output))
+            output => this.prepareTransactionOutput(transaction.assetId, output)
         );
-
-        return Promise.all(promises).then<void>();
     }
-    private prepareTransactionOutput(assetId: string, transactionOutput: ITransactionOutput): Promise<void> {
-        return this.assetService.prepareBigNumber(<any>transactionOutput.outputAmount, assetId).then(
-            (big) => {
-                transactionOutput.outputAmount = big;
-            }
-        );
+    private prepareTransactionOutput(assetId: string, transactionOutput: ITransactionOutput): void {
+        transactionOutput.outputAmount = this.assetService.prepareBigNumber(<any>transactionOutput.outputAmount, assetId);
     }
 }

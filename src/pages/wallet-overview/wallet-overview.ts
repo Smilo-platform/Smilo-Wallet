@@ -672,6 +672,7 @@ export class WalletOverviewPage {
                             found = true;
                         }
                     }
+                    
                     if (found) {
                         totalValue = currentCurrencyValue;
 

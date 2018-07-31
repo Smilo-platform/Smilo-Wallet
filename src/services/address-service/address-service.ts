@@ -45,13 +45,11 @@ export class AddressService implements IAddressService {
             (address) => {
                 // Convert any string to big decimals
                 let promises: Promise<void>[] = [];
+                
                 for(let assetId in address.balances) {
-                    promises.push(
-                        this.assetService.prepareBigNumber(<any>address.balances[assetId], assetId).then(
-                            (big) => {
-                                address.balances[assetId] = big;
-                            }
-                        )
+                    address.balances[assetId] = this.assetService.prepareBigNumber(
+                        <any>address.balances[assetId],
+                        assetId
                     );
                 }
 

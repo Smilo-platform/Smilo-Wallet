@@ -10,6 +10,7 @@ import { TransferTransactionService } from "../../services/transfer-transaction-
 import { TranslateService } from "@ngx-translate/core";
 import { BulkTranslateService } from "../../services/bulk-translate-service/bulk-translate-service";
 import Big from "big.js";
+import { AssetService } from "../../services/asset-service/asset-service";
 
 /**
  * Generated class for the TransferPage page.
@@ -77,7 +78,8 @@ export class TransferPage {
         private transactionSignService: TransactionSignService,
         private transferTransactionService: TransferTransactionService,
         private translateService: TranslateService,
-        private bulkTranslateService: BulkTranslateService) { }
+        private bulkTranslateService: BulkTranslateService,
+        private assetService: AssetService) { }
 
     ionViewDidLoad(): void {
         this.getAndSubscribeToTranslations();
@@ -184,7 +186,7 @@ export class TransferPage {
         this.statusMessage = this.translations.get("transfer.signing_transaction");
 
         let transaction = this.createTransaction();
-
+        
         this.signTransaction(transaction).then(
             () => this.transferTransactionService.sendTransaction(transaction)
         ).then(
@@ -218,7 +220,7 @@ export class TransferPage {
                 // We are no longer transferring
                 this.isTransferring = false;
             }
-        )
+        );
     }
 
     createTransaction(): ITransaction {
@@ -233,7 +235,7 @@ export class TransferPage {
             transactionOutputs: [
                 { 
                     outputAddress: this.toPublicKey, 
-                    outputAmount: Big(this.amount) 
+                    outputAmount: Big(this.amount)
                 }
             ]
         }
