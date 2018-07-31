@@ -53,6 +53,7 @@ import { WalletExtraImportPage } from "../pages/wallet-extra-import/wallet-extra
 import { TransactionSignService } from "../services/transaction-sign-service/transaction-sign-service";
 import { TransferTransactionService } from "../services/transfer-transaction-service/transfer-transaction";
 import { AddressService } from "../services/address-service/address-service";
+import { AssetService } from "../services/asset-service/asset-service";
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, "assets/i18n/");
@@ -128,6 +129,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     MerkleTreeService,
     TransactionSignService,
     AddressService,
+    AssetService,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

@@ -1,3 +1,5 @@
+import Big from "big.js";
+
 export declare type SupportedCurrency = "XSM" | "XSP";
 
 export interface IBalance {
@@ -8,9 +10,9 @@ export interface IBalance {
     /**
      * The amount of the currency
      */
-    amount: number;
+    amount: Big;
     /**
      * The value amount for the current currency and amount and exchange
      */
-    valueAmount: number;
+    valueAmount: Big;
 }

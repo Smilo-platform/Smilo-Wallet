@@ -5,11 +5,11 @@ import { IBalance } from "../../models/IBalance";
 import { TransactionSignService } from "../../services/transaction-sign-service/transaction-sign-service";
 import { ILocalWallet } from "../../models/ILocalWallet";
 import { ITransaction } from "../../models/ITransaction";
-import { ITransactionOutput } from "../../models/ITransactionOutput";
 import { TransactionHelper } from "../../core/transactions/TransactionHelper";
 import { TransferTransactionService } from "../../services/transfer-transaction-service/transfer-transaction";
 import { TranslateService } from "@ngx-translate/core";
 import { BulkTranslateService } from "../../services/bulk-translate-service/bulk-translate-service";
+import Big from "big.js";
 
 /**
  * Generated class for the TransferPage page.
@@ -43,11 +43,11 @@ export class TransferPage {
     /**
      * The amount of the chosen currency
      */
-    chosenCurrencyAmount: number;
+    chosenCurrencyAmount: Big;
     /**
      * The amount of the currency to send
      */
-    amount: number;
+    amount: string;
     /**
      * The error message to show if there is any
      */
@@ -169,7 +169,7 @@ export class TransferPage {
         if (this.amount === undefined || this.amount.toString() === "") {
             this.enoughFunds = undefined;
         } 
-        else if (this.amount <= this.chosenCurrencyAmount) {
+        else if (Big(this.amount).lte(this.chosenCurrencyAmount)) {
             this.enoughFunds = true;
         } 
         else {
@@ -202,7 +202,7 @@ export class TransferPage {
                         this.password = "";
 
                         let index = this.balances.indexOf(this.balances.find(x => x.currency === this.chosenCurrency));
-                        this.balances[index].amount -= this.amount;
+                        this.balances[index].amount = this.balances[index].amount.sub(this.amount);
                         this.chosenCurrencyAmount = this.balances[index].amount;
                     }
                 );
@@ -227,13 +227,13 @@ export class TransferPage {
         let transaction: ITransaction = {
             timestamp: new Date().getTime(),
             inputAddress: this.fromWallet.publicKey,
-            fee: 0,
+            fee: Big(0),
             assetId: "000x00123",
-            inputAmount: Number(this.amount),
+            inputAmount: Big(this.amount),
             transactionOutputs: [
                 { 
                     outputAddress: this.toPublicKey, 
-                    outputAmount: Number(this.amount) 
+                    outputAmount: Big(this.amount) 
                 }
             ]
         }
