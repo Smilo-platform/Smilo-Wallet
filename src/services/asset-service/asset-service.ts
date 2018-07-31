@@ -33,7 +33,7 @@ export class AssetService implements IAssetService {
         this.assetMap = new Map<String, IAsset>();
 
         for(let asset of assets) {
-            this.assetMap.set(asset.name, asset);
+            this.assetMap.set(asset.address, asset);
         }
     }
 
