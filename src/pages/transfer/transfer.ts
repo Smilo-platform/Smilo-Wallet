@@ -168,7 +168,7 @@ export class TransferPage {
         if (this.amount === undefined || this.amount.toString() === "") {
             this.enoughFunds = undefined;
         } 
-        else if (this.amount <= this.chosenCurrencyAmount) {
+        else if (Number(this.amount) <= this.chosenCurrencyAmount) {
             this.enoughFunds = true;
         } 
         else {
