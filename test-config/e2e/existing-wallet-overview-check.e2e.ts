@@ -13,7 +13,6 @@ describe("Wallet overview page", () => {
     let walletTotalValue: ElementFinder;
     let allActionSheetButtons: ElementArrayFinder;
     let chooseValueButton: ElementFinder;
-    let fundsButton: ElementFinder;
     let allWalletItems: ElementArrayFinder;
     let fundsOverview: ElementFinder;
     let currenciesOverview: ElementFinder;
@@ -55,7 +54,6 @@ describe("Wallet overview page", () => {
         walletTotalValue = element(by.id("total-wallet-value"));
         allActionSheetButtons = element.all(by.className("action-sheet-button"));
         chooseValueButton = element(by.className("choose-value-currency"));
-        fundsButton = element(by.className("show-funds"));
         allWalletItems = element.all(by.className("wallet-item"));
         fundsOverview = element(by.className("funds-overview"));
         currenciesOverview = element(by.className("currencies-overview"));
@@ -72,24 +70,6 @@ describe("Wallet overview page", () => {
         navigateToWalletOverViewPage();
 
         browser.sleep(1000);
-
-        expect(fundsOverview.isDisplayed()).toBeTruthy("funds overview should be displayed");
-        expect(currenciesOverview.isDisplayed()).toBeTruthy("currencies overview should be displayed");
-        expect(distributionOverview.isDisplayed()).toBeTruthy("distribution overview should be displayed");
-        
-        browser.wait(ExpectedConditions.presenceOf(fundsButton));
-
-        fundsButton.click();
-
-        browser.sleep(1000);
-
-        expect(fundsOverview.isDisplayed()).toBeFalsy("funds overview should be hidden");
-        expect(currenciesOverview.isDisplayed()).toBeFalsy("currencies overview should be hidden");
-        expect(distributionOverview.isDisplayed()).toBeFalsy("distribution overview should be hidden");
-
-        fundsButton.click();
-
-        browser.sleep(500);
 
         expect(fundsOverview.isDisplayed()).toBeTruthy("funds overview should be displayed");
         expect(currenciesOverview.isDisplayed()).toBeTruthy("currencies overview should be displayed");
