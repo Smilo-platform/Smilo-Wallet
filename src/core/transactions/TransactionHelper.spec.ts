@@ -1,5 +1,6 @@
 import { TransactionHelper } from "./TransactionHelper";
 import { ITransaction } from "../../models/ITransaction";
+import { FixedBigNumber } from "../big-number/FixedBigNumber";
 
 interface ITransactionHelperToStringTestVector {
     transaction: ITransaction;
@@ -29,14 +30,14 @@ describe("TransactionHelper", () => {
             transaction: {
                 timestamp: 1000,
                 inputAddress: "inputAddress",
-                fee: 10,
+                fee: new FixedBigNumber(10, 0),
                 assetId: "assetId",
-                inputAmount: 100,
+                inputAmount: new FixedBigNumber(100, 0),
                 dataHash: "hash",
                 transactionOutputs: [
                     {
                         outputAddress: "outputAddress1",
-                        outputAmount: 100
+                        outputAmount: new FixedBigNumber(100, 0)
                     }
                 ]
             },
@@ -46,14 +47,14 @@ describe("TransactionHelper", () => {
             transaction: {
                 timestamp: 5000,
                 inputAddress: "otherInputAddress",
-                fee: 10000,
+                fee: new FixedBigNumber(10000, 0),
                 assetId: "someAssetId",
                 dataHash: "hash",
-                inputAmount: 1000000,
+                inputAmount: new FixedBigNumber(1000000, 0),
                 transactionOutputs: [
                     {
                         outputAddress: "otherOutputAddress1",
-                        outputAmount: 1000000
+                        outputAmount: new FixedBigNumber(1000000, 0)
                     }
                 ]
             },
@@ -66,13 +67,13 @@ describe("TransactionHelper", () => {
             transaction: {
                 timestamp: 1000,
                 inputAddress: "inputAddress",
-                fee: 10,
+                fee: new FixedBigNumber(10, 0),
                 assetId: "assetId",
-                inputAmount: 100,
+                inputAmount: new FixedBigNumber(100, 0),
                 transactionOutputs: [
                     {
                         outputAddress: "outputAddress1",
-                        outputAmount: 100
+                        outputAmount: new FixedBigNumber(100, 0)
                     }
                 ]
             },

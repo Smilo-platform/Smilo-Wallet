@@ -9,7 +9,7 @@ import { MerkleLamportVerifier } from "../../core/signatures/MerkleLamportVerifi
 import { AddressHelper } from "../../core/address/AddressHelper";
 import { AddressService } from "../address-service/address-service";
 import { WalletService } from "../wallet-service/wallet-service";
-import Big from "big.js";
+import { FixedBigNumber } from "../../core/big-number/FixedBigNumber";
 
 export interface ITransactionSignService {
     sign(wallet: ILocalWallet, password: string, transaction: ITransaction): Promise<void>;
@@ -136,7 +136,7 @@ export class TransactionSignService implements ITransactionSignService {
         // Make sure the input and outputs are zero sum
         let outputSum = transaction.transactionOutputs.reduce(
             (previous, current) => previous.add(current.outputAmount),
-            Big(0)
+            new FixedBigNumber(0, transaction.inputAmount.getDecimals())
         );
         if(!outputSum.eq(transaction.inputAmount))
             return false;

@@ -1,4 +1,4 @@
-import Big from "big.js";
+import { FixedBigNumber } from "../core/big-number/FixedBigNumber";
 
 export declare type SupportedCurrency = "XSM" | "XSP";
 
@@ -10,9 +10,9 @@ export interface IBalance {
     /**
      * The amount of the currency
      */
-    amount: Big;
+    amount: FixedBigNumber;
     /**
      * The value amount for the current currency and amount and exchange
      */
-    valueAmount: Big;
+    valueAmount: FixedBigNumber;
 }

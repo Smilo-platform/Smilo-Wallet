@@ -1,14 +1,14 @@
 import { ITransactionOutput } from "./ITransactionOutput";
-import Big from "big.js";
+import { FixedBigNumber } from "../core/big-number/FixedBigNumber";
 
 export interface ITransaction {
     timestamp: number;
     inputAddress: string;
-    fee: Big;
+    fee: FixedBigNumber;
     signatureData?: string;
     signatureIndex?: number;
     dataHash?: string;
     assetId: string;
-    inputAmount: Big;
+    inputAmount: FixedBigNumber;
     transactionOutputs: ITransactionOutput[];
 }

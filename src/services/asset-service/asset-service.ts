@@ -1,13 +1,11 @@
 import { Injectable } from "../../../node_modules/@angular/core";
-import Big from "big.js";
 import { IAsset } from "../../models/IAsset";
 import { HttpClient } from "../../../node_modules/@angular/common/http";
 import { UrlService } from "../url-service/url-service";
-import { BigNumberHelper } from "../../core/big-number/BigNumberHelper";
+import { FixedBigNumber } from "../../core/big-number/FixedBigNumber";
 
 export interface IAssetService {
-    prepareBigNumber(numberAsString: string, assetId: string): Big;
-    toBigIntegerString(number: Big, assetId: string): string;
+    prepareBigNumber(numberAsString: string, assetId: string): FixedBigNumber;
 
     getAll(): Promise<IAsset[]>;
 
@@ -17,7 +15,6 @@ export interface IAssetService {
 @Injectable()
 export class AssetService implements IAssetService {
     private assetMap: Map<String, IAsset>;
-    private bigNumberHelper = new BigNumberHelper();
 
     constructor(private httpClient: HttpClient,
                 private urlService: UrlService) {
@@ -42,23 +39,15 @@ export class AssetService implements IAssetService {
      * 
      * This will return a Big number which can be used to accurately perform decimal calculations.
      */
-    prepareBigNumber(numberAsString: string, assetId: string): Big {
-        this.ensureAssetCache();
+    prepareBigNumber(number: string|FixedBigNumber, assetId: string): FixedBigNumber {
+        if(number instanceof FixedBigNumber)
+            return number;
 
-        let asset = this.assetMap.get(assetId);
-        
-        return this.bigNumberHelper.prepareBigNumber(numberAsString, asset.decimals);
-    }
-
-    /**
-     * Converts the given Big number into a string symbolizing a Big Integer.
-     */
-    toBigIntegerString(number: Big, assetId: string): string {
         this.ensureAssetCache();
 
         let asset = this.assetMap.get(assetId);
 
-        return this.bigNumberHelper.toBigIntegerString(number, asset.decimals);
+        return FixedBigNumber.fromBigIntegerString(number, asset.decimals);
     }
 
     getAll(): Promise<IAsset[]> {

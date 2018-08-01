@@ -2,8 +2,8 @@ import { Injectable } from "@angular/core";
 import { IAddress } from "../../models/IAddress";
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { UrlService } from "../url-service/url-service";
-import Big from "big.js";
 import { AssetService } from "../asset-service/asset-service";
+import { FixedBigNumber } from "../../core/big-number/FixedBigNumber";
 
 export interface IAddressService {
     get(address: string): Promise<IAddress>;
@@ -29,7 +29,7 @@ export class AddressService implements IAddressService {
                     let emptyAddress: IAddress = {
                         publickey: address,
                         balances: {
-                            "000x00123": <any>"0"
+                            "000x00123": new FixedBigNumber(0, 0)
                         },
                         signatureCount: -1
                     }
@@ -48,7 +48,7 @@ export class AddressService implements IAddressService {
                 
                 for(let assetId in address.balances) {
                     address.balances[assetId] = this.assetService.prepareBigNumber(
-                        <any>address.balances[assetId],
+                        address.balances[assetId],
                         assetId
                     );
                 }

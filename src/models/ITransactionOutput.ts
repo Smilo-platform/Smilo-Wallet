@@ -1,6 +1,6 @@
-import Big from "big.js";
+import { FixedBigNumber } from "../core/big-number/FixedBigNumber";
 
 export interface ITransactionOutput {
     outputAddress: string;
-    outputAmount: Big;
+    outputAmount: FixedBigNumber;
 }

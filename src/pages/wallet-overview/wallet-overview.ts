@@ -3,7 +3,7 @@ import { IonicPage, NavController, LoadingController, Loading, Alert, Platform }
 import { Chart } from "chart.js";
 import { WalletService } from "../../services/wallet-service/wallet-service";
 import { AlertController } from "ionic-angular";
-import { trigger, state, style, animate, transition } from "@angular/animations";
+import { trigger, state, style } from "@angular/animations";
 import { LandingPage } from "../landing/landing";
 import { ToastController } from "ionic-angular";
 import { IWallet } from "../../models/IWallet";
@@ -21,7 +21,7 @@ import { ExchangesService } from "../../services/exchanges-service/exchanges-ser
 import { WalletTransactionHistoryService } from "../../services/wallet-transaction-history-service/wallet-transaction-history-service";
 import { AddressService } from "../../services/address-service/address-service";
 import { SettingsService } from "../../services/settings-service/settings-service";
-import Big from "big.js";
+import { FixedBigNumber } from "../../core/big-number/FixedBigNumber";
 
 export declare type VisibilityType = "shown" | "hidden";
 
@@ -580,7 +580,7 @@ export class WalletOverviewPage {
                         currency: "XSM", amount: address.balances["000x00123"], valueAmount: address.balances["000x00123"]
                     },
                     {
-                        currency: "XSP", amount: Big(0), valueAmount: Big(0)
+                        currency: "XSP", amount: new FixedBigNumber(0, 18), valueAmount: new FixedBigNumber(0, 18)
                     }
                 ];
 
@@ -627,8 +627,8 @@ export class WalletOverviewPage {
 
         return this.exchangeService.getPrices(this.pickedCurrency, this.pickedExchange).then(data => {
             let prices = data;
-            let totalValue = Big(0);
-            let totalCurrencies = Big(0);
+            let totalValue = new FixedBigNumber(0, 0);
+            let totalCurrencies = new FixedBigNumber(0, 0);
             this.currenciesForDoughnutCanvasLabels = [];
             this.currenciesForDoughnutCanvas = [];
 
@@ -643,22 +643,26 @@ export class WalletOverviewPage {
                 let walletCurrencyAmount = this.balances[y].amount;
                 // Loop all prices
                 for (let i = 0; i < prices.length; i++) {
-                    let currencyFromApi = prices[i].currencyFrom;
-                    let currencyToApi = prices[i].currencyTo;
-                    let valueApi = prices[i].value;
-                    let currentCurrencyValue = Big(0);
+                    let price = prices[i];
+
+                    let currencyFromApi = price.currencyFrom;
+                    let currencyToApi = price.currencyTo;
+                    let valueApi = price.value;
+                    let currentCurrencyValue = new FixedBigNumber(0, 0);
                     let found = false;
                     // If there is a value in the prices array that matches the from and to currency 1 to 1
                     if (currencyFromApi === walletCurrency && currencyToApi === this.pickedCurrency) {
                         currentCurrencyValue = walletCurrencyAmount.mul(valueApi);
                         found = true;
                     } else if (i === prices.length - 1) {
-                        let alternatePrice = prices.find(price => price.currencyFrom === currencyToApi && price.currencyTo === this.pickedCurrency).value;
+                        let alternatePrice = prices.find(price => price.currencyFrom === currencyToApi && price.currencyTo === this.pickedCurrency);
+
+                        let alternatePriceValue = alternatePrice ? alternatePrice.value : undefined;
                         if (currencyToApi === this.pickedCurrency) {
-                            alternatePrice = 1;
+                            alternatePriceValue = 1;
                             currentCurrencyValue = walletCurrencyAmount;
                             found = true;
-                        } else if (alternatePrice === undefined) {
+                        } else if (alternatePriceValue === undefined) {
                             if (y === 0) {
                                 const alert = this.alertCtrl.create({
                                     title: this.translations.get("wallet_overview.error"),
@@ -668,19 +672,19 @@ export class WalletOverviewPage {
                                 alert.present();
                             }
                         } else {
-                            currentCurrencyValue = walletCurrencyAmount.mul(alternatePrice).mul(valueApi);
+                            currentCurrencyValue = walletCurrencyAmount.mul(alternatePriceValue).mul(valueApi);
                             found = true;
                         }
                     }
                     
                     if (found) {
-                        totalValue = currentCurrencyValue;
+                        totalValue = totalValue.add(currentCurrencyValue);
 
-                        this.currenciesForDoughnutCanvasLabels.push(String(walletCurrency));
+                        this.currenciesForDoughnutCanvasLabels.push(walletCurrency);
                         this.currenciesForDoughnutCanvas.push(Number(walletCurrencyAmount));
 
                         totalCurrencies = totalCurrencies.add(walletCurrencyAmount);
-                        this.balances[y].valueAmount = Big(currentCurrencyValue);//Number((currentCurrencyValue).toFixed(this.getFixedNumbers()));
+                        this.balances[y].valueAmount = currentCurrencyValue;//Number((currentCurrencyValue).toFixed(this.getFixedNumbers()));
                         break;
                     }
                 }
@@ -690,7 +694,7 @@ export class WalletOverviewPage {
             for (let i = 0; i < this.currenciesForDoughnutCanvas.length; i++) {
                 // If the data array is not zero
                 if (this.currenciesForDoughnutCanvas[i] !== 0) {
-                    this.currenciesForDoughnutCanvas[i] = <any>Big(100).div(totalCurrencies).mul(this.currenciesForDoughnutCanvas[i]).toFixed(2);//Number(((100 / totalCurrencies) * this.currenciesForDoughnutCanvas[i]).toFixed(2));
+                    this.currenciesForDoughnutCanvas[i] = Number(new FixedBigNumber(100, 0).div(totalCurrencies).mul(this.currenciesForDoughnutCanvas[i]).toFixed(2));//Number(((100 / totalCurrencies) * this.currenciesForDoughnutCanvas[i]).toFixed(2));
                 }
             }
 

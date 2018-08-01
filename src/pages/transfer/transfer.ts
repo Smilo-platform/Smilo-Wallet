@@ -9,15 +9,8 @@ import { TransactionHelper } from "../../core/transactions/TransactionHelper";
 import { TransferTransactionService } from "../../services/transfer-transaction-service/transfer-transaction";
 import { TranslateService } from "@ngx-translate/core";
 import { BulkTranslateService } from "../../services/bulk-translate-service/bulk-translate-service";
-import Big from "big.js";
 import { AssetService } from "../../services/asset-service/asset-service";
-
-/**
- * Generated class for the TransferPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
+import { FixedBigNumber } from "../../core/big-number/FixedBigNumber";
 
 @IonicPage()
 @Component({
@@ -44,7 +37,7 @@ export class TransferPage {
     /**
      * The amount of the chosen currency
      */
-    chosenCurrencyAmount: Big;
+    chosenCurrencyAmount: FixedBigNumber;
     /**
      * The amount of the currency to send
      */
@@ -141,6 +134,12 @@ export class TransferPage {
             return false;
         } 
 
+        // Check if amount is a valid number
+        // TODO: make generic e.g. take selected asset into account
+        if(!new FixedBigNumber(this.amount, 0).isValid()) {
+            return false;
+        }
+
         // Check if user has enough funds
         if (!this.enoughFunds) {
             return false;
@@ -171,7 +170,7 @@ export class TransferPage {
         if (this.amount === undefined || this.amount.toString() === "") {
             this.enoughFunds = undefined;
         } 
-        else if (Big(this.amount).lte(this.chosenCurrencyAmount)) {
+        else if (this.chosenCurrencyAmount.gte(this.amount)) {
             this.enoughFunds = true;
         } 
         else {
@@ -197,15 +196,16 @@ export class TransferPage {
                         // Status message should notify user of success
                         this.statusMessage = translation
 
+                        // Update balance locally
+                        let index = this.balances.indexOf(this.balances.find(x => x.currency === this.chosenCurrency));
+                        this.balances[index].amount = this.balances[index].amount.sub(this.amount);
+                        this.chosenCurrencyAmount = this.balances[index].amount;
+
                         // Reset input forms
                         this.toPublicKey = "";
                         this.amount = null;
                         this.enoughFunds = undefined;
                         this.password = "";
-
-                        let index = this.balances.indexOf(this.balances.find(x => x.currency === this.chosenCurrency));
-                        this.balances[index].amount = this.balances[index].amount.sub(this.amount);
-                        this.chosenCurrencyAmount = this.balances[index].amount;
                     }
                 );
             },
@@ -229,16 +229,16 @@ export class TransferPage {
         let transaction: ITransaction = {
             timestamp: new Date().getTime(),
             inputAddress: this.fromWallet.publicKey,
-            fee: Big(0),
+            fee: new FixedBigNumber(0, 0),
             assetId: "000x00123",
-            inputAmount: Big(this.amount),
+            inputAmount: new FixedBigNumber(this.amount, 0), // TODO: base decimals on selected asset
             transactionOutputs: [
                 { 
                     outputAddress: this.toPublicKey, 
-                    outputAmount: Big(this.amount)
+                    outputAmount: new FixedBigNumber(this.amount, 0) // TODO: base decimals on selected asset
                 }
             ]
-        }
+        };
         transaction.dataHash = transactionHelper.getDataHash(transaction);
 
         return transaction;
