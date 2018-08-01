@@ -34,18 +34,7 @@ export class FixedBigNumber {
      * A FixedBigNumber is invalid if the amount of decimals exceeds the defined amount of decimals.
      */
     isValid(): boolean {
-        let str = this.toString();
-
-        let dotIndex = str.indexOf(".");
-
-        if(dotIndex != -1) {
-            let decimals = str.substr(dotIndex + 1);
-
-            return decimals.length <= this.decimals;
-        }
-        else {
-            return true;
-        }
+        return new FixedBigNumber(this.toFixed(this.decimals), this.decimals).eq(this);
     }
 
     /**
@@ -128,8 +117,12 @@ export class FixedBigNumber {
         return new FixedBigNumber(this.big.sub(this.getSourceValue(n)), this.decimals);
     }
 
-    toFixed(dp: number): string {
+    toFixed(dp?: number): string {
         return this.big.toFixed(dp);
+    }
+
+    toPrecision(sd?: number): string {
+        return this.big.toPrecision(sd);
     }
 
     toString(): string {
@@ -146,7 +139,9 @@ export class FixedBigNumber {
      * of this FixedBigNumber.
      */
     toBigIntegerString(): string {
-        let numberString = this.big.toString();
+        // First get the string version of the big number.
+        // Note how we do decimals+1. We do this to prevent rounding issues.
+        let numberString = this.big.toFixed(this.decimals + 1);
 
         let dotIndex = numberString.indexOf(".");
 
@@ -157,7 +152,9 @@ export class FixedBigNumber {
         // Split the number string at the location of the dot
         let beforeDot = numberString.substr(0, dotIndex);
         let afterDot = numberString.substr(dotIndex + 1);
-        
+
+        afterDot = afterDot.substr(0, this.decimals);
+
         // Pad the 'after the dot' part until it has the correct amount of decimals
         afterDot = FixedBigNumber.padStringEnd(afterDot, "0", this.decimals);
 
@@ -175,25 +172,6 @@ export class FixedBigNumber {
         bigIntegerString = FixedBigNumber.insertDecimalDot(bigIntegerString, decimals);
 
         return new FixedBigNumber(Big(bigIntegerString), decimals);
-    }
-
-    /**
-     * Returns true if the amount of decimals in the given FixedBigNumber does
-     * not exceed the defined amount of decimals in the given FixedBugNumber.
-     */
-    private static satisfiesDecimalPlaces(number: FixedBigNumber): boolean {
-        let str = number.toString();
-
-        let dotIndex = str.indexOf(".");
-
-        if(dotIndex != -1) {
-            let decimals = str.substr(dotIndex);
-
-            return decimals.length < number.decimals;
-        }
-        else {
-            return true;
-        }
     }
 
     /**
