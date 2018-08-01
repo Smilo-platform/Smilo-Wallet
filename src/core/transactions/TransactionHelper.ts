@@ -21,13 +21,13 @@ export class TransactionHelper {
     getHashableData(transaction: ITransaction): string {
         let data = "";
 
-        data += `${ transaction.timestamp };${ transaction.assetId };${ transaction.inputAddress };${ transaction.inputAmount };`;
+        data += `${ transaction.timestamp };${ transaction.assetId };${ transaction.inputAddress };${ transaction.inputAmount.toBigIntegerString() };`;
 
         for(let output of transaction.transactionOutputs) {
-            data += `;${ output.outputAddress };${ output.outputAmount }`;
+            data += `;${ output.outputAddress };${ output.outputAmount.toBigIntegerString() }`;
         }
 
-        return `${ data };${ transaction.fee }`;
+        return `${ data };${ transaction.fee.toBigIntegerString() }`;
     }
 
     /**

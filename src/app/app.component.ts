@@ -8,6 +8,7 @@ import { SettingsService, ThemeType } from "../services/settings-service/setting
 import { HockeyApp } from "ionic-hockeyapp";
 import { AndroidPermissions } from '@ionic-native/android-permissions';
 import { StatusBar } from '@ionic-native/status-bar';
+import { AssetService } from "../services/asset-service/asset-service";
 
 const HOCKEY_APP_ANDROID_ID = "551bfde014ca4620996d78a376671a01";
 const HOCKEY_APP_IOS_ID = "7bd562fbce34466bb7efb63b63c86080";
@@ -27,13 +28,16 @@ export class SmiloWallet {
               private walletService: WalletService,
               private hockeyApp: HockeyApp,
               private settingsService: SettingsService,
-              private statusBar: StatusBar) {
+              private statusBar: StatusBar,
+              private assetService: AssetService) {
 
   }
 
   ngOnInit(): Promise<void> {
     this.statusBar.styleLightContent();
     return this.platform.ready().then(() => {
+      this.prepareAssetCache();
+
       this.preparePermissions();
 
       this.prepareSettings();
@@ -42,6 +46,12 @@ export class SmiloWallet {
 
       this.prepareFirstPage();
     });
+  }
+
+  prepareAssetCache() {
+    // Do a dummy call to retrieve all assets. This will ensure
+    // the cache is filled when it is actually needed.
+    this.assetService.getAll();
   }
 
   preparePermissions(): void {

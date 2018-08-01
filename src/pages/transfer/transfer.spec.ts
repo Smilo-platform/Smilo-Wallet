@@ -12,6 +12,8 @@ import { MockTransferTransactionService } from "../../../test-config/mocks/MockT
 import { TransferTransactionService } from "../../services/transfer-transaction-service/transfer-transaction";
 import { BulkTranslateService } from "../../services/bulk-translate-service/bulk-translate-service";
 import { MockBulkTranslateService } from "../../../test-config/mocks/MockBulkTranslateService";
+import { MockAssetService } from "../../../test-config/mocks/MockAssetService";
+import { AssetService } from "../../services/asset-service/asset-service";
 
 describe("TransferPage", () => {
   let comp: TransferPage;
@@ -21,6 +23,7 @@ describe("TransferPage", () => {
   let transactionSignService: MockTransactionSignService;
   let transferTransactionService: MockTransferTransactionService;
   let bulkTranslateService: BulkTranslateService;
+  let assetService: MockAssetService;
 
   beforeEach(async(() => {
     navController = new MockNavController();
@@ -28,7 +31,7 @@ describe("TransferPage", () => {
     transactionSignService = new MockTransactionSignService();
     transferTransactionService = new MockTransferTransactionService();
     bulkTranslateService = new MockBulkTranslateService();
-
+    assetService = new MockAssetService();
 
     TestBed.configureTestingModule({
       declarations: [TransferPage],
@@ -44,7 +47,8 @@ describe("TransferPage", () => {
         { provide: NavParams, useValue: navParams },
         { provide: TransactionSignService, useValue: transactionSignService },
         { provide: TransferTransactionService, useValue: transferTransactionService },
-        { provide: BulkTranslateService, useValue: bulkTranslateService }
+        { provide: BulkTranslateService, useValue: bulkTranslateService },
+        { provide: AssetService, useValue: assetService }
       ]
     }).compileComponents();
   }));
