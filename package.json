@@ -26,8 +26,8 @@
     "validate-translations:ci": "node ./scripts/translation_checker.js --ci",
     "compile-web-worker-lib": "tsc --p tsconfig.webworker.json && ./scripts/prepare-webworker-lib.sh",
     "compile-bitcoin-js-wrapper": "browserify ./bitcoin-js-wrapper/wrapper.js --standalone bitcoinjs > ./src/assets/scripts/bitcoinjs-lib.js",
-    "cypress-open": "cypress open",
-    "cypress-run": "cypress run"
+    "cypress": "cypress open",
+    "cypress-ci": "cypress run"
   },
   "dependencies": {
     "@angular/animations": "5.2.10",
