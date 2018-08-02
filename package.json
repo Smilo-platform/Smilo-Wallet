@@ -39,6 +39,7 @@
     "@angular/http": "5.2.10",
     "@angular/platform-browser": "5.2.10",
     "@angular/platform-browser-dynamic": "5.2.10",
+    "@cypress/webpack-preprocessor": "^2.0.1",
     "@ionic-native/android-permissions": "^4.8.0",
     "@ionic-native/clipboard": "^4.8.0",
     "@ionic-native/core": "4.7.0",
@@ -99,6 +100,7 @@
     "sjcl": "^1.0.7",
     "sw-toolbox": "3.6.0",
     "threads": "^0.11.0",
+    "ts-loader": "^4.4.2",
     "ts-node": "^6.0.5",
     "zone.js": "0.8.26"
   },
