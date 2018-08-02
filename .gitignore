@@ -47,3 +47,8 @@ src/assets/scripts/bitcoinjs-lib.js
 # Web worker libraries are auto generated
 src/assets/scripts/LamportGenerator.js
 src/assets/scripts/SHA1PRNG.js
+
+# Cypress
+cypress/screenshots
+cypress/videos
+!cypress/plugins
