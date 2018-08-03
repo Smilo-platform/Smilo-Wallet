@@ -20,6 +20,8 @@ import { MockPlatform } from "../../test-config/mocks/MockPlatform";
 import { MockTranslateService } from "../../test-config/mocks/MockTranslateService";
 import { LandingPage } from "../pages/landing/landing";
 import { HomePage } from "../pages/home/home";
+import { MockAssetService } from "../../test-config/mocks/MockAssetService";
+import { AssetService } from "../services/asset-service/asset-service";
 
 describe('SmiloWallet', () => {
     let comp: SmiloWallet;
@@ -31,6 +33,7 @@ describe('SmiloWallet', () => {
     let statusBar: MockStatusBar;
     let platform: MockPlatform;
     let translate: MockTranslateService;
+    let assetService: MockAssetService;
 
     beforeEach(async(() => {
         androidPermissions = new MockAndroidPermissions();
@@ -40,6 +43,7 @@ describe('SmiloWallet', () => {
         statusBar = new MockStatusBar();
         platform = new MockPlatform();
         translate = new MockTranslateService();
+        assetService = new MockAssetService();
 
         TestBed.configureTestingModule({
             declarations: [SmiloWallet],
@@ -57,7 +61,8 @@ describe('SmiloWallet', () => {
                 { provide: SettingsService, useValue: settingsService },
                 { provide: StatusBar, useValue: statusBar },
                 { provide: Platform, useValue: platform },
-                { provide: TranslateService, useValue: translate }
+                { provide: TranslateService, useValue: translate },
+                { provide: AssetService, useValue: assetService }
             ]
         }).compileComponents();
     }));
