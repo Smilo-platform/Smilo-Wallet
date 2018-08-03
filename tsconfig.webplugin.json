@@ -14,13 +14,10 @@
     "target": "es5"
   },
   "include": [
-    "src/**/*.ts"
+    "webplugin/popup.ts"
   ],
   "exclude": [
-    "webplugin",
-    "node_modules",
-    "src/**/*.spec.ts",
-    "src/**/__tests__/*.ts"
+    "node_modules"
   ],
   "compileOnSave": false,
   "atom": {

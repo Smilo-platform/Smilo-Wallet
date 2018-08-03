@@ -26,6 +26,7 @@
     "validate-translations:ci": "node ./scripts/translation_checker.js --ci",
     "generate-sha256-hash": "node ./scripts/generate-inline-script-hash.js",
     "compile-web-worker-lib": "tsc --p tsconfig.webworker.json && ./scripts/prepare-webworker-lib.sh",
+    "compile-web-plugin-lib": "tsc --p tsconfig.webplugin.json",
     "compile-bitcoin-js-wrapper": "browserify ./bitcoin-js-wrapper/wrapper.js --standalone bitcoinjs > ./src/assets/scripts/bitcoinjs-lib.js"
   },
   "dependencies": {
@@ -48,7 +49,9 @@
     "@ionic/storage": "^2.1.3",
     "@ngx-translate/core": "^9.1.1",
     "@ngx-translate/http-loader": "^2.0.1",
+    "@types/chrome": "0.0.71",
     "@types/jasmine": "^2.8.8",
+    "@types/jquery": "^3.3.5",
     "angular2-template-loader": "^0.6.2",
     "awesome-typescript-loader": "^3.5.0",
     "bip32": "^0.1.0",
@@ -79,6 +82,7 @@
     "istanbul-instrumenter-loader": "^3.0.1",
     "jasmine": "^3.1.0",
     "jasmine-spec-reporter": "^4.2.1",
+    "jquery": "^3.3.1",
     "karma": "^2.0.4",
     "karma-chrome-launcher": "^2.2.0",
     "karma-coverage-istanbul-reporter": "^2.0.1",

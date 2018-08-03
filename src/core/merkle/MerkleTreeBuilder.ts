@@ -55,7 +55,6 @@ export class MerkleTreeBuilder {
             let totalKeys = Math.pow(2, layerCount - 1);
 
             let scripts: string[];
-
             if(isAndroid) {
                 // Android requires the scripts to be loaded as shown below.
                 scripts = [
@@ -72,13 +71,21 @@ export class MerkleTreeBuilder {
                     `${ window.location.href.replace("/index.html", "") }/assets/scripts/SHA1PRNG.js`,
                     `${ window.location.href.replace("/index.html", "") }/assets/scripts/LamportGenerator.js`
                 ];
-            } else {
-                // Web requires the scripts to be loaded as shown below.
+            } else if (!window.location.protocol.includes("http")) {
+                // Browser extensions requires the scripts to be loaded as shown below
                 scripts = [
                     `${ window.location.protocol }//${ window.location.host }/www/assets/scripts/sjcl.js`,
                     `${ window.location.protocol }//${ window.location.host }/www/assets/scripts/seedrandom.min.js`,
                     `${ window.location.protocol }//${ window.location.host }/www/assets/scripts/SHA1PRNG.js`,
                     `${ window.location.protocol }//${ window.location.host }/www/assets/scripts/LamportGenerator.js`
+                ];
+            } else {
+                // Web requires the scripts to be loaded as shown below.
+                scripts = [
+                    `${ window.location.protocol }//${ window.location.host }/assets/scripts/sjcl.js`,
+                    `${ window.location.protocol }//${ window.location.host }/assets/scripts/seedrandom.min.js`,
+                    `${ window.location.protocol }//${ window.location.host }/assets/scripts/SHA1PRNG.js`,
+                    `${ window.location.protocol }//${ window.location.host }/assets/scripts/LamportGenerator.js`
                 ];
             }
 
