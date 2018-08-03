@@ -14,7 +14,7 @@
     "target": "es5"
   },
   "include": [
-    "webplugin/popup.ts"
+    "src/webplugin/popup.ts"
   ],
   "exclude": [
     "node_modules"
