@@ -1,15 +1,15 @@
 {
   "compilerOptions": {
-    "strict": true,
-    "baseUrl": "../node_modules",
     "target": "es5",
-    "lib": ["es5", "dom"],
+    "module": "commonjs",
+    "skipLibCheck": true,
+    "strict": true,
     "types": [
-      "cypress",
-      "node"
-    ],
+      "node",
+      "cypress"
+    ]
   },
   "include": [
-    "cypress/*/*.ts"
+    "*/*.ts"
   ]
 }
