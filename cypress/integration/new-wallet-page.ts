@@ -16,6 +16,7 @@ describe("NewWalletPage", () => {
         // Make sure we are at the page-wallet-new-passphrase page
         cy.get("page-wallet-new-passphrase");
 
+        // Make sure the passphrase box contains 24 words
         checkPassphraseBox(".show-box", 24);
 
         // Make sure the next button is shown
@@ -25,7 +26,10 @@ describe("NewWalletPage", () => {
     it("should show the enter passphrase page correctly", () => {
         moveToEnterPassphrasePage();
 
+        // Make sure the shuffled box shows 24 words
         checkPassphraseBox(".shuffled-box", 24);
+
+        // Make sure the entered box shows 0 words
         checkPassphraseBox(".entered-box", 0);
     });
 
@@ -49,6 +53,19 @@ describe("NewWalletPage", () => {
         cy.get(".next-button").click();
     }
 
+    function memorizePassphrase(selector: string) {
+        cy.get(selector).find(".word").then(
+            (words) => {
+                
+            }
+        );
+    }
+
+    /**
+     * Checks if the passphrase box gettable with the given selector has the expected amount of words.
+     * @param selector 
+     * @param expectedWordCount 
+     */
     function checkPassphraseBox(selector: string, expectedWordCount: number) {
         // Make sure 24 words are shown
         cy.get(selector).find(".word").should((words) => {
