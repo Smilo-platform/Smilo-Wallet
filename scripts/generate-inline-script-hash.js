@@ -17,7 +17,7 @@ fs.readFile("./www/index.html", "utf8", (error, data) => {
     }
     fs.readFile("./manifest.json", "utf8", (error, data) => {
       let json = JSON.parse(data);
-      json.content_security_policy = "object-src 'self'; script-src 'self' 'unsafe-eval'";
+      json.content_security_policy = "object-src 'self'; script-src 'self' 'unsafe-eval' blob:";
       for (let i = 0; i < validResults.length; i++) {
         json.content_security_policy += " '" + validResults[i] + "'";
         console.log("Added sha256 script hash: " + validResults[i]);

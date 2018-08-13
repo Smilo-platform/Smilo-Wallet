@@ -9,7 +9,6 @@ import { TransactionHelper } from "../../core/transactions/TransactionHelper";
 import { TransferTransactionService } from "../../services/transfer-transaction-service/transfer-transaction";
 import { TranslateService } from "@ngx-translate/core";
 import { BulkTranslateService } from "../../services/bulk-translate-service/bulk-translate-service";
-import { AssetService } from "../../services/asset-service/asset-service";
 import { FixedBigNumber } from "../../core/big-number/FixedBigNumber";
 
 @IonicPage()
@@ -71,8 +70,7 @@ export class TransferPage {
         private transactionSignService: TransactionSignService,
         private transferTransactionService: TransferTransactionService,
         private translateService: TranslateService,
-        private bulkTranslateService: BulkTranslateService,
-        private assetService: AssetService) { }
+        private bulkTranslateService: BulkTranslateService) { }
 
     ionViewDidLoad(): void {
         this.getAndSubscribeToTranslations();

@@ -4,6 +4,9 @@ let dbOpenRequest = indexedDB.open(dbName);
 
 let baseUrl = "";
 
+declare const $;
+declare const chrome;
+
 if (isDevMode()) {
     baseUrl = "http://localhost:8090";
 } else {

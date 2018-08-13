@@ -15,7 +15,7 @@
         "default_icon": "./www/assets/icon/favicon.png"
     },
     "permissions": [],
-    "content_security_policy": "object-src 'self'; script-src 'self' 'unsafe-eval' 'sha256-IGgUqf2i9eKZ1qu+Vn0Xn7PByjosM462r6rvjUxLGVw=' blob:",
+    "content_security_policy": "object-src 'self'; script-src 'self' 'unsafe-eval' blob: 'sha256-IGgUqf2i9eKZ1qu+Vn0Xn7PByjosM462r6rvjUxLGVw='",
     "-ms-preload": {
         "backgroundScript": "./src/webplugin/backgroundScriptsAPIBridge.js",
         "contentScript": "./src/webplugin/contentScriptsAPIBridge.js"
