@@ -41,6 +41,13 @@
           </span>
         </div>
 
+        <ng2-password-strength-bar
+          class="password-strength"
+          [passwordToCheck]="password"
+          [barLabel]="barLabel"
+          [barColors]="myColors">
+        </ng2-password-strength-bar>
+
         <div class="content-div">
           <a class="password-explanation" (click)="showPasswordExplanation()">
             {{ 'import_privatekey.password_why' | translate }}

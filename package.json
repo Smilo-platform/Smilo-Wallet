@@ -88,6 +88,7 @@
     "karma-jasmine-html-reporter": "^1.2.0",
     "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "^3.0.0",
+    "ng2-password-strength-bar": "^1.2.1",
     "node-forge": "^0.7.5",
     "null-loader": "^0.1.1",
     "protractor": "^5.1.1",

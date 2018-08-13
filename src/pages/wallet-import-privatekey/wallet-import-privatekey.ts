@@ -22,6 +22,8 @@ export class WalletImportPrivatekeyPage {
   confirmedPassword: string = "";
   passwordStatus: IPasswordValidationResult;
   selectedTheme: ThemeType;
+  barLabel: string = "Password strength:";
+  myColors = ['#DD2C00', '#FF6D00', '#FFD600', '#AEEA00', '#00C853'];
 
   constructor(private navCtrl: NavController,
               private navParams: NavParams,
