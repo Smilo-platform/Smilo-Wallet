@@ -4,9 +4,6 @@ let dbOpenRequest = indexedDB.open(dbName);
 
 let baseUrl = "";
 
-declare const $;
-declare const chrome;
-
 if (isDevMode()) {
     baseUrl = "http://localhost:8090";
 } else {
@@ -29,15 +26,15 @@ window.addEventListener('DOMContentLoaded', () => {
         browser.tabs.create({url: browser.extension.getURL('./www/index.html')});
     });
     let walletListVisible = false;
-    $(document).ready(() => {
-        $(".wallet-dropdown").click(() => {
+    this.$(document).ready(() => {
+        this.$(".wallet-dropdown").click(() => {
             if (totalWallets !== undefined && totalWallets.length > 0) {
                 if (!walletListVisible) {
                     walletListVisible = true;
-                    $("#wallet-list").show();
+                    this.$("#wallet-list").show();
                 } else {
                     walletListVisible = false;
-                    $("#wallet-list").hide();
+                    this.$("#wallet-list").hide();
                 }
             }
         });
@@ -53,8 +50,8 @@ dbOpenRequest.onsuccess = (event) => {
         let wallets = objectStoreWallets.result;
         totalWallets = wallets;
         setCurrentWallet(0);
-        $("#wallet-list").on("click", "li", function() {
-            let selectedText = $(this).text();
+        this.$("#wallet-list").on("click", "li", function() {
+            let selectedText = this.$(this).text();
             let selectedIndex = -1;
             for (let i = 0; i < totalWallets.length; i++) {
                 if((totalWallets[i].name + " - " + totalWallets[i].publicKey) === selectedText) {
@@ -72,22 +69,22 @@ function setCurrentWallet(index) {
         let wallet = totalWallets[index].name + " - " + totalWallets[index].publicKey;
         getWalletFunds(totalWallets[index].publicKey);
         currentPublicKey = totalWallets[index].publicKey;
-        $("#main-dropdown-item").text(wallet);
+        this.$("#main-dropdown-item").text(wallet);
         rebuildWalletsList(index);
     }
 }
 
 function rebuildWalletsList(selectedIndex) {
-    $("#wallet-list").empty();
+    this.$("#wallet-list").empty();
     for (let i = 0; i < totalWallets.length; i++) {
         let wallet = totalWallets[i];
-        $("#wallet-list").append("<li><a>" + wallet.name + " - " + wallet.publicKey + "</a></li>");
+        this.$("#wallet-list").append("<li><a>" + wallet.name + " - " + wallet.publicKey + "</a></li>");
     }
-    $('#wallet-list').find("li").slice(selectedIndex, selectedIndex + 1).remove();
+    this.$('#wallet-list').find("li").slice(selectedIndex, selectedIndex + 1).remove();
 }
 
 function setCurrentWalletFunds(currentWalletFunds) {
-    $("#funds-overview").empty();
+    this.$("#funds-overview").empty();
     for (let i = 0; i < currentWalletFunds.length; i++) {
         let walletfund = currentWalletFunds[i];
         let blockClass = "";
@@ -96,7 +93,7 @@ function setCurrentWalletFunds(currentWalletFunds) {
         } else {
             blockClass = "fundsBlockRight";
         }
-        $("#funds-overview").append(`<div class=${blockClass}>
+        this.$("#funds-overview").append(`<div class=${blockClass}>
             <p class="currencyHeader">${walletfund.symbol}</p>
             <p class="currencyValue">${walletfund.amount}</p>
         </div>`);
@@ -104,7 +101,7 @@ function setCurrentWalletFunds(currentWalletFunds) {
 }
 
 function getAssets() {
-    $.ajax({
+    this.$.ajax({
         url: baseUrl + "/asset",
         cache: false,
         success: (data) => {
@@ -116,7 +113,7 @@ function getAssets() {
 }
 
 function getWalletFunds(publicKey) {
-    $.ajax({
+    this.$.ajax({
         url: baseUrl + "/address/" + publicKey,
         cache: false,
         success: (data) => {
@@ -148,7 +145,7 @@ function getWalletFunds(publicKey) {
 }
 
 function isDevMode() {
-    return !('update_url' in chrome.runtime.getManifest());
+    return !('update_url' in this.chrome.runtime.getManifest());
 }
 
 window.setInterval(() => {
