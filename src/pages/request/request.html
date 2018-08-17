@@ -6,22 +6,21 @@
     <ion-grid>
         <ion-row justify-content-center>
             <ion-col col-12 col-xl-4>
-                <h1 class="no-padding-top">Your address</h1>
+                <h1 class="no-padding-top">{{ 'request.your-address' | translate }}</h1>
                 <ion-item class="input-bottom-border">
                     <ion-input class="toAddress biggerText padding" type="text" [disabled]="true" [(ngModel)]="fromWallet.publicKey"></ion-input> 
                 </ion-item>
-                <h1>Select currency</h1>
+                <h1>{{ 'request.select-currency' | translate }}</h1>
                 <ion-item class="input-bottom-border no-border">
                     <ion-select class="choose-currency" [(ngModel)]="chosenCurrency" interface="action-sheet">
                         <ion-option *ngFor="let balance of balances" [value]="balance.currency">{{ balance.currency }}</ion-option>
                     </ion-select> 
                 </ion-item>     
-                <h1>Enter amount</h1>
+                <h1>{{ 'request.enter-amount' | translate }}</h1>
                 <ion-item class="input-bottom-border">
-                    <ion-input class="biggerText padding" type="number" [(ngModel)]="amount" placeholder="enter amount"></ion-input>  
+                    <ion-input class="biggerText padding" type="number" [(ngModel)]="amount" placeholder="{{ 'request.enter-amount-placeholder' | translate }}"></ion-input>  
                 </ion-item>
-                <button class="transfer-button" (click)="generateQRCode()" ion-button full>Generate QR code</button>
-                <div id="qr-code-field"></div>
+                <button class="request-button" [disabled]="!canTransfer()" (click)="generateQRCode()" ion-button full>{{ 'request.generate-qr-code' | translate }}</button>
             </ion-col>
         </ion-row>
     </ion-grid>

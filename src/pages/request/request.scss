@@ -1,8 +1,4 @@
 page-request {
-    .transfer-button {
-        border: none !important;
-    }
-
     .no-padding-top {
         padding-top: 0 !important;
     }
@@ -11,10 +7,11 @@ page-request {
         box-shadow: none;
     }
 
-    .transfer-button {
+    .request-button {
         margin-top: 30px;
         font-size: 16px;
         height: 40px;
+        border: none !important;
     }
 
     .inputInfo {

@@ -104,7 +104,12 @@
         "nav-bar-title": "Wallet Import Ledger"
     },
     "request": {
-        "nav-bar-title": "Request"
+        "nav-bar-title": "Request",
+        "your-address": "Your address",
+        "select-currency": "Select currency",
+        "enter-amount": "Enter amount",
+        "enter-amount-placeholder": "enter amount",
+        "generate-qr-code": "Generate QR code"
     },
     "wallet_overview": {
         "nav-bar-title": "Wallet Overview",
@@ -184,6 +189,14 @@
         "buttons": {
             "import": "Import"
         }
+    },
+    "qr-code-page": {
+        "nav-bar-title": "QR Code",
+        "explanation-message": "Scan this QR code in the transfer page on another device to request the currency easily",
+        "address": "Address",
+        "currency": "Currency",
+        "amount": "Amount",
+        "close": "Close"
     },
     "import_keystore": {
         "nav-bar-title": "Import keystore",
