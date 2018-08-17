@@ -289,8 +289,8 @@ export class TransferPage {
                 if(status.authorized) {
                     let scanSubscription = this.qrScanner.scan().subscribe(
                         (text) => {
+                            // Browser platforms for some reason return an object and not the text...
                             text = (<any>text).result || text;
-                            console.log("Data = ", text);
 
                             let obj: IPaymentRequest;
                             try {
@@ -336,6 +336,7 @@ export class TransferPage {
 
                     this.hideUI();
                     this.qrScanner.show();
+                    this.qrScanner.destroy();
                 }
                 else if(status.denied) {
                     // User denied permission.
