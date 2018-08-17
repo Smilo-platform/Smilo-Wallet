@@ -3,6 +3,11 @@ qr-code-page {
         margin: auto;
     }
 
+    #qr-code-field canvas {
+        display: block;
+        margin: auto;
+    }
+
     .explanation-message {
         text-align: center;
         font-size: 18px;
