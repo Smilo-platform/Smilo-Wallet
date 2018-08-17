@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, NgZone } from "@angular/core";
 import { IonicPage, NavParams } from "ionic-angular";
 import { IWallet } from "../../models/IWallet";
 import { IBalance } from "../../models/IBalance";
@@ -11,6 +11,7 @@ import { TranslateService } from "@ngx-translate/core";
 import { BulkTranslateService } from "../../services/bulk-translate-service/bulk-translate-service";
 import { AssetService } from "../../services/asset-service/asset-service";
 import { FixedBigNumber } from "../../core/big-number/FixedBigNumber";
+import { QRScanner } from "@ionic-native/qr-scanner";
 
 @IonicPage()
 @Component({
@@ -72,7 +73,8 @@ export class TransferPage {
         private transferTransactionService: TransferTransactionService,
         private translateService: TranslateService,
         private bulkTranslateService: BulkTranslateService,
-        private assetService: AssetService) { }
+        private qrScanner: QRScanner,
+        private zone: NgZone) { }
 
     ionViewDidLoad(): void {
         this.getAndSubscribeToTranslations();
@@ -249,6 +251,71 @@ export class TransferPage {
             this.fromWallet as ILocalWallet,
             this.password,
             transaction
+        );
+    }
+
+    hideUI() {
+        document.getElementsByTagName("body")[0].className = "camera-ready";
+        (document.getElementsByTagName("page-transfer")[0] as HTMLElement).style.display = "none";
+    }
+
+    showUI() {
+        document.getElementsByTagName("body")[0].className = "";
+        (document.getElementsByTagName("page-transfer")[0] as HTMLElement).style.display = "initial";
+    }
+
+    scanQRCode() {
+        // Make the screen camera ready
+        this.qrScanner.prepare().then(
+            (status) => {
+                if(status.authorized) {
+                    console.log("Authorized!");
+                    let scanSubscription = this.qrScanner.scan().subscribe(
+                        (text) => {
+                            let obj: any;
+                            try {
+                                obj = JSON.parse(text);
+                            }
+                            catch(ex) {}
+
+                            if(obj) {
+                                // We found valid JSON. We are just going to assume it is correct.
+                                this.qrScanner.hide();
+                                this.qrScanner.destroy();
+                                scanSubscription.unsubscribe();
+                                this.showUI();
+
+                                this.zone.run(() => {
+                                    this.toPublicKey = obj.receiveAddress;
+                                    this.amount = obj.amount;
+                                    this.chosenCurrency = obj.assetId == "000x00123" ? "XSM" : "XSP";
+
+                                    this.onAmountChanged();
+                                });
+
+                                console.log(obj);
+                            }
+                            else {
+                                // We did not find valid JSON. We'll continue scanning.
+                                console.log("No valid json");
+                            }
+                        }
+                    );
+
+                    this.hideUI();
+                    this.qrScanner.show();
+                }
+                else if(status.denied) {
+                    // User denied permission.
+                    console.log("no camera permission");
+                    // return Promise.reject("No camera permission");
+                }
+                else {
+                    // Permission was denied but not permanently
+                    console.log("temp no camera permission");
+                    // return Promise.reject("No camera permission");
+                }
+            }
         );
     }
 }

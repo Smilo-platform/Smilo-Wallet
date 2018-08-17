@@ -210,3 +210,27 @@ page-transfer {
         border: 4px #fff solid;
     }
 }
+
+body {
+    &.camera-ready {
+        background: none transparent !important;
+
+        ion-content, 
+        ion-app,
+        page-app,
+        .app-root, 
+        .scroll-content, 
+        .fixed-content {
+            background: none transparent !important;
+        }
+
+        [app-viewport],
+        [overlay-portal],
+        [nav-viewport],
+        [tab-portal],
+        .nav-decor {
+            display: none !important;
+            background: none transparent !important;
+        }
+    }
+}
