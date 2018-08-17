@@ -57,6 +57,7 @@ import { AssetService } from "../services/asset-service/asset-service";
 import { QRGeneratorService } from "../services/qr-generator-service/qr-generator-service";
 import { RequestPageModule } from "../pages/request/request.module";
 import { QrCodePageModule } from "../pages/qr-code-page/qr-code-page.module";
+import { QRScanner } from "@ionic-native/qr-scanner";
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, "assets/i18n/");

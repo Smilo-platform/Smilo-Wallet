@@ -1,5 +1,5 @@
 import { Component, NgZone } from "@angular/core";
-import { IonicPage, NavParams } from "ionic-angular";
+import { IonicPage, NavParams, ToastController } from "ionic-angular";
 import { IWallet } from "../../models/IWallet";
 import { IBalance } from "../../models/IBalance";
 import { TransactionSignService } from "../../services/transaction-sign-service/transaction-sign-service";
@@ -12,6 +12,8 @@ import { BulkTranslateService } from "../../services/bulk-translate-service/bulk
 import { AssetService } from "../../services/asset-service/asset-service";
 import { FixedBigNumber } from "../../core/big-number/FixedBigNumber";
 import { QRScanner } from "@ionic-native/qr-scanner";
+import { IPaymentRequest } from "../../models/IPaymentRequest";
+import { AddressHelper } from "../../core/address/AddressHelper";
 
 @IonicPage()
 @Component({
@@ -68,13 +70,16 @@ export class TransferPage {
    */
     translations: Map<string, string> = new Map<string, string>();
 
+    private addressHelper = new AddressHelper();
+
     constructor(private navParams: NavParams,
         private transactionSignService: TransactionSignService,
         private transferTransactionService: TransferTransactionService,
         private translateService: TranslateService,
         private bulkTranslateService: BulkTranslateService,
         private qrScanner: QRScanner,
-        private zone: NgZone) { }
+        private zone: NgZone,
+        private toastController: ToastController) { }
 
     ionViewDidLoad(): void {
         this.getAndSubscribeToTranslations();
@@ -254,6 +259,11 @@ export class TransferPage {
         );
     }
 
+    isValidPaymentRequest(request: IPaymentRequest) {
+        return this.addressHelper.isValidAddress(request.receiveAddress).isValid &&
+               request.amount && request.assetId;
+    }
+
     hideUI() {
         document.getElementsByTagName("body")[0].className = "camera-ready";
         (document.getElementsByTagName("page-transfer")[0] as HTMLElement).style.display = "none";
@@ -272,32 +282,43 @@ export class TransferPage {
                     console.log("Authorized!");
                     let scanSubscription = this.qrScanner.scan().subscribe(
                         (text) => {
-                            let obj: any;
+                            let obj: IPaymentRequest;
                             try {
                                 obj = JSON.parse(text);
                             }
                             catch(ex) {}
 
                             if(obj) {
-                                // We found valid JSON. We are just going to assume it is correct.
-                                this.qrScanner.hide();
-                                this.qrScanner.destroy();
-                                scanSubscription.unsubscribe();
-                                this.showUI();
+                                if(this.isValidPaymentRequest(obj)) {
+                                    // We found valid JSON.
+                                    this.qrScanner.hide();
+                                    this.qrScanner.destroy();
+                                    scanSubscription.unsubscribe();
+                                    this.showUI();
 
-                                this.zone.run(() => {
-                                    this.toPublicKey = obj.receiveAddress;
-                                    this.amount = obj.amount;
-                                    this.chosenCurrency = obj.assetId == "000x00123" ? "XSM" : "XSP";
+                                    this.zone.run(() => {
+                                        this.toPublicKey = obj.receiveAddress;
+                                        this.amount = obj.amount;
+                                        this.chosenCurrency = obj.assetId == "000x00123" ? "XSM" : "XSP";
 
-                                    this.onAmountChanged();
-                                });
-
-                                console.log(obj);
+                                        this.onAmountChanged();
+                                    });
+                                }
+                                else {
+                                    // Invalid payment request.
+                                    this.toastController.create({
+                                        message: "Invalid payment request format",
+                                        cssClass: "error"
+                                    }).present();
+                                }
                             }
                             else {
                                 // We did not find valid JSON. We'll continue scanning.
                                 console.log("No valid json");
+                                this.toastController.create({
+                                    message: "Not valid data",
+                                    cssClass: "error"
+                                }).present();
                             }
                         }
                     );

@@ -48,7 +48,7 @@ export class RequestPage {
 
     generateQRCode(): void {
         let paymentRequest: IPaymentRequest = {receiveAddress: this.fromWallet.publicKey,
-                                               amount: new FixedBigNumber(this.amount, 0), 
+                                               amount: this.amount.toString(), 
                                                assetId: "000x00123"};
         let modal = this.modalController.create(QrCodePage, { paymentRequest: paymentRequest }, { cssClass: this.selectedTheme });
         modal.present();
