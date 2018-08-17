@@ -91,6 +91,13 @@ export class TransferPage {
         this.chosenCurrencyAmount = this.balances[0].amount;
     }
 
+    ionViewDidLeave(): void {
+        console.log("did leave");
+        this.showUI();
+        this.qrScanner.hide();
+        this.qrScanner.destroy();
+    }
+
     getAndSubscribeToTranslations(): void {
         this.translateService.onLangChange.subscribe(data => {
             this.retrieveTranslations();
@@ -260,7 +267,8 @@ export class TransferPage {
     }
 
     isValidPaymentRequest(request: IPaymentRequest) {
-        return this.addressHelper.isValidAddress(request.receiveAddress).isValid &&
+        return request.receiveAddress &&
+               this.addressHelper.isValidAddress(request.receiveAddress).isValid &&
                request.amount && request.assetId;
     }
 
@@ -279,9 +287,10 @@ export class TransferPage {
         this.qrScanner.prepare().then(
             (status) => {
                 if(status.authorized) {
-                    console.log("Authorized!");
                     let scanSubscription = this.qrScanner.scan().subscribe(
                         (text) => {
+                            console.log("Data = ", text);
+
                             let obj: IPaymentRequest;
                             try {
                                 obj = JSON.parse(text);
@@ -308,16 +317,17 @@ export class TransferPage {
                                     // Invalid payment request.
                                     this.toastController.create({
                                         message: "Invalid payment request format",
-                                        cssClass: "error"
+                                        duration: 2000,
+                                        position: "top"
                                     }).present();
                                 }
                             }
                             else {
                                 // We did not find valid JSON. We'll continue scanning.
-                                console.log("No valid json");
                                 this.toastController.create({
-                                    message: "Not valid data",
-                                    cssClass: "error"
+                                    message: "Could not parse JSON",
+                                    duration: 2000,
+                                    position: "top"
                                 }).present();
                             }
                         }
@@ -329,12 +339,19 @@ export class TransferPage {
                 else if(status.denied) {
                     // User denied permission.
                     console.log("no camera permission");
-                    // return Promise.reject("No camera permission");
+                    this.toastController.create({
+                        message: "Please enable camera permissions to scan a QR code",
+                        duration: 2000,
+                        position: "top"
+                    }).present();
                 }
                 else {
                     // Permission was denied but not permanently
-                    console.log("temp no camera permission");
-                    // return Promise.reject("No camera permission");
+                    this.toastController.create({
+                        message: "Please enable camera permissions to scan a QR code",
+                        duration: 2000,
+                        position: "top"
+                    }).present();
                 }
             }
         );
