@@ -103,6 +103,14 @@
     "wallet_import_ledger": {
         "nav-bar-title": "Wallet Import Ledger"
     },
+    "request": {
+        "nav-bar-title": "Request",
+        "your-address": "Your address",
+        "select-currency": "Select currency",
+        "enter-amount": "Enter amount",
+        "enter-amount-placeholder": "enter amount",
+        "generate-qr-code": "Generate QR code"
+    },
     "wallet_overview": {
         "nav-bar-title": "Wallet Overview",
         "error_retrieving_data": "Could not retrieve data",
@@ -131,6 +139,7 @@
         "distribution": "Distribution",
         "funds_hidden": "Your wallet funds are hidden.",
         "transfer": "Transfer",
+        "request": "Request",
         "settings": "Settings",
         "backup_wallet": "Backup wallet",
         "delete_wallet": "Delete wallet",
@@ -180,6 +189,14 @@
         "buttons": {
             "import": "Import"
         }
+    },
+    "qr-code-page": {
+        "nav-bar-title": "QR Code",
+        "explanation-message": "Scan this QR code in the transfer page on another device to request the currency easily",
+        "address": "Address",
+        "currency": "Currency",
+        "amount": "Amount",
+        "close": "Close"
     },
     "import_keystore": {
         "nav-bar-title": "Import keystore",

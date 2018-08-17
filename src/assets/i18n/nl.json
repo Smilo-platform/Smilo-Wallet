@@ -81,6 +81,14 @@
             }
         }
     },
+    "request": {
+        "nav-bar-title": "Verzoek",
+        "your-address": "Jouw adres",
+        "select-currency": "Selecteer currency",
+        "enter-amount": "Voer een bedrag in",
+        "enter-amount-placeholder": "voer een bedrag in",
+        "generate-qr-code": "Genereer QR code"
+    },
     "wallet_overview": {
         "nav-bar-title": "Wallet overzicht",
         "wallets": "Wallets",
@@ -90,6 +98,7 @@
         "distribution": "Verdeling",
         "funds_hidden": "Jouw fondsen zijn verborgen",
         "transfer": "Overmaken",
+        "request": "Verzoeken",
         "settings": "Instellingen",
         "backup_wallet": "Backup",
         "delete_wallet": "Verwijder wallet",
@@ -158,6 +167,14 @@
         "buttons": {
             "import": "Importeren"
         }
+    },
+    "qr-code-page": {
+        "nav-bar-title": "QR Code",
+        "explanation-message": "Scan deze QR code in de overmaak pagina op een ander apparaat om de currency makkelijk te verzoeken",
+        "address": "Adres",
+        "currency": "Currency",
+        "amount": "Hoeveelheid",
+        "close": "Sluiten"
     },
     "import_keystore": {
         "nav-bar-title": "Importeer keystore",
