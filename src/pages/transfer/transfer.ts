@@ -289,6 +289,7 @@ export class TransferPage {
                 if(status.authorized) {
                     let scanSubscription = this.qrScanner.scan().subscribe(
                         (text) => {
+                            text = (<any>text).result || text;
                             console.log("Data = ", text);
 
                             let obj: IPaymentRequest;
