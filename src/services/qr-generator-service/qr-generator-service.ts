@@ -4,16 +4,13 @@ import { IPaymentRequest } from "../../models/IPaymentRequest";
 declare const QRCode: any;
 
 export interface IQRGeneratorService {
-    generate(content: IPaymentRequest, element: HTMLElement, dimensions?: [number, number]): void;
+    generate(content: string, element: HTMLElement, dimensions?: [number, number]): void;
 }
 
 @Injectable()
 export class QRGeneratorService implements IQRGeneratorService {
-    generate(content: IPaymentRequest, element: HTMLElement, dimensions: [number, number] = [256, 256]): void {
-        new QRCode(element, {
-            text: content,
-            width: dimensions[0],
-            height: dimensions[1]
-        });
+    generate(content: string, element: HTMLElement, dimensions: [number, number] = [256, 256]): void {
+        let qrcode = new QRCode(element);
+        qrcode.makeCode(content);
     }
 }
