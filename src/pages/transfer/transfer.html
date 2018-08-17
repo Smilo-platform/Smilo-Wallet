@@ -8,10 +8,9 @@
             <ion-col col-12 col-xl-4>
                 <h1 class="no-padding-top">{{ 'transfer.enter_address' | translate }}</h1>
                 <ion-item class="input-bottom-border">
-                    <ion-input type="text" placeholder="{{ 'transfer.placeholder_enter_address' | translate }}" (ngModelChange)="resetTransferState()" [(ngModel)]="toPublicKey"></ion-input>
+                    <ion-input type="text" placeholder="{{ 'transfer.placeholder_enter_address' | translate }}" (ngModelChange)="resetTransferState()" [(ngModel)]="toPublicKey"></ion-input> 
+                    <ion-icon (click)="scanQRCode()" item-end name="camera"></ion-icon>
                 </ion-item>
-
-                <button (click)="scanQRCode()">CLICK ME TO START THE SCANNER FOR GOD'S SAKES</button>
                 <h1>{{ 'transfer.select_currency' | translate }}</h1>
                 <ion-item class="input-bottom-border no-border">
                     <ion-select class="choose-currency" [(ngModel)]="chosenCurrency" (ionChange)="setChosenCurrencyAmount()" interface="action-sheet">
