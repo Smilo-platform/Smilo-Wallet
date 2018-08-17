@@ -81,6 +81,9 @@
             }
         }
     },
+    "request": {
+        "nav-bar-title": "Verzoek"
+    },
     "wallet_overview": {
         "nav-bar-title": "Wallet overzicht",
         "wallets": "Wallets",
@@ -90,6 +93,7 @@
         "distribution": "Verdeling",
         "funds_hidden": "Jouw fondsen zijn verborgen",
         "transfer": "Overmaken",
+        "request": "Verzoeken",
         "settings": "Instellingen",
         "backup_wallet": "Backup",
         "delete_wallet": "Verwijder wallet",

@@ -55,6 +55,7 @@ import { TransferTransactionService } from "../services/transfer-transaction-ser
 import { AddressService } from "../services/address-service/address-service";
 import { AssetService } from "../services/asset-service/asset-service";
 import { QRGeneratorService } from "../services/qr-generator-service/qr-generator-service";
+import { RequestPageModule } from "../pages/request/request.module";
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, "assets/i18n/");
@@ -82,6 +83,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     WalletPageModule,
     FaqPageModule,
     SettingsGeneralPageModule,
+    RequestPageModule,
     TransferPageModule,
     WalletImportKeystorePageModule,
     WalletImportLedgerPageModule,

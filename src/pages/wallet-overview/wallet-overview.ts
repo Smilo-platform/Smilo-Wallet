@@ -22,6 +22,7 @@ import { WalletTransactionHistoryService } from "../../services/wallet-transacti
 import { AddressService } from "../../services/address-service/address-service";
 import { SettingsService } from "../../services/settings-service/settings-service";
 import { FixedBigNumber } from "../../core/big-number/FixedBigNumber";
+import { RequestPage } from "../request/request";
 
 export declare type VisibilityType = "shown" | "hidden";
 
@@ -281,6 +282,13 @@ export class WalletOverviewPage {
      */
     openTransferPage(): void {
         this.navCtrl.push(TransferPage, { currentWallet: this.currentWallet, currentWalletBalance: this.balances });
+    }
+    
+    /**
+     * Open the request page
+     */
+    openRequestPage(): void {
+        this.navCtrl.push(RequestPage, { currentWallet: this.currentWallet, currentWalletBalance: this.balances });
     }
 
     /**

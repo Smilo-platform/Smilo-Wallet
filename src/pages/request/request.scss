@@ -1,0 +1,58 @@
+page-request {
+    .transfer-button {
+        border: none !important;
+    }
+
+    .no-padding-top {
+        padding-top: 0 !important;
+    }
+
+    .no-border .item-inner {
+        box-shadow: none;
+    }
+
+    .transfer-button {
+        margin-top: 30px;
+        font-size: 16px;
+        height: 40px;
+    }
+
+    .inputInfo {
+        font-size: 16px;
+        width: 180px;
+        text-align: center;
+        margin: 13px 8px;
+        border: 4px #000 solid;
+        padding: 0px 16px 0px 16px;
+    }
+
+    h1 {
+        padding-top: 20px;
+        font-size: 20px !important;
+    }
+
+    .choose-currency {
+        width: 86px;
+        margin-left: 8px;
+    }
+
+    .biggerText {
+        font-size: 16px;
+    }
+
+    .padding {
+        padding-top: 3px;
+        padding-left: 2px;
+    }
+
+}
+
+.dark-theme {
+    h1 {
+        color: #fff !important;
+    }
+
+    .inputInfo {
+        border: 4px #fff solid;
+    }
+}

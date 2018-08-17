@@ -103,6 +103,9 @@
     "wallet_import_ledger": {
         "nav-bar-title": "Wallet Import Ledger"
     },
+    "request": {
+        "nav-bar-title": "Request"
+    },
     "wallet_overview": {
         "nav-bar-title": "Wallet Overview",
         "error_retrieving_data": "Could not retrieve data",
@@ -131,6 +134,7 @@
         "distribution": "Distribution",
         "funds_hidden": "Your wallet funds are hidden.",
         "transfer": "Transfer",
+        "request": "Request",
         "settings": "Settings",
         "backup_wallet": "Backup wallet",
         "delete_wallet": "Delete wallet",
