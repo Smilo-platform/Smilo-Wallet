@@ -222,8 +222,7 @@ describe("MerkleTreeBuilder", () => {
                         `file:///android_asset/www/assets/scripts/sjcl.js`,
                         `file:///android_asset/www/assets/scripts/seedrandom.min.js`,
                         `file:///android_asset/www/assets/scripts/SHA1PRNG.js`,
-                        `file:///android_asset/www/assets/scripts/LamportGenerator.js`,
-                        `file:///android_asset/www/assets/scripts/zxcvbn.js`
+                        `file:///android_asset/www/assets/scripts/LamportGenerator.js`
                     ]
                 );
 
@@ -261,8 +260,7 @@ describe("MerkleTreeBuilder", () => {
                         `${ window.location.protocol }//${ window.location.host }/assets/scripts/sjcl.js`,
                         `${ window.location.protocol }//${ window.location.host }/assets/scripts/seedrandom.min.js`,
                         `${ window.location.protocol }//${ window.location.host }/assets/scripts/SHA1PRNG.js`,
-                        `${ window.location.protocol }//${ window.location.host }/assets/scripts/LamportGenerator.js`,
-                        `${ window.location.protocol }//${ window.location.host }/assets/scripts/zxcvbn.js`
+                        `${ window.location.protocol }//${ window.location.host }/assets/scripts/LamportGenerator.js`
                     ]
                 );
 
