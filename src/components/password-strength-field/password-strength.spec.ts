@@ -7,14 +7,22 @@ import { MockTranslationLoader } from "../../../test-config/mocks/MockTranslatio
 import { ComponentsModule } from "../../components/components.module";
 import { PasswordStrengthComponent } from "./password-strength";
 import { SettingsGeneralPage } from "../../pages/settings-general/settings-general";
+import { BulkTranslateService } from "../../services/bulk-translate-service/bulk-translate-service";
+import { MockBulkTranslateService } from "../../../test-config/mocks/MockBulkTranslateService";
+import { PasswordService, IPasswordService } from "../../services/password-service/password-service";
+import { MockPasswordService } from "../../../test-config/mocks/MockPasswordService";
 
 describe("PasswordStrength", () => {
   let comp: PasswordStrengthComponent;
   let fixture: ComponentFixture<PasswordStrengthComponent>;
   let navController: MockNavController;
+  let bulkTranslateService: BulkTranslateService;
+  let passwordService: IPasswordService;
 
   beforeEach(async(() => {
     navController = new MockNavController();
+    bulkTranslateService = new MockBulkTranslateService();
+    passwordService = new MockPasswordService();
 
     TestBed.configureTestingModule({
       declarations: [PasswordStrengthComponent],
@@ -25,7 +33,9 @@ describe("PasswordStrength", () => {
         })
       ],
       providers: [
-        { provide: NavController, useValue: navController }
+        { provide: NavController, useValue: navController },
+        { provide: PasswordService, useValue: passwordService },
+        { provide: BulkTranslateService, useValue: bulkTranslateService }
       ]
     }).compileComponents();
   }));

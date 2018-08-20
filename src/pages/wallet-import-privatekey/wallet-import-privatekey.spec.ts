@@ -21,6 +21,8 @@ import { PrepareWalletPage } from "../prepare-wallet/prepare-wallet";
 import { ComponentsModule } from "../../components/components.module";
 import { MockSettingService } from "../../../test-config/mocks/MockSettingsService";
 import { SettingsService } from "../../services/settings-service/settings-service";
+import { MockBulkTranslateService } from "../../../test-config/mocks/MockBulkTranslateService";
+import { BulkTranslateService } from "../../services/bulk-translate-service/bulk-translate-service";
 
 describe("WalletImportPrivatekeyPage", () => {
   let comp: WalletImportPrivatekeyPage;
@@ -33,6 +35,7 @@ describe("WalletImportPrivatekeyPage", () => {
   let keyStoreService: IKeyStoreService;
   let passwordService: IPasswordService;
   let settingService: MockSettingService;
+  let bulkTranslateService: BulkTranslateService;
 
   beforeEach(async(() => {
     walletService = new MockWalletService();
@@ -43,6 +46,7 @@ describe("WalletImportPrivatekeyPage", () => {
     keyStoreService = new MockKeyStoreService();
     passwordService = new MockPasswordService();
     settingService = new MockSettingService();
+    bulkTranslateService = new MockBulkTranslateService();
 
     TestBed.configureTestingModule({
       declarations: [WalletImportPrivatekeyPage],
@@ -61,7 +65,8 @@ describe("WalletImportPrivatekeyPage", () => {
         { provide: NavController, useValue: navController },
         { provide: NavParams, useValue: navParams },
         { provide: PasswordService, useValue: passwordService },
-        { provide: SettingsService, useValue: settingService }
+        { provide: SettingsService, useValue: settingService },
+        { provide: BulkTranslateService, useValue: bulkTranslateService }
       ]
     }).compileComponents();
   }));
