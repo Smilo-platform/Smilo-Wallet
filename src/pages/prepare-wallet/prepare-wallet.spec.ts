@@ -25,10 +25,10 @@ import { IKeyStoreService, KeyStoreService } from "../../services/key-store-serv
 import { MockBIP39Service } from "../../../test-config/mocks/MockBIP39Service";
 import { MockBIP32Service } from "../../../test-config/mocks/MockBIP32Service";
 import { MockKeyStoreService } from "../../../test-config/mocks/MockKeyStoreService";
-import { WalletExtraImportPage } from "../wallet-extra-import/wallet-extra-import";
+import { IWalletExtraImportDismissData, WalletExtraImportPage } from "../wallet-extra-import/wallet-extra-import";
 import { ILocalWallet } from "../../models/ILocalWallet";
 import { IKeyStore } from "../../models/IKeyStore";
-import { MockSettingsService } from "../../../test-config/mocks/MockSettingsService";
+import { MockSettingService } from "../../../test-config/mocks/MockSettingsService";
 import { SettingsService } from "../../services/settings-service/settings-service";
 
 describe("PrepareWalletPage", () => {
@@ -46,7 +46,7 @@ describe("PrepareWalletPage", () => {
   let bip32Service: IBIP32Service;
   let bip39Service: IBIP39Service;
   let keyStoreService: IKeyStoreService;
-  let settingService: MockSettingsService;
+  let settingService: MockSettingService;
 
   beforeEach(async(() => {
     walletService = new MockWalletService();
@@ -60,7 +60,7 @@ describe("PrepareWalletPage", () => {
     bip32Service = new MockBIP32Service();
     bip39Service = new MockBIP39Service();
     keyStoreService = new MockKeyStoreService();
-    settingService = new MockSettingsService();
+    settingService = new MockSettingService();
 
     TestBed.configureTestingModule({
       declarations: [PrepareWalletPage],

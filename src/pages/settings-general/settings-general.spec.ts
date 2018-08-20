@@ -6,7 +6,7 @@ import { MockNavParams } from "../../../test-config/mocks/MockNavParams";
 import { TranslateModule, TranslateLoader, TranslateService } from "@ngx-translate/core";
 import { MockTranslationLoader } from "../../../test-config/mocks/MockTranslationLoader";
 import { SettingsService } from "../../services/settings-service/settings-service";
-import { MockSettingsService } from "../../../test-config/mocks/MockSettingsService";
+import { MockSettingService } from "../../../test-config/mocks/MockSettingsService";
 import { ComponentsModule } from "../../components/components.module";
 import 'rxjs/add/observable/of';
 import { Observable } from "rxjs/Observable";
@@ -14,10 +14,10 @@ import { Observable } from "rxjs/Observable";
 describe("SettingsGeneralPage", () => {
   let comp: SettingsGeneralPage;
   let fixture: ComponentFixture<SettingsGeneralPage>;
-  let settingsService: MockSettingsService;
+  let settingsService: MockSettingService;
 
   beforeEach(async(() => {
-    settingsService = new MockSettingsService();
+    settingsService = new MockSettingService();
 
     TestBed.configureTestingModule({
       declarations: [SettingsGeneralPage],

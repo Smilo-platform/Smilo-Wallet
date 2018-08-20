@@ -6,28 +6,11 @@ type FixedBigNumberSource = number | string | FixedBigNumber;
  * Represents a number with a fixed amount of decimals.
  */
 export class FixedBigNumber {
-    /**
-     * The interal Big number.
-     */
     private big: Big;
-    /**
-     * The amount of decimals.
-     */
     private decimals: number;
-    /**
-     * True if the internal Big number is invalid. This happens if the passed
-     * input string is of an invalid format.
-     */
-    private invalidNumber: boolean = false;
 
     constructor(number: string|number|Big, decimals: number) {
-        try {
-            this.big = Big(number);
-        }
-        catch(ex) {
-            this.invalidNumber = true;
-        }
-        
+        this.big = Big(number);
         this.decimals = decimals;
     }
 
@@ -51,8 +34,7 @@ export class FixedBigNumber {
      * A FixedBigNumber is invalid if the amount of decimals exceeds the defined amount of decimals.
      */
     isValid(): boolean {
-        return !this.invalidNumber &&
-                new FixedBigNumber(this.toFixed(this.decimals), this.decimals).eq(this);
+        return new FixedBigNumber(this.toFixed(this.decimals), this.decimals).eq(this);
     }
 
     /**

@@ -1,15 +1,14 @@
-<ion-header [hidden]="cameraIsShown">
+<ion-header>
     <smilo-nav-header titleTranslationKey="transfer.nav-bar-title"></smilo-nav-header>
 </ion-header>
 
-<ion-content padding [hidden]="cameraIsShown">
+<ion-content padding *ngIf="fromWallet">
     <ion-grid>
         <ion-row justify-content-center>
             <ion-col col-12 col-xl-4>
                 <h1 class="no-padding-top">{{ 'transfer.enter_address' | translate }}</h1>
                 <ion-item class="input-bottom-border">
-                    <ion-input type="text" placeholder="{{ 'transfer.placeholder_enter_address' | translate }}" (ngModelChange)="resetTransferState()" [(ngModel)]="toPublicKey"></ion-input> 
-                    <ion-icon class="camera" (click)="scanQRCode()" item-end name="camera"></ion-icon>
+                    <ion-input class="toAddress biggerText padding" type="text" placeholder="{{ 'transfer.placeholder_enter_address' | translate }}" (ngModelChange)="resetTransferState()" [(ngModel)]="toPublicKey"></ion-input> 
                 </ion-item>
                 <h1>{{ 'transfer.select_currency' | translate }}</h1>
                 <ion-item class="input-bottom-border no-border">
@@ -47,31 +46,4 @@
             </ion-col>
         </ion-row>
     </ion-grid>
-</ion-content>
-
-<ion-content *ngIf="cameraIsShown">
-    <div class="scanner-instruction-bar">
-        {{ 'transfer.scanner.instruction' | translate }}
-    </div>
-
-    <div class="center-container">
-        <div class="scanner-frame-container">
-            <div class="frame left top"></div>
-            <div class="frame-filler-width"></div>
-            <div class="frame right top"></div>
-    
-            <div class="frame-filler-height"></div>
-            <div class="frame-filler-width-height"></div>
-            <div class="frame-filler-height"></div>
-    
-            <div class="frame left bottom"></div>
-            <div class="frame-filler-width"></div>
-            <div class="frame right bottom"></div>
-        </div>
-    </div>
-
-    <div class="cancel-bar" (click)="hideCamera()">
-        {{ 'transfer.scanner.cancel' | translate }}
-    </div>
-    
 </ion-content>
