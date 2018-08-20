@@ -19,7 +19,7 @@ import { IPasswordService, PasswordService } from "../../services/password-servi
 import { MockPasswordService } from "../../../test-config/mocks/MockPasswordService";
 import { PrepareWalletPage } from "../prepare-wallet/prepare-wallet";
 import { ComponentsModule } from "../../components/components.module";
-import { MockSettingsService } from "../../../test-config/mocks/MockSettingsService";
+import { MockSettingService } from "../../../test-config/mocks/MockSettingsService";
 import { SettingsService } from "../../services/settings-service/settings-service";
 
 describe("WalletImportPrivatekeyPage", () => {
@@ -32,7 +32,7 @@ describe("WalletImportPrivatekeyPage", () => {
   let navigationHelperService: NavigationHelperService;
   let keyStoreService: IKeyStoreService;
   let passwordService: IPasswordService;
-  let settingService: MockSettingsService;
+  let settingService: MockSettingService;
 
   beforeEach(async(() => {
     walletService = new MockWalletService();
@@ -42,7 +42,7 @@ describe("WalletImportPrivatekeyPage", () => {
     modalController = new MockModalController();
     keyStoreService = new MockKeyStoreService();
     passwordService = new MockPasswordService();
-    settingService = new MockSettingsService();
+    settingService = new MockSettingService();
 
     TestBed.configureTestingModule({
       declarations: [WalletImportPrivatekeyPage],

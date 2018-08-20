@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 import { TransferPage } from "./transfer";
-import { IonicModule, NavController, NavParams, ToastController, Platform} from "ionic-angular/index";
+import { IonicModule, NavController, NavParams} from "ionic-angular/index";
 import { MockNavController } from "../../../test-config/mocks/MockNavController";
 import { MockNavParams } from "../../../test-config/mocks/MockNavParams";
 import { ComponentsModule } from "../../components/components.module";
@@ -14,11 +14,6 @@ import { BulkTranslateService } from "../../services/bulk-translate-service/bulk
 import { MockBulkTranslateService } from "../../../test-config/mocks/MockBulkTranslateService";
 import { MockAssetService } from "../../../test-config/mocks/MockAssetService";
 import { AssetService } from "../../services/asset-service/asset-service";
-import { MockToastController } from "../../../test-config/mocks/MockToastController";
-import { MockPlatform } from "../../../test-config/mocks/MockPlatform";
-import { MockQRScanner } from "../../../test-config/mocks/MockQRScanner";
-import { QRGeneratorService } from "../../services/qr-generator-service/qr-generator-service";
-import { QRScanner } from "@ionic-native/qr-scanner";
 
 describe("TransferPage", () => {
   let comp: TransferPage;
@@ -29,9 +24,6 @@ describe("TransferPage", () => {
   let transferTransactionService: MockTransferTransactionService;
   let bulkTranslateService: BulkTranslateService;
   let assetService: MockAssetService;
-  let toastController: MockToastController;
-  let platformService: MockPlatform;
-  let qrScannerService: MockQRScanner;
 
   beforeEach(async(() => {
     navController = new MockNavController();
@@ -40,9 +32,6 @@ describe("TransferPage", () => {
     transferTransactionService = new MockTransferTransactionService();
     bulkTranslateService = new MockBulkTranslateService();
     assetService = new MockAssetService();
-    toastController = new MockToastController();
-    platformService = new MockPlatform();
-    qrScannerService = new MockQRScanner();
 
     TestBed.configureTestingModule({
       declarations: [TransferPage],
@@ -59,10 +48,7 @@ describe("TransferPage", () => {
         { provide: TransactionSignService, useValue: transactionSignService },
         { provide: TransferTransactionService, useValue: transferTransactionService },
         { provide: BulkTranslateService, useValue: bulkTranslateService },
-        { provide: AssetService, useValue: assetService },
-        { provide: ToastController, useValue: toastController },
-        { provide: Platform, useValue: platformService },
-        { provide: QRScanner, useValue: qrScannerService }
+        { provide: AssetService, useValue: assetService }
       ]
     }).compileComponents();
   }));

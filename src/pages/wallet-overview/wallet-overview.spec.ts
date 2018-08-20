@@ -35,7 +35,7 @@ import { ElementRef } from "@angular/core";
 import { MockAddressService } from "../../../test-config/mocks/MockAddressService";
 import { AddressService } from "../../services/address-service/address-service";
 import { IAddress } from "../../models/IAddress";
-import { MockSettingsService } from "../../../test-config/mocks/MockSettingsService";
+import { MockSettingService } from "../../../test-config/mocks/MockSettingsService";
 import { SettingsService } from "../../services/settings-service/settings-service";
 import { FixedBigNumber } from "../../core/big-number/FixedBigNumber";
 
@@ -56,7 +56,7 @@ describe("WalletOverviewPage", () => {
     let translateService: MockTranslateService;
     let platform: MockPlatform;
     let addressService: MockAddressService;
-    let settingsService: MockSettingsService;
+    let settingsService: MockSettingService;
 
     beforeEach(async(() => {
         navController = new MockNavController();
@@ -73,7 +73,7 @@ describe("WalletOverviewPage", () => {
         translateService = new MockTranslateService();
         platform = new MockPlatform();
         addressService = new MockAddressService();
-        settingsService = new MockSettingsService();
+        settingsService = new MockSettingService();
 
         TestBed.configureTestingModule({
             declarations: [WalletOverviewPage],

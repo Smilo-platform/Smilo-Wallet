@@ -32,14 +32,7 @@
                         <p id="total-wallet-value">{{ totalCurrentCurrencyValue }}</p>
                         <p id="total-wallet-value-currency">{{ pickedCurrency }}</p>
                     </ion-card-header>
-                    <div>
-                        <div class="transfer-button-div">
-                            <button ion-button (click)="openTransferPage()" class="transfer-button" ion-button>{{ 'wallet_overview.transfer' | translate }}</button>
-                        </div>
-                        <div class="request-button-div">
-                            <button ion-button (click)="openRequestPage()" class="request-button" ion-button>{{ 'wallet_overview.request' | translate }}</button>
-                        </div>
-                    </div>
+                    <button ion-button (click)="openTransferPage()" class="transfer-button" ion-button>{{ 'wallet_overview.transfer' | translate }}</button>
                 </ion-card>
                 <ion-list class="currencies-overview" [@visibilityChanged]="walletFundsVisibility">
                     <ion-item>

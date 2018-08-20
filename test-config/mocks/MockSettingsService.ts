@@ -1,7 +1,8 @@
 import { ISettingsService } from "../../src/services/settings-service/settings-service";
 import { Observable } from "rxjs/Observable";
+import { Subscriber } from "rxjs";
 
-export class MockSettingsService implements ISettingsService {
+export class MockSettingService implements ISettingsService {
     getFundsSwitchSettings(): Promise<any> {
         return Promise.resolve();
     }
