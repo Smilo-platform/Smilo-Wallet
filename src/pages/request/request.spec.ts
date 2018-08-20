@@ -6,7 +6,7 @@ import { ComponentsModule } from "../../components/components.module";
 import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
 import { MockTranslationLoader } from "../../../test-config/mocks/MockTranslationLoader";
 import { MockModalController } from "../../../test-config/mocks/MockModalController";
-import { MockSettingService } from "../../../test-config/mocks/MockSettingsService";
+import { MockSettingsService } from "../../../test-config/mocks/MockSettingsService";
 import { ModalController, NavController } from "ionic-angular";
 import { SettingsService } from "../../services/settings-service/settings-service";
 import { MockNavController } from "../../../test-config/mocks/MockNavController";
@@ -17,12 +17,12 @@ describe("RequestPage", () => {
   let navParams: MockNavParams;
   let navController: MockNavController;
   let modalController: MockModalController;
-  let settingsService: MockSettingService;
+  let settingsService: MockSettingsService;
 
   beforeEach(async(() => {
     navParams = new MockNavParams();
     modalController = new MockModalController();
-    settingsService = new MockSettingService();
+    settingsService = new MockSettingsService();
     navController = new MockNavController();
 
     TestBed.configureTestingModule({
