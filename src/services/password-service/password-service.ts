@@ -10,6 +10,8 @@ export interface IPasswordService {
     validate(password: string, passwordConfirm: string): IPasswordValidationResult;
 }
 
+declare const zxcvbn: any;
+
 @Injectable()
 export class PasswordService implements IPasswordService {
      passwordWeakWarning: string;
@@ -49,5 +51,9 @@ export class PasswordService implements IPasswordService {
                 type: "success"
             }
         }
+    }
+
+    passwordStrength(password: string): any {
+        return zxcvbn(password);
     }
 }

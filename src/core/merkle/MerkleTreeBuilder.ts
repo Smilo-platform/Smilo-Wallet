@@ -62,7 +62,8 @@ export class MerkleTreeBuilder {
                     `file:///android_asset/www/assets/scripts/sjcl.js`,
                     `file:///android_asset/www/assets/scripts/seedrandom.min.js`,
                     `file:///android_asset/www/assets/scripts/SHA1PRNG.js`,
-                    `file:///android_asset/www/assets/scripts/LamportGenerator.js`
+                    `file:///android_asset/www/assets/scripts/LamportGenerator.js`,
+                    `file:///android_asset/www/assets/scripts/zxcvbn.js`
                 ];
             } else if (isIos) {
                 // iOS requires the scripts to be loaded as shown below.
@@ -70,7 +71,8 @@ export class MerkleTreeBuilder {
                     `${ window.location.href.replace("/index.html", "") }/assets/scripts/sjcl.js`,
                     `${ window.location.href.replace("/index.html", "") }/assets/scripts/seedrandom.min.js`,
                     `${ window.location.href.replace("/index.html", "") }/assets/scripts/SHA1PRNG.js`,
-                    `${ window.location.href.replace("/index.html", "") }/assets/scripts/LamportGenerator.js`
+                    `${ window.location.href.replace("/index.html", "") }/assets/scripts/LamportGenerator.js`,
+                    `${ window.location.href.replace("/index.html", "") }/assets/scripts/zxcvbn.js`
                 ];
             } else {
                 // Web requires the scripts to be loaded as shown below.
@@ -78,7 +80,8 @@ export class MerkleTreeBuilder {
                     `${ window.location.protocol }//${ window.location.host }/assets/scripts/sjcl.js`,
                     `${ window.location.protocol }//${ window.location.host }/assets/scripts/seedrandom.min.js`,
                     `${ window.location.protocol }//${ window.location.host }/assets/scripts/SHA1PRNG.js`,
-                    `${ window.location.protocol }//${ window.location.host }/assets/scripts/LamportGenerator.js`
+                    `${ window.location.protocol }//${ window.location.host }/assets/scripts/LamportGenerator.js`,
+                    `${ window.location.protocol }//${ window.location.host }/assets/scripts/zxcvbn.js`
                 ];
             }
 

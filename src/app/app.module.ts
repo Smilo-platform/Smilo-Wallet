@@ -54,7 +54,6 @@ import { TransactionSignService } from "../services/transaction-sign-service/tra
 import { TransferTransactionService } from "../services/transfer-transaction-service/transfer-transaction";
 import { AddressService } from "../services/address-service/address-service";
 import { AssetService } from "../services/asset-service/asset-service";
-import { PasswordStrengthBarModule } from 'ng2-password-strength-bar';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, "assets/i18n/");
@@ -67,7 +66,6 @@ export function HttpLoaderFactory(http: HttpClient) {
   imports: [
     BrowserModule,
     HttpClientModule,
-    PasswordStrengthBarModule,
     BrowserAnimationsModule,
     TranslateModule.forRoot({
       loader: {

@@ -291,5 +291,19 @@
             "back": "Terug",
             "import": "Importeer"
         }
-    }
+    },
+    "password-strength-component": {
+      "toggle-advanced": "Geavanceerd wachtwoord info schakelen",
+      "feedback": "Terugkoppeling",
+      "time-to-crack": "Benodigde tijd om je wachtwoord te kraken",
+      "online-throttling": "Online throttling",
+      "online-no-throttling": "Online geen throttling",
+      "offline-slow-hashing": "Offline traag hashen",
+      "offline-fast-hashing": "Offline snel hashen",
+      "fill-strong-password": "Vul een sterk wachtwoord in",
+      "password-weak": "Zwak. Probeer meer tekens toe te voegen",
+      "password-normal": "Het is een begin. Probeer nummers en speciale tekens toe te voegen.",
+      "password-good": "Goed. Probeer meer tekens toe te voegen",
+      "password-excellent": "Uitstekend!"
+  }
 }

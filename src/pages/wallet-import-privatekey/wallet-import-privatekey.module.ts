@@ -3,7 +3,6 @@ import { IonicPageModule } from "ionic-angular";
 import { WalletImportPrivatekeyPage } from "./wallet-import-privatekey";
 import { TranslateModule } from "@ngx-translate/core";
 import { ComponentsModule } from "../../components/components.module";
-import { PasswordStrengthBarModule } from "ng2-password-strength-bar";
 
 @NgModule({
   declarations: [
@@ -12,7 +11,6 @@ import { PasswordStrengthBarModule } from "ng2-password-strength-bar";
   imports: [
     IonicPageModule.forChild(WalletImportPrivatekeyPage),
     TranslateModule,
-    PasswordStrengthBarModule,
     ComponentsModule
   ],
 })
