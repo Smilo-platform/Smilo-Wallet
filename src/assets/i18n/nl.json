@@ -296,7 +296,8 @@
             "instruction": "Richt je camera op de QR code om de invoer velden automatisch in te vullen.",
             "cancel": "Annuleer",
             "access_denied": "Geef alstublieft toegang tot de camera om een QR code te scannen",
-            "failure": "De camera kon niet geopend worden. Onbekende fout."
+            "failure": "De camera kon niet geopend worden. Onbekende fout.",
+            "scan_failure": "Ongeldige QR code. Zorg ervoor dat je een geldig betaal verzoek scant."
         }
     },
     "wallet_import_ledger": {

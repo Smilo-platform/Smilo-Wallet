@@ -135,7 +135,8 @@ export class TransferPage {
             "transfer.sent_success",
             "transfer.sent_failed",
             "transfer.scanner.access_denied",
-            "transfer.scanner.failure"
+            "transfer.scanner.failure",
+            "transfer.scanner.scan_failure"
         ]).then(data => {
             this.translations = data;
             return data;
@@ -379,27 +380,27 @@ export class TransferPage {
 
     handleCameraScanResult(result: string) {
         // Try and parse the text to JSON
-        let obj: IPaymentRequest;
+        let paymentRequest: IPaymentRequest;
         try {
-            obj = JSON.parse(result);
+            paymentRequest = JSON.parse(result);
         }
         catch(ex) {}
 
-        if(obj) {
-            if(this.isValidPaymentRequest(obj)) {
+        if(paymentRequest) {
+            if(this.isValidPaymentRequest(paymentRequest)) {
                 // We found a valid QR code
                 this.hideCamera();
 
-                this.toPublicKey = obj.receiveAddress;
-                this.amount = obj.amount;
-                this.chosenCurrency = obj.assetId == "000x00123" ? "XSM" : "XSP";
+                this.toPublicKey = paymentRequest.receiveAddress;
+                this.amount = paymentRequest.amount;
+                this.chosenCurrency = paymentRequest.assetId == "000x00123" ? "XSM" : "XSP";
 
                 this.onAmountChanged();
             }
             else {
                 // Invalid payment request.
                 this.toastController.create({
-                    message: "Invalid payment request format",
+                    message: this.translations.get("transfer.scanner.scan_failure"),
                     duration: 2000,
                     position: "top"
                 }).present();
@@ -408,7 +409,7 @@ export class TransferPage {
         else {
             // We did not find valid JSON. We'll continue scanning.
             this.toastController.create({
-                message: "Could not parse JSON",
+                message: this.translations.get("transfer.scanner.scan_failure"),
                 duration: 2000,
                 position: "top"
             }).present();
