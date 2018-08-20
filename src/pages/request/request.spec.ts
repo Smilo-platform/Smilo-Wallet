@@ -1,37 +1,29 @@
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 import { RequestPage } from "./request";
-import { IonicModule, NavController, NavParams} from "ionic-angular/index";
-import { MockNavController } from "../../../test-config/mocks/MockNavController";
+import { IonicModule, NavParams} from "ionic-angular/index";
 import { MockNavParams } from "../../../test-config/mocks/MockNavParams";
 import { ComponentsModule } from "../../components/components.module";
 import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
 import { MockTranslationLoader } from "../../../test-config/mocks/MockTranslationLoader";
-import { MockTransactionSignService } from "../../../test-config/mocks/MockTransactionSignService";
-import { TransactionSignService } from "../../services/transaction-sign-service/transaction-sign-service";
-import { MockTransferTransactionService } from "../../../test-config/mocks/MockTransferTransactionService";
-import { TransferTransactionService } from "../../services/transfer-transaction-service/transfer-transaction";
-import { BulkTranslateService } from "../../services/bulk-translate-service/bulk-translate-service";
-import { MockBulkTranslateService } from "../../../test-config/mocks/MockBulkTranslateService";
-import { MockAssetService } from "../../../test-config/mocks/MockAssetService";
-import { AssetService } from "../../services/asset-service/asset-service";
+import { MockModalController } from "../../../test-config/mocks/MockModalController";
+import { MockSettingService } from "../../../test-config/mocks/MockSettingsService";
+import { ModalController, NavController } from "ionic-angular";
+import { SettingsService } from "../../services/settings-service/settings-service";
+import { MockNavController } from "../../../test-config/mocks/MockNavController";
 
 describe("RequestPage", () => {
   let comp: RequestPage;
   let fixture: ComponentFixture<RequestPage>;
-  let navController: MockNavController;
   let navParams: MockNavParams;
-  let transactionSignService: MockTransactionSignService;
-  let transferTransactionService: MockTransferTransactionService;
-  let bulkTranslateService: BulkTranslateService;
-  let assetService: MockAssetService;
+  let navController: MockNavController;
+  let modalController: MockModalController;
+  let settingsService: MockSettingService;
 
   beforeEach(async(() => {
-    navController = new MockNavController();
     navParams = new MockNavParams();
-    transactionSignService = new MockTransactionSignService();
-    transferTransactionService = new MockTransferTransactionService();
-    bulkTranslateService = new MockBulkTranslateService();
-    assetService = new MockAssetService();
+    modalController = new MockModalController();
+    settingsService = new MockSettingService();
+    navController = new MockNavController();
 
     TestBed.configureTestingModule({
       declarations: [RequestPage],
@@ -43,12 +35,10 @@ describe("RequestPage", () => {
         ComponentsModule
       ],
       providers: [
-        { provide: NavController, useValue: navController },
         { provide: NavParams, useValue: navParams },
-        { provide: TransactionSignService, useValue: transactionSignService },
-        { provide: TransferTransactionService, useValue: transferTransactionService },
-        { provide: BulkTranslateService, useValue: bulkTranslateService },
-        { provide: AssetService, useValue: assetService }
+        { provide: ModalController, useValue: modalController },
+        { provide: SettingsService, useValue: settingsService },
+        { provide: NavController, useValue: navController }
       ]
     }).compileComponents();
   }));

@@ -1,18 +1,19 @@
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 import { IonicModule, NavController, NavParams, ViewController} from "ionic-angular/index";
-import { MockNavController } from "../../../test-config/mocks/MockNavController";
-import { MockNavParams } from "../../../test-config/mocks/MockNavParams";
 import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
 import { MockTranslationLoader } from "../../../test-config/mocks/MockTranslationLoader";
-import { ComponentsModule } from "../../components/components.module";
-import { SettingsGeneralPage } from "../../pages/settings-general/settings-general";
 import { QrCodePage } from "./qr-code-page";
 import { MockViewController } from "../../../test-config/mocks/MockViewController";
+import { MockNavParams } from "../../../test-config/mocks/MockNavParams";
+import { MockQRGeneratorService } from "../../../test-config/mocks/MockQRGeneratorService";
+import { QRGeneratorService } from "../../services/qr-generator-service/qr-generator-service";
 
 describe("QrCodePage", () => {
   let comp: QrCodePage;
   let fixture: ComponentFixture<QrCodePage>;
   let viewController: MockViewController;
+  let navParams: MockNavParams;
+  let qrGeneratorService: MockQRGeneratorService;
 
   beforeEach(async(() => {
     viewController = new MockViewController();
@@ -27,6 +28,8 @@ describe("QrCodePage", () => {
       ],
       providers: [
         { provide: ViewController, useValue: viewController },
+        { provide: NavParams, useValue: navParams },
+        { provide: QRGeneratorService, useValue: qrGeneratorService }
       ]
     }).compileComponents();
   }));
