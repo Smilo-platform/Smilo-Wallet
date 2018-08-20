@@ -327,7 +327,6 @@ export class TransferPage {
         // Make the screen camera ready
         this.qrScanner.prepare().then(
             (status) => {
-                console.log(status);
                 if(status.authorized) {
                     this.scanSubscription = this.qrScanner.scan().subscribe(
                         (text) => {
