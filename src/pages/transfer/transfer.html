@@ -1,8 +1,8 @@
-<ion-header>
+<ion-header [hidden]="cameraIsShown">
     <smilo-nav-header titleTranslationKey="transfer.nav-bar-title"></smilo-nav-header>
 </ion-header>
 
-<ion-content padding *ngIf="fromWallet">
+<ion-content padding [hidden]="cameraIsShown">
     <ion-grid>
         <ion-row justify-content-center>
             <ion-col col-12 col-xl-4>
@@ -47,4 +47,31 @@
             </ion-col>
         </ion-row>
     </ion-grid>
+</ion-content>
+
+<ion-content *ngIf="cameraIsShown">
+    <div class="scanner-instruction-bar">
+        {{ 'transfer.scanner.instruction' | translate }}
+    </div>
+
+    <div class="center-container">
+        <div class="scanner-frame-container">
+            <div class="frame left top"></div>
+            <div class="frame-filler-width"></div>
+            <div class="frame right top"></div>
+    
+            <div class="frame-filler-height"></div>
+            <div class="frame-filler-width-height"></div>
+            <div class="frame-filler-height"></div>
+    
+            <div class="frame left bottom"></div>
+            <div class="frame-filler-width"></div>
+            <div class="frame right bottom"></div>
+        </div>
+    </div>
+
+    <div class="cancel-bar" (click)="hideCamera()">
+        {{ 'transfer.scanner.cancel' | translate }}
+    </div>
+    
 </ion-content>

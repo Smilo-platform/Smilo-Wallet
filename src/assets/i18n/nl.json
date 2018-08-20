@@ -291,7 +291,13 @@
         "signing_success": "De transactie succesvol ondertekend, verzenden naar de blockchain...",
         "signing_failed": "Kan de transactie niet ondertekenen. Controleer de ingevoerde informatie.",
         "sent_success": "Succesvol {{ amount }} {{ chosenCurrency }} verzonden naar {{ toPublicKey }}",
-        "sent_failed": "De transactie kan niet naar de blockchain verzonden worden. Controleer de informatie."
+        "sent_failed": "De transactie kan niet naar de blockchain verzonden worden. Controleer de informatie.",
+        "scanner": {
+            "instruction": "Richt je camera op de QR code om de invoer velden automatisch in te vullen.",
+            "cancel": "Annuleer",
+            "access_denied": "Geef alstublieft toegang tot de camera om een QR code te scannen",
+            "failure": "De camera kon niet geopend worden. Onbekende fout."
+        }
     },
     "wallet_import_ledger": {
         "nav-bar-title": "Ledger"
