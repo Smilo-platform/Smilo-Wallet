@@ -54,7 +54,8 @@ describe("QrCodePage", () => {
 
         spyOn(navParams, "get").and.returnValue(paymentRequest);
         spyOn(qrGeneratorService, "generate");
-        spyOn(document, "getElementById").and.returnValue(element);
+        // We write the spy this way because the normal way throws an error...
+        document.getElementById = jasmine.createSpy().and.returnValue(element);
 
         comp.ionViewDidLoad();
 
