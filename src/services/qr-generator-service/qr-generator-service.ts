@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-import { IPaymentRequest } from "../../models/IPaymentRequest";
 
 declare const QRCode: any;
 
@@ -10,7 +9,10 @@ export interface IQRGeneratorService {
 @Injectable()
 export class QRGeneratorService implements IQRGeneratorService {
     generate(content: string, element: HTMLElement, dimensions: [number, number] = [256, 256]): void {
-        let qrcode = new QRCode(element);
+        let qrcode = new QRCode(element, {
+            width: dimensions[0],
+            height: dimensions[1]
+        });
         qrcode.makeCode(content);
     }
 }
