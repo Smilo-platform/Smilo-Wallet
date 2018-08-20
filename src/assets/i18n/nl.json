@@ -81,6 +81,14 @@
             }
         }
     },
+    "request": {
+        "nav-bar-title": "Verzoek",
+        "your-address": "Jouw adres",
+        "select-currency": "Selecteer currency",
+        "enter-amount": "Voer een bedrag in",
+        "enter-amount-placeholder": "voer een bedrag in",
+        "generate-qr-code": "Genereer QR code"
+    },
     "wallet_overview": {
         "nav-bar-title": "Wallet overzicht",
         "wallets": "Wallets",
@@ -90,6 +98,7 @@
         "distribution": "Verdeling",
         "funds_hidden": "Jouw fondsen zijn verborgen",
         "transfer": "Overmaken",
+        "request": "Verzoeken",
         "settings": "Instellingen",
         "backup_wallet": "Backup",
         "delete_wallet": "Verwijder wallet",
@@ -158,6 +167,14 @@
         "buttons": {
             "import": "Importeren"
         }
+    },
+    "qr-code-page": {
+        "nav-bar-title": "QR Code",
+        "explanation-message": "Scan deze QR code in de overmaak pagina op een ander apparaat om de currency makkelijk te verzoeken",
+        "address": "Adres",
+        "currency": "Currency",
+        "amount": "Hoeveelheid",
+        "close": "Sluiten"
     },
     "import_keystore": {
         "nav-bar-title": "Importeer keystore",
@@ -274,7 +291,14 @@
         "signing_success": "De transactie succesvol ondertekend, verzenden naar de blockchain...",
         "signing_failed": "Kan de transactie niet ondertekenen. Controleer de ingevoerde informatie.",
         "sent_success": "Succesvol {{ amount }} {{ chosenCurrency }} verzonden naar {{ toPublicKey }}",
-        "sent_failed": "De transactie kan niet naar de blockchain verzonden worden. Controleer de informatie."
+        "sent_failed": "De transactie kan niet naar de blockchain verzonden worden. Controleer de informatie.",
+        "scanner": {
+            "instruction": "Richt je camera op de QR code om de invoer velden automatisch in te vullen.",
+            "cancel": "Annuleer",
+            "access_denied": "Geef alstublieft toegang tot de camera om een QR code te scannen",
+            "failure": "De camera kon niet geopend worden. Onbekende fout.",
+            "scan_failure": "Ongeldige QR code. Zorg ervoor dat je een geldig betaal verzoek scant."
+        }
     },
     "wallet_import_ledger": {
         "nav-bar-title": "Ledger"

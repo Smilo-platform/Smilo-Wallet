@@ -11,6 +11,10 @@ page-transfer {
         padding-bottom: 18px;
     }
 
+    .camera {
+        z-index: 999;
+    }
+
     .transfer-icon {
         font-size: 35px;
         margin: 13px 38px;
@@ -208,5 +212,114 @@ page-transfer {
 
     .inputInfo {
         border: 4px #fff solid;
+    }
+}
+
+body {
+    &.camera-ready {
+        background: none transparent !important;
+
+        ion-content, 
+        ion-app,
+        page-app,
+        .app-root, 
+        .scroll-content, 
+        .fixed-content {
+            background: none transparent !important;
+        }
+
+        [app-viewport],
+        [overlay-portal],
+        [nav-viewport],
+        [tab-portal],
+        .nav-decor {
+            display: none !important;
+            background: none transparent !important;
+        }
+    }
+}
+
+.scanner-instruction-bar {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    height: 50px;
+    background-color: #064C70;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    color: white;
+}
+
+.cancel-bar {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    height: 50px;
+    background-color: #064C70;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    color: white;
+}
+
+.center-container {
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+
+    .scanner-frame-container {
+        height: 310px;
+        width: 310px;
+    
+        .frame {
+            width: 50px;
+            height: 50px;
+            display: inline-block;
+        }
+
+        .frame-filler-width {
+            width: calc(300px - 2 * 50px);
+            height: 50px;
+            display: inline-block;
+        }
+
+        .frame-filler-height {
+            width: 50px;
+            height: calc(300px - 2 * 50px);
+            display: inline-block;
+        }
+
+        .frame-filler-width-height {
+            width: calc(300px - 2 * 50px);
+            height: calc(300px - 2 * 50px);
+            display: inline-block;
+        }
+    
+        .left {
+            border-left: 5px solid gray;
+        }
+    
+        .right {
+            border-right: 5px solid gray;
+        }
+    
+        .bottom {
+            border-bottom: 5px solid gray;
+        }
+    
+        .top {
+            border-top: 5px solid gray;
+        }
     }
 }
