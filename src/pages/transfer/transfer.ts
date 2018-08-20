@@ -389,8 +389,6 @@ export class TransferPage {
         if(paymentRequest) {
             if(this.isValidPaymentRequest(paymentRequest)) {
                 // We found a valid QR code
-                this.hideCamera();
-
                 this.toPublicKey = paymentRequest.receiveAddress;
                 this.amount = paymentRequest.amount;
                 this.chosenCurrency = paymentRequest.assetId == "000x00123" ? "XSM" : "XSP";
@@ -414,5 +412,7 @@ export class TransferPage {
                 position: "top"
             }).present();
         }
+
+        this.hideCamera();
     }
 }
