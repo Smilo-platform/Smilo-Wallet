@@ -29,7 +29,7 @@ export class RequestPage {
     /**
      * The amount of the currency to request
      */
-    amount: number;
+    amount: string;
     selectedTheme: ThemeType;
 
     constructor(private navParams: NavParams,
@@ -40,17 +40,27 @@ export class RequestPage {
         this.fromWallet = this.navParams.get("currentWallet");
         this.balances = this.navParams.get("currentWalletBalance");
         this.chosenCurrency = this.balances[0].currency;
+
+        this.settingsService.getActiveTheme().subscribe(val => this.selectedTheme = val);
     }
 
-    ngOnInit(): void {
-        this.settingsService.getActiveTheme().subscribe(val => this.selectedTheme = val);
-      }
-
     generateQRCode(): void {
-        let paymentRequest: IPaymentRequest = {receiveAddress: this.fromWallet.publicKey,
-                                               amount: this.amount.toString(), 
-                                               assetId: "000x00123"};
-        let modal = this.modalController.create(QrCodePage, { paymentRequest: paymentRequest }, { cssClass: this.selectedTheme });
+        let paymentRequest: IPaymentRequest = {
+            receiveAddress: this.fromWallet.publicKey,
+            amount: this.amount, 
+            assetId: "000x00123"
+        };
+
+        let modal = this.modalController.create(
+            QrCodePage, 
+            { 
+                paymentRequest: paymentRequest
+            }, 
+            { 
+                cssClass: this.selectedTheme
+            }
+        );
+
         modal.present();
     }
 
@@ -63,13 +73,14 @@ export class RequestPage {
         // Check if amount is set
         if (!this.amount || this.amount.toString() === "") {
             return false;
-        } 
+        }
 
         // Check if amount is a valid number
         // TODO: make generic e.g. take selected asset into account
         if (!new FixedBigNumber(this.amount, 0).isValid()) {
             return false;
-        }        
+        }
+
         return true;
     }
 }

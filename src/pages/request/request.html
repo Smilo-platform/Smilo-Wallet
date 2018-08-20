@@ -18,7 +18,7 @@
                 </ion-item>     
                 <h1>{{ 'request.enter-amount' | translate }}</h1>
                 <ion-item class="input-bottom-border">
-                    <ion-input class="biggerText padding" type="number" [(ngModel)]="amount" placeholder="{{ 'request.enter-amount-placeholder' | translate }}"></ion-input>  
+                    <ion-input class="biggerText padding" type="text" [(ngModel)]="amount" placeholder="{{ 'request.enter-amount-placeholder' | translate }}"></ion-input>  
                 </ion-item>
                 <button class="request-button" [disabled]="!canTransfer()" (click)="generateQRCode()" ion-button full>{{ 'request.generate-qr-code' | translate }}</button>
             </ion-col>
