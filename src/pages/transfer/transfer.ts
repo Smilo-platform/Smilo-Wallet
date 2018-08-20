@@ -294,15 +294,7 @@ export class TransferPage {
         this.cameraIsShown = true;
 
         this.unregisterBackButtonFunction = this.platform.registerBackButtonAction(() => {
-            if(this.cameraIsShown) {
-                // Close the camera and do nothing else
-                this.hideCamera();
-
-                return false;
-            }
-            else {
-                return true;
-            }
+            this.hideCamera();
         });
     }
 
