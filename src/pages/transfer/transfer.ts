@@ -283,10 +283,10 @@ export class TransferPage {
         );
     }
 
-    isValidPaymentRequest(request: IPaymentRequest) {
-        return request.receiveAddress &&
+    isValidPaymentRequest(request: IPaymentRequest): boolean {
+        return !!request.receiveAddress &&
                this.addressHelper.isValidAddress(request.receiveAddress).isValid &&
-               request.amount && request.assetId;
+               !!request.amount && !!request.assetId;
     }
 
     showCamera() {
