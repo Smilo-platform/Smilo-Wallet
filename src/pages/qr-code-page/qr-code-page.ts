@@ -17,8 +17,11 @@ export class QrCodePage {
 
   ionViewDidLoad(): void {
     this.paymentRequest = this.navParams.get("paymentRequest");
-    console.log(this.paymentRequest);
-    this.qrGeneratorService.generate(JSON.stringify(this.paymentRequest), document.getElementById("qr-code-field"));
+    
+    this.qrGeneratorService.generate(
+      JSON.stringify(this.paymentRequest), 
+      document.getElementById("qr-code-field")
+    );
   }
 
   dismiss() {
