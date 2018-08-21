@@ -116,15 +116,9 @@ function getWalletFunds(publicKey) {
                 let value = balances[key];
                 let asset = totalAssets.find(asset => asset.address === key);
                 if (asset !== undefined) {
-                    currentWalletFunds.push({symbol: asset.symbol, amount: this.assetService.prepareBigNumber(
-                        value,
-                        asset.address
-                    )});
+                    currentWalletFunds.push({symbol: asset.symbol, amount: value});
                 } else {
-                    currentWalletFunds.push({symbol: key, amount: this.assetService.prepareBigNumber(
-                        value,
-                        asset.address
-                    )});
+                    currentWalletFunds.push({symbol: key, amount: value});
                 }
             }
             if (balances["000x00321"] === undefined) {
