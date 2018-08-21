@@ -54,6 +54,10 @@ import { TransactionSignService } from "../services/transaction-sign-service/tra
 import { TransferTransactionService } from "../services/transfer-transaction-service/transfer-transaction";
 import { AddressService } from "../services/address-service/address-service";
 import { AssetService } from "../services/asset-service/asset-service";
+import { QRGeneratorService } from "../services/qr-generator-service/qr-generator-service";
+import { RequestPageModule } from "../pages/request/request.module";
+import { QrCodePageModule } from "../pages/qr-code-page/qr-code-page.module";
+import { QRScanner } from "@ionic-native/qr-scanner";
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, "assets/i18n/");
@@ -81,7 +85,9 @@ export function HttpLoaderFactory(http: HttpClient) {
     WalletPageModule,
     FaqPageModule,
     SettingsGeneralPageModule,
+    RequestPageModule,
     TransferPageModule,
+    QrCodePageModule,
     WalletImportKeystorePageModule,
     WalletImportLedgerPageModule,
     WalletImportPrivatekeyPageModule,
@@ -108,6 +114,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     WalletExtraImportPage
   ],
   providers: [
+    QRScanner,
     StatusBar,
     SplashScreen,
     WalletService,
@@ -130,6 +137,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     TransactionSignService,
     AddressService,
     AssetService,
+    QRGeneratorService,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
