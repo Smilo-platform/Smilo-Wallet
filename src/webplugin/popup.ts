@@ -1,5 +1,4 @@
-const dbName = "_ionicstorage";
-const dbOpenRequest = indexedDB.open(dbName);
+const dbOpenRequest = indexedDB.open("smilo-wallet");
 let baseUrl = "";
 let totalWallets = [];
 let totalAssets = [];
@@ -17,6 +16,7 @@ if (isDevMode()) {
 }
 
 $(document).ready(() => {
+    $("#failed-retrieve").hide();
     let walletListVisible = false;
     $("#openWalletButton").click(() => {
         browser.tabs.create({url: browser.extension.getURL('./www/index.html')});
@@ -96,6 +96,7 @@ function setCurrentWalletFunds(currentWalletFunds) {
 function getAssets() {
     $.ajax({
         url: baseUrl + "/asset",
+        async : true,
         cache: false,
         success: (data) => {
             totalAssets = data;
@@ -107,6 +108,7 @@ function getWalletFunds(publicKey) {
     $.ajax({
         url: baseUrl + "/address/" + publicKey,
         cache: false,
+        async: true,
         success: (data) => {
             $("#funds-overview").show();
             $("#failed-retrieve").hide();
@@ -127,8 +129,15 @@ function getWalletFunds(publicKey) {
             setCurrentWalletFunds(currentWalletFunds);
         },
         error: (error) => {
-            $("#funds-overview").hide();
-            $("#failed-retrieve").show();
+            if (error.status !== 404) {
+                $("#funds-overview").hide();
+                $("#failed-retrieve").show();
+            } else {
+                let currentWalletFunds = [];
+                currentWalletFunds.push({symbol: "XSM", amount: 0});
+                currentWalletFunds.push({symbol: "XSP", amount: 0});
+                setCurrentWalletFunds(currentWalletFunds);
+            }
         }
     });
 }
@@ -137,8 +146,22 @@ function isDevMode() {
     return !('update_url' in this.chrome.runtime.getManifest());
 }
 
-window.setInterval(() => {
+setInterval(() => {
     if (currentPublicKey !== undefined) {
         getWalletFunds(currentPublicKey);
     }
 }, 2500);
+
+
+// let t = false;
+
+setInterval(() => {
+    // console.log("Set");
+    // if (t) {
+    //     t = !t;
+    //     $("body").css("background-color", "red");
+    // } else {
+    //     t = !t;
+    //     $("body").css("background-color", "orange");
+    // }
+}, 100);

@@ -12,46 +12,51 @@
   color: #fff;
   height: 35px;
   font-size: 14px;
-  outline: none;
-}
+  outline: none; }
+  #openWalletButton:hover {
+    opacity: 0.8;
+    cursor: pointer; }
 
-#openWalletButton:hover {
-  opacity: 0.8;
-  cursor: pointer;
-}
+.error-text {
+  text-align: center;
+  color: red;
+  font-size: 16px;
+  margin-top: 25px;
+  margin-bottom: 0; }
+
+.error-text-refresh {
+  text-align: center;
+  font-size: 12px;
+  margin-top: 0px;
+  margin-bottom: 25px;
+  font-style: italic; }
 
 .social-links-container {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 18px;
-}
+  margin-top: 18px; }
 
 .social-media-button {
   width: 40px;
   height: 40px;
-  margin: 5px;
-}
+  margin: 5px; }
 
 .slogan {
   text-align: center;
   margin: 0;
-  font-weight: 100;
-}
+  font-weight: 100; }
 
 #primary-nav-wrap {
   margin-top: 15px;
-  margin-bottom: 15px;
-}
-
+  margin-bottom: 15px; }
 
 #primary-nav-wrap ul {
   width: 101%;
   list-style: none;
   text-align: center;
-	margin: 0;
-	padding: 0;
-}
+  margin: 0;
+  padding: 0; }
 
 #primary-nav-wrap ul a {
   display: block;
@@ -63,68 +68,55 @@
   white-space: nowrap;
   overflow: hidden !important;
   text-overflow: ellipsis;
-  border-bottom: 1px #eee solid;
-}
+  border-bottom: 1px #eee solid; }
 
 #primary-nav-wrap ul li {
-	position: relative;
-	margin: 0;
-	padding: 0;
-}
+  position: relative;
+  margin: 0;
+  padding: 0; }
+  #primary-nav-wrap ul li:hover {
+    background: #f6f6f6; }
 
 .wallet-dropdown:hover {
-  cursor: pointer;
-}
+  cursor: pointer; }
 
 #primary-nav-wrap ul li.current-menu-item {
-	background:#ddd
-}
-
-#main-dropdown-item:after {
-  margin-left: 5px;
-  padding-left: 5px;
-  font-size: 18px;
-  content:"\00bb"; 
-  display: inline-block;
-  -webkit-transform: rotate(90deg);
-  -moz-transform: rotate(90deg);
-  -o-transform: rotate(90deg);
-  -ms-transform: rotate(90deg);
-  transform: rotate(90deg);
-}
-
-#primary-nav-wrap ul li:hover {
-	background:#f6f6f6
-}
+  background: #ddd; }
 
 #main-dropdown-item {
-  border-bottom: 1px #bbb solid !important;
-}
+  border-bottom: 1px #bbb solid !important; }
+  #main-dropdown-item:after {
+    margin-left: 5px;
+    padding-left: 5px;
+    font-size: 18px;
+    content: "\00bb";
+    display: inline-block;
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    transform: rotate(90deg); }
 
 #primary-nav-wrap ul ul {
-	display: none;
-	position: absolute;
-	top: 100%;
-	left: 0;
-	background:#fff;
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #fff;
   padding: 0;
-  height: 210px;
-}
+  height: 210px; }
 
 #primary-nav-wrap ul ul li {
-	float: none;
-	width: 100%;
-}
+  float: none;
+  width: 100%; }
 
 #primary-nav-wrap ul ul a {
-	line-height: 120%;
-	padding: 10px 15px;
-}
+  line-height: 120%;
+  padding: 10px 15px; }
 
 #primary-nav-wrap ul ul ul {
-	top: 0;
-	left: 100%;
-}
+  top: 0;
+  left: 100%; }
 
 .currencyHeader {
   margin-top: 5px;
@@ -134,41 +126,33 @@
   border-bottom: 1px dotted #eee;
   margin-left: 25%;
   margin-right: 25%;
-  padding-bottom: 5px;
-}
+  padding-bottom: 5px; }
 
 .currencyValue {
   text-align: center;
   font-size: 15px;
   font-weight: 100;
-  color: green;
-}
+  color: green; }
 
 .fundsBlockLeft {
   float: left;
-  width: 50%;
-}
+  width: 50%; }
 
 .fundsBlockRight {
   float: right;
-  width: 50%;
-}
+  width: 50%; }
 
 body {
   height: 400px;
-  width: 500px;
-}
+  width: 500px; }
 
-.img-container img{
+.img-container img {
   display: block;
-  margin: auto;
-}
+  margin: auto; }
 
 #funds-overview {
   max-height: 75px;
-  overflow-y: scroll;
-}
+  overflow-y: scroll; }
 
 .social-links-container a:hover {
-  opacity: 0.5;
-}
+  opacity: 0.5; }
