@@ -9,7 +9,6 @@ import { TransactionHelper } from "../../core/transactions/TransactionHelper";
 import { TransferTransactionService } from "../../services/transfer-transaction-service/transfer-transaction";
 import { TranslateService } from "@ngx-translate/core";
 import { BulkTranslateService } from "../../services/bulk-translate-service/bulk-translate-service";
-import { AssetService } from "../../services/asset-service/asset-service";
 import { FixedBigNumber } from "../../core/big-number/FixedBigNumber";
 import { QRScanner } from "@ionic-native/qr-scanner";
 import { IPaymentRequest } from "../../models/IPaymentRequest";
@@ -324,21 +323,29 @@ export class TransferPage {
         document.getElementsByTagName("body")[0].className = "";
     }
 
-    scanQRCode() {
+    scanQRCode(): Promise<void> {
         // Make the screen camera ready
-        this.qrScanner.prepare().then(
+        return this.qrScanner.prepare().then(
             (status) => {
                 if(status.authorized) {
-                    this.scanSubscription = this.qrScanner.scan().subscribe(
-                        (text) => {
-                            // Browser platforms for some reason return an object and not the text...
-                            text = (<any>text).result || text;
+                    return new Promise<void>((resolve) => {
+                        this.scanSubscription = this.qrScanner.scan().subscribe(
+                            (text) => {
+                                // Browser platforms for some reason return an object and not the text...
+                                text = (<any>text).result || text;
+    
+                                this.zone.run(
+                                    () => {
+                                        this.handleCameraScanResult(text);
 
-                            this.zone.run(() => this.handleCameraScanResult(text));
-                        }
-                    );
-
-                    this.showCamera();
+                                        resolve();
+                                    }
+                                );
+                            }
+                        );
+    
+                        this.showCamera();
+                    });
                 }
                 else if(status.denied) {
                     // User denied permission.

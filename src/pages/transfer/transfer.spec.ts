@@ -24,6 +24,8 @@ import { ITransaction } from "../../models/ITransaction";
 import { IPaymentRequest } from "../../models/IPaymentRequest";
 import { MockToast } from "../../../test-config/mocks/MockToast";
 import { Observable } from "rxjs";
+import { QRScannerStatus } from "@ionic-native/qr-scanner";
+import { NgZone } from "@angular/core";
 
 interface ICanTransferTestVector {
     publicKey: string;
@@ -49,7 +51,10 @@ interface IHandleCameraScanResultTestVector {
 }
 
 interface IScanQRCodeTestVector {
-    prepareResult: QRScannerStatus;
+    prepareResult?: QRScannerStatus;
+    prepareError?: {
+        code: number
+    };
     text?: string;
     toastMessage?: string;
 }
@@ -66,6 +71,7 @@ describe("TransferPage", () => {
     let toastController: MockToastController;
     let platformService: MockPlatform;
     let qrScannerService: MockQRScanner;
+    let zone: NgZone;
 
     beforeEach(async(() => {
         navController = new MockNavController();
@@ -77,6 +83,7 @@ describe("TransferPage", () => {
         toastController = new MockToastController();
         platformService = new MockPlatform();
         qrScannerService = new MockQRScanner();
+        zone = new NgZone({});
 
         TestBed.configureTestingModule({
             declarations: [TransferPage],
@@ -96,7 +103,8 @@ describe("TransferPage", () => {
                 { provide: AssetService, useValue: assetService },
                 { provide: ToastController, useValue: toastController },
                 { provide: Platform, useValue: platformService },
-                { provide: QRScanner, useValue: qrScannerService }
+                { provide: QRScanner, useValue: qrScannerService },
+                { provide: NgZone, useValue: zone }
             ]
         }).compileComponents();
     }));
@@ -383,12 +391,46 @@ describe("TransferPage", () => {
 
     it("should start the QR code scanner correctly", (done) => {
         let tests: IScanQRCodeTestVector[] = [
-
+            // Scan succeeded
+            {
+                prepareResult: <QRScannerStatus>{
+                    authorized: true
+                },
+                text: "Scanned Text"
+            },
+            // User denied camera access permanently
+            {
+                prepareResult: <QRScannerStatus>{
+                    denied: true
+                },
+                toastMessage: "transfer.scanner.access_denied"
+            },
+            // Use denied camera access just this once
+            {
+                prepareResult: <QRScannerStatus>{
+                    
+                },
+                toastMessage: "transfer.scanner.access_denied"
+            },
+            // Access denied rejection
+            {
+                prepareError: {
+                    code: 1
+                },
+                toastMessage: "transfer.scanner.access_denied"
+            },
+            // Unknown error
+            {
+                prepareError: {
+                    code: 100
+                },
+                toastMessage: "transfer.scanner.failure"
+            }
         ];
 
         // Mock toast
         let mockToast = new MockToast();
-        let presentSpy = jasmine.createSpy();
+        let presentSpy = jasmine.createSpy("Toast present");
         mockToast.present = presentSpy;
 
         // Mock toast service
@@ -404,13 +446,17 @@ describe("TransferPage", () => {
         spyOn(comp.translations, "get").and.callFake((key) => key);
 
         // Mock show camera
-        let showCameraSpy = jasmine.createSpy();
+        let showCameraSpy = jasmine.createSpy("Show camera");
         comp.showCamera = showCameraSpy;
 
         // Mock qr scanner
         let qrScannerPrepareResult: QRScannerStatus;
+        let qrScannerPrepareError: {code: number};
         spyOn(qrScannerService, "prepare").and.callFake(() => {
-            return Promise.resolve(qrScannerPrepareResult);
+            if(qrScannerPrepareError)
+                return Promise.reject(qrScannerPrepareError);
+            else
+                return Promise.resolve(qrScannerPrepareResult);
         });
 
         let qrScannerScanResult: string;
@@ -418,9 +464,67 @@ describe("TransferPage", () => {
             return Observable.of(qrScannerScanResult);
         });
 
+        // Mock ng zone
+        spyOn(zone, "run").and.callFake((func) => {
+            func();
+        });
+
+        // Mock handle camera scan result
+        let handleCameraScanResultSpy = jasmine.createSpy("Handle camera scan result");
+        comp.handleCameraScanResult = handleCameraScanResultSpy;
+
+        let promise = Promise.resolve();
         for(let test of tests) {
-            // To Do
+            promise = promise.then(
+                () => doTest(test)
+            );
         }
+
+        function doTest(test: IScanQRCodeTestVector): Promise<void> {
+            qrScannerPrepareResult = test.prepareResult;
+            qrScannerPrepareError = test.prepareError;
+            qrScannerScanResult = test.text;
+            expectedToastMessage = test.toastMessage;
+
+            return comp.scanQRCode().then(
+                () => {
+                    if(test.prepareError) {
+                        expect(presentSpy).toHaveBeenCalled();
+                        expect(showCameraSpy).not.toHaveBeenCalled();
+                    }
+                    else {
+                        if(test.prepareResult.authorized) {
+                            // Scanning should have worked
+                            expect(handleCameraScanResultSpy).toHaveBeenCalledWith(test.text);
+                            expect(showCameraSpy).toHaveBeenCalledTimes(1);
+                        }
+                        else if(test.prepareResult.denied) {
+                            // Scanning denied by user
+                            expect(presentSpy).toHaveBeenCalled();
+                            expect(showCameraSpy).not.toHaveBeenCalled();
+                        }
+                        else {
+                            // Scanning denied by user but not permanently
+                            expect(presentSpy).toHaveBeenCalled();
+                            expect(showCameraSpy).not.toHaveBeenCalled();
+                        }
+                    }
+
+                    presentSpy.calls.reset();
+                    showCameraSpy.calls.reset();
+                    handleCameraScanResultSpy.calls.reset();
+                }
+            );
+        }
+
+        promise.then(
+            () => {
+                done();
+            },
+            (error) => {
+                expect(true).toBeFalsy("Promise reject should not be called");
+            }
+        );
     });
 
     it("should handle a QR scan result correctly", () => {
