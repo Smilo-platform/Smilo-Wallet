@@ -10,11 +10,11 @@
   </div>
 
   <div class="action-container">
-    <button class="get-started-button" (click)="openNewWallet()">
+    <button class="get-started-button" [attr.data-cy]="'get-started-button'" (click)="openNewWallet()">
       {{ 'landing.get_started' | translate }}
     </button>
 
-    <button class="restore-backup-button" (click)="openRestoreBackup()">
+    <button class="restore-backup-button" [attr.data-cy]="'restore-backup-button'" (click)="openRestoreBackup()">
       {{ 'landing.import_wallet' | translate }}
     </button>
   </div>

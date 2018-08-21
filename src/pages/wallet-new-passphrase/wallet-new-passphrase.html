@@ -19,7 +19,7 @@
 
     <ion-row justify-content-center>
       <ion-col col-12 col-md-6 col-lg-6 col-xl-4>
-        <div class="passphrase-box show-box">
+        <div class="passphrase-box" [attr.data-cy]="'show-box'">
           <div class="passphrase-content">
             <div class="word" *ngFor="let word of words">
               <span>
@@ -33,7 +33,7 @@
 
     <ion-row>
       <ion-col text-center>
-        <button ion-button class="next-button" (click)="goToEnterState()">
+        <button ion-button [attr.data-cy]="'go-to-enter-passphrase-button'" (click)="goToEnterState()">
           {{ 'passphrase.show.buttons.next' | translate }}
         </button>
       </ion-col>
@@ -55,9 +55,9 @@
 
     <ion-row justify-content-center>
       <ion-col col-12 col-md-6 col-lg-6 col-xl-4>
-          <div class="passphrase-box shuffled-box">
+          <div class="passphrase-box" [attr.data-cy]="'shuffled-box'">
             <div class="passphrase-content">
-              <div class="word" *ngFor="let word of shuffledWords; let i = index" (click)="pickWordIndex(i)">
+              <div class="word" [attr.data-cy]="word" *ngFor="let word of shuffledWords; let i = index" (click)="pickWordIndex(i)">
                 <span [ngClass]="{'is-picked': isPickedWordIndex(i)}">
                   {{ word }}
                 </span>
@@ -67,7 +67,7 @@
       </ion-col>
 
       <ion-col col-12 col-md-6 col-lg-6 col-xl-4>
-        <div class="passphrase-box entered-box">
+        <div class="passphrase-box" [attr.data-cy]="'entered-box'">
           <div class="passphrase-content">
             <div class="word" *ngFor="let enteredIndex of enteredIndices" (click)="unpickWordIndex(enteredIndex)">
               <span>
@@ -95,7 +95,7 @@
         text-center 
         col-12 col-md-6 col-lg-6 col-xl-4
         offset-md-6 offset-lg-6 offset-xl-6>
-        <button ion-button *ngIf="!passphraseIsValid" class="small reset-button" (click)="reset()">
+        <button ion-button *ngIf="!passphraseIsValid" class="small reset-button" (click)="reset()" [attr.data-cy]="'reset-button'">
           {{ 'passphrase.enter.buttons.reset' | translate }}
         </button>
       </ion-col>
@@ -103,7 +103,7 @@
 
     <ion-row>
       <ion-col text-center>
-        <button ion-button *ngIf="passphraseIsValid" class="next-button" (click)="next()">
+        <button ion-button *ngIf="passphraseIsValid" [attr.data-cy]="'go-to-password-button'" (click)="next()">
           {{ 'passphrase.enter.buttons.next' | translate }}
         </button>
       </ion-col>
