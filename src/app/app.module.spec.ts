@@ -1,4 +1,4 @@
-import { HttpLoaderFactory, AppModule } from "./app.module";
+import { HttpLoaderFactory } from "./app.module";
 import { TranslateHttpLoader } from "@ngx-translate/http-loader";
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 import { IonicModule, Platform } from "ionic-angular";
@@ -12,7 +12,7 @@ import { MockWalletService } from "../../test-config/mocks/MockWalletService";
 import { WalletService } from "../services/wallet-service/wallet-service";
 import { MockHockeyApp } from "../../test-config/mocks/MockHockeyApp";
 import { HockeyApp } from "ionic-hockeyapp";
-import { MockSettingService } from "../../test-config/mocks/MockSettingsService";
+import { MockSettingsService } from "../../test-config/mocks/MockSettingsService";
 import { SettingsService } from "../services/settings-service/settings-service";
 import { MockStatusBar } from "../../test-config/mocks/MockStatusBar";
 import { StatusBar } from "@ionic-native/status-bar";
@@ -29,7 +29,7 @@ describe('SmiloWallet', () => {
     let androidPermissions: MockAndroidPermissions;
     let walletService: MockWalletService;
     let hockeyApp: MockHockeyApp;
-    let settingsService: MockSettingService;
+    let settingsService: MockSettingsService;
     let statusBar: MockStatusBar;
     let platform: MockPlatform;
     let translate: MockTranslateService;
@@ -39,7 +39,7 @@ describe('SmiloWallet', () => {
         androidPermissions = new MockAndroidPermissions();
         walletService = new MockWalletService();
         hockeyApp = new MockHockeyApp();
-        settingsService = new MockSettingService();
+        settingsService = new MockSettingsService();
         statusBar = new MockStatusBar();
         platform = new MockPlatform();
         translate = new MockTranslateService();
