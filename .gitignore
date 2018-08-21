@@ -51,3 +51,4 @@ src/assets/scripts/SHA1PRNG.js
 # chrome extension files auto generated
 src/webplugin/popup.js
 src/webplugin/popup.js.map
+src/webplugin/popup.css

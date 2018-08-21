@@ -73,8 +73,25 @@ page-wallet-overview {
         max-height: 162px !important;
         max-width: 327px !important;
     }
-    
+
+    .transfer-button-div {
+        float: left;
+        width: 50%;
+        border-right: 5px solid #eee !important;
+    }
+
+    .request-button-div {
+        float: right;
+        width: 50%;
+        border-left: 5px solid #eee !important;
+    }
+
     .transfer-button {
+        width: 100%;
+        margin: 0px;
+    }
+
+    .request-button {
         width: 100%;
         margin: 0px;
     }

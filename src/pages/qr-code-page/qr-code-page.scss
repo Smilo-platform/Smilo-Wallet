@@ -1,0 +1,33 @@
+qr-code-page {
+    #qr-code-field img{
+        margin: auto;
+    }
+
+    #qr-code-field canvas {
+        display: block;
+        margin: auto;
+    }
+
+    .explanation-message {
+        text-align: center;
+        font-size: 18px;
+        font-weight: 100;
+    }
+
+    .close-button {
+        font-size: 16px;
+        height: 40px;
+        border: none !important;
+    }
+
+    .qr-code-info {
+        font-size: 12px;
+        font-weight: 100;
+        text-align: center;
+        padding: 20px;
+    }
+
+    .qr-code-info span {
+        font-weight: 500;
+    }
+}

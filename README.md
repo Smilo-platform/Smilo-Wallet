@@ -191,3 +191,23 @@ To generate the Browserified version of the bitcoinjs-lib library use the follow
 ```
 browserify ./bitcoin-js-wrapper/wrapper.js --standalone bitcoinjs > ./src/assets/scripts/bitcoinjs-lib.js
 ```
+
+## Building the webplugin
+
+To build the files needed for the webplugin run this command
+
+```
+npm run build-webplugin
+```
+
+To add file watcher for transpiling the ts files
+
+```
+dev-webplugin-ts
+```
+
+To add file watcher for transpiling the scss files
+
+```
+dev-webplugin-scss
+```

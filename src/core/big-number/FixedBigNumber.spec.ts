@@ -1,6 +1,13 @@
 import { FixedBigNumber } from "./FixedBigNumber";
 
 describe("FixedBigNumber", () => {
+    it("should handle malformed string formats correctly", () => {
+        expect(new FixedBigNumber("100.100.100", 3).isValid()).toBeFalsy();
+        expect(new FixedBigNumber("asdfasdfasdf", 3).isValid()).toBeFalsy();
+        expect(new FixedBigNumber(".....", 3).isValid()).toBeFalsy();
+        expect(new FixedBigNumber("1000asd1.d.1", 3).isValid()).toBeFalsy();
+    });
+
     it("should return a correct BigInteger string", () => {
         let checks = [
             {

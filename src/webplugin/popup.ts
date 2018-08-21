@@ -1,8 +1,14 @@
-let dbName = "_ionicstorage";
-
-let dbOpenRequest = indexedDB.open(dbName);
-
+const dbName = "_ionicstorage";
+const dbOpenRequest = indexedDB.open(dbName);
 let baseUrl = "";
+let totalWallets = [];
+let totalAssets = [];
+let currentPublicKey;
+let browser = (<any>window).browser = (function () {
+    return (<any>window).msBrowser ||
+    (<any>window).browser ||
+    (<any>window).chrome;
+})();
 
 if (isDevMode()) {
     baseUrl = "http://localhost:8090";
@@ -10,34 +16,21 @@ if (isDevMode()) {
     baseUrl = "https://prototype-api.smilo.network";
 }
 
-let browser = (<any>window).browser = (function () {
-    return (<any>window).msBrowser ||
-    (<any>window).browser ||
-    (<any>window).chrome;
-})();
-
-let totalWallets = [];
-let totalAssets = [];
-let currentPublicKey;
-
-window.addEventListener('DOMContentLoaded', () => {
-    let link = document.getElementById('openWalletButton');
-    link.addEventListener('click', () => {
+$(document).ready(() => {
+    let walletListVisible = false;
+    $("#openWalletButton").click(() => {
         browser.tabs.create({url: browser.extension.getURL('./www/index.html')});
     });
-    let walletListVisible = false;
-    $(document).ready(() => {
-        $(".wallet-dropdown").click(() => {
-            if (totalWallets !== undefined && totalWallets.length > 0) {
-                if (!walletListVisible) {
-                    walletListVisible = true;
-                    $("#wallet-list").show();
-                } else {
-                    walletListVisible = false;
-                    $("#wallet-list").hide();
-                }
+    $(".wallet-dropdown").click(() => {
+        if (totalWallets !== undefined && totalWallets.length > 0) {
+            if (!walletListVisible) {
+                walletListVisible = true;
+                $("#wallet-list").show();
+            } else {
+                walletListVisible = false;
+                $("#wallet-list").hide();
             }
-        });
+        }
     });
     getAssets();
 });
@@ -105,9 +98,7 @@ function getAssets() {
         url: baseUrl + "/asset",
         cache: false,
         success: (data) => {
-            for (let i = 0; i < data.length; i++) {
-                totalAssets.push({address: data[i].address, symbol: data[i].symbol});
-            }
+            totalAssets = data;
         }
     });
 }
@@ -117,29 +108,33 @@ function getWalletFunds(publicKey) {
         url: baseUrl + "/address/" + publicKey,
         cache: false,
         success: (data) => {
+            $("#funds-overview").show();
+            $("#failed-retrieve").hide();
             let currentWalletFunds = [];
             let balances = data.balances;
-            let keysArray = Object.keys(balances);
-            for (let key of keysArray) {
+            for (let key in balances) {
                 let value = balances[key];
-                let symbol = totalAssets.find(asset => asset.address === key);
-                if (symbol !== undefined) {
-                    currentWalletFunds.push({symbol: symbol.symbol, amount: value});
+                let asset = totalAssets.find(asset => asset.address === key);
+                if (asset !== undefined) {
+                    currentWalletFunds.push({symbol: asset.symbol, amount: this.assetService.prepareBigNumber(
+                        value,
+                        asset.address
+                    )});
                 } else {
-                    currentWalletFunds.push({symbol: key, amount: value});
+                    currentWalletFunds.push({symbol: key, amount: this.assetService.prepareBigNumber(
+                        value,
+                        asset.address
+                    )});
                 }
             }
-            if (balances["000x00322"] === undefined) {
+            if (balances["000x00321"] === undefined) {
                 currentWalletFunds.push({symbol: "XSP", amount: 0});
             }
-            console.log(currentWalletFunds);
             setCurrentWalletFunds(currentWalletFunds);
         },
         error: (error) => {
-            let currentWalletFunds = [];
-            currentWalletFunds.push({symbol: "XSM", amount: 0});
-            currentWalletFunds.push({symbol: "XSP", amount: 0});
-            setCurrentWalletFunds(currentWalletFunds);
+            $("#funds-overview").hide();
+            $("#failed-retrieve").show();
         }
     });
 }

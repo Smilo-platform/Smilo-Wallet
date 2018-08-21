@@ -59,7 +59,6 @@ export class MerkleTreeBuilder {
                 // Android requires the scripts to be loaded as shown below.
                 scripts = [
                     `file:///android_asset/www/assets/scripts/sjcl.js`,
-                    `file:///android_asset/www/assets/scripts/seedrandom.min.js`,
                     `file:///android_asset/www/assets/scripts/SHA1PRNG.js`,
                     `file:///android_asset/www/assets/scripts/LamportGenerator.js`
                 ];
@@ -67,7 +66,6 @@ export class MerkleTreeBuilder {
                 // iOS requires the scripts to be loaded as shown below.
                 scripts = [
                     `${ window.location.href.replace("/index.html", "") }/assets/scripts/sjcl.js`,
-                    `${ window.location.href.replace("/index.html", "") }/assets/scripts/seedrandom.min.js`,
                     `${ window.location.href.replace("/index.html", "") }/assets/scripts/SHA1PRNG.js`,
                     `${ window.location.href.replace("/index.html", "") }/assets/scripts/LamportGenerator.js`
                 ];
@@ -75,7 +73,6 @@ export class MerkleTreeBuilder {
                 // Browser extensions requires the scripts to be loaded as shown below
                 scripts = [
                     `${ window.location.protocol }//${ window.location.host }/www/assets/scripts/sjcl.js`,
-                    `${ window.location.protocol }//${ window.location.host }/www/assets/scripts/seedrandom.min.js`,
                     `${ window.location.protocol }//${ window.location.host }/www/assets/scripts/SHA1PRNG.js`,
                     `${ window.location.protocol }//${ window.location.host }/www/assets/scripts/LamportGenerator.js`
                 ];
@@ -83,7 +80,6 @@ export class MerkleTreeBuilder {
                 // Web requires the scripts to be loaded as shown below.
                 scripts = [
                     `${ window.location.protocol }//${ window.location.host }/assets/scripts/sjcl.js`,
-                    `${ window.location.protocol }//${ window.location.host }/assets/scripts/seedrandom.min.js`,
                     `${ window.location.protocol }//${ window.location.host }/assets/scripts/SHA1PRNG.js`,
                     `${ window.location.protocol }//${ window.location.host }/assets/scripts/LamportGenerator.js`
                 ];
