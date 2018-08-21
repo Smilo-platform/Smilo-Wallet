@@ -23,9 +23,10 @@ import { FixedBigNumber } from "../../core/big-number/FixedBigNumber";
 import { ITransaction } from "../../models/ITransaction";
 import { IPaymentRequest } from "../../models/IPaymentRequest";
 import { MockToast } from "../../../test-config/mocks/MockToast";
-import { Observable } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 import { QRScannerStatus } from "@ionic-native/qr-scanner";
 import { NgZone } from "@angular/core";
+import { IBalance } from "../../models/IBalance";
 
 interface ICanTransferTestVector {
     publicKey: string;
@@ -117,7 +118,32 @@ describe("TransferPage", () => {
     it("should create component", () => expect(comp).toBeDefined());
 
     it("should be initialized correctly", () => {
+        spyOn(comp, "getAndSubscribeToTranslations");
 
+        let wallet: IWallet = <IWallet>{};
+        let balances: IBalance[] = [
+            {
+                currency: "XSM",
+                amount: new FixedBigNumber("100", 0),
+                valueAmount: new FixedBigNumber("100", 0)
+            }
+        ];
+
+        spyOn(navParams, "get").and.callFake((key) => {
+            if(key == "currentWallet")
+                return wallet;
+            else if(key == "currentWalletBalance")
+                return balances;
+        });
+
+        comp.ionViewDidLoad();
+
+        expect(comp.isTransferring).toBe(false);
+        expect(comp.fromWallet).toBe(wallet);
+        expect(comp.balances).toBe(balances);
+        expect(comp.chosenCurrency).toBe("XSM");
+        expect(comp.chosenCurrencyAmount.eq(new FixedBigNumber("100", 0))).toBe(true);
+        expect(comp.getAndSubscribeToTranslations).toHaveBeenCalled();
     });
 
     it("should hide the camera when leaving the page", () => {
@@ -249,8 +275,68 @@ describe("TransferPage", () => {
         expect(comp.enoughFunds).toBe(false);
     });
 
-    it("should transfer funds correctly", () => {
+    it("should transfer funds correctly", (done) => {
+        spyOn(comp, "resetTransferState");
 
+        // Mock translations map
+        comp.translations = new Map<string, string>();
+        spyOn(comp.translations, "get").and.callFake((key) => key);
+
+        let transaction: ITransaction = <ITransaction>{};
+
+        spyOn(comp, "createTransaction").and.returnValue(transaction);
+        spyOn(comp, "signTransaction").and.callFake((t) => {
+            expect(t).toBe(transaction);
+
+            return Promise.resolve();
+        });
+        spyOn(transferTransactionService, "sendTransaction").and.callFake((t) => {
+            expect(t).toEqual(transaction);
+
+            return Promise.resolve();
+        });
+
+        comp.toPublicKey = "PUBLIC_KEY";
+        comp.amount = "100";
+        comp.enoughFunds = true;
+        comp.password = "PASSWORD";
+        comp.chosenCurrency = "XSM";
+        comp.balances = [
+            {
+                currency: "XSM",
+                amount: new FixedBigNumber("200", 0),
+                valueAmount: new FixedBigNumber("200", 0)
+            }
+        ];
+
+        let promise = comp.transfer();
+
+        expect(comp.resetTransferState).toHaveBeenCalled();
+        expect(comp.isTransferring).toBe(true);
+        expect(comp.statusMessage).toBe("transfer.signing_transaction");
+
+        promise.then(
+            () => {
+                // Expect user to be notified of success
+                expect(comp.statusMessage).toBe("transfer.sent_success");
+                expect(comp.isTransferring).toBe(false);
+
+                // Balance should be updated correctly
+                expect(comp.balances[0].amount.eq(new FixedBigNumber("100", 0))).toBe(true);
+
+                // Expect input fields to be reset
+                expect(comp.toPublicKey).toBe("");
+                expect(comp.amount).toBe(null);
+                expect(comp.enoughFunds).toBe(undefined);
+                expect(comp.password).toBe("");
+
+                done();
+            },
+            (error) => {
+                expect(true).toBe(false, "Promise reject should not be called");
+                done();
+            }
+        );
     });
 
     it("should create the transaction correctly", () => {
@@ -362,11 +448,71 @@ describe("TransferPage", () => {
     });
 
     it("should show the camera correctly", () => {
-        
+        comp.cameraIsShown = false;
+        spyOn(comp, "hideUI");
+        spyOn(qrScannerService, "show");
+        spyOn(platformService, "is").and.returnValue(false);
+        spyOn(platformService, "registerBackButtonAction");
+
+        comp.showCamera();
+
+        expect(comp.hideUI).toHaveBeenCalled();
+        expect(qrScannerService.show).toHaveBeenCalled();
+        expect(platformService.registerBackButtonAction).not.toHaveBeenCalled();
+        expect(comp.cameraIsShown).toBe(true);
+
+    });
+
+    it("should listen to the back button when showing the camera on Android", () => {
+        spyOn(comp, "hideUI");
+        spyOn(qrScannerService, "show");
+        spyOn(platformService, "is").and.returnValue(true);
+        spyOn(platformService, "registerBackButtonAction");
+
+        comp.showCamera();
+
+        expect(comp.hideUI).toHaveBeenCalled();
+        expect(qrScannerService.show).toHaveBeenCalled();
+        expect(platformService.registerBackButtonAction).toHaveBeenCalled();
     });
 
     it("should hide the camera correctly", () => {
+        comp.cameraIsShown = true;
+        spyOn(qrScannerService, "hide");
+        spyOn(qrScannerService, "destroy");
+        spyOn(comp, "showUI");
+        spyOn(platformService, "is").and.returnValue(false);
 
+        let scanSubscription = new Subscription();
+        comp.scanSubscription = scanSubscription;
+
+        spyOn(scanSubscription, "unsubscribe");
+
+        let unregisterDummySpy = jasmine.createSpy();
+        comp.unregisterBackButtonFunction = unregisterDummySpy;
+
+        comp.hideCamera();
+
+        expect(qrScannerService.hide).toHaveBeenCalled();
+        expect(qrScannerService.destroy).toHaveBeenCalled();
+        expect(comp.showUI).toHaveBeenCalled();
+        expect(unregisterDummySpy).not.toHaveBeenCalled();
+        expect(scanSubscription.unsubscribe).toHaveBeenCalled();
+        expect(comp.cameraIsShown).toBe(false);
+    });
+
+    it("should unregister from listening to the back button when hiding the camera on Android", () => {
+        spyOn(qrScannerService, "hide");
+        spyOn(qrScannerService, "destroy");
+        spyOn(comp, "showUI");
+        spyOn(platformService, "is").and.returnValue(true);
+
+        let unregisterDummySpy = jasmine.createSpy();
+        comp.unregisterBackButtonFunction = unregisterDummySpy;
+
+        comp.hideCamera();
+
+        expect(unregisterDummySpy).toHaveBeenCalled();
     });
 
     it("should show the UI correctly", () => {

@@ -208,7 +208,7 @@ export class TransferPage {
         }
     }
 
-    transfer(): void {
+    transfer(): Promise<void> {
         this.resetTransferState();
         
         this.isTransferring = true;
@@ -216,7 +216,7 @@ export class TransferPage {
 
         let transaction = this.createTransaction();
         
-        this.signTransaction(transaction).then(
+        return this.signTransaction(transaction).then(
             () => this.transferTransactionService.sendTransaction(transaction)
         ).then(
             () => {
@@ -293,9 +293,11 @@ export class TransferPage {
         this.qrScanner.show();
         this.cameraIsShown = true;
 
-        this.unregisterBackButtonFunction = this.platform.registerBackButtonAction(() => {
-            this.hideCamera();
-        });
+        if(this.platform.is("android")) {
+            this.unregisterBackButtonFunction = this.platform.registerBackButtonAction(() => {
+                this.hideCamera();
+            });
+        }
     }
 
     hideCamera() {
@@ -305,7 +307,7 @@ export class TransferPage {
         this.showUI();
         this.cameraIsShown = false;
 
-        if(this.unregisterBackButtonFunction) {
+        if(this.unregisterBackButtonFunction && this.platform.is("android")) {
             this.unregisterBackButtonFunction();
             this.unregisterBackButtonFunction = null;
         }
