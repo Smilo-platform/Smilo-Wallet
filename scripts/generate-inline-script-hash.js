@@ -1,4 +1,6 @@
+// Required because we need to generate a sha256 hash of a piece of code
 var sjcl = require("../src/assets/scripts/sjcl.js");
+// Required because we need to read a file
 var fs = require("fs");
 
 fs.readFile("./www/index.html", "utf8", (error, data) => {
@@ -8,10 +10,12 @@ fs.readFile("./www/index.html", "utf8", (error, data) => {
     for (let i = 0; i < result.length; i++) {
       let resultItem = result[i];
       if (!resultItem.includes("><")) {
-        let innerContent = resultItem.split(">")[1].split("<")[0];
+        let innerContent = resultItem.split(">")[1].split("</")[0];
+        // Generate the sha256 hash of the code
         var hashed = sjcl.hash.sha256.hash(innerContent);
         let output = sjcl.codec.base64.fromBits(hashed);
         let sha256Script = "sha256-" + output;
+        // Add the hash to the results
         validResults.push(sha256Script);
       }
     }
