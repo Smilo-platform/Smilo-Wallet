@@ -1,7 +1,5 @@
 import { LamportGenerator } from "./LamportGenerator";
 
-declare const sjcl: any;
-
 export interface ILamportGeneratorThreadInput {
     startIndex: number,
     seeds: Int8Array[],

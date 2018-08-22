@@ -3,7 +3,6 @@ import { HttpClient } from "@angular/common/http";
 import { ITransaction } from "../../models/ITransaction";
 import { UrlService } from "../url-service/url-service";
 import { IPostTransactionResult } from "../../models/IPostTransactionResult";
-import { ITransactionOutput } from "../../models/ITransactionOutput";
 
 export interface ITransferTransactionService {
     sendTransaction(transaction: ITransaction): Promise<IPostTransactionResult>

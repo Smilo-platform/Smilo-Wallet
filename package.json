@@ -23,8 +23,14 @@
     "postinstall": "npm run compile-bitcoin-js-wrapper && npm run compile-web-worker-lib",
     "validate-translations": "node ./scripts/translation_checker.js",
     "validate-translations:ci": "node ./scripts/translation_checker.js --ci",
+    "generate-sha256-hash": "node ./scripts/generate-inline-script-hash.js",
     "compile-web-worker-lib": "tsc --p tsconfig.webworker.json && ./scripts/prepare-webworker-lib.sh",
-    "compile-bitcoin-js-wrapper": "browserify ./bitcoin-js-wrapper/wrapper.js --standalone bitcoinjs > ./src/assets/scripts/bitcoinjs-lib.js"
+    "compile-web-plugin-lib": "tsc --p tsconfig.webplugin.json",
+    "compile-web-plugin-lib-watch": "tsc --p tsconfig.webplugin.json -w",
+    "compile-bitcoin-js-wrapper": "browserify ./bitcoin-js-wrapper/wrapper.js --standalone bitcoinjs > ./src/assets/scripts/bitcoinjs-lib.js",
+    "build-webplugin": "npm run generate-sha256-hash && npm run compile-web-plugin-lib && node-sass --include-path scss src/webplugin/popup.scss src/webplugin/popup.css",
+    "dev-webplugin-ts": "npm run generate-sha256-hash && npm run compile-web-plugin-lib-watch",
+    "dev-webplugin-scss": "node-sass -w --include-path scss src/webplugin/popup.scss src/webplugin/popup.css"
   },
   "dependencies": {
     "@angular/animations": "5.2.10",
@@ -49,7 +55,9 @@
     "@ngx-translate/core": "^9.1.1",
     "@ngx-translate/http-loader": "^2.0.1",
     "@types/big.js": "^4.0.5",
+    "@types/chrome": "0.0.71",
     "@types/jasmine": "^2.8.8",
+    "@types/jquery": "^3.3.6",
     "@types/zxcvbn": "^4.4.0",
     "angular2-template-loader": "^0.6.2",
     "awesome-typescript-loader": "^3.5.0",
@@ -85,6 +93,7 @@
     "istanbul-instrumenter-loader": "^3.0.1",
     "jasmine": "^3.1.0",
     "jasmine-spec-reporter": "^4.2.1",
+    "jquery": "^3.3.1",
     "karma": "^2.0.4",
     "karma-chrome-launcher": "^2.2.0",
     "karma-coverage-istanbul-reporter": "^2.0.1",
@@ -104,10 +113,12 @@
     "ts-loader": "^4.4.2",
     "ts-node": "^6.0.5",
     "wait-on": "^2.1.0",
+    "xmlhttprequest": "^1.8.0",
     "zone.js": "0.8.26"
   },
   "devDependencies": {
     "@ionic/app-scripts": "3.1.9",
+    "node-sass": "^4.9.3",
     "puppeteer": "^1.4.0",
     "typescript": "~2.6.2"
   },

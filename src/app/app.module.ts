@@ -78,7 +78,7 @@ export function HttpLoaderFactory(http: HttpClient) {
         deps: [HttpClient]
       }
     }),
-    IonicStorageModule.forRoot(),
+    IonicStorageModule.forRoot({ name: 'smilo-wallet' }),
     HomePageModule,
     AboutPageModule,
     WalletOverviewPageModule,
