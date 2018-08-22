@@ -10,7 +10,10 @@
           <ion-label stacked>
             {{ 'import_privatekey.privatekey' | translate }}
           </ion-label>
-          <ion-textarea class="private-key-input" [(ngModel)]="privateKey" rows="10" cols="50"></ion-textarea> 
+          <ion-textarea class="private-key-input" [(ngModel)]="privateKey"
+                        rows="10" cols="50"
+                        [attr.data-cy]="'private-key-input'">
+          </ion-textarea> 
         </ion-item>
 
 
@@ -18,25 +21,31 @@
           <ion-label stacked>
             {{ 'import_privatekey.name' | translate }}
           </ion-label>
-          <ion-input class="name-input" [(ngModel)]="name"></ion-input>
+          <ion-input class="name-input" [(ngModel)]="name" [attr.data-cy]="'wallet-name-input'"></ion-input>
         </ion-item>
 
         <ion-item>
           <ion-label stacked>
             {{ 'import_privatekey.password' | translate }}
           </ion-label>
-          <ion-input class="password-input" type="password" [(ngModel)]="password" (ionChange)="onPasswordsChanged()"></ion-input>
+          <ion-input class="password-input" type="password" 
+                     [(ngModel)]="password" (ionChange)="onPasswordsChanged()"
+                     [attr.data-cy]="'password-input'">
+            </ion-input>
         </ion-item>
 
         <ion-item>
           <ion-label stacked>
             {{ 'import_privatekey.validate_password' | translate }}
           </ion-label>
-          <ion-input class="password-confirmation-input" type="password" [(ngModel)]="confirmedPassword" (ionChange)="onPasswordsChanged()"></ion-input>
+          <ion-input class="password-confirmation-input" type="password" 
+                     [(ngModel)]="confirmedPassword" (ionChange)="onPasswordsChanged()"
+                     [attr.data-cy]="'password-confirm-input'">
+          </ion-input>
         </ion-item>
 
         <div class="content-div">
-          <span *ngIf="!passwordsArePristine() && passwordStatus.type != 'success'" class="password-error">
+          <span *ngIf="!passwordsArePristine() && passwordStatus.type != 'success'" class="password-error" [attr.data-cy]="'password-error'">
             {{ passwordStatus.message }}
           </span>
         </div>
@@ -48,7 +57,7 @@
         </div>
 
         <div class="content-div">
-          <button ion-button *ngIf="dataIsValid()" class="import-button" (click)="import()">
+          <button ion-button *ngIf="dataIsValid()" class="import-button" (click)="import()" [attr.data-cy]="'start-import-privatekey-button'">
             {{ 'import_privatekey.buttons.import' | translate }}
           </button>
         </div>
