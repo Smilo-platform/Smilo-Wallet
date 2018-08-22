@@ -11,7 +11,7 @@
     "test": "karma start ./test-config/karma.conf.js",
     "test-ci": "karma start ./test-config/karma.conf.js --coverage --single-run",
     "e2e": "cypress open",
-    "e2e-ci": "nohup ionic serve --no-open --no-livereload --no-interactive & (./scripts/wait-for-ionic.sh && cypress run && pkill -f ionic && rm ./nohup.out)",
+    "e2e-ci": "nohup ionic serve --no-open --no-livereload --no-interactive &> /dev/null & (wait-on http://localhost:8100 && cypress run && pkill -f ionic && rm ./nohup.out)",
     "ionic:build": "ionic-app-scripts build",
     "ionic:serve": "ionic-app-scripts serve",
     "release:android": "./scripts/release-android.sh",
@@ -102,6 +102,7 @@
     "threads": "^0.11.0",
     "ts-loader": "^4.4.2",
     "ts-node": "^6.0.5",
+    "wait-on": "^2.1.0",
     "zone.js": "0.8.26"
   },
   "devDependencies": {
