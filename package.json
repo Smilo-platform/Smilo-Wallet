@@ -10,9 +10,8 @@
     "lint": "ionic-app-scripts lint",
     "test": "karma start ./test-config/karma.conf.js",
     "test-ci": "karma start ./test-config/karma.conf.js --coverage --single-run",
-    "e2e": "npm run e2e-update && npm run e2e-test --",
-    "e2e-test": "protractor ./test-config/protractor.conf.js",
-    "e2e-update": "webdriver-manager update --standalone false --gecko false",
+    "e2e": "cypress open",
+    "e2e-ci": "nohup ionic serve --no-open --no-livereload --no-interactive & (./scripts/wait-for-ionic.sh && cypress run && pkill -f ionic)",
     "ionic:build": "ionic-app-scripts build",
     "ionic:serve": "ionic-app-scripts serve",
     "release:android": "./scripts/release-android.sh",
@@ -25,9 +24,7 @@
     "validate-translations": "node ./scripts/translation_checker.js",
     "validate-translations:ci": "node ./scripts/translation_checker.js --ci",
     "compile-web-worker-lib": "tsc --p tsconfig.webworker.json && ./scripts/prepare-webworker-lib.sh",
-    "compile-bitcoin-js-wrapper": "browserify ./bitcoin-js-wrapper/wrapper.js --standalone bitcoinjs > ./src/assets/scripts/bitcoinjs-lib.js",
-    "cypress": "cypress open",
-    "cypress-ci": "cypress run"
+    "compile-bitcoin-js-wrapper": "browserify ./bitcoin-js-wrapper/wrapper.js --standalone bitcoinjs > ./src/assets/scripts/bitcoinjs-lib.js"
   },
   "dependencies": {
     "@angular/animations": "5.2.10",
