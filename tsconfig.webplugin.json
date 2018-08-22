@@ -13,20 +13,16 @@
     "sourceMap": true,
     "target": "es5",
     "types": [
-      // We only include the types of Jasmine and Node because these are required by the unit tests.
-      // If we don't add them this way the compiler will complain about type conflicts between Jasmine and Mocha.
+      "jquery",
       "jasmine",
       "node"
     ]
   },
   "include": [
-    "src/**/*.ts"
+    "src/webplugin/popup.ts"
   ],
   "exclude": [
-    "webplugin",
-    "node_modules",
-    "src/**/*.spec.ts",
-    "src/**/__tests__/*.ts"
+    "node_modules"
   ],
   "compileOnSave": false,
   "atom": {

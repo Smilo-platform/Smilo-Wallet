@@ -4,7 +4,6 @@ import { IWallet } from "../../models/IWallet";
 import { IBalance } from "../../models/IBalance";
 import { IPaymentRequest } from "../../models/IPaymentRequest";
 import { FixedBigNumber } from "../../core/big-number/FixedBigNumber";
-import { QRGeneratorService } from "../../services/qr-generator-service/qr-generator-service";
 import { QrCodePage } from "../qr-code-page/qr-code-page";
 import { ThemeType, SettingsService } from "../../services/settings-service/settings-service";
 
