@@ -89,6 +89,8 @@
           </button>
         </div>
 
+        <smilo-password-strength-field [password]="password"></smilo-password-strength-field>
+
         <div class="content-div">
           <button ion-button *ngIf="dataIsValid()" class="import-button" (click)="import()">
             {{ 'import_passphrase.buttons.import' | translate }}

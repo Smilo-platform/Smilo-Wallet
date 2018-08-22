@@ -1,6 +1,8 @@
 page-wallet-import-privatekey {
     .password-error {
         color: red;
+        margin-bottom: 20px;
+        display: block;
 
         &:hover {
             cursor: pointer;

@@ -25,7 +25,10 @@
           <ion-label stacked>
             {{ 'import_privatekey.password' | translate }}
           </ion-label>
-          <ion-input class="password-input" type="password" [(ngModel)]="password" (ionChange)="onPasswordsChanged()"></ion-input>
+          <ion-input class="password-input" 
+                     type="password" 
+                     [(ngModel)]="password" 
+                     (ionChange)="onPasswordsChanged()"></ion-input>
         </ion-item>
 
         <ion-item>
@@ -46,6 +49,8 @@
             {{ 'import_privatekey.password_why' | translate }}
           </a>
         </div>
+
+        <smilo-password-strength-field [password]="password"></smilo-password-strength-field>
 
         <div class="content-div">
           <button ion-button *ngIf="dataIsValid()" class="import-button" (click)="import()">
