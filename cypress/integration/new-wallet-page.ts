@@ -140,6 +140,9 @@ describe("NewWalletPage", () => {
                 cy.get("[data-cy=wallet-name-input] input").type("My Wallet");
 
                 cy.get("[data-cy=finish-button]").click();
+
+                // Prepare wallet page should now be shown
+                cy.get("page-prepare-wallet");
             }
         );
     });
