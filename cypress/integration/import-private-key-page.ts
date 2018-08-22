@@ -5,11 +5,11 @@ describe("ImportPrivateKeyPage", () => {
         cleanIndexedDB();
 
         cy.visit("http://localhost:8100");
+
+        goToPage();
     });
 
     it("should not show the import button initially", () => {
-        goToPage();
-
         cy.get("page-wallet-import-privatekey").then(
             (page) => {
                 expect(page.find("[data-cy=import-privatekey-button]")).to.have.length(0);
@@ -18,8 +18,6 @@ describe("ImportPrivateKeyPage", () => {
     });
 
     it("should show a password warning if the passwords do not match", () => {
-        goToPage();
-        
         cy.get("[data-cy=password-input] input").type("pass123");
         cy.get("[data-cy=password-confirm-input] input").type("321ssap");
 
@@ -27,8 +25,6 @@ describe("ImportPrivateKeyPage", () => {
     });
 
     it("should show the import button once all fields have been filled correctly", () => {
-        goToPage();
-
         cy.get("[data-cy=private-key-input] textarea").type("PrivateKey");
         cy.get("[data-cy=wallet-name-input] input").type("Wallet Name");
         cy.get("[data-cy=password-input] input").type("pass123");
@@ -41,8 +37,6 @@ describe("ImportPrivateKeyPage", () => {
     });
 
     it("should show a password explanation dialog", () => {
-        goToPage();
-
         // Open modal
         cy.get("[data-cy=password-explanation]").click();
 
