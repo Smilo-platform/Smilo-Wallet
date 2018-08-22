@@ -36,8 +36,9 @@ UserInterfaceState.xcuserstate
 
 .gradle
 release
-resources/android
-resources/ios
+resources/*/icon
+resources/*/splash
+resources/*/*.md5
 resources/*.md5
 *.jks
 
