@@ -52,3 +52,4 @@ src/assets/scripts/SHA1PRNG.js
 cypress/screenshots
 cypress/videos
 !cypress/plugins
+nohup.out
