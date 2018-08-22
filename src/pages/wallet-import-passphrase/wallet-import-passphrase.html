@@ -15,8 +15,8 @@
                         formControlName="passphrase"
                         [(ngModel)]="passphrase" 
                         (ionChange)="onPassphraseChanged()"
-                        class="passphrase-input"
-                        [placeholder]="'import_passphrase.passphrase_hint' | translate"></ion-textarea>
+                        [placeholder]="'import_passphrase.passphrase_hint' | translate"
+                        [attr.data-cy]="'passphrase-input'"></ion-textarea>
           </ion-item>
 
           <ion-item>
@@ -25,9 +25,9 @@
             </ion-label>
             <ion-input type="password" 
                         formControlName="password"
-                        class="password-input"
                         [(ngModel)]="password" 
-                        (ionChange)="onPasswordChanged()"></ion-input>
+                        (ionChange)="onPasswordChanged()"
+                        [attr.data-cy]="'password-input'"></ion-input>
           </ion-item>
 
           <ion-item>
@@ -36,18 +36,18 @@
             </ion-label>
             <ion-input type="password" 
                         formControlName="passwordConfirm"
-                        class="password-confirm-input"
                         [(ngModel)]="passwordConfirm" 
-                        (ionChange)="onPasswordChanged()"></ion-input>
+                        (ionChange)="onPasswordChanged()"
+                        [attr.data-cy]="'password-confirm-input'"></ion-input>
           </ion-item>
 
           <ion-item>
             <ion-label stacked>
               {{ 'import_passphrase.wallet_name' | translate }}
             </ion-label>
-            <ion-input class="name-input" 
-                        formControlName="walletName"
-                        [(ngModel)]="walletName"></ion-input>
+            <ion-input formControlName="walletName"
+                        [(ngModel)]="walletName"
+                        [attr.data-cy]="'wallet-name-input'"></ion-input>
           </ion-item>
 
           <div *ngIf="showAdvanced">
@@ -55,36 +55,38 @@
               <ion-label stacked>
                 {{ 'import_passphrase.wallet_index' | translate }}
               </ion-label>
-              <ion-input class="name-input" 
-                          formControlName="walletIndex"
+              <ion-input formControlName="walletIndex"
                           class="wallet-index-input"
-                          [(ngModel)]="walletIndex"></ion-input>
+                          [(ngModel)]="walletIndex"
+                          [attr.data-cy]="'wallet-index-input'"></ion-input>
             </ion-item>
           </div>
         </form>
 
-        <div class="content-div" *ngIf="passwordStatus && passwordStatus.type != 'success'">
+        <div class="content-div" *ngIf="passwordStatus && passwordStatus.type != 'success'" [attr.data-cy]="'password-error-box'">
           <span [ngClass]="{'error-box': passwordStatus.type == 'error', 'warning-box': passwordStatus.type == 'warning'}" 
                 class="password-message-box">
             {{ passwordStatus.message }}
           </span>
         </div>
 
-        <div class="content-div" *ngIf="passphraseStatus && !passphraseStatus.isValid">
+        <div class="content-div" *ngIf="passphraseStatus && !passphraseStatus.isValid" [attr.data-cy]="'passphrase-error-box'">
           <span [ngClass]="{'error-box': passphraseStatus.isBlocking, 'warning-box': !passphraseStatus.isBlocking}" 
-                class="error-box passphrase-message-box">
+                class="error-box">
             {{ passphraseStatus.errorMessage }}
           </span>
         </div>
 
-        <div class="content-div" *ngIf="!form.controls.walletIndex.valid">
-          <span class="wallet-index-message-box error-box">
+        <div class="content-div" *ngIf="!form.controls.walletIndex.valid" [attr.data-cy]="'wallet-index-error-box'">
+          <span class="error-box">
               {{ 'import_passphrase.errors.wallet_index' | translate }}
           </span>
         </div>
-
+        
         <div class="content-div">
-          <button ion-button small class="show-advanced-button" (click)="walletIndex = 0; showAdvanced = !showAdvanced">
+          <button ion-button small
+                  (click)="walletIndex = 0; showAdvanced = !showAdvanced"
+                  [attr.data-cy]="'toggle-index-button'">
             {{ 'import_passphrase.buttons.advanced' | translate }}
           </button>
         </div>
@@ -92,7 +94,7 @@
         <smilo-password-strength-field [password]="password"></smilo-password-strength-field>
 
         <div class="content-div">
-          <button ion-button *ngIf="dataIsValid()" class="import-button" (click)="import()">
+          <button ion-button *ngIf="dataIsValid()" (click)="import()" [attr.data-cy]="'import-button'">
             {{ 'import_passphrase.buttons.import' | translate }}
           </button>
         </div>
