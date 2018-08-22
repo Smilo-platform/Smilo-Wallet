@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
+import { ZXCVBNResult } from "zxcvbn";
 
 export interface IPasswordValidationResult {
     type: "success" | "warning" | "error";
@@ -8,6 +9,7 @@ export interface IPasswordValidationResult {
 
 export interface IPasswordService {
     validate(password: string, passwordConfirm: string): IPasswordValidationResult;
+    passwordStrength(password: string): ZXCVBNResult;
 }
 
 declare const zxcvbn: any;
@@ -53,7 +55,7 @@ export class PasswordService implements IPasswordService {
         }
     }
 
-    passwordStrength(password: string): any {
+    passwordStrength(password: string): ZXCVBNResult {
         return zxcvbn(password);
     }
 }

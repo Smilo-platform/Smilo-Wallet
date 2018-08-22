@@ -292,7 +292,7 @@
   "password-strength-component": {
       "toggle-advanced": "Toggle advanced password info",
       "feedback": "Feedback",
-      "time-to-crack": "Time to crack your password",
+      "time-to-crack": "Time to crack your password (estimation)",
       "online-throttling": "Online throttling",
       "online-no-throttling": "Online no throttling",
       "offline-slow-hashing": "Offline slow hashing",

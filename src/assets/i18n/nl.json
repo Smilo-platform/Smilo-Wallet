@@ -293,11 +293,11 @@
         }
     },
     "password-strength-component": {
-      "toggle-advanced": "Geavanceerd wachtwoord info schakelen",
+      "toggle-advanced": "Meer info",
       "feedback": "Terugkoppeling",
-      "time-to-crack": "Benodigde tijd om je wachtwoord te kraken",
-      "online-throttling": "Online throttling",
-      "online-no-throttling": "Online geen throttling",
+      "time-to-crack": "Benodigde tijd om je wachtwoord te kraken (schatting)",
+      "online-throttling": "Online afknijpen",
+      "online-no-throttling": "Online niet afknijpen",
       "offline-slow-hashing": "Offline traag hashen",
       "offline-fast-hashing": "Offline snel hashen",
       "fill-strong-password": "Vul een sterk wachtwoord in",
