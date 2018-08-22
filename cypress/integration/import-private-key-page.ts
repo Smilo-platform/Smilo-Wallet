@@ -40,6 +40,29 @@ describe("ImportPrivateKeyPage", () => {
         cy.get("page-prepare-wallet");
     });
 
+    it("should show a password explanation dialog", () => {
+        goToPage();
+
+        // Open modal
+        cy.get("[data-cy=password-explanation]").click();
+
+        // Expect modal to be shown
+        cy.get("page-password-explanation");
+
+        // Close modal
+        cy.get("[data-cy=password-explain-ok-button]").click();
+
+        // Wait to allow the modal animation to end
+        cy.wait(2000);
+
+        cy.get("body").then(
+            (body) => {
+                // Expect modal not to be shown
+                expect(body.find("page-password-explanation")).to.have.length(0);
+            }
+        )
+    });
+
     function goToPage() {
         cy.get("[data-cy=restore-backup-button]").click();
 

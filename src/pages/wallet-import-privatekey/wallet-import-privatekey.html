@@ -51,7 +51,7 @@
         </div>
 
         <div class="content-div">
-          <a class="password-explanation" (click)="showPasswordExplanation()">
+          <a class="password-explanation" (click)="showPasswordExplanation()" [attr.data-cy]="'password-explanation'">
             {{ 'import_privatekey.password_why' | translate }}
           </a>
         </div>
