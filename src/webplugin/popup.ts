@@ -1,3 +1,4 @@
+declare const $;
 const dbOpenRequest = indexedDB.open("smilo-wallet");
 let baseUrl = "";
 let totalWallets = [];

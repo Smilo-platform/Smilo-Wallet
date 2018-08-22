@@ -7,7 +7,7 @@ This repo contains the source code for the Smilo mobile wallet.
 This project relies on the following dependencies:
 - NodeJS @ 8.11.2
 - NPM @ 5.6.0
-- Ionic @ 3.20.0
+- Ionic @ 4.1.1
 - Cordova @ 8.0.0
 - Browserify @16.2.2
 
@@ -134,23 +134,30 @@ We use Jasmine and Karma to unit test this project. To unit test the project run
 npm run test
 ````
 
-For end-to-end testing we use Protractor and Jasmine. To e2e test the project first ensure the project is running with `ionic serve`. Next run the following command in the root of this project:
+This will start a process which will watch for source file changes and rerun the tests if needed.
+
+If you only want to run the unit tests once (for example when running on a build server) use this command:
+
+```
+npm run test-ci
+```
+
+For end-to-end testing we use Cypress and Mocha. To e2e test the project _during development_ first ensure the project is running with `ionic serve`. Next run the following command in the root of this project:
 
 ```
 npm run e2e
 ```
 
-For end-to-end testing we use Protractor and Jasmine. To e2e test the project first ensure the project is running with `ionic serve`. Next run the following command in the root of this project. Use the FILE_NAME as variable defined in the e2e script. 
+This will open the Cypress test runner in which you can select which tests should be run.
+
+If you only want to run all e2e tests once (for example when running on a build server) use this command:
 
 ```
-npm run e2e -- --params.testFile=<FILE_NAME>
+npm run e2e-ci
 ```
 
-Example
+This will build and run this project and next run the e2e tests. Afterwards the running project will be killed.
 
-```
-npm run e2e -- --params.testFile="existing-wallet-overview-check"
-```
 
 ## Validating translations
 
