@@ -54,7 +54,7 @@
 
     <ion-row>
       <ion-col text-center>
-        <button ion-button class="show-passphrase-button" (click)="goToPassphrasePage()">
+        <button [attr.data-cy]="'show-passphrase-button'" ion-button (click)="goToPassphrasePage()">
           {{ 'new_wallet.buttons.show_passphrase' | translate }}
         </button>
       </ion-col>

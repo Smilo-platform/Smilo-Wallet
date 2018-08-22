@@ -12,7 +12,13 @@
     "moduleResolution": "node",
     "sourceMap": true,
     "target": "es5",
-    "outDir": "src/assets/scripts/webworker"
+    "outDir": "src/assets/scripts/webworker",
+    "types": [
+      // We only include the types of Jasmine and Node because these are required by the unit tests.
+      // If we don't add them this way the compiler will complain about type conflicts between Jasmine and Mocha.
+      "jasmine",
+      "node"
+    ]
   },
   "include": [
     "src/core/random/IPRNG.ts",

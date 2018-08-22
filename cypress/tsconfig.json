@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "skipLibCheck": true,
+    "strict": true,
+    "types": [
+      "node",
+      "cypress"
+    ]
+  },
+  "include": [
+    "*/*.ts"
+  ]
+}

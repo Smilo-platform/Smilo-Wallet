@@ -1,5 +1,5 @@
-import { Component } from "@angular/core";
-import { IonicPage, NavParams } from "ionic-angular";
+import { Component, NgZone } from "@angular/core";
+import { IonicPage, NavParams, ToastController, Platform } from "ionic-angular";
 import { IWallet } from "../../models/IWallet";
 import { IBalance } from "../../models/IBalance";
 import { TransactionSignService } from "../../services/transaction-sign-service/transaction-sign-service";
@@ -11,6 +11,10 @@ import { TranslateService } from "@ngx-translate/core";
 import { BulkTranslateService } from "../../services/bulk-translate-service/bulk-translate-service";
 import { AssetService } from "../../services/asset-service/asset-service";
 import { FixedBigNumber } from "../../core/big-number/FixedBigNumber";
+import { QRScanner } from "@ionic-native/qr-scanner";
+import { IPaymentRequest } from "../../models/IPaymentRequest";
+import { AddressHelper } from "../../core/address/AddressHelper";
+import { Subscription } from "rxjs";
 
 @IonicPage()
 @Component({
@@ -67,12 +71,32 @@ export class TransferPage {
    */
     translations: Map<string, string> = new Map<string, string>();
 
+    /**
+     * True if the camera is currently active.
+     */
+    cameraIsShown: boolean = false;
+
+    /**
+     * Function to call when unregistering the back button handler.
+     */
+    unregisterBackButtonFunction: Function;
+
+    /**
+     * The subscription used to get scan responses.
+     */
+    scanSubscription: Subscription;
+
+    private addressHelper = new AddressHelper();
+
     constructor(private navParams: NavParams,
         private transactionSignService: TransactionSignService,
         private transferTransactionService: TransferTransactionService,
         private translateService: TranslateService,
         private bulkTranslateService: BulkTranslateService,
-        private assetService: AssetService) { }
+        private qrScanner: QRScanner,
+        private zone: NgZone,
+        private toastController: ToastController,
+        private platform: Platform) { }
 
     ionViewDidLoad(): void {
         this.getAndSubscribeToTranslations();
@@ -82,6 +106,10 @@ export class TransferPage {
         this.balances = this.navParams.get("currentWalletBalance");
         this.chosenCurrency = this.balances[0].currency;
         this.chosenCurrencyAmount = this.balances[0].amount;
+    }
+
+    ionViewDidLeave(): void {
+        this.hideCamera();
     }
 
     getAndSubscribeToTranslations(): void {
@@ -105,7 +133,10 @@ export class TransferPage {
             "transfer.signing_success",
             "transfer.signing_failed",
             "transfer.sent_success",
-            "transfer.sent_failed"
+            "transfer.sent_failed",
+            "transfer.scanner.access_denied",
+            "transfer.scanner.failure",
+            "transfer.scanner.scan_failure"
         ]).then(data => {
             this.translations = data;
             return data;
@@ -250,5 +281,138 @@ export class TransferPage {
             this.password,
             transaction
         );
+    }
+
+    isValidPaymentRequest(request: IPaymentRequest) {
+        return request.receiveAddress &&
+               this.addressHelper.isValidAddress(request.receiveAddress).isValid &&
+               request.amount && request.assetId;
+    }
+
+    showCamera() {
+        this.hideUI();
+        this.qrScanner.show();
+        this.cameraIsShown = true;
+
+        this.unregisterBackButtonFunction = this.platform.registerBackButtonAction(() => {
+            this.hideCamera();
+        });
+    }
+
+    hideCamera() {
+        this.qrScanner.hide();
+        this.qrScanner.destroy();
+
+        this.showUI();
+        this.cameraIsShown = false;
+
+        if(this.unregisterBackButtonFunction) {
+            this.unregisterBackButtonFunction();
+            this.unregisterBackButtonFunction = null;
+        }
+
+        if(this.scanSubscription) {
+            this.scanSubscription.unsubscribe();
+        }
+    }
+
+    hideUI() {
+        document.getElementsByTagName("body")[0].className = "camera-ready";
+    }
+
+    showUI() {
+        document.getElementsByTagName("body")[0].className = "";
+    }
+
+    scanQRCode() {
+        // Make the screen camera ready
+        this.qrScanner.prepare().then(
+            (status) => {
+                if(status.authorized) {
+                    this.scanSubscription = this.qrScanner.scan().subscribe(
+                        (text) => {
+                            // Browser platforms for some reason return an object and not the text...
+                            text = (<any>text).result || text;
+
+                            this.zone.run(() => this.handleCameraScanResult(text));
+                        }
+                    );
+
+                    this.showCamera();
+                }
+                else if(status.denied) {
+                    // User denied permission.
+                    this.toastController.create({
+                        message: this.translations.get("transfer.scanner.access_denied"),
+                        duration: 2000,
+                        position: "top"
+                    }).present();
+                }
+                else {
+                    // Permission was denied but not permanently
+                    this.toastController.create({
+                        message: this.translations.get("transfer.scanner.access_denied"),
+                        duration: 2000,
+                        position: "top"
+                    }).present();
+                }
+            },
+            (error) => {
+                if(error.code == 1) {
+                    // Camera access denied
+                    this.toastController.create({
+                        message: this.translations.get("transfer.scanner.access_denied"),
+                        duration: 2000,
+                        position: "top"
+                    }).present();
+                }
+                else {
+                    // Something went wrong...
+                    this.toastController.create({
+                        message: this.translations.get("transfer.scanner.failure"),
+                        duration: 2000,
+                        position: "top"
+                    }).present();
+                }
+            }
+        );
+    }
+
+    handleCameraScanResult(result: string) {
+        // Try and parse the text to JSON
+        let paymentRequest: IPaymentRequest;
+        try {
+            paymentRequest = JSON.parse(result);
+        }
+        catch(ex) {}
+
+        if(paymentRequest) {
+            if(this.isValidPaymentRequest(paymentRequest)) {
+                // We found a valid QR code
+                this.toPublicKey = paymentRequest.receiveAddress;
+                this.amount = paymentRequest.amount;
+                this.chosenCurrency = paymentRequest.assetId == "000x00123" ? "XSM" : "XSP";
+
+                this.onAmountChanged();
+            }
+            else {
+                // Invalid payment request.
+                this.toastController.create({
+                    message: this.translations.get("transfer.scanner.scan_failure"),
+                    duration: 2000,
+                    position: "top"
+                }).present();
+            }
+        }
+        else {
+            // We did not find valid JSON. We'll continue scanning.
+            this.toastController.create({
+                message: this.translations.get("transfer.scanner.scan_failure"),
+                duration: 2000,
+                position: "top"
+            }).present();
+        }
+
+        this.hideCamera();
     }
 }
