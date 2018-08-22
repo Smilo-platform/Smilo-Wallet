@@ -10,7 +10,7 @@
           <ion-label stacked>
             {{ 'import_privatekey.privatekey' | translate }}
           </ion-label>
-          <ion-textarea class="private-key-input" [(ngModel)]="privateKey"
+          <ion-textarea [(ngModel)]="privateKey"
                         rows="10" cols="50"
                         [attr.data-cy]="'private-key-input'">
           </ion-textarea> 
@@ -21,14 +21,14 @@
           <ion-label stacked>
             {{ 'import_privatekey.name' | translate }}
           </ion-label>
-          <ion-input class="name-input" [(ngModel)]="name" [attr.data-cy]="'wallet-name-input'"></ion-input>
+          <ion-input [(ngModel)]="name" [attr.data-cy]="'wallet-name-input'"></ion-input>
         </ion-item>
 
         <ion-item>
           <ion-label stacked>
             {{ 'import_privatekey.password' | translate }}
           </ion-label>
-          <ion-input class="password-input" type="password" 
+          <ion-input type="password" 
                      [(ngModel)]="password" (ionChange)="onPasswordsChanged()"
                      [attr.data-cy]="'password-input'">
             </ion-input>
@@ -38,7 +38,7 @@
           <ion-label stacked>
             {{ 'import_privatekey.validate_password' | translate }}
           </ion-label>
-          <ion-input class="password-confirmation-input" type="password" 
+          <ion-input type="password" 
                      [(ngModel)]="confirmedPassword" (ionChange)="onPasswordsChanged()"
                      [attr.data-cy]="'password-confirm-input'">
           </ion-input>
@@ -57,7 +57,7 @@
         </div>
 
         <div class="content-div">
-          <button ion-button *ngIf="dataIsValid()" class="import-button" (click)="import()" [attr.data-cy]="'start-import-privatekey-button'">
+          <button ion-button *ngIf="dataIsValid()" (click)="import()" [attr.data-cy]="'start-import-privatekey-button'">
             {{ 'import_privatekey.buttons.import' | translate }}
           </button>
         </div>
