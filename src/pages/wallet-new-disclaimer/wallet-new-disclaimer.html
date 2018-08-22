@@ -15,40 +15,40 @@
         <ion-grid>
           <ion-row justify-content-center>
             <ion-col col-1>
-              <ion-checkbox [(ngModel)]="agreedToTerm1"></ion-checkbox>
+              <ion-checkbox [(ngModel)]="agreedToTerm1" [attr.data-cy]="'disclaimer-checkbox'"></ion-checkbox>
             </ion-col>
 
-            <ion-col class="term-description" col-xs-12 col-md-9 (click)="agreedToTerm1 = !agreedToTerm1">
+            <ion-col class="term-description" col-xs-12 col-md-9 (click)="agreedToTerm1 = !agreedToTerm1" [attr.data-cy]="'disclaimer-checkbox-label'">
               {{ 'disclaimer.term1' | translate }}
             </ion-col>
           </ion-row>
 
           <ion-row justify-content-center>
             <ion-col col-1>
-              <ion-checkbox [(ngModel)]="agreedToTerm2"></ion-checkbox>
+              <ion-checkbox [(ngModel)]="agreedToTerm2" [attr.data-cy]="'disclaimer-checkbox'"></ion-checkbox>
             </ion-col>
 
-            <ion-col class="term-description" col-xs-12 col-md-9 (click)="agreedToTerm2 = !agreedToTerm2">
+            <ion-col class="term-description" col-xs-12 col-md-9 (click)="agreedToTerm2 = !agreedToTerm2" [attr.data-cy]="'disclaimer-checkbox-label'">
               {{ 'disclaimer.term2' | translate }}
             </ion-col>
           </ion-row>
 
           <ion-row justify-content-center>
             <ion-col col-1>
-              <ion-checkbox [(ngModel)]="agreedToTerm3"></ion-checkbox>
+              <ion-checkbox [(ngModel)]="agreedToTerm3" [attr.data-cy]="'disclaimer-checkbox'"></ion-checkbox>
             </ion-col>
 
-            <ion-col class="term-description" col-xs-12 col-md-9 (click)="agreedToTerm3 = !agreedToTerm3">
+            <ion-col class="term-description" col-xs-12 col-md-9 (click)="agreedToTerm3 = !agreedToTerm3" [attr.data-cy]="'disclaimer-checkbox-label'">
               {{ 'disclaimer.term3' | translate }}
             </ion-col>
           </ion-row>
 
           <ion-row justify-content-center>
             <ion-col col-1>
-              <ion-checkbox [(ngModel)]="agreedToTerm4"></ion-checkbox>
+              <ion-checkbox [(ngModel)]="agreedToTerm4" [attr.data-cy]="'disclaimer-checkbox'"></ion-checkbox>
             </ion-col>
 
-            <ion-col class="term-description" col-xs-12 col-md-9 (click)="agreedToTerm4 = !agreedToTerm4">
+            <ion-col class="term-description" col-xs-12 col-md-9 (click)="agreedToTerm4 = !agreedToTerm4" [attr.data-cy]="'disclaimer-checkbox-label'">
               {{ 'disclaimer.term4' | translate }}
             </ion-col>
           </ion-row>
@@ -68,14 +68,14 @@
           <ion-label stacked>
             {{ 'disclaimer.wallet_name' | translate }}
           </ion-label>
-          <ion-input class="wallet-name-input" [(ngModel)]="walletName"></ion-input>
+          <ion-input class="wallet-name-input" [(ngModel)]="walletName" [attr.data-cy]="'wallet-name-input'"></ion-input>
         </ion-item>
       </ion-col>
     </ion-row>
 
     <ion-row>
       <ion-col text-center>
-        <button ion-button (click)="finish()" *ngIf="canShowFinishButton()" class="finish-button">
+        <button ion-button (click)="finish()" *ngIf="canShowFinishButton()" class="finish-button" [attr.data-cy]="'finish-button'">
           {{ 'disclaimer.buttons.finish' | translate }}
         </button>
       </ion-col>
