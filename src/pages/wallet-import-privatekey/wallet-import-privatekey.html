@@ -56,6 +56,8 @@
           </a>
         </div>
 
+        <smilo-password-strength-field [password]="password"></smilo-password-strength-field>
+
         <div class="content-div">
           <button ion-button *ngIf="dataIsValid()" (click)="import()" [attr.data-cy]="'start-import-privatekey-button'">
             {{ 'import_privatekey.buttons.import' | translate }}

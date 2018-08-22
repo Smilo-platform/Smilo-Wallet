@@ -9,21 +9,21 @@ import { SettingsGeneralPage } from '../../pages/settings-general/settings-gener
  * Components.
  */
 @Component({
-  selector: 'smilo-nav-header',
-  templateUrl: 'nav-header.html'
+	selector: 'smilo-nav-header',
+	templateUrl: 'nav-header.html'
 })
 export class NavHeaderComponent {
-  @Input() titleTranslationKey: string;
+	@Input() titleTranslationKey: string;
 
-  constructor(public navCtrl: NavController) {
+	constructor(public navCtrl: NavController) {
 
-  }
+	}
 
-   /**
-   * Open the settings page
-   */
-  openSettingsPage(): void {
-    this.navCtrl.push(SettingsGeneralPage);
-  }
+	/**
+	* Open the settings page
+	*/
+	openSettingsPage(): void {
+		this.navCtrl.push(SettingsGeneralPage);
+	}
 
 }

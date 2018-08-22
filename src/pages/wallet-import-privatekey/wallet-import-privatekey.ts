@@ -15,7 +15,6 @@ import { SettingsService, ThemeType } from "../../services/settings-service/sett
   templateUrl: "wallet-import-privatekey.html",
 })
 export class WalletImportPrivatekeyPage {
-
   privateKey: string = "";
   name: string = "";
   password: string = "";

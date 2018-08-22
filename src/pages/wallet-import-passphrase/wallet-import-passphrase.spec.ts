@@ -22,6 +22,8 @@ import { MockBIP32Service } from "../../../test-config/mocks/MockBIP32Service";
 import { ComponentsModule } from "../../components/components.module";
 import { FormBuilder } from "@angular/forms";
 import { PrepareWalletPage } from "../prepare-wallet/prepare-wallet";
+import { BulkTranslateService } from "../../services/bulk-translate-service/bulk-translate-service";
+import { MockBulkTranslateService } from "../../../test-config/mocks/MockBulkTranslateService";
 
 describe("WalletImportPassphrasePage", () => {
   let comp: WalletImportPassphrasePage;
@@ -34,6 +36,7 @@ describe("WalletImportPassphrasePage", () => {
   let navigationHelperService: INavigationHelperService;
   let bip39Service: IBIP39Service;
   let bip32Service: IBIP32Service;
+  let bulkTranslateService: BulkTranslateService;
 
   beforeEach(async(() => {
     keyStoreService = new MockKeyStoreService();
@@ -41,6 +44,7 @@ describe("WalletImportPassphrasePage", () => {
     walletService = new MockWalletService();
     navController = new MockNavController();
     navigationHelperService = new NavigationHelperService();
+    bulkTranslateService = new MockBulkTranslateService();
     navParams = new MockNavParams();
     bip39Service = new MockBIP39Service();
     bip32Service = new MockBIP32Service();
@@ -60,6 +64,7 @@ describe("WalletImportPassphrasePage", () => {
         { provide: PasswordService, useValue: passwordService },
         { provide: WalletService, useValue: walletService },
         { provide: KeyStoreService, useValue: keyStoreService },
+        { provide: BulkTranslateService, useValue: bulkTranslateService },
         { provide: NavigationHelperService, useValue: navigationHelperService },
         { provide: BIP39Service, useValue: bip39Service},
         { provide: BIP32Service, useValue: bip32Service},
