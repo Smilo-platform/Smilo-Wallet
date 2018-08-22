@@ -8,7 +8,7 @@
   <ion-grid>
     <ion-row justify-content-center>
       <ion-col col-9 col-md-6 col-lg-3 col-xl-2>
-        <button ion-button full class="import-keystore-button" (click)="openImportKeystorePage()">
+        <button ion-button full (click)="openImportKeystorePage()" [attr.data-cy]="'import-keystore-button'">
           {{ 'import_wallet.buttons.keystore' | translate }}
         </button>
       </ion-col>
@@ -16,7 +16,7 @@
 
     <ion-row justify-content-center>
       <ion-col col-9 col-md-6 col-lg-3 col-xl-2>
-        <button ion-button full class="import-privatekey-button" (click)="openImportPrivatekeyPage()">
+        <button ion-button full (click)="openImportPrivatekeyPage()" [attr.data-cy]="'import-privatekey-button'">
           {{ 'import_wallet.buttons.private_key' | translate }}
         </button>
       </ion-col>
@@ -24,7 +24,7 @@
 
     <ion-row justify-content-center>
       <ion-col col-9 col-md-6 col-lg-3 col-xl-2>
-        <button ion-button full class="import-passphrase-button" (click)="openRestoreBackupPage()">
+        <button ion-button full (click)="openRestoreBackupPage()" [attr.data-cy]="'import-passphrase-button'">
           {{ 'import_wallet.buttons.passphrase' | translate }}
         </button>
       </ion-col>
