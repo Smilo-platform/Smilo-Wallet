@@ -7,7 +7,7 @@ This repo contains the source code for the Smilo mobile wallet.
 This project relies on the following dependencies:
 - NodeJS @ 8.11.2
 - NPM @ 5.6.0
-- Ionic @ 3.20.0
+- Ionic @ 4.1.1
 - Cordova @ 8.0.0
 - Browserify @16.2.2
 
