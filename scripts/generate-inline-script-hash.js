@@ -1,6 +1,11 @@
-// Required because we need to generate a sha256 hash of a piece of code
+/**
+ * This script is used to generate a sha256 hash for every <script></script tag in index.html.
+ * The browser extension manifest.json CSP (content_security_policy key) requires that inline script code to be validated.
+ * The code should be sha256 hashed and added to the content_security_policy in the manifest.json.
+ * This script takes every inline code in the index.html into account except empty inline scripts.
+ */
+
 var sjcl = require("../src/assets/scripts/sjcl.js");
-// Required because we need to read a file
 var fs = require("fs");
 
 fs.readFile("./www/index.html", "utf8", (error, data) => {

@@ -210,11 +210,11 @@ npm run build-webplugin
 To add file watcher for transpiling the ts files
 
 ```
-dev-webplugin-ts
+npm run dev-webplugin-ts
 ```
 
 To add file watcher for transpiling the scss files
 
 ```
-dev-webplugin-scss
+npm run dev-webplugin-scss
 ```

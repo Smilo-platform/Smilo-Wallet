@@ -74,8 +74,9 @@
   position: relative;
   margin: 0;
   padding: 0; }
-  #primary-nav-wrap ul li:hover {
-    background: #f6f6f6; }
+
+#primary-nav-wrap:hover {
+  background: #f6f6f6; }
 
 .wallet-dropdown:hover {
   cursor: pointer; }

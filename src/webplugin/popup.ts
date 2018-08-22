@@ -1,4 +1,4 @@
-declare const $;
+///<reference types="jquery"/>
 const dbOpenRequest = indexedDB.open("smilo-wallet");
 let baseUrl = "";
 let totalWallets = [];
@@ -152,17 +152,3 @@ setInterval(() => {
         getWalletFunds(currentPublicKey);
     }
 }, 2500);
-
-
-// let t = false;
-
-setInterval(() => {
-    // console.log("Set");
-    // if (t) {
-    //     t = !t;
-    //     $("body").css("background-color", "red");
-    // } else {
-    //     t = !t;
-    //     $("body").css("background-color", "orange");
-    // }
-}, 100);

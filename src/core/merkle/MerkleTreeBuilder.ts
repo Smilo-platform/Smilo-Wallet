@@ -70,6 +70,7 @@ export class MerkleTreeBuilder {
                     `${ window.location.href.replace("/index.html", "") }/assets/scripts/LamportGenerator.js`
                 ];
             } else if (!window.location.protocol.includes("http")) {
+                console.log("EXTENSION!");
                 // Browser extensions requires the scripts to be loaded as shown below
                 scripts = [
                     `${ window.location.protocol }//${ window.location.host }/www/assets/scripts/sjcl.js`,
@@ -77,6 +78,7 @@ export class MerkleTreeBuilder {
                     `${ window.location.protocol }//${ window.location.host }/www/assets/scripts/LamportGenerator.js`
                 ];
             } else {
+                console.log("WEB!");
                 // Web requires the scripts to be loaded as shown below.
                 scripts = [
                     `${ window.location.protocol }//${ window.location.host }/assets/scripts/sjcl.js`,
