@@ -312,5 +312,19 @@
           "back": "Go back",
           "import": "Import"
       }
+  },
+  "password-strength-component": {
+      "toggle-advanced": "Toggle advanced password info",
+      "feedback": "Feedback",
+      "time-to-crack": "Time to crack your password (estimation)",
+      "online-throttling": "Online throttling",
+      "online-no-throttling": "Online no throttling",
+      "offline-slow-hashing": "Offline slow hashing",
+      "offline-fast-hashing": "Offline fast hashing",
+      "fill-strong-password": "Fill in a strong password",
+      "password-weak": "Weak. Try adding more characters",
+      "password-normal": "It's a good start. Try adding numbers and special characters.",
+      "password-good": "Good. Try adding more characters",
+      "password-excellent": "Excellent!"
   }
 }

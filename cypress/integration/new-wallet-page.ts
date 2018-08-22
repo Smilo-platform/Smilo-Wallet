@@ -1,5 +1,9 @@
+import { cleanIndexedDB } from "../plugins/helpers/clean-indexed-db";
+
 describe("NewWalletPage", () => {
     beforeEach(() => {
+        cleanIndexedDB();
+
         cy.visit("http://localhost:8100");
     });
 
@@ -122,6 +126,24 @@ describe("NewWalletPage", () => {
         );
     });
 
+    it("should be able to pass the disclaimer page correctly", () => {
+        moveToDisclaimerPage();
+
+        ensureDisclaimerContinueButtonIsHidden().then(
+            () => {
+                cy.get("[data-cy=disclaimer-checkbox]").as("checkboxes");
+
+                for(let i = 0; i < 4; i++) {
+                    cy.get("@checkboxes").eq(i).click();
+                }
+
+                cy.get("[data-cy=wallet-name-input] input").type("My Wallet");
+
+                cy.get("[data-cy=finish-button]").click();
+            }
+        );
+    });
+
     function moveToWarningPage() {
         cy.get("[data-cy=get-started-button]").click();
     }
@@ -149,12 +171,38 @@ describe("NewWalletPage", () => {
         cy.get("[data-cy=go-to-password-button]").click();
     }
 
+    function moveToDisclaimerPage() {
+        moveToPasswordPage();
+
+        cy.get("[data-cy=password-input] input").type("pass123");
+        cy.get("[data-cy=password-confirm-input] input").type("pass123");
+
+        cy.get("[data-cy=move-to-disclaimer-button]").click();
+    }
+
+    /**
+     * For the given selector, assuming it is a passphrase box, extract the passphrase word elements.
+     */
     function getWordElements(selector: string): Cypress.Chainable<JQuery<HTMLElement>> {
         return cy.get(selector).find(".word");
     }
 
+    /**
+     * For the given HTMLElement, assuming it is a passphrase word, extract the passphrase word.
+     */
     function extractWordText(element: HTMLElement): string {
         return element.getElementsByTagName("span")[0].innerHTML.trim();
+    }
+
+    /**
+     * Validates the continue button on the disclaimer page is hidden.
+     */
+    function ensureDisclaimerContinueButtonIsHidden(): Cypress.Chainable {
+        return cy.get("page-wallet-new-disclaimer").then(
+            (page) => {
+                expect(page.find("[data-cy=finish-button]")).to.have.length(0);
+            }
+        );
     }
 
     /**

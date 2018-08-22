@@ -58,6 +58,7 @@
     "@types/chrome": "0.0.71",
     "@types/jasmine": "^2.8.8",
     "@types/jquery": "^3.3.6",
+    "@types/zxcvbn": "^4.4.0",
     "angular2-template-loader": "^0.6.2",
     "awesome-typescript-loader": "^3.5.0",
     "big.js": "^5.1.2",

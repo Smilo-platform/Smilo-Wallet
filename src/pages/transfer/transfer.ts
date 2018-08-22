@@ -208,7 +208,7 @@ export class TransferPage {
         }
     }
 
-    transfer(): void {
+    transfer(): Promise<void> {
         this.resetTransferState();
         
         this.isTransferring = true;
@@ -216,7 +216,7 @@ export class TransferPage {
 
         let transaction = this.createTransaction();
         
-        this.signTransaction(transaction).then(
+        return this.signTransaction(transaction).then(
             () => this.transferTransactionService.sendTransaction(transaction)
         ).then(
             () => {
@@ -282,10 +282,10 @@ export class TransferPage {
         );
     }
 
-    isValidPaymentRequest(request: IPaymentRequest) {
-        return request.receiveAddress &&
+    isValidPaymentRequest(request: IPaymentRequest): boolean {
+        return !!request.receiveAddress &&
                this.addressHelper.isValidAddress(request.receiveAddress).isValid &&
-               request.amount && request.assetId;
+               !!request.amount && !!request.assetId;
     }
 
     showCamera() {
@@ -293,9 +293,11 @@ export class TransferPage {
         this.qrScanner.show();
         this.cameraIsShown = true;
 
-        this.unregisterBackButtonFunction = this.platform.registerBackButtonAction(() => {
-            this.hideCamera();
-        });
+        if(this.platform.is("android")) {
+            this.unregisterBackButtonFunction = this.platform.registerBackButtonAction(() => {
+                this.hideCamera();
+            });
+        }
     }
 
     hideCamera() {
@@ -305,7 +307,7 @@ export class TransferPage {
         this.showUI();
         this.cameraIsShown = false;
 
-        if(this.unregisterBackButtonFunction) {
+        if(this.unregisterBackButtonFunction && this.platform.is("android")) {
             this.unregisterBackButtonFunction();
             this.unregisterBackButtonFunction = null;
         }
@@ -323,21 +325,29 @@ export class TransferPage {
         document.getElementsByTagName("body")[0].className = "";
     }
 
-    scanQRCode() {
+    scanQRCode(): Promise<void> {
         // Make the screen camera ready
-        this.qrScanner.prepare().then(
+        return this.qrScanner.prepare().then(
             (status) => {
                 if(status.authorized) {
-                    this.scanSubscription = this.qrScanner.scan().subscribe(
-                        (text) => {
-                            // Browser platforms for some reason return an object and not the text...
-                            text = (<any>text).result || text;
+                    return new Promise<void>((resolve) => {
+                        this.scanSubscription = this.qrScanner.scan().subscribe(
+                            (text) => {
+                                // Browser platforms for some reason return an object and not the text...
+                                text = (<any>text).result || text;
+    
+                                this.zone.run(
+                                    () => {
+                                        this.handleCameraScanResult(text);
 
-                            this.zone.run(() => this.handleCameraScanResult(text));
-                        }
-                    );
-
-                    this.showCamera();
+                                        resolve();
+                                    }
+                                );
+                            }
+                        );
+    
+                        this.showCamera();
+                    });
                 }
                 else if(status.denied) {
                     // User denied permission.

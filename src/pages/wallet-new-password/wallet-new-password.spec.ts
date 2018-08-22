@@ -9,17 +9,21 @@ import { WalletNewDisclaimerPage } from "../wallet-new-disclaimer/wallet-new-dis
 import { IPasswordService, PasswordService } from "../../services/password-service/password-service";
 import { MockPasswordService } from "../../../test-config/mocks/MockPasswordService";
 import { ComponentsModule } from "../../components/components.module";
+import { BulkTranslateService } from "../../services/bulk-translate-service/bulk-translate-service";
+import { MockBulkTranslateService } from "../../../test-config/mocks/MockBulkTranslateService";
 
 describe("WalletNewPasswordPage", () => {
   let comp: WalletNewPasswordPage;
   let fixture: ComponentFixture<WalletNewPasswordPage>;
   let navController: NavController;
+  let bulkTranslateService: BulkTranslateService;
   let passwordService: IPasswordService;
   let navParams: NavParams;
 
   beforeEach(async(() => {
     navController = new MockNavController();
     navParams = new MockNavParams();
+    bulkTranslateService = new MockBulkTranslateService();
     passwordService = new MockPasswordService();
 
     TestBed.configureTestingModule({
@@ -34,6 +38,7 @@ describe("WalletNewPasswordPage", () => {
       providers: [
         { provide: NavController, useValue: navController },
         { provide: NavParams, useValue: navParams },
+        { provide: BulkTranslateService, useValue: bulkTranslateService },
         { provide: PasswordService, useValue: passwordService}
       ]
     }).compileComponents();
