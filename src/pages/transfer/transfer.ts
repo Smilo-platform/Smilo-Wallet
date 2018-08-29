@@ -323,7 +323,9 @@ export class TransferPage {
         // Safari does not update the screen correctly causing the camera
         // to still be obscured by a white background. This pointless rotation
         // tricks Safari into thinking a fullscreen refresh is required.
-        document.body.style.transform = "rotate(360deg)";
+        setTimeout(() => {
+            document.body.style.transform = "rotate(360deg)";
+        }, 100);
     }
 
     showUI() {
