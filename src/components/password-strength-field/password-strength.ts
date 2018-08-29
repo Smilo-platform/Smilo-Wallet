@@ -4,12 +4,6 @@ import { BulkTranslateService } from '../../services/bulk-translate-service/bulk
 import { TranslateService } from '@ngx-translate/core';
 import { ZXCVBNResult } from 'zxcvbn';
 
-/**
- * Generated class for the PasswordStrengthComponent component.
- *
- * See https://angular.io/api/core/Component for more info on Angular
- * Components.
- */
 @Component({
     selector: 'smilo-password-strength-field',
     templateUrl: 'password-strength.html'
@@ -25,18 +19,6 @@ export class PasswordStrengthComponent {
     passwordStrengthScore: number = 0;
     // The default password strength score text
     passwordStrengthScoreText: string;
-    // The array of feedback messages
-    passwordFeedbackWarning: string[] = [];
-    // The online throttling time
-    onlineThrottlingMessage: string = "-";
-    // The online no throttling time
-    onlineNoThrottlingMessage: string = "-";
-    // The offline slow hashing time
-    offlineSlowHashingMessage: string = "-";
-    // The offline fast hashign time
-    offlineFastHashingMessage: string = "-";
-    // The toggle for the advanced content to show
-    showPasswordAdvanced: boolean = false;
 
     /**
      * @param passwordService The password service to get the strength from
@@ -80,13 +62,6 @@ export class PasswordStrengthComponent {
     }
 
     /**
-     * Toggles the boolean for the advanced content view
-     */
-    togglePasswordAdvanced() {
-        this.showPasswordAdvanced = !this.showPasswordAdvanced;
-    }
-
-    /**
      * Whenever there is a change
      * @param changes Object with changes
      */
@@ -103,10 +78,6 @@ export class PasswordStrengthComponent {
             this.passwordStrength = this.passwordService.passwordStrength(this.password);
             this.passwordStrengthScore = this.passwordStrength.score;
             this.setPasswordBasicText();
-            this.setPasswordAdvancedText();
-        } else {
-            // Reset the fields
-            this.resetAdvancedPasswordFields();
         }
     }
 
@@ -132,34 +103,5 @@ export class PasswordStrengthComponent {
                 this.passwordStrengthScoreText = this.translations.get("password-strength-component.password-excellent");
                 break;
         }
-    }
-
-    /**
-     * Set the advanced text of the password score
-     */
-    setPasswordAdvancedText() {
-         // Reset the feedback list
-         this.passwordFeedbackWarning = [];
-         // Set the times for the different scenario's
-         this.onlineThrottlingMessage = String(this.passwordStrength.crack_times_display.online_throttling_100_per_hour);
-         this.onlineNoThrottlingMessage = String(this.passwordStrength.crack_times_display.online_no_throttling_10_per_second);
-         this.offlineSlowHashingMessage = String(this.passwordStrength.crack_times_display.offline_slow_hashing_1e4_per_second);
-         this.offlineFastHashingMessage = String(this.passwordStrength.crack_times_display.offline_fast_hashing_1e10_per_second);
-         // For every suggestion
-         for (let i = 0; i < this.passwordStrength.feedback.suggestions.length; i++) {
-             // Add the message
-             this.passwordFeedbackWarning.push((i + 1) + ". " + this.passwordStrength.feedback.suggestions[i]);
-         }
-    }
-
-    /**
-     * Resets the advanced password fields
-     */
-    resetAdvancedPasswordFields(): void {
-        this.passwordFeedbackWarning = [];
-        this.onlineThrottlingMessage = "-";
-        this.onlineNoThrottlingMessage = "-";
-        this.offlineSlowHashingMessage = "-";
-        this.offlineFastHashingMessage = "-";
     }
 }
