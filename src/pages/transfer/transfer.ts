@@ -318,11 +318,19 @@ export class TransferPage {
     }
 
     hideUI() {
-        document.getElementsByTagName("body")[0].className = "camera-ready";
+        document.body.className = "camera-ready";
+
+        // Safari does not update the screen correctly causing the camera
+        // to still be obscured by a white background. This pointless rotation
+        // tricks Safari into thinking a fullscreen refresh is required.
+        setTimeout(() => {
+            document.body.style.transform = "rotate(360deg)";
+        }, 100);
     }
 
     showUI() {
-        document.getElementsByTagName("body")[0].className = "";
+        document.body.className = "";
+        document.body.style.transform = "rotate(0deg)";
     }
 
     scanQRCode(): Promise<void> {
