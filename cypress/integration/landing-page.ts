@@ -1,5 +1,9 @@
+import { cleanIndexedDB } from "../plugins/helpers/clean-indexed-db";
+
 describe("LandingPage", () => {
     beforeEach(() => {
+        cleanIndexedDB();
+
         cy.visit("http://localhost:8100");
     })
 
