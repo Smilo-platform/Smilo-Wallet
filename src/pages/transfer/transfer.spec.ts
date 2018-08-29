@@ -516,23 +516,15 @@ describe("TransferPage", () => {
     });
 
     it("should show the UI correctly", () => {
-        let body = document.createElement("body");
-        
-        document.getElementsByTagName = jasmine.createSpy().and.returnValue([body]);
-
         comp.showUI();
 
-        expect(body.className).toBe("");
+        expect(document.body.className).toBe("");
     });
 
     it("should hide the UI correctly", () => {
-        let body = document.createElement("body");
-        
-        document.getElementsByTagName = jasmine.createSpy().and.returnValue([body]);
-
         comp.hideUI();
 
-        expect(body.className).toBe("camera-ready");
+        expect(document.body.className).toBe("camera-ready");
     });
 
     it("should start the QR code scanner correctly", (done) => {
