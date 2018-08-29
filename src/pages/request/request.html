@@ -2,13 +2,13 @@
     <smilo-nav-header titleTranslationKey="request.nav-bar-title"></smilo-nav-header>
 </ion-header>
 
-<ion-content padding *ngIf="fromWallet">
+<ion-content padding>
     <ion-grid>
         <ion-row justify-content-center>
             <ion-col col-12 col-xl-4>
                 <h1 class="no-padding-top">{{ 'request.your-address' | translate }}</h1>
                 <ion-item class="input-bottom-border">
-                    <ion-input class="toAddress biggerText padding" type="text" [disabled]="true" [(ngModel)]="fromWallet.publicKey"></ion-input> 
+                    <ion-input class="toAddress biggerText padding" type="text" [disabled]="true" [(ngModel)]="fromPublicKey"></ion-input> 
                 </ion-item>
                 <h1>{{ 'request.select-currency' | translate }}</h1>
                 <ion-item class="input-bottom-border no-border">

@@ -18,6 +18,10 @@ export class RequestPage {
      */
     fromWallet: IWallet;
     /**
+     * The public key of the from wallet
+     */
+    fromPublicKey: string;
+    /**
      * The balances of the current wallet
      */
     balances: IBalance[];
@@ -37,6 +41,7 @@ export class RequestPage {
 
     ionViewDidLoad(): void {
         this.fromWallet = this.navParams.get("currentWallet");
+        this.fromPublicKey = this.fromWallet.publicKey;
         this.balances = this.navParams.get("currentWalletBalance");
         this.chosenCurrency = this.balances[0].currency;
 
@@ -64,6 +69,9 @@ export class RequestPage {
     }
 
     canTransfer(): boolean {
+        if(!this.fromWallet)
+            return false;
+
         // Check if public key is set
         if (!this.fromWallet.publicKey || this.fromWallet.publicKey === "") {
             return false;
