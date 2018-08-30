@@ -35,6 +35,8 @@ describe("ImportPassphrasePage", () => {
 
         cy.get("[data-cy=wallet-name-input] input").type("Wallet Name");
 
+        cy.wait(2000);
+
         cy.get("[data-cy=import-button]").click();
 
         cy.get("page-prepare-wallet");
