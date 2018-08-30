@@ -1,5 +1,4 @@
 import { cleanIndexedDB } from "../plugins/helpers/clean-indexed-db";
-import { elementExists } from "../plugins/helpers/element-exists";
 import { elementNotExists } from "../plugins/helpers/element-not-exists";
 
 describe("ImportPassphrasePage", () => {
@@ -12,11 +11,7 @@ describe("ImportPassphrasePage", () => {
     });
 
     it("should not show the import button initially", () => {
-        cy.get("page-wallet-import-passphrase").then(
-            (page) => {
-                expect(page.find("[data-cy=import-button]")).to.have.length(0);
-            }
-        );
+        elementNotExists("page-wallet-import-passphrase", "[data-cy=import-button]");
     });
 
     it("should show a warning if the passwords do not match", () => {
@@ -45,17 +40,35 @@ describe("ImportPassphrasePage", () => {
         cy.get("page-prepare-wallet");
     });
 
-    it("should work correctly with the advanced options", () => {
-        // ToDo
+    it("should toggle the advanced options correctly", () => {
+        elementNotExists("page-wallet-import-passphrase", "[data-cy=wallet-index-input] input").then(
+            () => {
+                cy.get("[data-cy=toggle-advanced-button").click();
+
+                cy.get("[data-cy=wallet-index-input] input");
+
+                cy.get("[data-cy=toggle-advanced-button").click();
+
+                elementNotExists("page-wallet-import-passphrase", "[data-cy=wallet-index-input] input");
+            }
+        );
     });
 
-    function advancedOptionsAreVisible(visible: boolean): Cypress.Chainable {
-        return cy.get("page-wallet-import-passphrase").then(
-            (page) => {
-                expect(page.find("[data-cy=wallet-index-input]")).to.have.length(visible ? 1 : 0);
-            }
-        )
-    }
+    it("should show a warning when entering incorrect address index input", () => {
+        cy.get("[data-cy=toggle-advanced-button").click();
+
+        cy.get("[data-cy=wallet-index-input] input").clear();
+
+        cy.get("[data-cy=wallet-index-input] input").type("wrong input");
+
+        cy.get("[data-cy=wallet-index-error-box]");
+
+        cy.get("[data-cy=wallet-index-input] input").clear();
+
+        cy.get("[data-cy=wallet-index-input] input").type("100");
+
+        elementNotExists("page-wallet-import-passphrase", "[data-cy=wallet-index-error-box]");
+    });
 
     function goToPage() {
         cy.get("[data-cy=restore-backup-button]").click();
