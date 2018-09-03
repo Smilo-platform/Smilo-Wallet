@@ -47,7 +47,7 @@ describe("ImportPrivateKeyPage", () => {
         cy.get("[data-cy=password-explain-ok-button]").click();
 
         // Wait to allow the modal animation to end
-        cy.wait(2000);
+        cy.wait(10000);
 
         cy.get("body").then(
             (body) => {

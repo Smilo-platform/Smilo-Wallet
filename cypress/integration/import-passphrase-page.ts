@@ -4,7 +4,7 @@ import { elementNotExists } from "../plugins/helpers/element-not-exists";
 describe("ImportPassphrasePage", () => {
     beforeEach(() => {
         cleanIndexedDB();
-
+        
         cy.visit("http://localhost:8100");
 
         goToPage();
@@ -34,8 +34,6 @@ describe("ImportPassphrasePage", () => {
         cy.get("[data-cy=password-confirm-input] input").type("pass123");
 
         cy.get("[data-cy=wallet-name-input] input").type("Wallet Name");
-
-        cy.wait(2000);
 
         cy.get("[data-cy=import-button]").click();
 
