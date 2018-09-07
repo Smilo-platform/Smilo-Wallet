@@ -12,6 +12,7 @@
     "test-ci": "karma start ./test-config/karma.conf.js --coverage --single-run",
     "e2e": "cypress open",
     "e2e-ci": "nohup ionic serve --no-open --no-livereload --no-interactive &> /dev/null & (wait-on http://localhost:8100 && cypress run && pkill -f ionic)",
+    "e2e-electron-headed": "cypress run --headed",
     "ionic:build": "ionic-app-scripts build",
     "ionic:serve": "ionic-app-scripts serve",
     "release:android": "./scripts/release-android.sh",

@@ -4,6 +4,10 @@
     "module": "commonjs",
     "skipLibCheck": true,
     "strict": true,
+    "lib": [
+      "es2015",
+      "dom"
+    ],
     "types": [
       "node",
       "cypress"
