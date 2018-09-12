@@ -49,10 +49,9 @@ src/assets/scripts/bitcoinjs-lib.js
 src/assets/scripts/LamportGenerator.js
 src/assets/scripts/SHA1PRNG.js
 
-# chrome extension files auto generated
-src/webplugin/popup.js
-src/webplugin/popup.js.map
-src/webplugin/popup.css
+# webplugin extension files generated
+webplugin-build-files
+webplugin-builds
 
 # Cypress
 cypress/screenshots

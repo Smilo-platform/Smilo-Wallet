@@ -1,6 +1,6 @@
 ///<reference types="jquery"/>
-const dbOpenRequest = indexedDB.open("smilo-wallet");
-let baseUrl = "";
+let baseUrl = "https://prototype-api.smilo.network"; 
+var safari;
 let totalWallets = [];
 let totalAssets = [];
 let currentPublicKey;
@@ -10,20 +10,19 @@ let browser = (<any>window).browser = (function () {
     (<any>window).chrome;
 })();
 
-if (isDevMode()) {
-    baseUrl = "http://localhost:8090";
-} else {
-    baseUrl = "https://prototype-api.smilo.network";
-}
-
 $(document).ready(() => {
     $("#failed-retrieve").hide();
     let walletListVisible = false;
     $("#openWalletButton").click(() => {
-        browser.tabs.create({url: browser.extension.getURL('./www/index.html')});
+        if (safari === undefined) {
+            browser.tabs.create({ url: browser.extension.getURL('./www/index.html') });
+        } else {
+            var newTab = safari.application.activeBrowserWindow.openTab();
+            newTab.url = safari.extension.baseURI + 'www/index.html';
+        }
     });
     $(".wallet-dropdown").click(() => {
-        if (totalWallets !== undefined && totalWallets.length > 0) {
+        if (totalWallets !== undefined && totalWallets.length > 1) {
             if (!walletListVisible) {
                 walletListVisible = true;
                 $("#wallet-list").show();
@@ -33,30 +32,33 @@ $(document).ready(() => {
             }
         }
     });
-    getAssets();
+    getAssets().then(() => {
+        const dbOpenRequest = indexedDB.open("smilo-wallet");
+        dbOpenRequest.onsuccess = (event) => {
+            let db = (<any>event).target.result;
+            let objectStore = db.transaction(['_ionickv'], "readwrite").objectStore('_ionickv');
+            let objectStoreWallets = objectStore.get("wallets");
+            objectStoreWallets.onsuccess = (result) => {
+                let wallets = objectStoreWallets.result;
+                totalWallets = wallets;
+                setCurrentWallet(0);
+                $("#wallet-list").on("click", "li", function() {
+                    let selectedText = $(this).text();
+                    let selectedIndex = -1;
+                    for (let i = 0; i < totalWallets.length; i++) {
+                        if((totalWallets[i].name + " - " + totalWallets[i].publicKey) === selectedText) {
+                            selectedIndex = i;
+                            break;
+                        }
+                    }
+                    setCurrentWallet(selectedIndex);
+                });
+            };
+        };
+    });
 });
 
-dbOpenRequest.onsuccess = (event) => {
-    let db = (<any>event).target.result;
-    let objectStore = db.transaction(['_ionickv'], "readwrite").objectStore('_ionickv');
-    let objectStoreWallets = objectStore.get("wallets");
-    objectStoreWallets.onsuccess = (result) => {
-        let wallets = objectStoreWallets.result;
-        totalWallets = wallets;
-        setCurrentWallet(0);
-        $("#wallet-list").on("click", "li", function() {
-            let selectedText = $(this).text();
-            let selectedIndex = -1;
-            for (let i = 0; i < totalWallets.length; i++) {
-                if((totalWallets[i].name + " - " + totalWallets[i].publicKey) === selectedText) {
-                    selectedIndex = i;
-                    break;
-                }
-            }
-            setCurrentWallet(selectedIndex);
-        });
-    };
-};
+
 
 function setCurrentWallet(index) {
     if (totalWallets !== undefined && totalWallets.length > 0) {
@@ -94,15 +96,15 @@ function setCurrentWalletFunds(currentWalletFunds) {
     }
 }
 
-function getAssets() {
-    $.ajax({
+function getAssets(): Promise<void> {
+    return Promise.resolve($.ajax({
         url: baseUrl + "/asset",
         async : true,
         cache: false,
         success: (data) => {
             totalAssets = data;
         }
-    });
+    }));
 }
 
 function getWalletFunds(publicKey) {
@@ -112,6 +114,7 @@ function getWalletFunds(publicKey) {
         async: true,
         success: (data) => {
             $("#funds-overview").show();
+            $("#primary-nav-wrap").show();
             $("#failed-retrieve").hide();
             let currentWalletFunds = [];
             let balances = data.balances;
@@ -132,6 +135,8 @@ function getWalletFunds(publicKey) {
         error: (error) => {
             if (error.status !== 404) {
                 $("#funds-overview").hide();
+                $(".safari-space").hide();
+                $("#primary-nav-wrap").hide();
                 $("#failed-retrieve").show();
             } else {
                 let currentWalletFunds = [];
@@ -143,12 +148,18 @@ function getWalletFunds(publicKey) {
     });
 }
 
-function isDevMode() {
-    return !('update_url' in this.chrome.runtime.getManifest());
+if (safari === undefined) {
+    setInterval(function () {
+        if (currentPublicKey !== undefined) {
+            getWalletFunds(currentPublicKey);
+        }
+    }, 2500);
+} else {
+    $(document).ready(() => {
+        $("#primary-nav-wrap").hide();
+        $(".safari-space").show();
+        // Because Safari is the best browser ever
+        Array.from(document.querySelectorAll('a[target="_blank"]')).forEach(link => link.removeAttribute('target'));
+        $(".telegram").hide();
+    });
 }
-
-setInterval(() => {
-    if (currentPublicKey !== undefined) {
-        getWalletFunds(currentPublicKey);
-    }
-}, 2500);
