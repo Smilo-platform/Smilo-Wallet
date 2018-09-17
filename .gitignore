@@ -50,7 +50,9 @@ src/assets/scripts/LamportGenerator.js
 src/assets/scripts/SHA1PRNG.js
 
 # webplugin extension files generated
-webplugin-build-files
+webplugin-build-files/popup.css
+webplugin-build-files/popup.js
+webplugin-build-files/popup.js.map
 webplugin-builds
 
 # Cypress

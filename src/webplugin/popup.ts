@@ -1,5 +1,5 @@
 ///<reference types="jquery"/>
-let baseUrl = "https://prototype-api.smilo.network"; 
+let baseUrl = "https://prototype-api.smilo.network"; // IMPORTANT LINE! Webplugin scripts uses this line number to replace API endpoint
 var safari;
 let totalWallets = [];
 let totalAssets = [];
