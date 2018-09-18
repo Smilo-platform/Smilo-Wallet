@@ -5,6 +5,8 @@ import { MerkleTree } from "./MerkleTree";
 import { IPRNG } from "../random/IPRNG";
 import { SHA1PRNG } from "../random/SHA1PRNG";
 
+declare const safari: any;
+
 export class MerkleTreeBuilder {
     private readonly KEYS_PER_JOB = 100;
 
@@ -69,7 +71,14 @@ export class MerkleTreeBuilder {
                     `${ window.location.href.replace("/index.html", "") }/assets/scripts/SHA1PRNG.js`,
                     `${ window.location.href.replace("/index.html", "") }/assets/scripts/LamportGenerator.js`
                 ];
-            } else if (!window.location.protocol.includes("http")) {
+            } else if (window.location.protocol.includes("safari-extension:")) {
+                // Safari requires the scripts to be loaded as shown below.
+                scripts = [
+                    `${ safari.extension.baseURI }assets/scripts/sjcl.js`,
+                    `${ safari.extension.baseURI }assets/scripts/SHA1PRNG.js`,
+                    `${ safari.extension.baseURI }assets/scripts/LamportGenerator.js`
+                ];
+            } else if (window.location.protocol.includes("extension")) {
                 // Browser extensions requires the scripts to be loaded as shown below
                 scripts = [
                     `${ window.location.protocol }//${ window.location.host }/www/assets/scripts/sjcl.js`,

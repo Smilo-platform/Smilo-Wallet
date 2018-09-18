@@ -1,0 +1,9 @@
+<script>
+    safari.application.addEventListener("command", performCommand, false);
+     
+    function performCommand(event) {
+        if (event.command == "open-smilo-wallet") {
+            safari.extension.toolbarItems[0].showPopover();
+        }
+    }
+</script>

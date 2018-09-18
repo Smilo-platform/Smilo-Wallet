@@ -204,7 +204,7 @@ browserify ./bitcoin-js-wrapper/wrapper.js --standalone bitcoinjs > ./src/assets
 To build the files needed for the webplugin run this command
 
 ```
-npm run build-webplugin
+npm run build-webplugin 
 ```
 
 To add file watcher for transpiling the ts files
@@ -218,3 +218,31 @@ To add file watcher for transpiling the scss files
 ```
 npm run dev-webplugin-scss
 ```
+
+To generate a development package use:
+```
+npm run webplugin-generate-*-dev
+```
+
+Where the '*' can be replaced with one of the following browser names:
+
+* chrome (also used for Opera)
+* firefox
+* safari
+* edge
+
+To generate a production package use:
+```
+npm run webplugin-generate-*-prod
+```
+
+To generate development packages for all browsers (Chrome (also Opera), Safari, Edge, Firefox):
+```
+npm run webplugin-generate-all-dev
+```
+
+To generate production packages for all browsers (Chrome (also Opera), Safari, Edge, Firefox):
+```
+npm run webplugin-generate-all-prod
+```
+
