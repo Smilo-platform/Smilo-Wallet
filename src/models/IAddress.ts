@@ -1,7 +1,7 @@
-import { FixedBigNumber } from "../core/big-number/FixedBigNumber";
+import * as Smilo from "@smilo-platform/smilo-commons-js-web"
 
 export interface IAddress {
     publickey: string;
-    balances: {[index: string]: FixedBigNumber};
+    balances: {[index: string]: Smilo.FixedBigNumber};
     signatureCount: number;
 }

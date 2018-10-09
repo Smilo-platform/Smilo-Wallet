@@ -29,7 +29,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NavigationHelperService } from "../services/navigation-helper-service/navigation-helper-service";
 import { PasswordExplanationPage } from "../pages/password-explanation/password-explanation";
 import { PasswordExplanationPageModule } from "../pages/password-explanation/password-explanation.module";
-import { KeyStoreService } from "../services/key-store-service/key-store-service";
 import { PasswordService } from "../services/password-service/password-service";
 import { SettingsService } from "../services/settings-service/settings-service";
 import { BIP39Service } from "../services/bip39-service/bip39-service";
@@ -119,7 +118,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     SplashScreen,
     WalletService,
     NavigationHelperService,
-    KeyStoreService,
     PasswordService,
     SettingsService,
     FileNative,

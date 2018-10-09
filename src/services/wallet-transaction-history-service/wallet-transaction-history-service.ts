@@ -2,9 +2,8 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { UrlService } from "../url-service/url-service";
 import { ITransactionList } from "../../models/ITransactionList";
-import { ITransaction } from "../../models/ITransaction";
-import { ITransactionOutput } from "../../models/ITransactionOutput";
 import { AssetService } from "../asset-service/asset-service";
+import * as Smilo from "@smilo-platform/smilo-commons-js-web";
 
 export interface IWalletTransactionHistoryService {
     getTransactionHistory(publicKey: string): Promise<ITransactionList>
@@ -31,7 +30,7 @@ export class WalletTransactionHistoryService implements IWalletTransactionHistor
         );
     }
 
-    private prepareTransaction(transaction: ITransaction): void {
+    private prepareTransaction(transaction: Smilo.ITransaction): void {
         transaction.fee = this.assetService.prepareBigNumber(<any>transaction.fee, "000x00123");
         transaction.inputAmount = this.assetService.prepareBigNumber(<any>transaction.inputAmount, "000x00123");
         
@@ -39,7 +38,7 @@ export class WalletTransactionHistoryService implements IWalletTransactionHistor
             output => this.prepareTransactionOutput(transaction.assetId, output)
         );
     }
-    private prepareTransactionOutput(assetId: string, transactionOutput: ITransactionOutput): void {
+    private prepareTransactionOutput(assetId: string, transactionOutput: Smilo.ITransactionOutput): void {
         transactionOutput.outputAmount = this.assetService.prepareBigNumber(<any>transactionOutput.outputAmount, assetId);
     }
 }

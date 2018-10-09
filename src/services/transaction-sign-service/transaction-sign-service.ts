@@ -1,29 +1,22 @@
 import { Injectable } from "@angular/core";
-import { ITransaction } from "../../models/ITransaction";
 import { MerkleTreeService } from "../merkle-tree-service/merkle-tree-service";
-import { ILocalWallet } from "../../models/ILocalWallet";
-import { KeyStoreService } from "../key-store-service/key-store-service";
-import { TransactionHelper } from "../../core/transactions/TransactionHelper";
-import { MerkleLamportSigner } from "../../core/signatures/MerkleLamportSigner";
-import { MerkleLamportVerifier } from "../../core/signatures/MerkleLamportVerifier";
-import { AddressHelper } from "../../core/address/AddressHelper";
 import { AddressService } from "../address-service/address-service";
 import { WalletService } from "../wallet-service/wallet-service";
-import { FixedBigNumber } from "../../core/big-number/FixedBigNumber";
+import * as Smilo from "@smilo-platform/smilo-commons-js-web";
 
 export interface ITransactionSignService {
-    sign(wallet: ILocalWallet, password: string, transaction: ITransaction): Promise<void>;
+    sign(wallet: Smilo.ILocalWallet, password: string, transaction: Smilo.ITransaction): Promise<void>;
 }
 
 @Injectable()
 export class TransactionSignService implements ITransactionSignService {
-    private merkleLamportSigner = new MerkleLamportSigner();
-    private merkleLamportVerifier = new MerkleLamportVerifier();
-    private transactionHelper = new TransactionHelper();
-    private addressHelper = new AddressHelper();
+    private merkleLamportSigner = new Smilo.MerkleLamportSigner();
+    private merkleLamportVerifier = new Smilo.MerkleLamportVerifier();
+    private transactionHelper = new Smilo.TransactionHelper();
+    private addressHelper = new Smilo.AddressHelper();
+    private encryptionHelper = new Smilo.EncryptionHelper();
 
     constructor(private merkleTreeService: MerkleTreeService,
-                private keyStoreService: KeyStoreService,
                 private addressService: AddressService,
                 private walletService: WalletService) {
 
@@ -35,9 +28,9 @@ export class TransactionSignService implements ITransactionSignService {
      * 
      * A promise is returned which if resolved means the 'signatureData' and 'signatureIndex' property of the transaction have been filled.
      */
-    sign(wallet: ILocalWallet, password: string, transaction: ITransaction): Promise<void> {
+    sign(wallet: Smilo.ILocalWallet, password: string, transaction: Smilo.ITransaction): Promise<void> {
         // Extract the private key
-        let privateKey = this.keyStoreService.decryptKeyStore(wallet.keyStore, password);
+        let privateKey = this.encryptionHelper.decryptKeyStore(wallet.keyStore, password);
         if(!privateKey)
             return Promise.reject("Wrong password");
 
@@ -85,7 +78,7 @@ export class TransactionSignService implements ITransactionSignService {
         );
     }
 
-    private getNextSignatureIndex(wallet: ILocalWallet): Promise<number> {
+    private getNextSignatureIndex(wallet: Smilo.ILocalWallet): Promise<number> {
         return this.addressService.get(wallet.publicKey).then(
             (address) => {
                 if(wallet.signatureIndex > address.signatureCount)
@@ -114,7 +107,7 @@ export class TransactionSignService implements ITransactionSignService {
      * - The transaction signature is correct
      * - TODO: check if coins can actually be spent
      */
-    private isValid(transaction: ITransaction): boolean {
+    private isValid(transaction: Smilo.ITransaction): boolean {
         // Make sure a dataHash is set and is not empty
         if(!transaction.dataHash)
             return false;
@@ -136,7 +129,7 @@ export class TransactionSignService implements ITransactionSignService {
         // Make sure the input and outputs are zero sum
         let outputSum = transaction.transactionOutputs.reduce(
             (previous, current) => previous.add(current.outputAmount),
-            new FixedBigNumber(0, transaction.inputAmount.getDecimals())
+            new Smilo.FixedBigNumber(0, transaction.inputAmount.getDecimals())
         );
         if(!outputSum.eq(transaction.inputAmount))
             return false;

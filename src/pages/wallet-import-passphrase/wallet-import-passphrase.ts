@@ -1,15 +1,14 @@
 import { Component } from "@angular/core";
 import { IonicPage, NavController, NavParams } from "ionic-angular";
 import { PasswordService, IPasswordValidationResult } from "../../services/password-service/password-service";
-import { ILocalWallet } from "../../models/ILocalWallet";
 import { WalletService } from "../../services/wallet-service/wallet-service";
-import { KeyStoreService } from "../../services/key-store-service/key-store-service";
 import { NAVIGATION_ORIGIN_KEY } from "../wallet/wallet";
 import { BIP39Service, IPassphraseValidationResult } from "../../services/bip39-service/bip39-service";
 import { PrepareWalletPage } from "../prepare-wallet/prepare-wallet";
 import { BIP32Service } from "../../services/bip32-service/bip32-service";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { WalletIndexValidator } from "../../validators/WalletIndexValidator";
+import * as Smilo from "@smilo-platform/smilo-commons-js-web";
 
 @IonicPage()
 @Component({
@@ -31,11 +30,12 @@ export class WalletImportPassphrasePage {
 
   form: FormGroup;
 
+  private encryptionHelper = new Smilo.EncryptionHelper();
+
   constructor(private navCtrl: NavController, 
               private navParams: NavParams,
               private passwordService: PasswordService,
               private walletService: WalletService,
-              private keyStoreService: KeyStoreService,
               private bip32Service: BIP32Service,
               private bip39Service: BIP39Service,
               private formBuilder: FormBuilder) {
@@ -78,7 +78,7 @@ export class WalletImportPassphrasePage {
     return this.goToPrepareWalletPage(wallet, this.password);
   }
 
-  goToPrepareWalletPage(wallet: ILocalWallet, password: string): Promise<void> {
+  goToPrepareWalletPage(wallet: Smilo.ILocalWallet, password: string): Promise<void> {
     let params = {
       wallet: wallet,
       password: password,
@@ -90,15 +90,15 @@ export class WalletImportPassphrasePage {
     return this.navCtrl.push(PrepareWalletPage, params);
   }
 
-  prepareWallet(): ILocalWallet {
+  prepareWallet(): Smilo.ILocalWallet {
     let seed = this.bip39Service.toSeed(this.passphrase);
     let privateKey = this.bip32Service.getPrivateKey(seed, this.walletIndex);
 
     // Create key store for private key
-    let keyStore = this.keyStoreService.createKeyStore(privateKey, this.password);
+    let keyStore = this.encryptionHelper.createKeyStore(privateKey, this.password);
 
     // Prepare wallet
-    let wallet: ILocalWallet = {
+    let wallet: Smilo.ILocalWallet = {
       id: this.walletService.generateId(),
       name: this.walletName,
       type: "local",

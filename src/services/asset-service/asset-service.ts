@@ -2,10 +2,10 @@ import { Injectable } from "../../../node_modules/@angular/core";
 import { IAsset } from "../../models/IAsset";
 import { HttpClient } from "../../../node_modules/@angular/common/http";
 import { UrlService } from "../url-service/url-service";
-import { FixedBigNumber } from "../../core/big-number/FixedBigNumber";
+import * as Smilo from "@smilo-platform/smilo-commons-js-web";
 
 export interface IAssetService {
-    prepareBigNumber(numberAsString: string, assetId: string): FixedBigNumber;
+    prepareBigNumber(numberAsString: string, assetId: string): Smilo.FixedBigNumber;
 
     getAll(): Promise<IAsset[]>;
 
@@ -39,15 +39,15 @@ export class AssetService implements IAssetService {
      * 
      * This will return a Big number which can be used to accurately perform decimal calculations.
      */
-    prepareBigNumber(number: string|FixedBigNumber, assetId: string): FixedBigNumber {
-        if(number instanceof FixedBigNumber)
+    prepareBigNumber(number: string|Smilo.FixedBigNumber, assetId: string): Smilo.FixedBigNumber {
+        if(number instanceof Smilo.FixedBigNumber)
             return number;
 
         this.ensureAssetCache();
 
         let asset = this.assetMap.get(assetId);
 
-        return FixedBigNumber.fromBigIntegerString(number, asset.decimals);
+        return Smilo.FixedBigNumber.fromBigIntegerString(number, asset.decimals);
     }
 
     getAll(): Promise<IAsset[]> {

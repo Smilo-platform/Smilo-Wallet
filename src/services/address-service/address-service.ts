@@ -3,7 +3,7 @@ import { IAddress } from "../../models/IAddress";
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { UrlService } from "../url-service/url-service";
 import { AssetService } from "../asset-service/asset-service";
-import { FixedBigNumber } from "../../core/big-number/FixedBigNumber";
+import * as Smilo from "@smilo-platform/smilo-commons-js-web";
 
 export interface IAddressService {
     get(address: string): Promise<IAddress>;
@@ -29,7 +29,7 @@ export class AddressService implements IAddressService {
                     let emptyAddress: IAddress = {
                         publickey: address,
                         balances: {
-                            "000x00123": new FixedBigNumber(0, 0)
+                            "000x00123": new Smilo.FixedBigNumber(0, 0)
                         },
                         signatureCount: -1
                     }
