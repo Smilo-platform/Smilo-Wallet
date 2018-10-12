@@ -9,12 +9,8 @@ import { IWalletService, WalletService } from "../../services/wallet-service/wal
 import { MockWalletService } from "../../../test-config/mocks/MockWalletService";
 import { NavigationHelperService } from "../../services/navigation-helper-service/navigation-helper-service";
 import { PasswordExplanationPage } from "../password-explanation/password-explanation";
-import { ILocalWallet } from "../../models/ILocalWallet";
 import { NAVIGATION_ORIGIN_KEY } from "../wallet/wallet";
 import { MockModalController } from "../../../test-config/mocks/MockModalController";
-import { IKeyStoreService, KeyStoreService } from "../../services/key-store-service/key-store-service";
-import { MockKeyStoreService } from "../../../test-config/mocks/MockKeyStoreService";
-import { IKeyStore } from "../../models/IKeyStore";
 import { IPasswordService, PasswordService } from "../../services/password-service/password-service";
 import { MockPasswordService } from "../../../test-config/mocks/MockPasswordService";
 import { PrepareWalletPage } from "../prepare-wallet/prepare-wallet";
@@ -23,6 +19,7 @@ import { MockSettingsService } from "../../../test-config/mocks/MockSettingsServ
 import { SettingsService } from "../../services/settings-service/settings-service";
 import { MockBulkTranslateService } from "../../../test-config/mocks/MockBulkTranslateService";
 import { BulkTranslateService } from "../../services/bulk-translate-service/bulk-translate-service";
+import * as Smilo from "@smilo-platform/smilo-commons-js-web";
 
 describe("WalletImportPrivatekeyPage", () => {
   let comp: WalletImportPrivatekeyPage;
@@ -32,7 +29,6 @@ describe("WalletImportPrivatekeyPage", () => {
   let navParams: NavParams;
   let navController: MockNavController;
   let navigationHelperService: NavigationHelperService;
-  let keyStoreService: IKeyStoreService;
   let passwordService: IPasswordService;
   let settingService: MockSettingsService;
   let bulkTranslateService: BulkTranslateService;
@@ -43,7 +39,6 @@ describe("WalletImportPrivatekeyPage", () => {
     navController = new MockNavController();
     navigationHelperService = new NavigationHelperService();
     modalController = new MockModalController();
-    keyStoreService = new MockKeyStoreService();
     passwordService = new MockPasswordService();
     settingService = new MockSettingsService();
     bulkTranslateService = new MockBulkTranslateService();
@@ -58,7 +53,6 @@ describe("WalletImportPrivatekeyPage", () => {
         ComponentsModule
       ],
       providers: [
-        { provide: KeyStoreService, useValue: keyStoreService },
         { provide: ModalController, useValue: modalController },
         { provide: NavigationHelperService, useValue: navigationHelperService },
         { provide: WalletService, useValue: walletService },
@@ -176,7 +170,7 @@ describe("WalletImportPrivatekeyPage", () => {
   });
 
   it("should prepare the wallet correctly", () => {
-    let dummyKeyStore: IKeyStore = {
+    let dummyKeyStore: Smilo.IKeyStore = {
       cipher: "AES-CTR",
       cipherParams: {
         iv: "iv"
@@ -189,7 +183,7 @@ describe("WalletImportPrivatekeyPage", () => {
       },
       controlHash: "controlHash"
     };
-    spyOn(keyStoreService, "createKeyStore").and.returnValue(dummyKeyStore);
+    spyOn((<any>comp).encryptionHelper, "createKeyStore").and.returnValue(dummyKeyStore);
     spyOn(walletService, "generateId").and.returnValue("WALLET_ID");
 
     comp.name = "Wallet #1";
@@ -244,7 +238,7 @@ describe("WalletImportPrivatekeyPage", () => {
 
     spyOn(navController, "push").and.returnValue(Promise.resolve());
 
-    comp.goToPrepareWalletPage(<ILocalWallet><any>dummyWallet, "pass123").then(
+    comp.goToPrepareWalletPage(<Smilo.ILocalWallet><any>dummyWallet, "pass123").then(
       () => {
         expect(navController.push).toHaveBeenCalledWith(PrepareWalletPage, params);
 

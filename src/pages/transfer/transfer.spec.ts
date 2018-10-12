@@ -18,21 +18,19 @@ import { MockToastController } from "../../../test-config/mocks/MockToastControl
 import { MockPlatform } from "../../../test-config/mocks/MockPlatform";
 import { MockQRScanner } from "../../../test-config/mocks/MockQRScanner";
 import { QRScanner } from "@ionic-native/qr-scanner";
-import { IWallet } from "../../models/IWallet";
-import { FixedBigNumber } from "../../core/big-number/FixedBigNumber";
-import { ITransaction } from "../../models/ITransaction";
 import { IPaymentRequest } from "../../models/IPaymentRequest";
 import { MockToast } from "../../../test-config/mocks/MockToast";
 import { Observable, Subscription } from "rxjs";
 import { QRScannerStatus } from "@ionic-native/qr-scanner";
 import { NgZone } from "@angular/core";
 import { IBalance } from "../../models/IBalance";
+import * as Smilo from "@smilo-platform/smilo-commons-js-web";
 
 interface ICanTransferTestVector {
     publicKey: string;
     amount: string;
     enoughFunds: boolean;
-    fromWallet: IWallet;
+    fromWallet: Smilo.IWallet;
     password: string;
     isValid: boolean;
 }
@@ -120,12 +118,12 @@ describe("TransferPage", () => {
     it("should be initialized correctly", () => {
         spyOn(comp, "getAndSubscribeToTranslations");
 
-        let wallet: IWallet = <IWallet>{};
+        let wallet: Smilo.IWallet = <Smilo.IWallet>{};
         let balances: IBalance[] = [
             {
                 currency: "XSM",
-                amount: new FixedBigNumber("100", 0),
-                valueAmount: new FixedBigNumber("100", 0)
+                amount: new Smilo.FixedBigNumber("100", 0),
+                valueAmount: new Smilo.FixedBigNumber("100", 0)
             }
         ];
 
@@ -142,7 +140,7 @@ describe("TransferPage", () => {
         expect(comp.fromWallet).toBe(wallet);
         expect(comp.balances).toBe(balances);
         expect(comp.chosenCurrency).toBe("XSM");
-        expect(comp.chosenCurrencyAmount.eq(new FixedBigNumber("100", 0))).toBe(true);
+        expect(comp.chosenCurrencyAmount.eq(new Smilo.FixedBigNumber("100", 0))).toBe(true);
         expect(comp.getAndSubscribeToTranslations).toHaveBeenCalled();
     });
 
@@ -160,7 +158,7 @@ describe("TransferPage", () => {
                 publicKey: "PUBLIC_KEY",
                 amount: "100",
                 enoughFunds: true,
-                fromWallet: <IWallet>{
+                fromWallet: <Smilo.IWallet>{
                     publicKey: "OTHER_PUBLIC_KEY"
                 },
                 password: "PASSWORD",
@@ -171,7 +169,7 @@ describe("TransferPage", () => {
                 publicKey: "PUBLIC_KEY",
                 amount: "100",
                 enoughFunds: true,
-                fromWallet: <IWallet>{
+                fromWallet: <Smilo.IWallet>{
                     publicKey: "PUBLIC_KEY"
                 },
                 password: "PASSWORD",
@@ -182,7 +180,7 @@ describe("TransferPage", () => {
                 publicKey: "",
                 amount: "100",
                 enoughFunds: true,
-                fromWallet: <IWallet>{
+                fromWallet: <Smilo.IWallet>{
                     publicKey: "OTHER_PUBLIC_KEY"
                 },
                 password: "PASSWORD",
@@ -193,7 +191,7 @@ describe("TransferPage", () => {
                 publicKey: "PUBLIC_KEY",
                 amount: "",
                 enoughFunds: true,
-                fromWallet: <IWallet>{
+                fromWallet: <Smilo.IWallet>{
                     publicKey: "OTHER_PUBLIC_KEY"
                 },
                 password: "PASSWORD",
@@ -204,7 +202,7 @@ describe("TransferPage", () => {
                 publicKey: "PUBLIC_KEY",
                 amount: "100.100.100",
                 enoughFunds: true,
-                fromWallet: <IWallet>{
+                fromWallet: <Smilo.IWallet>{
                     publicKey: "OTHER_PUBLIC_KEY"
                 },
                 password: "PASSWORD",
@@ -215,7 +213,7 @@ describe("TransferPage", () => {
                 publicKey: "PUBLIC_KEY",
                 amount: "100",
                 enoughFunds: true,
-                fromWallet: <IWallet>{
+                fromWallet: <Smilo.IWallet>{
                     publicKey: "OTHER_PUBLIC_KEY"
                 },
                 password: "",
@@ -226,7 +224,7 @@ describe("TransferPage", () => {
                 publicKey: "PUBLIC_KEY",
                 amount: "100",
                 enoughFunds: false,
-                fromWallet: <IWallet>{
+                fromWallet: <Smilo.IWallet>{
                     publicKey: "OTHER_PUBLIC_KEY"
                 },
                 password: "PASSWORD",
@@ -258,7 +256,7 @@ describe("TransferPage", () => {
     });
 
     it("should set 'enoughFunds' to true if there are enough funds", () => {
-        comp.chosenCurrencyAmount = new FixedBigNumber("1000", 0);
+        comp.chosenCurrencyAmount = new Smilo.FixedBigNumber("1000", 0);
         comp.amount = "100";
 
         comp.onAmountChanged();
@@ -267,7 +265,7 @@ describe("TransferPage", () => {
     });
 
     it("should set 'enoughFunds' to false if there are not enough funds", () => {
-        comp.chosenCurrencyAmount = new FixedBigNumber("1000", 0);
+        comp.chosenCurrencyAmount = new Smilo.FixedBigNumber("1000", 0);
         comp.amount = "10000";
 
         comp.onAmountChanged();
@@ -282,7 +280,7 @@ describe("TransferPage", () => {
         comp.translations = new Map<string, string>();
         spyOn(comp.translations, "get").and.callFake((key) => key);
 
-        let transaction: ITransaction = <ITransaction>{};
+        let transaction: Smilo.ITransaction = <Smilo.ITransaction>{};
 
         spyOn(comp, "createTransaction").and.returnValue(transaction);
         spyOn(comp, "signTransaction").and.callFake((t) => {
@@ -304,8 +302,8 @@ describe("TransferPage", () => {
         comp.balances = [
             {
                 currency: "XSM",
-                amount: new FixedBigNumber("200", 0),
-                valueAmount: new FixedBigNumber("200", 0)
+                amount: new Smilo.FixedBigNumber("200", 0),
+                valueAmount: new Smilo.FixedBigNumber("200", 0)
             }
         ];
 
@@ -322,7 +320,7 @@ describe("TransferPage", () => {
                 expect(comp.isTransferring).toBe(false);
 
                 // Balance should be updated correctly
-                expect(comp.balances[0].amount.eq(new FixedBigNumber("100", 0))).toBe(true);
+                expect(comp.balances[0].amount.eq(new Smilo.FixedBigNumber("100", 0))).toBe(true);
 
                 // Expect input fields to be reset
                 expect(comp.toPublicKey).toBe("");
@@ -341,7 +339,7 @@ describe("TransferPage", () => {
 
     it("should create the transaction correctly", () => {
         // This unit test is written to only support XSM (000x00123) right now.
-        comp.fromWallet = <IWallet>{
+        comp.fromWallet = <Smilo.IWallet>{
             publicKey: "PUBLIC_KEY"
         };
         comp.amount = "100";
@@ -352,13 +350,13 @@ describe("TransferPage", () => {
             <any>{
                 timestamp: jasmine.any(Number),
                 inputAddress: "PUBLIC_KEY",
-                fee: new FixedBigNumber(0, 0),
+                fee: new Smilo.FixedBigNumber(0, 0),
                 assetId: "000x00123",
-                inputAmount: new FixedBigNumber("100", 0),
+                inputAmount: new Smilo.FixedBigNumber("100", 0),
                 transactionOutputs: [
                     {
                         outputAddress: "TO_PUBLIC_KEY",
-                        outputAmount: new FixedBigNumber("100", 0)
+                        outputAmount: new Smilo.FixedBigNumber("100", 0)
                     }
                 ],
                 dataHash: jasmine.any(String)
@@ -367,9 +365,9 @@ describe("TransferPage", () => {
     });
 
     it("should sign the transaction correctly", (done) => {
-        let wallet: IWallet = <IWallet>{};
+        let wallet: Smilo.IWallet = <Smilo.IWallet>{};
         let password = "PASSWORD";
-        let transaction: ITransaction = <ITransaction>{};
+        let transaction: Smilo.ITransaction = <Smilo.ITransaction>{};
 
         spyOn(transactionSignService, "sign").and.returnValue(Promise.resolve());
 

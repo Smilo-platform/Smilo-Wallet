@@ -1,37 +1,30 @@
 import { MerkleTreeService } from "./merkle-tree-service";
-import { MockKeyStoreService } from "../../../test-config/mocks/MockKeyStoreService";
 import { Platform } from "ionic-angular/platform/platform";
 import { Storage } from "@ionic/storage";
-import { MerkleTree } from "../../core/merkle/MerkleTree";
-import { MerkleTreeBuilder } from "../../core/merkle/MerkleTreeBuilder";
-import { MerkleTreeSerializer } from "../../core/merkle/MerkleTreeSerializer";
-import { MerkleTreeDeserializer } from "../../core/merkle/MerkleTreeDeserializer";
-import { MerkleTreeHelper } from "../../core/merkle/MerkleTreeHelper";
+import * as Smilo from "@smilo-platform/smilo-commons-js-web";
 
 describe("MerkleTreeService", () => {
     let service: MerkleTreeService;
 
-    let keyStoreService: MockKeyStoreService;
     let storageService: Storage;
     let platformService: Platform;
 
-    let builder: MerkleTreeBuilder;
-    let serializer: MerkleTreeSerializer;
-    let deserializer: MerkleTreeDeserializer;
+    let encryptionHelper: Smilo.EncryptionHelper;
+    let builder: Smilo.MerkleTreeBuilder;
+    let serializer: Smilo.MerkleTreeSerializer;
 
     beforeEach(() => {
-        keyStoreService = new MockKeyStoreService();
         storageService = new Storage(null);
         platformService = new Platform();
 
-        service = new MerkleTreeService(keyStoreService, storageService, platformService);
+        service = new MerkleTreeService(storageService);
     });
 
     beforeEach(() => {
         // Read some private properties :O
+        encryptionHelper = (<any>service).encryptionHelper;
         builder = (<any>service).merkleTreeBuilder;
         serializer = (<any>service).merkleTreeSerializer;
-        deserializer = (<any>service).merkleTreeDeserializer;
     });
 
     it("should be initialized correctly", () => {
@@ -47,7 +40,7 @@ describe("MerkleTreeService", () => {
             id: "WALLET_ID"
         };
 
-        spyOn(keyStoreService, "decryptKeyStore").and.returnValue("PRIVATE_KEY");
+        spyOn(encryptionHelper, "decryptKeyStore").and.returnValue("PRIVATE_KEY");
         spyOn(builder, "generate").and.returnValue(Promise.resolve(dummyMerkleTree));
         spyOn(serializer, "serialize").and.returnValue(Promise.resolve());
         spyOn(platformService, "is").and.returnValue(true);
@@ -60,10 +53,10 @@ describe("MerkleTreeService", () => {
                 });
 
                 // Expect generate function to be called correctly
-                expect(builder.generate).toHaveBeenCalledWith("PRIVATE_KEY", 14, true, true, undefined);
+                expect(builder.generate).toHaveBeenCalledWith("PRIVATE_KEY", 14, undefined);
 
                 // Expect Merkle Tree to be serialized
-                expect(serializer.serialize).toHaveBeenCalledWith(dummyMerkleTree, dummyWallet, storageService, keyStoreService, "pass123");
+                expect(serializer.serialize).toHaveBeenCalledWith(dummyMerkleTree, dummyWallet, "pass123");
 
                 done();
             },
@@ -79,7 +72,7 @@ describe("MerkleTreeService", () => {
             id: "WALLET_ID"
         };
 
-        spyOn(keyStoreService, "decryptKeyStore").and.returnValue(null);
+        spyOn(encryptionHelper, "decryptKeyStore").and.returnValue(null);
         spyOn(builder, "generate").and.returnValue(Promise.resolve(null));
 
         service.generate(<any>dummyWallet, "pass123").then(
@@ -105,12 +98,12 @@ describe("MerkleTreeService", () => {
 
         (<any>service).cache["WALLET_ID"] = dummyMerkleTree;
 
-        spyOn(deserializer, "fromDisk");
+        spyOn(serializer, "deserialize");
 
         service.get(<any>dummyWallet, "pass123").then(
             (merkleTree) => {
                 expect(merkleTree).toBe(<any>dummyMerkleTree);
-                expect(deserializer.fromDisk).not.toHaveBeenCalled();
+                expect(serializer.deserialize).not.toHaveBeenCalled();
 
                 done();
             }
@@ -123,12 +116,12 @@ describe("MerkleTreeService", () => {
             id: "WALLET_ID"
         };
 
-        spyOn(deserializer, "fromDisk").and.returnValue(Promise.resolve(dummyMerkleTree));
+        spyOn(serializer, "deserialize").and.returnValue(Promise.resolve(dummyMerkleTree));
 
         service.get(<any>dummyWallet, "pass123").then(
             (merkleTree) => {
                 expect(merkleTree).toBe(<any>dummyMerkleTree);
-                expect(deserializer.fromDisk).toHaveBeenCalled();
+                expect(serializer.deserialize).toHaveBeenCalled();
 
                 done();
             }
@@ -136,7 +129,7 @@ describe("MerkleTreeService", () => {
     });
 
     it("should reject the promise when a Merkle Tree was not found on disk or cache", (done) => {
-        spyOn(deserializer, "fromDisk").and.returnValue(Promise.reject("Not found on disk"));
+        spyOn(serializer, "deserialize").and.returnValue(Promise.reject("Not found on disk"));
 
         let dummyWallet = {
             id: "WALLET_ID"
@@ -162,160 +155,14 @@ describe("MerkleTreeService", () => {
         };
 
         (<any>service).cache["WALLET_ID"] = dummyMerkleTree;
-
-        spyOn(MerkleTreeHelper, "getConfigStorageKey").and.returnValue("config-storagekey");
-        spyOn(MerkleTreeHelper, "getLayerStorageKeys").and.returnValue([
-            "layer1-storagekey",
-            "layer2-storagekey",
-            "layer3-storagekey",
-            "layer4-storagekey"
-        ]);
-
-        spyOn(storageService, "get").and.callFake((key) => {
-            // Only the config is requested
-            return Promise.resolve({
-                layerCount: 4
-            });
-        });
-
-        let removedKeys: string[] = [];
-        spyOn(storageService, "remove").and.callFake((key) => {
-            // Store the removed key. Later we will use this
-            // array to determine if everything was removed.
-            removedKeys.push(key);
-
-            return Promise.resolve();
-        });
+        
+        spyOn((<any>service).merkleTreeSerializer, "clean").and.returnValue(Promise.resolve());
 
         service.remove(<any>dummyWallet).then(
             () => {
-                // Sort the removed keys so we can do an equality check
-                removedKeys.sort((a, b) => {
-                    if(a > b)
-                        return 1;
-                    else if(a < b)
-                        return -1;
-                    else
-                        return 0;
-                });
-
-                // Expect config and all layers to be removed
-                expect(removedKeys).toEqual([
-                    "config-storagekey",
-                    "layer1-storagekey",
-                    "layer2-storagekey",
-                    "layer3-storagekey",
-                    "layer4-storagekey"
-                ]);
-
                 // Expect cache to be cleared
                 expect((<any>service).cache).toEqual({});
-
-                done();
-            },
-            (error) => {
-                expect(true).toBe(false, "Promise reject should never be called");
-
-                done();
-            }
-        );
-    });
-
-    it("should remove a merkle tree with missing layers correctly", (done) => {
-        let dummyMerkleTree = {};
-        let dummyWallet = {
-            id: "WALLET_ID"
-        };
-
-        (<any>service).cache["WALLET_ID"] = dummyMerkleTree;
-
-        spyOn(MerkleTreeHelper, "getConfigStorageKey").and.returnValue("config-storagekey");
-        spyOn(MerkleTreeHelper, "getLayerStorageKeys").and.returnValue([
-            "layer1-storagekey",
-            "layer2-storagekey",
-            "layer3-storagekey",
-            "layer4-storagekey"
-        ]);
-
-        spyOn(storageService, "get").and.callFake((key) => {
-            // Only the config is requested
-            return Promise.resolve({
-                layerCount: 4
-            });
-        });
-
-        let removedKeys: string[] = [];
-        spyOn(storageService, "remove").and.callFake((key) => {
-            // Store the removed key. Later we will use this
-            // array to determine if everything was removed.
-
-            // Layer 2 and 4 are magically missing from disk :O
-            if(key == "layer2-storagekey")
-                return Promise.reject("Not found");
-            else if(key == "layer4-storagekey")
-                return Promise.reject("Not found");
-
-            removedKeys.push(key);
-
-            return Promise.resolve();
-        });
-
-        // Add a spy to the console error to silence the logs showing up in the test output
-        spyOn(console, "error");
-
-        service.remove(<any>dummyWallet).then(
-            () => {
-                // Sort the removed keys so we can do an equality check
-                removedKeys.sort((a, b) => {
-                    if(a > b)
-                        return 1;
-                    else if(a < b)
-                        return -1;
-                    else
-                        return 0;
-                });
-
-                // Expect config and all layers to be removed
-                expect(removedKeys).toEqual([
-                    "config-storagekey",
-                    "layer1-storagekey",
-                    "layer3-storagekey"
-                ]);
-
-                // Expect cache to be cleared
-                expect((<any>service).cache).toEqual({});
-
-                done();
-            },
-            (error) => {
-                expect(true).toBe(false, "Promise reject should never be called");
-
-                done();
-            }
-        );
-    });
-
-    it("should abort removing a merkle tree with no config", (done) => {
-        let dummyMerkleTree = {};
-        let dummyWallet = {
-            id: "WALLET_ID"
-        };
-
-        (<any>service).cache["WALLET_ID"] = dummyMerkleTree;
-
-        spyOn(MerkleTreeHelper, "getConfigStorageKey").and.returnValue("config-storagekey");
-
-        spyOn(storageService, "get").and.callFake((key) => {
-            // Return null because the config could not be found
-            return Promise.resolve(null);
-        });
-
-        spyOn(storageService, "remove");
-
-        service.remove(<any>dummyWallet).then(
-            () => {
-                // No call to remove should be made
-                expect(storageService.remove).not.toHaveBeenCalled();
+                expect((<any>service).merkleTreeSerializer.clean).toHaveBeenCalledWith(dummyWallet);
 
                 done();
             },

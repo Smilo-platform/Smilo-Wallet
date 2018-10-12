@@ -1,6 +1,5 @@
 import { WalletService, IWalletService } from "../../src/services/wallet-service/wallet-service";
-import { IWallet } from "../../src/models/IWallet";
-import { ITransaction } from "../../src/models/ITransaction";
+import * as Smilo from "@smilo-platform/smilo-commons-js-web";
 
 export class MockWalletService implements IWalletService {
 
@@ -67,11 +66,11 @@ export class MockWalletService implements IWalletService {
         return "SOME_ID";
     }
 
-    store(wallet: IWallet): Promise<void> {
+    store(wallet: Smilo.IWallet): Promise<void> {
         return Promise.resolve();
     }
 
-    remove(wallet: IWallet): Promise<void> {
+    remove(wallet: Smilo.IWallet): Promise<void> {
         return Promise.resolve();
     }
 }

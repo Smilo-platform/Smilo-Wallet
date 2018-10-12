@@ -1,19 +1,18 @@
 import { IMerkleTreeService } from "../../src/services/merkle-tree-service/merkle-tree-service";
-import { IWallet } from "../../src/models/IWallet";
-import { MerkleTree } from "../../src/core/merkle/MerkleTree";
 import { MockMerkleTree } from "./MockMerkleTree";
+import * as Smilo from "@smilo-platform/smilo-commons-js-web";
 
 export class MockMerkleTreeService implements IMerkleTreeService {
     
-    generate(wallet: IWallet, password: string, progressUpdate: (progress: number) => void): Promise<void> {
+    generate(wallet: Smilo.IWallet, password: string, progressUpdate: (progress: number) => void): Promise<void> {
         return Promise.resolve();
     }
 
-    get(wallet: IWallet, password: string): Promise<MerkleTree> {
+    get(wallet: Smilo.IWallet, password: string): Promise<Smilo.MerkleTree> {
         return Promise.resolve(new MockMerkleTree());
     }
 
-    remove(wallet: IWallet): Promise<void> {
+    remove(wallet: Smilo.IWallet): Promise<void> {
         return Promise.resolve(null);
     }
 }

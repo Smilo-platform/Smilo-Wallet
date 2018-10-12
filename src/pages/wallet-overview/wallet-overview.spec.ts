@@ -19,16 +19,12 @@ import { MockClipboard } from "../../../test-config/mocks/MockClipboard";
 import { MockFileNative } from "../../../test-config/mocks/MockFileNative";
 import { BulkTranslateService } from "../../services/bulk-translate-service/bulk-translate-service";
 import { MockBulkTranslateService } from "../../../test-config/mocks/MockBulkTranslateService";
-import { KeyStoreService, IKeyStoreService } from "../../services/key-store-service/key-store-service";
-import { MockKeyStoreService } from "../../../test-config/mocks/MockKeyStoreService";
 import { IExchangesService, ExchangesService } from "../../services/exchanges-service/exchanges-service";
 import { IWalletTransactionHistoryService, WalletTransactionHistoryService } from "../../services/wallet-transaction-history-service/wallet-transaction-history-service";
 import { MockExchangesService } from "../../../test-config/mocks/MockExchangesSevice";
 import { MockWalletTransactionHistoryService } from "../../../test-config/mocks/MockWalletTransactionHistoryService";
 import { TransferPage } from "../transfer/transfer";
-import { IWallet } from "../../models/IWallet";
 import { MockToast } from "../../../test-config/mocks/MockToast";
-import { ILocalWallet } from "../../models/ILocalWallet";
 import { MockTranslateService } from "../../../test-config/mocks/MockTranslateService";
 import { MockPlatform } from "../../../test-config/mocks/MockPlatform";
 import { ElementRef } from "@angular/core";
@@ -37,7 +33,7 @@ import { AddressService } from "../../services/address-service/address-service";
 import { IAddress } from "../../models/IAddress";
 import { MockSettingsService } from "../../../test-config/mocks/MockSettingsService";
 import { SettingsService } from "../../services/settings-service/settings-service";
-import { FixedBigNumber } from "../../core/big-number/FixedBigNumber";
+import * as Smilo from "@smilo-platform/smilo-commons-js-web";
 
 describe("WalletOverviewPage", () => {
     let comp: WalletOverviewPage;
@@ -50,7 +46,6 @@ describe("WalletOverviewPage", () => {
     let clipBoard: Clipboard;
     let fileNative: FileNative;
     let bulkTranslateService: BulkTranslateService;
-    let keystoreService: IKeyStoreService;
     let exchangeService: IExchangesService;
     let transactionHistoryService: IWalletTransactionHistoryService;
     let translateService: MockTranslateService;
@@ -67,7 +62,6 @@ describe("WalletOverviewPage", () => {
         clipBoard = new MockClipboard();
         fileNative = new MockFileNative();
         bulkTranslateService = new MockBulkTranslateService();
-        keystoreService = new MockKeyStoreService();
         exchangeService = new MockExchangesService();
         transactionHistoryService = new MockWalletTransactionHistoryService();
         translateService = new MockTranslateService();
@@ -94,7 +88,6 @@ describe("WalletOverviewPage", () => {
                 { provide: Clipboard, useValue: clipBoard },
                 { provide: FileNative, useValue: fileNative },
                 { provide: BulkTranslateService, useValue: bulkTranslateService },
-                { provide: KeyStoreService, useValue: keystoreService },
                 { provide: ExchangesService, useValue: exchangeService },
                 { provide: WalletTransactionHistoryService, useValue: transactionHistoryService },
                 { provide: WalletService, useValue: walletService },
@@ -165,7 +158,7 @@ describe("WalletOverviewPage", () => {
 
         comp.currentWallet = comp.wallets[0];
 
-        let fakeWallet: ILocalWallet = {
+        let fakeWallet: Smilo.ILocalWallet = {
             id: "FAKE_ID",
             keyStore: {
                 cipher: "AES-CTR",
@@ -288,7 +281,7 @@ describe("WalletOverviewPage", () => {
         let dummyAddress: IAddress = {
             publickey: "PUBLIC_KEY",
             balances: {
-                "000x00123": new FixedBigNumber(1000, 0)
+                "000x00123": new Smilo.FixedBigNumber(1000, 0)
             },
             signatureCount: -1
         };
@@ -318,8 +311,8 @@ describe("WalletOverviewPage", () => {
         comp.currentWallet = comp.wallets[0];
         comp.pickedCurrency = "USD";
         comp.pickedExchange = "GDAX";
-        comp.balances = [{ currency: "XSM", amount: new FixedBigNumber(5712, 0), valueAmount: new FixedBigNumber(0, 0) },
-        { currency: "XSP", amount: new FixedBigNumber(234, 18), valueAmount: new FixedBigNumber(0, 18) }];
+        comp.balances = [{ currency: "XSM", amount: new Smilo.FixedBigNumber(5712, 0), valueAmount: new Smilo.FixedBigNumber(0, 0) },
+        { currency: "XSP", amount: new Smilo.FixedBigNumber(234, 18), valueAmount: new Smilo.FixedBigNumber(0, 18) }];
         comp.setCalculatedCurrencyValue().then(
             (data) => {
                 expect(comp.currenciesForDoughnutCanvas.length).toBe(2);
@@ -372,8 +365,8 @@ describe("WalletOverviewPage", () => {
         spyOn(navController, "push");
 
         comp.currentWallet = getDummyWallet();
-        comp.balances = [{ currency: "XSM", amount: new FixedBigNumber(550, 0), valueAmount: new FixedBigNumber(0.25, 0) },
-        { currency: "XSP", amount: new FixedBigNumber(4723, 18), valueAmount: new FixedBigNumber(0.025, 0) }];
+        comp.balances = [{ currency: "XSM", amount: new Smilo.FixedBigNumber(550, 0), valueAmount: new Smilo.FixedBigNumber(0.25, 0) },
+        { currency: "XSP", amount: new Smilo.FixedBigNumber(4723, 18), valueAmount: new Smilo.FixedBigNumber(0.025, 0) }];
 
         comp.openTransferPage();
 
@@ -384,7 +377,7 @@ describe("WalletOverviewPage", () => {
         spyOn(comp, "getWalletBalance");
         spyOn(comp, "getTransactionHistory");
 
-        comp.currentWallet = <IWallet>{};
+        comp.currentWallet = <Smilo.IWallet>{};
         comp.currentWallet.publicKey = "";
 
         comp.refreshWalletInfo();
@@ -725,7 +718,7 @@ describe("WalletOverviewPage", () => {
         let dummyAddress: IAddress = {
             publickey: "PUBLIC_KEY",
             balances: {
-                "000x00123": new FixedBigNumber(1000, 0)
+                "000x00123": new Smilo.FixedBigNumber(1000, 0)
             },
             signatureCount: -1
         };
@@ -734,8 +727,8 @@ describe("WalletOverviewPage", () => {
 
         comp.getWalletBalance("").then(
             (data) => {
-                expect(comp.balances[0]).toEqual({ currency: "XSM", amount: new FixedBigNumber(1000, 0), valueAmount: new FixedBigNumber(1000, 0) });
-                expect(comp.balances[1]).toEqual({ currency: "XSP", amount: new FixedBigNumber(0, 18), valueAmount: new FixedBigNumber(0, 18) });
+                expect(comp.balances[0]).toEqual({ currency: "XSM", amount: new Smilo.FixedBigNumber(1000, 0), valueAmount: new Smilo.FixedBigNumber(1000, 0) });
+                expect(comp.balances[1]).toEqual({ currency: "XSP", amount: new Smilo.FixedBigNumber(0, 18), valueAmount: new Smilo.FixedBigNumber(0, 18) });
 
                 done();
             },
@@ -830,8 +823,8 @@ describe("WalletOverviewPage", () => {
         comp.pickedCurrency = "Curr1";
         comp.pickedExchange = "Exchange1";
         comp.balances = [
-            { currency: "XSM", amount: new FixedBigNumber(0, 0), valueAmount: new FixedBigNumber(0, 0) },
-            { currency: "XSP", amount: new FixedBigNumber(0, 18), valueAmount: new FixedBigNumber(0, 18) }
+            { currency: "XSM", amount: new Smilo.FixedBigNumber(0, 0), valueAmount: new Smilo.FixedBigNumber(0, 0) },
+            { currency: "XSP", amount: new Smilo.FixedBigNumber(0, 18), valueAmount: new Smilo.FixedBigNumber(0, 18) }
         ];
         comp.currentWallet = getDummyWallet();
         comp.currenciesForDoughnutCanvasLabels = ["Label1", "Label2", "Label3"];
@@ -868,8 +861,8 @@ describe("WalletOverviewPage", () => {
         comp.pickedCurrency = "XSM";
         comp.pickedExchange = "GDAX";
         comp.balances = [
-            { currency: "XSM", amount: new FixedBigNumber(5, 0), valueAmount: new FixedBigNumber(0, 0) },
-            { currency: "XSP", amount: new FixedBigNumber(100, 18), valueAmount: new FixedBigNumber(0, 18) }
+            { currency: "XSM", amount: new Smilo.FixedBigNumber(5, 0), valueAmount: new Smilo.FixedBigNumber(0, 0) },
+            { currency: "XSP", amount: new Smilo.FixedBigNumber(100, 18), valueAmount: new Smilo.FixedBigNumber(0, 18) }
         ];
 
         comp.setCalculatedCurrencyValue().then(
@@ -897,8 +890,8 @@ describe("WalletOverviewPage", () => {
         comp.currentWallet = getDummyWallet();
         comp.pickedCurrency = "I DON'T EXIST";
         comp.pickedExchange = "ME NEITHER";
-        comp.balances = [{ currency: "XSM", amount: new FixedBigNumber(5, 0), valueAmount: new FixedBigNumber(0, 0) },
-        { currency: "XSP", amount: new FixedBigNumber(100, 18), valueAmount: new FixedBigNumber(0, 0) }];
+        comp.balances = [{ currency: "XSM", amount: new Smilo.FixedBigNumber(5, 0), valueAmount: new Smilo.FixedBigNumber(0, 0) },
+        { currency: "XSP", amount: new Smilo.FixedBigNumber(100, 18), valueAmount: new Smilo.FixedBigNumber(0, 0) }];
 
         comp.setCalculatedCurrencyValue().then(
             (data) => {
@@ -921,8 +914,8 @@ describe("WalletOverviewPage", () => {
         comp.currentWallet = getDummyWallet();
         comp.pickedCurrency = "XSM";
         comp.pickedExchange = "GDAX";
-        comp.balances = [{ currency: "XSM", amount: new FixedBigNumber(0, 0), valueAmount: new FixedBigNumber(0, 0) },
-        { currency: "XSP", amount: new FixedBigNumber(0, 18), valueAmount: new FixedBigNumber(0, 18) }];
+        comp.balances = [{ currency: "XSM", amount: new Smilo.FixedBigNumber(0, 0), valueAmount: new Smilo.FixedBigNumber(0, 0) },
+        { currency: "XSP", amount: new Smilo.FixedBigNumber(0, 18), valueAmount: new Smilo.FixedBigNumber(0, 18) }];
 
         comp.setCalculatedCurrencyValue().then(
             (data) => {
@@ -968,8 +961,8 @@ describe("WalletOverviewPage", () => {
         comp.currentWallet = getDummyWallet();
         comp.pickedCurrency = "XSM";
         comp.pickedExchange = "GDAX";
-        comp.balances = [{ currency: "XSM", amount: new FixedBigNumber(0, 0), valueAmount: new FixedBigNumber(0, 0) },
-        { currency: "XSP", amount: new FixedBigNumber(0, 18), valueAmount: new FixedBigNumber(0, 18) }];
+        comp.balances = [{ currency: "XSM", amount: new Smilo.FixedBigNumber(0, 0), valueAmount: new Smilo.FixedBigNumber(0, 0) },
+        { currency: "XSP", amount: new Smilo.FixedBigNumber(0, 18), valueAmount: new Smilo.FixedBigNumber(0, 18) }];
 
         comp.setCalculatedCurrencyValue().then(
             (data) => {

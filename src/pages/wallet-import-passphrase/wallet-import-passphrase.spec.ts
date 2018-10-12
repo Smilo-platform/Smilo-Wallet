@@ -5,16 +5,11 @@ import { MockNavController } from "../../../test-config/mocks/MockNavController"
 import { MockNavParams } from "../../../test-config/mocks/MockNavParams";
 import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
 import { MockTranslationLoader } from "../../../test-config/mocks/MockTranslationLoader";
-import { IKeyStoreService, KeyStoreService } from "../../services/key-store-service/key-store-service";
 import { IPasswordService, PasswordService, IPasswordValidationResult } from "../../services/password-service/password-service";
-import { MockKeyStoreService } from "../../../test-config/mocks/MockKeyStoreService";
 import { MockPasswordService } from "../../../test-config/mocks/MockPasswordService";
 import { MockWalletService } from "../../../test-config/mocks/MockWalletService";
 import { IWalletService, WalletService } from "../../services/wallet-service/wallet-service";
 import { INavigationHelperService, NavigationHelperService } from "../../services/navigation-helper-service/navigation-helper-service";
-import { IKeyPair } from "../../models/IKeyPair";
-import { IKeyStore } from "../../models/IKeyStore";
-import { ILocalWallet } from "../../models/ILocalWallet";
 import { IBIP39Service, BIP39Service, IPassphraseValidationResult } from "../../services/bip39-service/bip39-service";
 import { MockBIP39Service } from "../../../test-config/mocks/MockBIP39Service";
 import { IBIP32Service, BIP32Service } from "../../services/bip32-service/bip32-service";
@@ -24,11 +19,11 @@ import { FormBuilder } from "@angular/forms";
 import { PrepareWalletPage } from "../prepare-wallet/prepare-wallet";
 import { BulkTranslateService } from "../../services/bulk-translate-service/bulk-translate-service";
 import { MockBulkTranslateService } from "../../../test-config/mocks/MockBulkTranslateService";
+import * as Smilo from "@smilo-platform/smilo-commons-js-web";
 
 describe("WalletImportPassphrasePage", () => {
   let comp: WalletImportPassphrasePage;
   let fixture: ComponentFixture<WalletImportPassphrasePage>;
-  let keyStoreService: IKeyStoreService;
   let passwordService: IPasswordService;
   let walletService: IWalletService;
   let navController: MockNavController;
@@ -39,7 +34,6 @@ describe("WalletImportPassphrasePage", () => {
   let bulkTranslateService: BulkTranslateService;
 
   beforeEach(async(() => {
-    keyStoreService = new MockKeyStoreService();
     passwordService = new MockPasswordService();
     walletService = new MockWalletService();
     navController = new MockNavController();
@@ -63,7 +57,6 @@ describe("WalletImportPassphrasePage", () => {
         { provide: NavParams, useValue: navParams },
         { provide: PasswordService, useValue: passwordService },
         { provide: WalletService, useValue: walletService },
-        { provide: KeyStoreService, useValue: keyStoreService },
         { provide: BulkTranslateService, useValue: bulkTranslateService },
         { provide: NavigationHelperService, useValue: navigationHelperService },
         { provide: BIP39Service, useValue: bip39Service},
@@ -128,7 +121,7 @@ describe("WalletImportPassphrasePage", () => {
     spyOn(bip32Service, "getPrivateKey").and.returnValue("PRIVATE_KEY");
     spyOn(bip39Service, "toSeed").and.returnValue("SEED");
 
-    let keyStore: IKeyStore = {
+    let keyStore: Smilo.IKeyStore = {
       cipher: "AES-CTR",
       cipherParams: {
         iv: "iv"
@@ -141,7 +134,7 @@ describe("WalletImportPassphrasePage", () => {
       },
       controlHash: "controlHash"
     };
-    spyOn(keyStoreService, "createKeyStore").and.returnValue(keyStore);
+    spyOn((<any>comp).encryptionHelper, "createKeyStore").and.returnValue(keyStore);
 
     spyOn(walletService, "generateId").and.returnValue("WALLET_ID");
 
@@ -162,7 +155,7 @@ describe("WalletImportPassphrasePage", () => {
   });
 
   it("should import the wallet correctly", (done) => {
-    let dummyWallet: ILocalWallet = <ILocalWallet>{};
+    let dummyWallet: Smilo.ILocalWallet = <Smilo.ILocalWallet>{};
 
     spyOn(comp, "prepareWallet").and.returnValue(dummyWallet);
 

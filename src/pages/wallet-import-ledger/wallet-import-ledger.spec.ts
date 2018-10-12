@@ -10,7 +10,7 @@ import { MockTranslationLoader } from "../../../test-config/mocks/MockTranslatio
 describe("WalletImportLedgerPage", () => {
   let comp: WalletImportLedgerPage;
   let fixture: ComponentFixture<WalletImportLedgerPage>;
-  let navController: NavController;
+  let navController: MockNavController;
   let navParams: MockNavParams;
 
   beforeEach(async(() => {

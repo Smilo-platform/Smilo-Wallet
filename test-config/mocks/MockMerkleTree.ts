@@ -1,6 +1,6 @@
-import { MerkleTree } from "../../src/core/merkle/MerkleTree";
+import * as Smilo from "@smilo-platform/smilo-commons-js-web";
 
-export class MockMerkleTree extends MerkleTree {
+export class MockMerkleTree extends Smilo.MerkleTree {
     constructor() {
         super([]);
     }

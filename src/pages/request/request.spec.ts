@@ -11,10 +11,10 @@ import { ModalController, NavController } from "ionic-angular";
 import { SettingsService } from "../../services/settings-service/settings-service";
 import { MockNavController } from "../../../test-config/mocks/MockNavController";
 import { BehaviorSubject } from "rxjs";
-import { IWallet } from "../../models/IWallet";
 import { IBalance } from "../../models/IBalance";
 import { MockModal } from "../../../test-config/mocks/MockModal";
 import { QrCodePage } from "../qr-code-page/qr-code-page";
+import * as Smilo from "@smilo-platform/smilo-commons-js-web";
 
 interface ICanTransferTestVector {
     publicKey: string;
@@ -62,7 +62,7 @@ describe("RequestPage", () => {
     it("should create component", () => expect(comp).toBeDefined());
 
     it("should be initialized correctly", () => {
-        let wallet: IWallet = <IWallet>{};
+        let wallet: Smilo.IWallet = <Smilo.IWallet>{};
         let balances: IBalance[] = <IBalance[]>[{currency: "XSM"}];
         let activeTheme = new BehaviorSubject("light-theme");
 
@@ -87,7 +87,7 @@ describe("RequestPage", () => {
     });
 
     it("should start generating the QR code correctly", () => {
-        comp.fromWallet = <IWallet>{
+        comp.fromWallet = <Smilo.IWallet>{
             publicKey: "PUBLIC_KEY"
         };
         comp.amount = "100";
@@ -151,7 +151,7 @@ describe("RequestPage", () => {
         ];
 
         for(let test of tests) {
-            comp.fromWallet = <IWallet>{
+            comp.fromWallet = <Smilo.IWallet>{
                 publicKey: test.publicKey
             };
             comp.amount = test.amount;

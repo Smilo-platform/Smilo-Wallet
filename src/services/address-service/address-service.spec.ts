@@ -5,7 +5,7 @@ import { MockAssetService } from "../../../test-config/mocks/MockAssetService";
 import { Observable } from "rxjs/Observable";
 import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/throw';
-import { FixedBigNumber } from "../../core/big-number/FixedBigNumber";
+import * as Smilo from "@smilo-platform/smilo-commons-js-web";
 
 describe("AddressService", () => {
     let httpClient: MockHttpClient;
@@ -46,7 +46,7 @@ describe("AddressService", () => {
                 expect(address).toEqual({
                     publickey: "SOME_ADDRESS",
                     balances: {
-                        "000x00123": new FixedBigNumber(0, 0)
+                        "000x00123": new Smilo.FixedBigNumber(0, 0)
                     },
                     signatureCount: -1
                 });

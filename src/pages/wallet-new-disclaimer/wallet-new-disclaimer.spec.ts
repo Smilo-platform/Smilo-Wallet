@@ -7,17 +7,14 @@ import { TranslateModule, TranslateLoader } from "@ngx-translate/core";
 import { MockTranslationLoader } from "../../../test-config/mocks/MockTranslationLoader";
 import { WalletService, IWalletService } from "../../services/wallet-service/wallet-service";
 import { MockWalletService } from "../../../test-config/mocks/MockWalletService";
-import { KeyStoreService, IKeyStoreService } from "../../services/key-store-service/key-store-service";
-import { MockKeyStoreService } from "../../../test-config/mocks/MockKeyStoreService";
-import { IKeyStore } from "../../models/IKeyStore";
 import { PrepareWalletPage } from "../prepare-wallet/prepare-wallet";
 import { NAVIGATION_ORIGIN_KEY } from "../wallet/wallet";
-import { ILocalWallet } from "../../models/ILocalWallet";
 import { IBIP32Service, BIP32Service } from "../../services/bip32-service/bip32-service";
 import { IBIP39Service, BIP39Service } from "../../services/bip39-service/bip39-service";
 import { MockBIP32Service } from "../../../test-config/mocks/MockBIP32Service";
 import { MockBIP39Service } from "../../../test-config/mocks/MockBIP39Service";
 import { ComponentsModule } from "../../components/components.module";
+import * as Smilo from "@smilo-platform/smilo-commons-js-web";
 
 describe("WalletNewDisclaimerPage", () => {
   let comp: WalletNewDisclaimerPage;
@@ -25,7 +22,6 @@ describe("WalletNewDisclaimerPage", () => {
   let navController: MockNavController;
   let navParams: NavParams;
   let walletService: IWalletService;
-  let keyStoreService: IKeyStoreService;
   let bip32Service: IBIP32Service;
   let bip39Service: IBIP39Service;
 
@@ -33,7 +29,6 @@ describe("WalletNewDisclaimerPage", () => {
     navController = new MockNavController();
     navParams = new MockNavParams();
     walletService = new MockWalletService();
-    keyStoreService = new MockKeyStoreService();
     bip32Service = new MockBIP32Service();
     bip39Service = new MockBIP39Service();
 
@@ -47,7 +42,6 @@ describe("WalletNewDisclaimerPage", () => {
         ComponentsModule
       ],
       providers: [
-        { provide: KeyStoreService, useValue: keyStoreService },
         { provide: WalletService, useValue: walletService },
         { provide: NavController, useValue: navController },
         { provide: NavParams, useValue: navParams },
@@ -157,7 +151,7 @@ describe("WalletNewDisclaimerPage", () => {
     spyOn(bip39Service, "toSeed").and.returnValue("SEED");
     spyOn(bip32Service, "getPrivateKey").and.returnValue("PRIVATE_KEY");
 
-    let dummyKeyStore: IKeyStore = {
+    let dummyKeyStore: Smilo.IKeyStore = {
       cipher: "AES-CTR",
       cipherParams: {
         iv: "iv"
@@ -170,7 +164,7 @@ describe("WalletNewDisclaimerPage", () => {
       },
       controlHash: "controlHash"
     };
-    spyOn(keyStoreService, "createKeyStore").and.returnValue(dummyKeyStore);
+    spyOn((<any>comp).encryptionHelper, "createKeyStore").and.returnValue(dummyKeyStore);
 
     comp.walletName = "name";
 
@@ -204,7 +198,7 @@ describe("WalletNewDisclaimerPage", () => {
 
     spyOn(navController, "push").and.returnValue(Promise.resolve());
 
-    comp.goToPrepareWalletPage(<ILocalWallet><any>dummyWallet, "pass123").then(
+    comp.goToPrepareWalletPage(<Smilo.ILocalWallet><any>dummyWallet, "pass123").then(
       () => {
         expect(navController.push).toHaveBeenCalledWith(PrepareWalletPage, params);
 
