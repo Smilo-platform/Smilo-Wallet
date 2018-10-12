@@ -1,10 +1,10 @@
 import { IAssetService } from "../../src/services/asset-service/asset-service";
-import { FixedBigNumber } from "../../src/core/big-number/FixedBigNumber";
 import { IAsset } from "../../src/models/IAsset";
+import * as Smilo from "@smilo-platform/smilo-commons-js-web";
 
 export class MockAssetService implements IAssetService {
-    prepareBigNumber(numberAsString: string, assetId: string): FixedBigNumber {
-        return new FixedBigNumber(0, 0);
+    prepareBigNumber(numberAsString: string, assetId: string): Smilo.FixedBigNumber {
+        return new Smilo.FixedBigNumber(0, 0);
     }
 
     getAll(): Promise<IAsset[]> {

@@ -1,4 +1,4 @@
-import { FixedBigNumber } from "../core/big-number/FixedBigNumber";
+import * as Smilo from "@smilo-platform/smilo-commons-js-web";
 
 export declare type SupportedCurrency = "XSM" | "XSP";
 
@@ -10,9 +10,9 @@ export interface IBalance {
     /**
      * The amount of the currency
      */
-    amount: FixedBigNumber;
+    amount: Smilo.FixedBigNumber;
     /**
      * The value amount for the current currency and amount and exchange
      */
-    valueAmount: FixedBigNumber;
+    valueAmount: Smilo.FixedBigNumber;
 }

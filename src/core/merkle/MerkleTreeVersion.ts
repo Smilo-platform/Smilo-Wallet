@@ -1,1 +1,0 @@
-export const MERKLE_TREE_VERSION = 1;

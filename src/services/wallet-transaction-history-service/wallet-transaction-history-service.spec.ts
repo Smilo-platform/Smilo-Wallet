@@ -1,13 +1,11 @@
 import { WalletTransactionHistoryService } from "./wallet-transaction-history-service";
 import { MockHttpClient } from "../../../test-config/mocks/MockHttpClient";
-import { MockWalletTransactionHistoryService } from "../../../test-config/mocks/MockWalletTransactionHistoryService";
 import { Observable } from "rxjs/Observable";
 import "rxjs/add/observable/of";
 import { UrlService } from "../url-service/url-service";
 import { ITransactionList } from "../../models/ITransactionList";
 import { MockAssetService } from "../../../test-config/mocks/MockAssetService";
-import { ITransaction } from "../../models/ITransaction";
-import { FixedBigNumber } from "../../core/big-number/FixedBigNumber";
+import * as Smilo from "@smilo-platform/smilo-commons-js-web";
 
 describe("WalletTransactionHistoryService", () => {
     let walletTransactionHistoryService: WalletTransactionHistoryService;
@@ -49,20 +47,20 @@ describe("WalletTransactionHistoryService", () => {
         );
     });
 
-    function createDummyTransaction(): ITransaction {
-        let transaction: ITransaction = {
+    function createDummyTransaction(): Smilo.ITransaction {
+        let transaction: Smilo.ITransaction = {
             timestamp: 1000,
             inputAddress: "InputAddress",
-            fee: new FixedBigNumber(0, 0),
+            fee: new Smilo.FixedBigNumber(0, 0),
             signatureData: "Signature",
             signatureIndex: 0,
             dataHash: "Hash",
             assetId: "AssetId",
-            inputAmount: new FixedBigNumber(100, 0),
+            inputAmount: new Smilo.FixedBigNumber(100, 0),
             transactionOutputs: [
                 {
                     outputAddress: "OutputAddress",
-                    outputAmount: new FixedBigNumber(100, 0)
+                    outputAmount: new Smilo.FixedBigNumber(100, 0)
                 }
             ]
         };

@@ -1,11 +1,9 @@
 import { Component } from "@angular/core";
 import { IonicPage, NavController, NavParams } from "ionic-angular";
-import { IKeyStore } from "../../models/IKeyStore";
 import { WalletService } from "../../services/wallet-service/wallet-service";
-import { ILocalWallet } from "../../models/ILocalWallet";
-import { KeyStoreService } from "../../services/key-store-service/key-store-service";
 import { NAVIGATION_ORIGIN_KEY } from "../wallet/wallet";
 import { PrepareWalletPage } from "../prepare-wallet/prepare-wallet";
+import * as Smilo from "@smilo-platform/smilo-commons-js-web";
 
 export declare type ImportType = "clipboard" | "file";
 
@@ -24,7 +22,7 @@ export class WalletImportKeystorePage {
   /**
    * The parsed keystore if valid key store JSON was pasted by the user.
    */
-  keyStore: IKeyStore = null;
+  keyStore: Smilo.IKeyStore = null;
 
   /**
    * Set to true if the pasted key store JSON was not valid.
@@ -41,10 +39,11 @@ export class WalletImportKeystorePage {
   filePassword: string = "";
   fileWalletNameImport: string = "";
 
+  private encryptionHelper = new Smilo.EncryptionHelper();
+
   constructor(private navCtrl: NavController,
               private navParams: NavParams,
-              private walletService: WalletService,
-              private keyStoreService: KeyStoreService) {
+              private walletService: WalletService) {
 
   }
 
@@ -113,7 +112,7 @@ export class WalletImportKeystorePage {
     }
   }
 
-  goToPrepareWalletPage(wallet: ILocalWallet, password: string): Promise<void> {
+  goToPrepareWalletPage(wallet: Smilo.ILocalWallet, password: string): Promise<void> {
     let params = {
       wallet: wallet,
       password: password
@@ -126,7 +125,7 @@ export class WalletImportKeystorePage {
   /**
    * Prepares the wallet based on the current key store, password and name entered by the user.
    */
-  prepareWallet(type: ImportType): ILocalWallet {
+  prepareWallet(type: ImportType): Smilo.ILocalWallet {
     // Get the decrypted private key. We need this to retrieve the public key for the wallet.
     let password = "";
     let name = "";
@@ -137,11 +136,11 @@ export class WalletImportKeystorePage {
       password = this.filePassword;
       name = this.fileWalletNameImport;
     }
-    let privateKey = this.keyStoreService.decryptKeyStore(this.keyStore, password);
+    let privateKey = this.encryptionHelper.decryptKeyStore(this.keyStore, password);
     if(privateKey == null)
       return null;
 
-    let wallet: ILocalWallet = {
+    let wallet: Smilo.ILocalWallet = {
       id: this.walletService.generateId(),
       type: "local",
       name: name,
@@ -192,7 +191,7 @@ export class WalletImportKeystorePage {
     this.clipBoardKeyStoreIsInvalid = true;
 
     // First try and parse the key store as JSON
-    let testKeyStore: IKeyStore;
+    let testKeyStore: Smilo.IKeyStore;
     try {
       testKeyStore = JSON.parse(this.keyStoreString);
     }
@@ -209,7 +208,7 @@ export class WalletImportKeystorePage {
     this.clipBoardKeyStoreIsInvalid = false;
   }
 
-  isValidKeyStore(keyStore: IKeyStore): boolean {
+  isValidKeyStore(keyStore: Smilo.IKeyStore): boolean {
     if(keyStore.cipher != "AES-CTR")
       return false;
 
@@ -321,7 +320,7 @@ export class WalletImportKeystorePage {
     let file: string = event.target.result;
     try {
       let allLines = file.split(/\r\n|\n/);
-      let keyStore = JSON.parse(allLines[0]) as IKeyStore;
+      let keyStore = JSON.parse(allLines[0]) as Smilo.IKeyStore;
       if (this.isValidKeyStore(keyStore)) {
         this.keyStore = keyStore;
         this.fileImportedName = filename;

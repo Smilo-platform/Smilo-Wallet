@@ -7,16 +7,13 @@ import { TranslateModule, TranslateLoader, TranslateService } from "@ngx-transla
 import { MockTranslationLoader } from "../../../test-config/mocks/MockTranslationLoader";
 import { WalletService, IWalletService } from "../../services/wallet-service/wallet-service";
 import { MockWalletService } from "../../../test-config/mocks/MockWalletService";
-import { IKeyStoreService, KeyStoreService } from "../../services/key-store-service/key-store-service";
-import { MockKeyStoreService } from "../../../test-config/mocks/MockKeyStoreService";
 import { NavigationHelperService } from "../../services/navigation-helper-service/navigation-helper-service";
 import { MockTranslateService } from "../../../test-config/mocks/MockTranslateService";
 import { MockToastController } from "../../../test-config/mocks/MockToastController";
-import { IKeyStore } from "../../models/IKeyStore";
-import { ILocalWallet } from "../../models/ILocalWallet";
 import { NAVIGATION_ORIGIN_KEY } from "../wallet/wallet";
 import { PrepareWalletPage } from "../prepare-wallet/prepare-wallet";
 import { ComponentsModule } from "../../components/components.module";
+import * as Smilo from "@smilo-platform/smilo-commons-js-web";
 
 describe("WalletImportKeystorePage", () => {
   let comp: WalletImportKeystorePage;
@@ -24,7 +21,6 @@ describe("WalletImportKeystorePage", () => {
   let navController: MockNavController;
   let navParams: NavParams;
   let walletService: IWalletService;
-  let keyStoreService: IKeyStoreService;
   let navigationHelperService: NavigationHelperService;
   let translateService: TranslateService;
   let toastController: MockToastController;
@@ -33,7 +29,6 @@ describe("WalletImportKeystorePage", () => {
     navController = new MockNavController();
     navParams = new MockNavParams();
     walletService = new MockWalletService();
-    keyStoreService = new MockKeyStoreService();
     navigationHelperService = new NavigationHelperService();
     translateService = new MockTranslateService();
     toastController = new MockToastController();
@@ -51,7 +46,6 @@ describe("WalletImportKeystorePage", () => {
         { provide: WalletService, useValue: walletService },
         { provide: NavController, useValue: navController },
         { provide: NavParams, useValue: navParams },
-        { provide: KeyStoreService, useValue: keyStoreService },
         { provide: NavigationHelperService, useValue: navigationHelperService },
         { provide: ToastController, useValue: toastController },
         { provide: TranslateService, useValue: translateService }
@@ -109,7 +103,7 @@ describe("WalletImportKeystorePage", () => {
   });
 
   it("should validate a key store correctly", () => {
-    let keyStore: IKeyStore = {
+    let keyStore: Smilo.IKeyStore = {
       cipher: "AES-CTR",
       cipherParams: {
         iv: "iv"
@@ -184,7 +178,7 @@ describe("WalletImportKeystorePage", () => {
   });
 
   it("should prepare the wallet correctly by clipboard", () => {
-    spyOn(keyStoreService, "decryptKeyStore").and.returnValue("SOME_PRIVATE_KEY");
+    spyOn((<any>comp).encryptionHelper, "decryptKeyStore").and.returnValue("SOME_PRIVATE_KEY");
     spyOn(walletService, "generateId").and.returnValue("WALLET_ID");
 
     comp.name = "name";
@@ -201,12 +195,10 @@ describe("WalletImportKeystorePage", () => {
       keyStore: comp.keyStore,
       lastUpdateTime: null
     });
-
-    expect(keyStoreService.decryptKeyStore).toHaveBeenCalledWith(comp.keyStore, "pass123");
   });
 
   it("should perform the import to clipboard correctly when all data is entered correctly", (done) => {
-    let dummyWallet: ILocalWallet = <any>{};
+    let dummyWallet: Smilo.ILocalWallet = <any>{};
     comp.password = "pass123";
     
     spyOn(comp, "clipboardDataIsValid").and.returnValue(true);
@@ -229,7 +221,7 @@ describe("WalletImportKeystorePage", () => {
   });
 
   it("should perform the import to file correctly when all data is entered correctly", (done) => {
-    let dummyWallet: ILocalWallet = <any>{};
+    let dummyWallet: Smilo.ILocalWallet = <any>{};
     comp.filePassword = "pass123";
     
     spyOn(comp, "keystoreFileDataIsValid").and.returnValue(true);
@@ -310,7 +302,7 @@ describe("WalletImportKeystorePage", () => {
 
     spyOn(navController, "push").and.returnValue(Promise.resolve());
 
-    comp.goToPrepareWalletPage(<ILocalWallet><any>dummyWallet, "pass123").then(
+    comp.goToPrepareWalletPage(<Smilo.ILocalWallet><any>dummyWallet, "pass123").then(
       () => {
         expect(navController.push).toHaveBeenCalledWith(PrepareWalletPage, params);
 
@@ -416,7 +408,7 @@ describe("WalletImportKeystorePage", () => {
   })
 
   it("should prepare the wallet correctly by file", () => {
-    spyOn(keyStoreService, "decryptKeyStore").and.returnValue("SOME_PRIVATE_KEY");
+    spyOn((<any>comp).encryptionHelper, "decryptKeyStore").and.returnValue("SOME_PRIVATE_KEY");
     spyOn(walletService, "generateId").and.returnValue("WALLET_ID");
 
     comp.fileWalletNameImport = "name";
@@ -434,19 +426,19 @@ describe("WalletImportKeystorePage", () => {
       lastUpdateTime: null
     });
 
-    expect(keyStoreService.decryptKeyStore).toHaveBeenCalledWith(comp.keyStore, "pass123");
+    expect((<any>comp).encryptionHelper.decryptKeyStore).toHaveBeenCalledWith(comp.keyStore, "pass123");
   });
 
   it("should return null after the decryptkeystore returned null as a private key as either file or clipboard", () => {
     spyOn(comp, "prepareWallet").and.callThrough();
-    spyOn(keyStoreService, "decryptKeyStore").and.returnValue(null);
+    spyOn((<any>comp).encryptionHelper, "decryptKeyStore").and.returnValue(null);
 
     expect(comp.prepareWallet("file")).toBeNull();
   });
 
   it("should return null after the decryptkeystore returned null as a private key as either file or clipboard", () => {
     spyOn(comp, "prepareWallet").and.callThrough();
-    spyOn(keyStoreService, "decryptKeyStore").and.returnValue(null);
+    spyOn((<any>comp).encryptionHelper, "decryptKeyStore").and.returnValue(null);
 
     expect(comp.prepareWallet(<any>"NOT_EXISTING")).toBeNull();
   });

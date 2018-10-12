@@ -1,11 +1,10 @@
 import { Component } from "@angular/core";
 import { IonicPage, NavParams, ModalController } from "ionic-angular";
-import { IWallet } from "../../models/IWallet";
 import { IBalance } from "../../models/IBalance";
 import { IPaymentRequest } from "../../models/IPaymentRequest";
-import { FixedBigNumber } from "../../core/big-number/FixedBigNumber";
 import { QrCodePage } from "../qr-code-page/qr-code-page";
 import { ThemeType, SettingsService } from "../../services/settings-service/settings-service";
+import * as Smilo from "@smilo-platform/smilo-commons-js-web";
 
 @IonicPage()
 @Component({
@@ -16,7 +15,7 @@ export class RequestPage {
     /**
      * The wallet to request from
      */
-    fromWallet: IWallet;
+    fromWallet: Smilo.IWallet;
     /**
      * The public key of the from wallet
      */
@@ -84,7 +83,7 @@ export class RequestPage {
 
         // Check if amount is a valid number
         // TODO: make generic e.g. take selected asset into account
-        if (!new FixedBigNumber(this.amount, 0).isValid()) {
+        if (!new Smilo.FixedBigNumber(this.amount, 0).isValid()) {
             return false;
         }
 

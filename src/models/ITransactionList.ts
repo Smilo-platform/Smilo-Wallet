@@ -1,7 +1,7 @@
-import { ITransaction } from "./ITransaction";
+import * as Smilo from "@smilo-platform/smilo-commons-js-web";
 
 export interface ITransactionList {
-    transactions: ITransaction[];
+    transactions: Smilo.ITransaction[];
     skip: number;
     take: number;
     totalCount: number;

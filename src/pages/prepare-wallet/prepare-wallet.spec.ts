@@ -21,15 +21,12 @@ import { WalletErrorPage } from "../wallet-error/wallet-error";
 import { Platform } from "ionic-angular/platform/platform";
 import { IBIP32Service, BIP32Service } from "../../services/bip32-service/bip32-service";
 import { IBIP39Service, BIP39Service } from "../../services/bip39-service/bip39-service";
-import { IKeyStoreService, KeyStoreService } from "../../services/key-store-service/key-store-service";
 import { MockBIP39Service } from "../../../test-config/mocks/MockBIP39Service";
 import { MockBIP32Service } from "../../../test-config/mocks/MockBIP32Service";
-import { MockKeyStoreService } from "../../../test-config/mocks/MockKeyStoreService";
 import { WalletExtraImportPage } from "../wallet-extra-import/wallet-extra-import";
-import { ILocalWallet } from "../../models/ILocalWallet";
-import { IKeyStore } from "../../models/IKeyStore";
 import { MockSettingsService } from "../../../test-config/mocks/MockSettingsService";
 import { SettingsService } from "../../services/settings-service/settings-service";
+import * as Smilo from "@smilo-platform/smilo-commons-js-web";
 
 describe("PrepareWalletPage", () => {
   let comp: PrepareWalletPage;
@@ -45,7 +42,6 @@ describe("PrepareWalletPage", () => {
   let platformService: Platform;
   let bip32Service: IBIP32Service;
   let bip39Service: IBIP39Service;
-  let keyStoreService: IKeyStoreService;
   let settingService: MockSettingsService;
 
   beforeEach(async(() => {
@@ -59,7 +55,6 @@ describe("PrepareWalletPage", () => {
     modalController = new MockModalController();
     bip32Service = new MockBIP32Service();
     bip39Service = new MockBIP39Service();
-    keyStoreService = new MockKeyStoreService();
     settingService = new MockSettingsService();
 
     TestBed.configureTestingModule({
@@ -81,7 +76,6 @@ describe("PrepareWalletPage", () => {
         { provide: ModalController, useValue: modalController },
         { provide: BIP32Service, useValue: bip32Service },
         { provide: BIP39Service, useValue: bip39Service },
-        { provide: KeyStoreService, useValue: keyStoreService },
         { provide: SettingsService, useValue: settingService }
       ]
     }).compileComponents();
@@ -314,7 +308,7 @@ describe("PrepareWalletPage", () => {
     comp.selectedTheme = "light-theme";
 
     let mockModal = new MockModal();
-    let dummyWallet: ILocalWallet = <any>{};
+    let dummyWallet: Smilo.ILocalWallet = <any>{};
 
     spyOn(modalController, "create").and.returnValue(mockModal);
     spyOn(comp, "goBackToOriginPage");
@@ -361,7 +355,7 @@ describe("PrepareWalletPage", () => {
     comp.selectedTheme = "light-theme";
 
     let mockModal = new MockModal();
-    let dummyWallet: ILocalWallet = <any>{};
+    let dummyWallet: Smilo.ILocalWallet = <any>{};
 
     spyOn(modalController, "create").and.returnValue(mockModal);
     spyOn(comp, "goBackToOriginPage");
@@ -415,8 +409,8 @@ describe("PrepareWalletPage", () => {
     spyOn(bip32Service, "getPrivateKey").and.returnValue("PRIVATE_KEY");
     spyOn(walletService, "generateId").and.returnValue("WALLET_ID");
 
-    let dummyKeystore: IKeyStore = <any>{};
-    spyOn(keyStoreService, "createKeyStore").and.returnValue(dummyKeystore);
+    let dummyKeystore: Smilo.IKeyStore = <any>{};
+    spyOn((<any>comp).encryptionHelper, "createKeyStore").and.returnValue(dummyKeystore);
 
     let wallet = comp.prepareWallet("WALLET_NAME", 10);
 

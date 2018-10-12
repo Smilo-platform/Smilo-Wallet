@@ -2,11 +2,9 @@ import { WalletService, WALLET_STORAGE_KEY } from "./wallet-service";
 import { MockStorage } from "../../../test-config/mocks/MockStorage";
 import { MockMerkleTreeService } from "../../../test-config/mocks/MockMerkleTreeService";
 import { MockWalletService } from "../../../test-config/mocks/MockWalletService";
-import { Observable } from "rxjs/Observable";
 import 'rxjs/add/observable/of';
-import { IWallet } from "../../models/IWallet";
 import { MerkleTreeService } from "../merkle-tree-service/merkle-tree-service";
-import { ILocalWallet } from "../../models/ILocalWallet";
+import * as Smilo from "@smilo-platform/smilo-commons-js-web";
 
 describe("WalletService", () => {
     let walletService: WalletService;
@@ -127,7 +125,7 @@ describe("WalletService", () => {
     it("should push a new wallet when it does not yet exist and overwrite when it already exists", (done) => {
         expect((<any>walletService).wallets).toEqual([]);
         spyOn(storage, "set").and.callThrough();
-        let wallet: ILocalWallet = {id : "4b6cff11-5888-43bb-bde1-911e12b659e6",
+        let wallet: Smilo.ILocalWallet = {id : "4b6cff11-5888-43bb-bde1-911e12b659e6",
             keyStore: { 
                 cipher: "AES-CTR",
                 cipherParams: {
@@ -172,7 +170,7 @@ describe("WalletService", () => {
         spyOn(merkleTreeService, "remove");
         spyOn(storage, "set");
         expect((<any>walletService).wallets).toEqual([]);
-        let wallet: ILocalWallet = {id : "4b6cff11-5888-43bb-bde1-911e12b659e6",
+        let wallet: Smilo.ILocalWallet = {id : "4b6cff11-5888-43bb-bde1-911e12b659e6",
             keyStore: { 
                 cipher: "AES-CTR",
                 cipherParams: {
@@ -192,7 +190,7 @@ describe("WalletService", () => {
             type : "local"};
         (<any>walletService).wallets.push(wallet);
         expect((<any>walletService).wallets.length).toBe(1);
-        let fakeWallet: ILocalWallet = {id : "NOT_EXISTING",
+        let fakeWallet: Smilo.ILocalWallet = {id : "NOT_EXISTING",
             keyStore: { 
                 cipher: "AES-CTR",
                 cipherParams: {

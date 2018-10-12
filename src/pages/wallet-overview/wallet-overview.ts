@@ -6,14 +6,10 @@ import { AlertController } from "ionic-angular";
 import { trigger, state, style } from "@angular/animations";
 import { LandingPage } from "../landing/landing";
 import { ToastController } from "ionic-angular";
-import { IWallet } from "../../models/IWallet";
 import { TransferPage } from "../transfer/transfer";
 import { IAvailableExchange } from "../../models/IAvailableExchange";
-import { ITransaction } from "../../models/ITransaction";
-import { ILocalWallet } from "../../models/ILocalWallet";
 import { File as FileNative } from "@ionic-native/file";
 import { Clipboard } from "@ionic-native/clipboard";
-import { KeyStoreService } from "../../services/key-store-service/key-store-service";
 import { BulkTranslateService } from "../../services/bulk-translate-service/bulk-translate-service";
 import { TranslateService } from "@ngx-translate/core";
 import { IBalance } from "../../models/IBalance";
@@ -21,8 +17,8 @@ import { ExchangesService } from "../../services/exchanges-service/exchanges-ser
 import { WalletTransactionHistoryService } from "../../services/wallet-transaction-history-service/wallet-transaction-history-service";
 import { AddressService } from "../../services/address-service/address-service";
 import { SettingsService } from "../../services/settings-service/settings-service";
-import { FixedBigNumber } from "../../core/big-number/FixedBigNumber";
 import { RequestPage } from "../request/request";
+import * as Smilo from "@smilo-platform/smilo-commons-js-web";
 
 export declare type VisibilityType = "shown" | "hidden";
 
@@ -60,7 +56,7 @@ export class WalletOverviewPage {
     /**
      * All of the wallets
      */
-    wallets: IWallet[] = [];
+    wallets: Smilo.IWallet[] = [];
     /**
      * The currency in amounts to show on the chart
      */
@@ -72,7 +68,7 @@ export class WalletOverviewPage {
     /**
      * The current selected wallet
      */
-    currentWallet: IWallet;
+    currentWallet: Smilo.IWallet;
     /**
      * The current selected wallet index
      */
@@ -92,7 +88,7 @@ export class WalletOverviewPage {
     /**
      * The transaction history for the current wallet
      */
-    transactionsHistory: ITransaction[] = [];
+    transactionsHistory: Smilo.ITransaction[] = [];
     /**
      * Status to show the funds for the switch
      */
@@ -138,6 +134,8 @@ export class WalletOverviewPage {
 
     private readonly refreshIntervalTime: number = 2500;
 
+    private encryptionHelper = new Smilo.EncryptionHelper();
+
     /**
      * The scheduler timer interval. We store this value so we can
      * clear the interval at a later time.
@@ -155,7 +153,6 @@ export class WalletOverviewPage {
         private settingsService: SettingsService,
         private clipboard: Clipboard,
         private fileNative: FileNative,
-        private keyStoreService: KeyStoreService,
         private exchangeService: ExchangesService,
         private transactionHistoryService: WalletTransactionHistoryService,
         private addressService: AddressService) {
@@ -330,10 +327,10 @@ export class WalletOverviewPage {
 
     handleExportModalClick(dataType, exportType) {
         if (exportType === "keystore") {
-            let keystoreData = JSON.stringify((this.currentWallet as ILocalWallet).keyStore);
+            let keystoreData = JSON.stringify((this.currentWallet as Smilo.ILocalWallet).keyStore);
             this.export(dataType, keystoreData, "keystore");
         } else if (exportType === "privatekey") {
-            let keystoreDataObj = (this.currentWallet as ILocalWallet).keyStore;
+            let keystoreDataObj = (this.currentWallet as Smilo.ILocalWallet).keyStore;
             const prompt = this.alertCtrl.create({
                 title: this.translations.get("wallet_overview.export_privatekey"),
                 inputs: [
@@ -351,7 +348,7 @@ export class WalletOverviewPage {
                     {
                         text: this.translations.get("wallet_overview.continue"),
                         handler: data => {
-                            let result = this.keyStoreService.decryptKeyStore(keystoreDataObj, data.password);
+                            let result = this.encryptionHelper.decryptKeyStore(keystoreDataObj, data.password);
                             if (result === null) {
                                 this.showToastMessage(this.translations.get("wallet_overview.incorrect_password"), 5000, "bottom");
                             } else {
@@ -520,7 +517,7 @@ export class WalletOverviewPage {
      * Delete a wallet from the UI and local database
      * @param wallet The wallet to delete
      */
-    deleteSelectedWallet(wallet: IWallet): void {
+    deleteSelectedWallet(wallet: Smilo.IWallet): void {
         let index = this.wallets.indexOf(wallet);
         if (index !== -1) {
             this.wallets.splice(index, 1);
@@ -588,7 +585,7 @@ export class WalletOverviewPage {
                         currency: "XSM", amount: address.balances["000x00123"], valueAmount: address.balances["000x00123"]
                     },
                     {
-                        currency: "XSP", amount: new FixedBigNumber(0, 18), valueAmount: new FixedBigNumber(0, 18)
+                        currency: "XSP", amount: new Smilo.FixedBigNumber(0, 18), valueAmount: new Smilo.FixedBigNumber(0, 18)
                     }
                 ];
 
@@ -635,8 +632,8 @@ export class WalletOverviewPage {
 
         return this.exchangeService.getPrices(this.pickedCurrency, this.pickedExchange).then(data => {
             let prices = data;
-            let totalValue = new FixedBigNumber(0, 0);
-            let totalCurrencies = new FixedBigNumber(0, 0);
+            let totalValue = new Smilo.FixedBigNumber(0, 0);
+            let totalCurrencies = new Smilo.FixedBigNumber(0, 0);
             this.currenciesForDoughnutCanvasLabels = [];
             this.currenciesForDoughnutCanvas = [];
 
@@ -656,7 +653,7 @@ export class WalletOverviewPage {
                     let currencyFromApi = price.currencyFrom;
                     let currencyToApi = price.currencyTo;
                     let valueApi = price.value;
-                    let currentCurrencyValue = new FixedBigNumber(0, 0);
+                    let currentCurrencyValue = new Smilo.FixedBigNumber(0, 0);
                     let found = false;
                     // If there is a value in the prices array that matches the from and to currency 1 to 1
                     if (currencyFromApi === walletCurrency && currencyToApi === this.pickedCurrency) {
@@ -702,7 +699,7 @@ export class WalletOverviewPage {
             for (let i = 0; i < this.currenciesForDoughnutCanvas.length; i++) {
                 // If the data array is not zero
                 if (this.currenciesForDoughnutCanvas[i] !== 0) {
-                    this.currenciesForDoughnutCanvas[i] = Number(new FixedBigNumber(100, 0).div(totalCurrencies).mul(this.currenciesForDoughnutCanvas[i]).toFixed(2));//Number(((100 / totalCurrencies) * this.currenciesForDoughnutCanvas[i]).toFixed(2));
+                    this.currenciesForDoughnutCanvas[i] = Number(new Smilo.FixedBigNumber(100, 0).div(totalCurrencies).mul(this.currenciesForDoughnutCanvas[i]).toFixed(2));//Number(((100 / totalCurrencies) * this.currenciesForDoughnutCanvas[i]).toFixed(2));
                 }
             }
 

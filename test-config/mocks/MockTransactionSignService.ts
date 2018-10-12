@@ -1,9 +1,8 @@
 import { ITransactionSignService } from "../../src/services/transaction-sign-service/transaction-sign-service";
-import { ITransaction } from "../../src/models/ITransaction";
-import { ILocalWallet } from "../../src/models/ILocalWallet";
+import * as Smilo from "@smilo-platform/smilo-commons-js-web";
 
 export class MockTransactionSignService implements ITransactionSignService {
-    sign(wallet: ILocalWallet, password: string, transaction: ITransaction): Promise<void> {
+    sign(wallet: Smilo.ILocalWallet, password: string, transaction: Smilo.ITransaction): Promise<void> {
         return Promise.resolve();
     }
 }

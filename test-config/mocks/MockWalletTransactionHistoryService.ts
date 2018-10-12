@@ -1,5 +1,4 @@
 import { IWalletTransactionHistoryService } from "../../src/services/wallet-transaction-history-service/wallet-transaction-history-service";
-import { ITransaction } from "../../src/models/ITransaction";
 import { ITransactionList } from "../../src/models/ITransactionList";
 
 export class MockWalletTransactionHistoryService implements IWalletTransactionHistoryService {
