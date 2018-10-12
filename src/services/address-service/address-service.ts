@@ -19,7 +19,7 @@ export class AddressService implements IAddressService {
 
     get(address: string): Promise<IAddress> {
         return this.httpClient.get<IAddress>(
-            `${ this.urlService.getBaseUrl() }/address/${ address }`
+            `${ this.urlService.getBaseUrl() }/address/${ encodeURIComponent(address) }`
         ).toPromise().then<IAddress>(
             (address) => address,
             (error: HttpErrorResponse) => {

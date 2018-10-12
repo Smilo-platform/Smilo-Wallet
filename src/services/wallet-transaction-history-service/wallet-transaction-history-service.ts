@@ -17,7 +17,7 @@ export class WalletTransactionHistoryService implements IWalletTransactionHistor
 
     getTransactionHistory(publicKey: string, skip: number = 0, take: number = 32, isDescending: boolean = false): Promise<ITransactionList> {
         return this.http.get<ITransactionList>(
-            `${ this.urlService.getBaseUrl() }/address/tx/${ publicKey }?skip=${ skip }&take=${ take }&isdescending=${ isDescending }`
+            `${ this.urlService.getBaseUrl() }/address/tx/${ encodeURIComponent(publicKey) }?skip=${ skip }&take=${ take }&isdescending=${ isDescending }`
         ).toPromise().then(
             (result) => {
                 // Convert string big integer to true big number
