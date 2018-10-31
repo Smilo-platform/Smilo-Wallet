@@ -19,10 +19,6 @@ import { MockModalController } from "../../../test-config/mocks/MockModalControl
 import { MockModal } from "../../../test-config/mocks/MockModal";
 import { WalletErrorPage } from "../wallet-error/wallet-error";
 import { Platform } from "ionic-angular/platform/platform";
-import { IBIP32Service, BIP32Service } from "../../services/bip32-service/bip32-service";
-import { IBIP39Service, BIP39Service } from "../../services/bip39-service/bip39-service";
-import { MockBIP39Service } from "../../../test-config/mocks/MockBIP39Service";
-import { MockBIP32Service } from "../../../test-config/mocks/MockBIP32Service";
 import { WalletExtraImportPage } from "../wallet-extra-import/wallet-extra-import";
 import { MockSettingsService } from "../../../test-config/mocks/MockSettingsService";
 import { SettingsService } from "../../services/settings-service/settings-service";
@@ -40,9 +36,9 @@ describe("PrepareWalletPage", () => {
   let translateService: MockTranslateService;
   let modalController: MockModalController;
   let platformService: Platform;
-  let bip32Service: IBIP32Service;
-  let bip39Service: IBIP39Service;
   let settingService: MockSettingsService;
+  let bip39: Smilo.BIP39;
+  let bip32: Smilo.BIP32;
 
   beforeEach(async(() => {
     walletService = new MockWalletService();
@@ -53,8 +49,6 @@ describe("PrepareWalletPage", () => {
     toastController = new MockToastController();
     translateService = new MockTranslateService();
     modalController = new MockModalController();
-    bip32Service = new MockBIP32Service();
-    bip39Service = new MockBIP39Service();
     settingService = new MockSettingsService();
 
     TestBed.configureTestingModule({
@@ -74,8 +68,6 @@ describe("PrepareWalletPage", () => {
         { provide: MerkleTreeService, useValue: merkleTreeService },
         { provide: TranslateService, useValue: translateService },
         { provide: ModalController, useValue: modalController },
-        { provide: BIP32Service, useValue: bip32Service },
-        { provide: BIP39Service, useValue: bip39Service },
         { provide: SettingsService, useValue: settingService }
       ]
     }).compileComponents();
@@ -89,6 +81,11 @@ describe("PrepareWalletPage", () => {
     fixture = TestBed.createComponent(PrepareWalletPage);
     comp = fixture.componentInstance;
   });
+
+  beforeEach(() => {
+    bip39 = (<any>comp).bip39;
+    bip32 = (<any>comp).bip32;
+  })
 
   it("should create component", () => expect(comp).toBeDefined());
 
@@ -405,8 +402,8 @@ describe("PrepareWalletPage", () => {
   it("should prepare an extra wallet correctly", () => {
     comp.passphrase = "PASSPHRASE";
 
-    spyOn(bip39Service, "toSeed").and.returnValue("SEED");
-    spyOn(bip32Service, "getPrivateKey").and.returnValue("PRIVATE_KEY");
+    spyOn(bip39, "toSeed").and.returnValue("SEED");
+    spyOn(bip32, "getPrivateKey").and.returnValue("PRIVATE_KEY");
     spyOn(walletService, "generateId").and.returnValue("WALLET_ID");
 
     let dummyKeystore: Smilo.IKeyStore = <any>{};

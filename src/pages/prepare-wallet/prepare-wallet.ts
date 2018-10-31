@@ -9,8 +9,6 @@ import { TranslateService } from "@ngx-translate/core";
 import { WalletErrorPage } from "../wallet-error/wallet-error";
 import { Platform } from "ionic-angular/platform/platform";
 import { WalletExtraImportPage, IWalletExtraImportDismissData } from "../wallet-extra-import/wallet-extra-import";
-import { BIP39Service } from "../../services/bip39-service/bip39-service";
-import { BIP32Service } from "../../services/bip32-service/bip32-service";
 import { ThemeType, SettingsService } from "../../services/settings-service/settings-service";
 import * as Smilo from "@smilo-platform/smilo-commons-js-web";
 
@@ -67,6 +65,8 @@ export class PrepareWalletPage {
   selectedTheme: ThemeType;
 
   private encryptionHelper = new Smilo.EncryptionHelper();
+  private bip39 = new Smilo.BIP39();
+  private bip32 = new Smilo.BIP32();
 
   constructor(private navCtrl: NavController, 
               private navParams: NavParams,
@@ -77,8 +77,6 @@ export class PrepareWalletPage {
               private toastController: ToastController,
               private modalController: ModalController,
               private platform: Platform,
-              private bip39Service: BIP39Service,
-              private bip32Service: BIP32Service,
               private settingsService: SettingsService) {
     
   }
@@ -235,8 +233,8 @@ export class PrepareWalletPage {
   }
 
   prepareWallet(walletName: string, walletIndex: number): Smilo.ILocalWallet {
-    let seed = this.bip39Service.toSeed(this.passphrase);
-    let privateKey = this.bip32Service.getPrivateKey(seed, walletIndex);
+    let seed = this.bip39.toSeed(this.passphrase);
+    let privateKey = this.bip32.getPrivateKey(seed, walletIndex);
 
     // Create key store for private key
     let keyStore = this.encryptionHelper.createKeyStore(privateKey, this.password);

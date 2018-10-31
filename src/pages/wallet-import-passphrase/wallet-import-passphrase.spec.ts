@@ -10,10 +10,6 @@ import { MockPasswordService } from "../../../test-config/mocks/MockPasswordServ
 import { MockWalletService } from "../../../test-config/mocks/MockWalletService";
 import { IWalletService, WalletService } from "../../services/wallet-service/wallet-service";
 import { INavigationHelperService, NavigationHelperService } from "../../services/navigation-helper-service/navigation-helper-service";
-import { IBIP39Service, BIP39Service, IPassphraseValidationResult } from "../../services/bip39-service/bip39-service";
-import { MockBIP39Service } from "../../../test-config/mocks/MockBIP39Service";
-import { IBIP32Service, BIP32Service } from "../../services/bip32-service/bip32-service";
-import { MockBIP32Service } from "../../../test-config/mocks/MockBIP32Service";
 import { ComponentsModule } from "../../components/components.module";
 import { FormBuilder } from "@angular/forms";
 import { PrepareWalletPage } from "../prepare-wallet/prepare-wallet";
@@ -29,9 +25,9 @@ describe("WalletImportPassphrasePage", () => {
   let navController: MockNavController;
   let navParams: NavParams;
   let navigationHelperService: INavigationHelperService;
-  let bip39Service: IBIP39Service;
-  let bip32Service: IBIP32Service;
   let bulkTranslateService: BulkTranslateService;
+  let bip39: Smilo.BIP39;
+  let bip32: Smilo.BIP32;
 
   beforeEach(async(() => {
     passwordService = new MockPasswordService();
@@ -40,8 +36,6 @@ describe("WalletImportPassphrasePage", () => {
     navigationHelperService = new NavigationHelperService();
     bulkTranslateService = new MockBulkTranslateService();
     navParams = new MockNavParams();
-    bip39Service = new MockBIP39Service();
-    bip32Service = new MockBIP32Service();
 
     TestBed.configureTestingModule({
       declarations: [WalletImportPassphrasePage],
@@ -59,8 +53,6 @@ describe("WalletImportPassphrasePage", () => {
         { provide: WalletService, useValue: walletService },
         { provide: BulkTranslateService, useValue: bulkTranslateService },
         { provide: NavigationHelperService, useValue: navigationHelperService },
-        { provide: BIP39Service, useValue: bip39Service},
-        { provide: BIP32Service, useValue: bip32Service},
         { provide: FormBuilder, useClass: FormBuilder }
       ]
     }).compileComponents();
@@ -70,6 +62,11 @@ describe("WalletImportPassphrasePage", () => {
     fixture = TestBed.createComponent(WalletImportPassphrasePage);
     comp = fixture.componentInstance;
   });
+
+  beforeEach(() => {
+    bip39 = (<any>comp).bip39;
+    bip32 = (<any>comp).bip32;
+  })
 
   it("should create component", () => expect(comp).toBeDefined());
 
@@ -97,29 +94,21 @@ describe("WalletImportPassphrasePage", () => {
     expect(comp.passwordStatus).toEqual({type: "success"});
   });
 
-  it("should validate the passphrase when the passphrase is changed", (done) => {
-    let passphraseStatus: IPassphraseValidationResult = {isValid: true};
-    spyOn(bip39Service, "check").and.returnValue(Promise.resolve(passphraseStatus));
+  it("should validate the passphrase when the passphrase is changed", () => {
+    let passphraseStatus: Smilo.IPassphraseValidationResult = {isValid: true};
+    spyOn(bip39, "check").and.returnValue(passphraseStatus);
 
     comp.passphrase = "1 2 3 4 5 6";
 
-    comp.onPassphraseChanged().then(
-      () => {
-        expect(bip39Service.check).toHaveBeenCalledWith("1 2 3 4 5 6");
-        expect(comp.passphraseStatus).toEqual(passphraseStatus);
+    comp.onPassphraseChanged();
 
-        done();
-      },
-      (error) => {
-        expect(true).toBe(false, "Promise rejection should never be called");
-        done();
-      }
-    );
+    expect(bip39.check).toHaveBeenCalledWith("1 2 3 4 5 6");
+    expect(comp.passphraseStatus).toEqual(passphraseStatus);
   });
 
   it("should prepare the wallet correctly", () => {
-    spyOn(bip32Service, "getPrivateKey").and.returnValue("PRIVATE_KEY");
-    spyOn(bip39Service, "toSeed").and.returnValue("SEED");
+    spyOn(bip32, "getPrivateKey").and.returnValue("PRIVATE_KEY");
+    spyOn(bip39, "toSeed").and.returnValue("SEED");
 
     let keyStore: Smilo.IKeyStore = {
       cipher: "AES-CTR",
@@ -175,36 +164,27 @@ describe("WalletImportPassphrasePage", () => {
     );
   })
 
-  it("should detect correctly when the passphrase is invalid", (done) => {
-    let passphraseStatus: IPassphraseValidationResult = {
+  it("should detect correctly when the passphrase is invalid", () => {
+    let passphraseStatus: Smilo.IPassphraseValidationResult = {
       isValid: false,
       isBlocking: false,
-      errorMessage: "SOME ERROR"
+      errorMessage: "invalid_size"
     };
 
-    spyOn(bip39Service, "check").and.returnValue(Promise.resolve(passphraseStatus));
+    spyOn(bip39, "check").and.returnValue(passphraseStatus);
 
     comp.passphraseStatus = null;
     comp.passphrase = "passphrase";
 
-    comp.onPassphraseChanged().then(
-      () => {
-        expect(bip39Service.check).toHaveBeenCalledWith("passphrase");
+    comp.onPassphraseChanged();
 
-        expect(comp.passphraseStatus).toEqual({
-          isValid: false,
-          isBlocking: false,
-          errorMessage: "SOME ERROR"
-        });
+    expect(bip39.check).toHaveBeenCalledWith("passphrase");
 
-        done();
-      },
-      (error) => {
-        // Reject should never be called
-        expect(true).toBeFalsy();
-        done();
-      }
-    );
+    expect(comp.passphraseStatus).toEqual({
+      isValid: false,
+      isBlocking: false,
+      errorMessage: "invalid_size"
+    });
   });
 
   it("should detect correctly when the password is invalid", () => {

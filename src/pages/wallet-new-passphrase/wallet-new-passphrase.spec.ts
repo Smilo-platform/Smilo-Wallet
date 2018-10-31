@@ -5,22 +5,18 @@ import { MockNavController } from "../../../test-config/mocks/MockNavController"
 import { MockNavParams } from "../../../test-config/mocks/MockNavParams";
 import { TranslateModule, TranslateLoader, TranslateService } from "@ngx-translate/core";
 import { MockTranslationLoader } from "../../../test-config/mocks/MockTranslationLoader";
-import { IBIP39Service, BIP39Service } from "../../services/bip39-service/bip39-service";
-import { MockBIP39Service } from "../../../test-config/mocks/MockBIP39Service";
-import { HttpClient } from "@angular/common/http";
-import { MockTranslateService } from "../../../test-config/mocks/MockTranslateService";
 import { ComponentsModule } from "../../components/components.module";
 import { WalletNewPasswordPage } from "../wallet-new-password/wallet-new-password";
+import { BIP39 } from "@smilo-platform/smilo-commons-js-web";
 
 describe("WalletNewPassphrasePage", () => {
   let comp: WalletNewPassphrasePage;
   let fixture: ComponentFixture<WalletNewPassphrasePage>;
   let navController: MockNavController;
-  let bip39Service: IBIP39Service;
+  let bip39: BIP39;
 
   beforeEach(async(() => {
     navController = new MockNavController();
-    bip39Service = new MockBIP39Service();
 
     TestBed.configureTestingModule({
       declarations: [WalletNewPassphrasePage],
@@ -32,7 +28,6 @@ describe("WalletNewPassphrasePage", () => {
         ComponentsModule
       ],
       providers: [
-        { provide: BIP39Service, useValue: bip39Service },
         { provide: NavController, useValue: navController },
         { provide: NavParams, useValue: new MockNavParams() }
       ]
@@ -43,6 +38,10 @@ describe("WalletNewPassphrasePage", () => {
     fixture = TestBed.createComponent(WalletNewPassphrasePage);
     comp = fixture.componentInstance;
   });
+
+  beforeEach(() => {
+    bip39 = (<any>comp).bip39;
+  })
 
   it("should create component", () => expect(comp).toBeDefined());
 
@@ -55,24 +54,20 @@ describe("WalletNewPassphrasePage", () => {
     expect(comp.state).toBe("showPassphrase");
   });
 
-  it("should initialize correctly", (done) => {
-    spyOn(bip39Service, "generate").and.returnValue(
-      Promise.resolve("one two three four five six seven eight nine ten eleven twelve")
+  it("should initialize correctly", () => {
+    spyOn(bip39, "generate").and.returnValue(
+      "one two three four five six seven eight nine ten eleven twelve"
     );
 
-    comp.initialize().then(
-      () => {
-        expect(bip39Service.generate).toHaveBeenCalledWith(256);
+    comp.initialize();
 
-        expect(comp.words).toEqual(
-          [
-            "one", "two", "three", "four", "five", "six",
-            "seven", "eight", "nine", "ten", "eleven", "twelve"
-          ]
-        );
+    expect(bip39.generate).toHaveBeenCalledWith(256);
 
-        done();
-      }
+    expect(comp.words).toEqual(
+      [
+        "one", "two", "three", "four", "five", "six",
+        "seven", "eight", "nine", "ten", "eleven", "twelve"
+      ]
     );
   });
 

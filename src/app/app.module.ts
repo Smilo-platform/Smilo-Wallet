@@ -31,9 +31,7 @@ import { PasswordExplanationPage } from "../pages/password-explanation/password-
 import { PasswordExplanationPageModule } from "../pages/password-explanation/password-explanation.module";
 import { PasswordService } from "../services/password-service/password-service";
 import { SettingsService } from "../services/settings-service/settings-service";
-import { BIP39Service } from "../services/bip39-service/bip39-service";
 import { HockeyApp } from "ionic-hockeyapp";
-import { BIP32Service } from "../services/bip32-service/bip32-service";
 import { MerkleTreeService } from "../services/merkle-tree-service/merkle-tree-service";
 import { PrepareWalletPageModule } from "../pages/prepare-wallet/prepare-wallet.module";
 import { ComponentsModule } from "../components/components.module";
@@ -125,8 +123,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     BulkTranslateService,
     ExchangesService,
     AndroidPermissions,
-    BIP39Service,
-    BIP32Service,
     TransferTransactionService,
     Clipboard,
     WalletTransactionHistoryService,

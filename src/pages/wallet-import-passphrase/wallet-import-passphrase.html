@@ -73,7 +73,7 @@
         <div class="content-div" *ngIf="passphraseStatus && !passphraseStatus.isValid">
           <span [ngClass]="{'error-box': passphraseStatus.isBlocking, 'warning-box': !passphraseStatus.isBlocking}" 
                 class="error-box passphrase-message-box">
-            {{ passphraseStatus.errorMessage }}
+            {{ 'passphrase_messages.' + passphraseStatus.errorMessage | translate }}
           </span>
         </div>
 
