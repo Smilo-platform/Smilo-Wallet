@@ -3,9 +3,7 @@ import { IonicPage, NavController, NavParams } from "ionic-angular";
 import { PasswordService, IPasswordValidationResult } from "../../services/password-service/password-service";
 import { WalletService } from "../../services/wallet-service/wallet-service";
 import { NAVIGATION_ORIGIN_KEY } from "../wallet/wallet";
-import { BIP39Service, IPassphraseValidationResult } from "../../services/bip39-service/bip39-service";
 import { PrepareWalletPage } from "../prepare-wallet/prepare-wallet";
-import { BIP32Service } from "../../services/bip32-service/bip32-service";
 import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 import { WalletIndexValidator } from "../../validators/WalletIndexValidator";
 import * as Smilo from "@smilo-platform/smilo-commons-js-web";
@@ -21,7 +19,7 @@ export class WalletImportPassphrasePage {
   passwordConfirm: string = "";
   walletName: string = "";
 
-  passphraseStatus: IPassphraseValidationResult;
+  passphraseStatus: Smilo.IPassphraseValidationResult;
   passwordStatus: IPasswordValidationResult;
 
   showAdvanced: boolean = false;
@@ -30,14 +28,15 @@ export class WalletImportPassphrasePage {
 
   form: FormGroup;
 
+  private bip39: Smilo.BIP39 = new Smilo.BIP39();
+  private bip32: Smilo.BIP32 = new Smilo.BIP32();
+
   private encryptionHelper = new Smilo.EncryptionHelper();
 
   constructor(private navCtrl: NavController, 
               private navParams: NavParams,
               private passwordService: PasswordService,
               private walletService: WalletService,
-              private bip32Service: BIP32Service,
-              private bip39Service: BIP39Service,
               private formBuilder: FormBuilder) {
     this.form = this.formBuilder.group({
       passphrase: ["", Validators.compose([Validators.required])],
@@ -52,13 +51,9 @@ export class WalletImportPassphrasePage {
     this.passwordStatus = this.passwordService.validate(this.password, this.passwordConfirm);
   }
 
-  onPassphraseChanged(): Promise<void> {
+  onPassphraseChanged() {
     if (this.passphrase.length > 0) {
-      return this.bip39Service.check(this.passphrase).then(
-        (valid) => {
-          this.passphraseStatus = valid;
-        }
-      );
+      this.passphraseStatus = this.bip39.check(this.passphrase);
     } else {
       this.passphraseStatus = undefined;
     }
@@ -91,8 +86,8 @@ export class WalletImportPassphrasePage {
   }
 
   prepareWallet(): Smilo.ILocalWallet {
-    let seed = this.bip39Service.toSeed(this.passphrase);
-    let privateKey = this.bip32Service.getPrivateKey(seed, this.walletIndex);
+    let seed = this.bip39.toSeed(this.passphrase);
+    let privateKey = this.bip32.getPrivateKey(seed, this.walletIndex);
 
     // Create key store for private key
     let keyStore = this.encryptionHelper.createKeyStore(privateKey, this.password);

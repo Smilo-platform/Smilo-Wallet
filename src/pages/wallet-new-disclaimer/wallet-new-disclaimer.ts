@@ -3,8 +3,6 @@ import { IonicPage, NavController, NavParams } from "ionic-angular";
 import { WalletService } from "../../services/wallet-service/wallet-service";
 import { NAVIGATION_ORIGIN_KEY } from "../wallet/wallet";
 import { PrepareWalletPage } from "../prepare-wallet/prepare-wallet";
-import { BIP39Service } from "../../services/bip39-service/bip39-service";
-import { BIP32Service } from "../../services/bip32-service/bip32-service";
 import * as Smilo from "@smilo-platform/smilo-commons-js-web";
 
 @IonicPage()
@@ -25,12 +23,12 @@ export class WalletNewDisclaimerPage {
   walletName: string = "";
 
   private encryptionHelper = new Smilo.EncryptionHelper();
+  private bip39 = new Smilo.BIP39();
+  private bip32 = new Smilo.BIP32();
 
   constructor(public navCtrl: NavController, 
               public navParams: NavParams,
-              private walletService: WalletService,
-              private bip39Service: BIP39Service,
-              private bip32Service: BIP32Service) {
+              private walletService: WalletService) {
     this.passphrase = this.navParams.get("passphrase");
     this.password = this.navParams.get("password");
   }
@@ -61,8 +59,8 @@ export class WalletNewDisclaimerPage {
    * Prepares and returns the wallet based on the current passphrase and password.
    */
   prepareWallet(): Smilo.ILocalWallet {
-    let seed = this.bip39Service.toSeed(this.passphrase.join(" "));
-    let privateKey = this.bip32Service.getPrivateKey(seed);
+    let seed = this.bip39.toSeed(this.passphrase.join(" "));
+    let privateKey = this.bip32.getPrivateKey(seed);
 
     let wallet: Smilo.ILocalWallet = {
       id: this.walletService.generateId(),

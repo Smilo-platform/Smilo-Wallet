@@ -1,7 +1,8 @@
 import { Component, isDevMode } from "@angular/core";
 import { IonicPage, NavController, NavParams } from "ionic-angular";
 import { WalletNewPasswordPage } from "../wallet-new-password/wallet-new-password";
-import { BIP39Service } from "../../services/bip39-service/bip39-service";
+import { SmiloWallet } from "../../app/app.component";
+import * as Smilo from "@smilo-platform/smilo-commons-js-web";
 
 declare type State = "showPassphrase" | "enterPassphrase";
 
@@ -22,9 +23,10 @@ export class WalletNewPassphrasePage {
 
   resetClickCount: number = 0;
 
+  private bip39 = new Smilo.BIP39();
+
   constructor(public navCtrl: NavController, 
-              public navParams: NavParams,
-              private bip39Service: BIP39Service) {
+              public navParams: NavParams) {
     
   }
 
@@ -32,12 +34,8 @@ export class WalletNewPassphrasePage {
     this.initialize();
   }
 
-  initialize(): Promise<void> {
-    return this.bip39Service.generate(256).then(
-      (phrase) => {
-        this.words = phrase.split(" ");
-      }
-    );
+  initialize() {
+    this.words = this.bip39.generate(256).split(" ");
   }
 
   /**
