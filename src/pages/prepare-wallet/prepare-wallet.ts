@@ -65,6 +65,8 @@ export class PrepareWalletPage {
   selectedTheme: ThemeType;
 
   private encryptionHelper = new Smilo.EncryptionHelper();
+  private bip39 = new Smilo.BIP39();
+  private bip32 = new Smilo.BIP32();
 
   constructor(private navCtrl: NavController, 
               private navParams: NavParams,
@@ -231,11 +233,8 @@ export class PrepareWalletPage {
   }
 
   prepareWallet(walletName: string, walletIndex: number): Smilo.ILocalWallet {
-    let bip39 = new Smilo.BIP39();
-    let bip32 = new Smilo.BIP32();
-
-    let seed = bip39.toSeed(this.passphrase);
-    let privateKey = bip32.getPrivateKey(seed, walletIndex);
+    let seed = this.bip39.toSeed(this.passphrase);
+    let privateKey = this.bip32.getPrivateKey(seed, walletIndex);
 
     // Create key store for private key
     let keyStore = this.encryptionHelper.createKeyStore(privateKey, this.password);

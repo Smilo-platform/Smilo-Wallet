@@ -396,7 +396,7 @@ describe("TransferPage", () => {
         let tests: IValidatePaymentRequestTestVector[] = [
             {
                 paymentRequest: {
-                    receiveAddress: "S173C2LE2SULSN3XZPX5DIYCVL3SPY5VIC6SLG",
+                    receiveAddress: "d2+dr9T4+562ySMwKMnMmu3qpjaJ7VK2657SIqNm",
                     amount: "100",
                     assetId: "000x00123"
                 },
@@ -423,7 +423,7 @@ describe("TransferPage", () => {
             // Empty amount
             {
                 paymentRequest: {
-                    receiveAddress: "S173C2LE2SULSN3XZPX5DIYCVL3SPY5VIC6SLG",
+                    receiveAddress: "d2+dr9T4+562ySMwKMnMmu3qpjaJ7VK2657SIqNm",
                     amount: "",
                     assetId: "000x00123"
                 },
@@ -432,7 +432,7 @@ describe("TransferPage", () => {
             // Empty asset id
             {
                 paymentRequest: {
-                    receiveAddress: "S173C2LE2SULSN3XZPX5DIYCVL3SPY5VIC6SLG",
+                    receiveAddress: "d2+dr9T4+562ySMwKMnMmu3qpjaJ7VK2657SIqNm",
                     amount: "100",
                     assetId: ""
                 },

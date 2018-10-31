@@ -9,10 +9,6 @@ import { WalletService, IWalletService } from "../../services/wallet-service/wal
 import { MockWalletService } from "../../../test-config/mocks/MockWalletService";
 import { PrepareWalletPage } from "../prepare-wallet/prepare-wallet";
 import { NAVIGATION_ORIGIN_KEY } from "../wallet/wallet";
-import { IBIP32Service, BIP32Service } from "../../services/bip32-service/bip32-service";
-import { IBIP39Service, BIP39Service } from "../../services/bip39-service/bip39-service";
-import { MockBIP32Service } from "../../../test-config/mocks/MockBIP32Service";
-import { MockBIP39Service } from "../../../test-config/mocks/MockBIP39Service";
 import { ComponentsModule } from "../../components/components.module";
 import * as Smilo from "@smilo-platform/smilo-commons-js-web";
 
@@ -22,15 +18,13 @@ describe("WalletNewDisclaimerPage", () => {
   let navController: MockNavController;
   let navParams: NavParams;
   let walletService: IWalletService;
-  let bip32Service: IBIP32Service;
-  let bip39Service: IBIP39Service;
+  let bip39: Smilo.BIP39;
+  let bip32: Smilo.BIP32;
 
   beforeEach(async(() => {
     navController = new MockNavController();
     navParams = new MockNavParams();
     walletService = new MockWalletService();
-    bip32Service = new MockBIP32Service();
-    bip39Service = new MockBIP39Service();
 
     TestBed.configureTestingModule({
       declarations: [WalletNewDisclaimerPage],
@@ -44,9 +38,7 @@ describe("WalletNewDisclaimerPage", () => {
       providers: [
         { provide: WalletService, useValue: walletService },
         { provide: NavController, useValue: navController },
-        { provide: NavParams, useValue: navParams },
-        { provide: BIP32Service, useValue: bip32Service },
-        { provide: BIP39Service, useValue: bip39Service }
+        { provide: NavParams, useValue: navParams }
       ]
     }).compileComponents();
   }));
@@ -81,6 +73,11 @@ describe("WalletNewDisclaimerPage", () => {
     fixture = TestBed.createComponent(WalletNewDisclaimerPage);
     comp = fixture.componentInstance;
   });
+
+  beforeEach(() => {
+    bip39 = (<any>comp).bip39;
+    bip32 = (<any>comp).bip32;
+  })
 
   it("should create component", () => expect(comp).toBeDefined());
 
@@ -148,8 +145,8 @@ describe("WalletNewDisclaimerPage", () => {
   });
 
   it("should prepare the wallet correctly", () => {
-    spyOn(bip39Service, "toSeed").and.returnValue("SEED");
-    spyOn(bip32Service, "getPrivateKey").and.returnValue("PRIVATE_KEY");
+    spyOn(bip39, "toSeed").and.returnValue("SEED");
+    spyOn(bip32, "getPrivateKey").and.returnValue("PRIVATE_KEY");
 
     let dummyKeyStore: Smilo.IKeyStore = {
       cipher: "AES-CTR",
