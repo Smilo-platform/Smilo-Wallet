@@ -281,7 +281,8 @@ describe("WalletOverviewPage", () => {
         let dummyAddress: IAddress = {
             publickey: "PUBLIC_KEY",
             balances: {
-                "000x00123": new Smilo.FixedBigNumber(1000, 0)
+                "0x000000536d696c6f": new Smilo.FixedBigNumber(1000, 0),
+                "0x536d696c6f506179": new Smilo.FixedBigNumber(0, 18),
             },
             signatureCount: -1
         };
@@ -718,7 +719,8 @@ describe("WalletOverviewPage", () => {
         let dummyAddress: IAddress = {
             publickey: "PUBLIC_KEY",
             balances: {
-                "000x00123": new Smilo.FixedBigNumber(1000, 0)
+                "0x000000536d696c6f": new Smilo.FixedBigNumber(1000, 0),
+                "0x536d696c6f506179": new Smilo.FixedBigNumber(0, 18)
             },
             signatureCount: -1
         };

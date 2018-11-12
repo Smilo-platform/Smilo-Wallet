@@ -127,7 +127,7 @@ function getWalletFunds(publicKey) {
                     currentWalletFunds.push({symbol: key, amount: value});
                 }
             }
-            if (balances["000x00321"] === undefined) {
+            if (balances["0x536d696c6f506179"] === undefined) {
                 currentWalletFunds.push({symbol: "XSP", amount: 0});
             }
             setCurrentWalletFunds(currentWalletFunds);

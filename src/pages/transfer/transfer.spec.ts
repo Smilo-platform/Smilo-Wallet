@@ -338,7 +338,7 @@ describe("TransferPage", () => {
     });
 
     it("should create the transaction correctly", () => {
-        // This unit test is written to only support XSM (000x00123) right now.
+        // This unit test is written to only support XSM (0x000000536d696c6f) right now.
         comp.fromWallet = <Smilo.IWallet>{
             publicKey: "PUBLIC_KEY"
         };
@@ -351,7 +351,7 @@ describe("TransferPage", () => {
                 timestamp: jasmine.any(Number),
                 inputAddress: "PUBLIC_KEY",
                 fee: new Smilo.FixedBigNumber(0, 0),
-                assetId: "000x00123",
+                assetId: "0x000000536d696c6f",
                 inputAmount: new Smilo.FixedBigNumber("100", 0),
                 transactionOutputs: [
                     {
@@ -398,7 +398,7 @@ describe("TransferPage", () => {
                 paymentRequest: {
                     receiveAddress: "d2+dr9T4+562ySMwKMnMmu3qpjaJ7VK2657SIqNm",
                     amount: "100",
-                    assetId: "000x00123"
+                    assetId: "0x000000536d696c6f"
                 },
                 isValid: true
             },
@@ -407,7 +407,7 @@ describe("TransferPage", () => {
                 paymentRequest: {
                     receiveAddress: "",
                     amount: "100",
-                    assetId: "000x00123"
+                    assetId: "0x000000536d696c6f"
                 },
                 isValid: false
             },
@@ -416,7 +416,7 @@ describe("TransferPage", () => {
                 paymentRequest: {
                     receiveAddress: "SOME_ADDRESS",
                     amount: "100",
-                    assetId: "000x00123"
+                    assetId: "0x000000536d696c6f"
                 },
                 isValid: false
             },
@@ -425,7 +425,7 @@ describe("TransferPage", () => {
                 paymentRequest: {
                     receiveAddress: "d2+dr9T4+562ySMwKMnMmu3qpjaJ7VK2657SIqNm",
                     amount: "",
-                    assetId: "000x00123"
+                    assetId: "0x000000536d696c6f"
                 },
                 isValid: false
             },
@@ -666,7 +666,7 @@ describe("TransferPage", () => {
     it("should handle a QR scan result correctly", () => {
         let tests: IHandleCameraScanResultTestVector[] = [
             {
-                result: `{"receiveAddress": "PUBLIC_KEY", "amount": "100", "assetId": "000x00123"}`,
+                result: `{"receiveAddress": "PUBLIC_KEY", "amount": "100", "assetId": "0x000000536d696c6f"}`,
                 toPublicKey: "PUBLIC_KEY",
                 amount: "100",
                 chosenCurrency: "XSM",

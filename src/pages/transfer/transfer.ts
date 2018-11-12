@@ -255,7 +255,7 @@ export class TransferPage {
             timestamp: new Date().getTime(),
             inputAddress: this.fromWallet.publicKey,
             fee: new Smilo.FixedBigNumber(0, 0),
-            assetId: "000x00123",
+            assetId: "0x000000536d696c6f",
             inputAmount: new Smilo.FixedBigNumber(this.amount, 0), // TODO: base decimals on selected asset
             transactionOutputs: [
                 { 
@@ -403,7 +403,7 @@ export class TransferPage {
                 // We found a valid QR code
                 this.toPublicKey = paymentRequest.receiveAddress;
                 this.amount = paymentRequest.amount;
-                this.chosenCurrency = paymentRequest.assetId == "000x00123" ? "XSM" : "XSP";
+                this.chosenCurrency = paymentRequest.assetId == "0x000000536d696c6f" ? "XSM" : "XSP";
 
                 this.onAmountChanged();
             }

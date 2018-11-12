@@ -10,14 +10,14 @@ export class MockAssetService implements IAssetService {
     getAll(): Promise<IAsset[]> {
         let assets: IAsset[] = [
             {
-                address: "000x00123",
+                address: "0x000000536d696c6f",
                 totalSupply: 200000000,
                 name: "Smilo",
                 decimals: 0,
                 symbol: "XSM"
             },
             {
-                address: "000x00321",
+                address: "0x536d696c6f506179",
                 totalSupply: 200000000,
                 name: "SmiloPay",
                 decimals: 18,

@@ -29,7 +29,7 @@ export class AddressService implements IAddressService {
                     let emptyAddress: IAddress = {
                         publickey: address,
                         balances: {
-                            "000x00123": new Smilo.FixedBigNumber(0, 0)
+                            "0x000000536d696c6f": new Smilo.FixedBigNumber(0, 0)
                         },
                         signatureCount: -1
                     }

@@ -51,7 +51,7 @@ export class RequestPage {
         let paymentRequest: IPaymentRequest = {
             receiveAddress: this.fromWallet.publicKey,
             amount: this.amount, 
-            assetId: "000x00123"
+            assetId: "0x000000536d696c6f"
         };
 
         let modal = this.modalController.create(

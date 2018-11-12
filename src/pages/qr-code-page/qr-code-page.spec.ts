@@ -48,7 +48,7 @@ describe("QrCodePage", () => {
         let paymentRequest: IPaymentRequest = {
             receiveAddress: "ADDRESS",
             amount: "1000",
-            assetId: "000x00123"
+            assetId: "0x000000536d696c6f"
         };
         let element = document.createElement("div");
 
@@ -60,7 +60,7 @@ describe("QrCodePage", () => {
         comp.ionViewDidLoad();
 
         expect(qrGeneratorService.generate).toHaveBeenCalledWith(
-            `{"receiveAddress":"ADDRESS","amount":"1000","assetId":"000x00123"}`,
+            `{"receiveAddress":"ADDRESS","amount":"1000","assetId":"0x000000536d696c6f"}`,
             element
         );
     });

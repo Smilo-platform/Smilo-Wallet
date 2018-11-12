@@ -105,7 +105,7 @@ describe("RequestPage", () => {
                 paymentRequest: {
                     receiveAddress: "PUBLIC_KEY",
                     amount: "100",
-                    assetId: "000x00123"
+                    assetId: "0x000000536d696c6f"
                 }
             },
             {

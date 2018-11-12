@@ -46,7 +46,7 @@ export class WalletOverviewPage {
      */
     pickedCurrency: string;
     /**
-     * The picked exchange to show 
+     * The picked exchange to show
      */
     pickedExchange: string;
     /**
@@ -280,7 +280,7 @@ export class WalletOverviewPage {
     openTransferPage(): void {
         this.navCtrl.push(TransferPage, { currentWallet: this.currentWallet, currentWalletBalance: this.balances });
     }
-    
+
     /**
      * Open the request page
      */
@@ -532,7 +532,7 @@ export class WalletOverviewPage {
 
     /**
      * Retrieves the transaction history for the current wallet
-     * @param publicKey 
+     * @param publicKey
      */
     getTransactionHistory(publicKey: string): Promise<void> {
         return this.transactionHistoryService.getTransactionHistory(publicKey, 0, 10, true).then(data => {
@@ -582,10 +582,10 @@ export class WalletOverviewPage {
             (address) => {
                 this.balances = [
                     {
-                        currency: "XSM", amount: address.balances["000x00123"], valueAmount: address.balances["000x00123"]
+                        currency: "XSM", amount: address.balances["0x000000536d696c6f"], valueAmount: address.balances["0x000000536d696c6f"]
                     },
                     {
-                        currency: "XSP", amount: new Smilo.FixedBigNumber(0, 18), valueAmount: new Smilo.FixedBigNumber(0, 18)
+                        currency: "XSP", amount: address.balances["0x536d696c6f506179"], valueAmount: address.balances["0x536d696c6f506179"]
                     }
                 ];
 
@@ -681,7 +681,7 @@ export class WalletOverviewPage {
                             found = true;
                         }
                     }
-                    
+
                     if (found) {
                         totalValue = totalValue.add(currentCurrencyValue);
 

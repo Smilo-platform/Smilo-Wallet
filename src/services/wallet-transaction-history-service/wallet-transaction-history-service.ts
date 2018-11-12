@@ -31,8 +31,8 @@ export class WalletTransactionHistoryService implements IWalletTransactionHistor
     }
 
     private prepareTransaction(transaction: Smilo.ITransaction): void {
-        transaction.fee = this.assetService.prepareBigNumber(<any>transaction.fee, "000x00123");
-        transaction.inputAmount = this.assetService.prepareBigNumber(<any>transaction.inputAmount, "000x00123");
+        transaction.fee = this.assetService.prepareBigNumber(<any>transaction.fee, "0x000000536d696c6f");
+        transaction.inputAmount = this.assetService.prepareBigNumber(<any>transaction.inputAmount, "0x000000536d696c6f");
         
         transaction.transactionOutputs.forEach(
             output => this.prepareTransactionOutput(transaction.assetId, output)
