@@ -8,7 +8,7 @@ export interface IUrlService {
 export class UrlService implements IUrlService {
     readonly productionBaseUrl: string = "https://prototype-api.smilo.network";
     // readonly developmentBaseUrl: string = "https://quakechain.smilo.network";
-    readonly developmentBaseUrl: string = "http://localhost:8080";
+    readonly developmentBaseUrl: string = "http://localhost:8090";
 
     constructor() {}
 

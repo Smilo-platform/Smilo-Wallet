@@ -111,21 +111,21 @@ export class TransactionSignService implements ITransactionSignService {
         // Make sure a dataHash is set and is not empty
         if(!transaction.dataHash)
             return false;
-console.log("1");
+
         // Make sure the dataHash is correct
         if(transaction.dataHash != this.transactionHelper.getDataHash(transaction))
             return false;
-console.log("2");
+
         // Make sure the input address is correct
         if(!this.addressHelper.isValidAddress(transaction.inputAddress))
             return false;
-console.log("3");
+
         // Make sure the output addresses are correct
         for(let output of transaction.transactionOutputs) {
             if(!this.addressHelper.isValidAddress(output.outputAddress))
                 return false;
         }
-console.log("4");
+
         // Make sure the input and outputs are zero sum
         let outputSum = transaction.transactionOutputs.reduce(
             (previous, current) => previous.add(current.outputAmount),
@@ -133,18 +133,18 @@ console.log("4");
         );
         if(!outputSum.eq(transaction.inputAmount))
             return false;
-console.log("5");
+
         // Make sure the signature is correct
-        // if(!this.merkleLamportVerifier.verifyMerkleSignature(
-        //     this.transactionHelper.transactionToString(transaction),
-        //     transaction.signatureData,
-        //     transaction.signatureIndex,
-        //     this.addressHelper.getLayerCount(transaction.inputAddress),
-        //     transaction.inputAddress
-        // )) {
-        //     return false;
-        // }
-console.log("6");
+        if(!this.merkleLamportVerifier.verifyMerkleSignature(
+            this.transactionHelper.transactionToString(transaction),
+            transaction.signatureData,
+            transaction.signatureIndex,
+            this.addressHelper.getLayerCount(transaction.inputAddress),
+            transaction.inputAddress
+        )) {
+            return false;
+        }
+
         // TODO: check if the coins can actually be spent
 
         return true;

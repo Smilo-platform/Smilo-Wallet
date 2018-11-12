@@ -338,7 +338,7 @@ describe("TransferPage", () => {
     });
 
     it("should create the transaction correctly", () => {
-        // This unit test is written to only support XSM (0x000000536d696c6f) right now.
+        // This unit test is written to only support XSM (0x536d696c6f506179) right now.
         comp.fromWallet = <Smilo.IWallet>{
             publicKey: "PUBLIC_KEY"
         };
@@ -351,12 +351,13 @@ describe("TransferPage", () => {
                 timestamp: jasmine.any(Number),
                 inputAddress: "PUBLIC_KEY",
                 fee: new Smilo.FixedBigNumber(0, 0),
-                assetId: "0x000000536d696c6f",
-                inputAmount: new Smilo.FixedBigNumber("100", 0),
+                assetId: "0x536d696c6f506179",
+                inputData: "",
+                inputAmount: new Smilo.FixedBigNumber("100", 18),
                 transactionOutputs: [
                     {
                         outputAddress: "TO_PUBLIC_KEY",
-                        outputAmount: new Smilo.FixedBigNumber("100", 0)
+                        outputAmount: new Smilo.FixedBigNumber("100", 18)
                     }
                 ],
                 dataHash: jasmine.any(String)
@@ -373,7 +374,7 @@ describe("TransferPage", () => {
 
         comp.fromWallet = wallet;
         comp.password = password;
-        
+
         comp.signTransaction(transaction).then(
             () => {
                 expect(transactionSignService.sign).toHaveBeenCalledWith(
@@ -544,7 +545,7 @@ describe("TransferPage", () => {
             // Use denied camera access just this once
             {
                 prepareResult: <QRScannerStatus>{
-                    
+
                 },
                 toastMessage: "transfer.scanner.access_denied"
             },
