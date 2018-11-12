@@ -537,6 +537,14 @@ export class WalletOverviewPage {
     getTransactionHistory(publicKey: string): Promise<void> {
         return this.transactionHistoryService.getTransactionHistory(publicKey, 0, 10, true).then(data => {
             this.transactionsHistory = data.transactions;
+            this.transactionsHistory.forEach (
+              history => {
+                if (history.assetId === "0x000000536d696c6f") { history.assetId = "XSM";}
+                else if (history.assetId === "0x536d696c6f506179") { history.assetId = "XSP";}
+                else { history.assetId = "UNKNOWN";} 
+              }
+            )
+            console.log(this.transactionsHistory)
             if (this.transactionsHistory.length > 0) {
                 this.noTransactionHistoryVisibility = "hidden";
                 this.transactionHistoryVisibility = "shown";

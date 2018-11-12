@@ -153,33 +153,28 @@ export class TransferPage {
         if (!this.toPublicKey || this.toPublicKey === "") {
             return false;
         }
-
         // Check if amount is set
         if (!this.amount || this.amount.toString() === "") {
             return false;
-        } 
-
+        }
         // Check if amount is a valid number
         // TODO: make generic e.g. take selected asset into account
-        if(!new Smilo.FixedBigNumber(this.amount, 0).isValid()) {
+        if(!new Smilo.FixedBigNumber(this.amount, 18).isValid()) {
             return false;
         }
-
         // Check if user has enough funds
         if (!this.enoughFunds) {
             return false;
-        } 
-
+        }
         // Make sure we are not sending to our own wallet
         if (this.toPublicKey === this.fromWallet.publicKey) {
             return false;
-        } 
-
+        }
         // Make sure password has been entered
         if (this.password === undefined || this.password === "") {
             return false;
-        } 
-        
+        }
+
         return true;
     }
 
@@ -194,10 +189,10 @@ export class TransferPage {
 
         if (this.amount === undefined || this.amount.toString() === "") {
             this.enoughFunds = undefined;
-        } 
+        }
         else if (this.chosenCurrencyAmount.gte(this.amount)) {
             this.enoughFunds = true;
-        } 
+        }
         else {
             this.enoughFunds = false;
         }
@@ -205,12 +200,12 @@ export class TransferPage {
 
     transfer(): Promise<void> {
         this.resetTransferState();
-        
+
         this.isTransferring = true;
         this.statusMessage = this.translations.get("transfer.signing_transaction");
 
         let transaction = this.createTransaction();
-        
+
         return this.signTransaction(transaction).then(
             () => this.transferTransactionService.sendTransaction(transaction)
         ).then(
@@ -255,12 +250,13 @@ export class TransferPage {
             timestamp: new Date().getTime(),
             inputAddress: this.fromWallet.publicKey,
             fee: new Smilo.FixedBigNumber(0, 0),
-            assetId: "0x000000536d696c6f",
-            inputAmount: new Smilo.FixedBigNumber(this.amount, 0), // TODO: base decimals on selected asset
+            assetId: "0x536d696c6f506179",
+            inputData: "",
+            inputAmount: new Smilo.FixedBigNumber(this.amount, 18), // TODO: base decimals on selected asset
             transactionOutputs: [
-                { 
-                    outputAddress: this.toPublicKey, 
-                    outputAmount: new Smilo.FixedBigNumber(this.amount, 0) // TODO: base decimals on selected asset
+                {
+                    outputAddress: this.toPublicKey,
+                    outputAmount: new Smilo.FixedBigNumber(this.amount, 18) // TODO: base decimals on selected asset
                 }
             ]
         };
@@ -338,7 +334,7 @@ export class TransferPage {
                             (text) => {
                                 // Browser platforms for some reason return an object and not the text...
                                 text = (<any>text).result || text;
-    
+
                                 this.zone.run(
                                     () => {
                                         this.handleCameraScanResult(text);
@@ -348,7 +344,7 @@ export class TransferPage {
                                 );
                             }
                         );
-    
+
                         this.showCamera();
                     });
                 }

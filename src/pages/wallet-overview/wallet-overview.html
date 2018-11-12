@@ -98,11 +98,11 @@
                             <ion-icon class="copy-publickey" name="copy" item-end></ion-icon>
                             <ion-label>{{ 'wallet_overview.copy_public_key' | translate }}</ion-label>
                         </button>
-                    
+
                         <button detail-none ion-item (click)="deleteWallet()">
                             <ion-icon class="delete-wallet" name="trash" item-end></ion-icon>
                             <ion-label>{{ 'wallet_overview.delete_wallet' | translate }}</ion-label>
-                        </button>  
+                        </button>
                     </ion-list>
                 </ion-card>
                 <h4 class="margin-header">{{ 'wallet_overview.transactions_history' | translate }}</h4>
@@ -117,15 +117,15 @@
                                     {{ (transaction.blockIndex == -1 ? 'wallet_overview.pending' : 'wallet_overview.confirmed') | translate }}
                                 </p>
                                 <p class="transaction-date">{{ transaction.timestamp | date:'MMM d, y, h:mm:ss a' }}</p>
-                                
+
                                 <h2 class="transaction-from">{{ transaction.inputAddress }}</h2>
                                 <div class="transaction-list-div-amount">
-                                    <ion-icon [ngClass]="{'greenColor': transaction.inputAddress !== currentWallet.publicKey, 
+                                    <ion-icon [ngClass]="{'greenColor': transaction.inputAddress !== currentWallet.publicKey,
                                                         'redColor': transaction.inputAddress === currentWallet.publicKey }"
-                                            class="transaction-arrow" 
+                                            class="transaction-arrow"
                                             [name]="transaction.inputAddress !== currentWallet.publicKey ? 'arrow-back' :'arrow-forward'">
                                     </ion-icon>
-                                    <h3 class="transaction-list-amount">{{ transaction.transactionOutputs[0].outputAmount }} XSM</h3>
+                                    <h3 class="transaction-list-amount">{{ transaction.transactionOutputs[0].outputAmount }} {{ transaction.assetId }}</h3>
                                 </div>
                                 <p class="transaction-to">{{ transaction.transactionOutputs[0].outputAddress }}</p>
                             </ion-item>
