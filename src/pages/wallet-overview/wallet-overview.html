@@ -125,9 +125,11 @@
                                             class="transaction-arrow"
                                             [name]="transaction.inputAddress !== currentWallet.publicKey ? 'arrow-back' :'arrow-forward'">
                                     </ion-icon>
-                                    <h3 class="transaction-list-amount">{{ transaction.transactionOutputs[0].outputAmount }} {{ transaction.assetId }}</h3>
+                                    <h3 *ngIf="transaction.transactionOutputs.length > 0" class="transaction-list-amount">{{ transaction.transactionOutputs[0].outputAmount }} {{ transaction.assetId }}</h3>
+                                    <h3 *ngIf="transaction.transactionOutputs.length == 0" class="transaction-list-amount">0 {{ transaction.assetId }}</h3>
                                 </div>
-                                <p class="transaction-to">{{ transaction.transactionOutputs[0].outputAddress }}</p>
+                                <p *ngIf="transaction.transactionOutputs.length > 0" class="transaction-to">{{ transaction.transactionOutputs[0].outputAddress }}</p>
+                                <p *ngIf="transaction.transactionOutputs.length == 0" class="transaction-to">{{ transaction.contractAddress }}</p>
                             </ion-item>
                         </ion-list>
                     </ion-card-header>
