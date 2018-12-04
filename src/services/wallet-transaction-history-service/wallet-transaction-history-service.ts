@@ -21,7 +21,7 @@ export class WalletTransactionHistoryService implements IWalletTransactionHistor
         ).toPromise().then(
             (result) => {
                 // Convert string big integer to true big number
-                for(let transaction of result.transactions) {
+                for(let transaction of result.content) {
                     this.prepareTransaction(transaction);
                 }
 

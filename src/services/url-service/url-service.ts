@@ -7,8 +7,8 @@ export interface IUrlService {
 @Injectable()
 export class UrlService implements IUrlService {
     readonly productionBaseUrl: string = "https://prototype-api.smilo.network";
-    // readonly developmentBaseUrl: string = "https://quakechain.smilo.network";
-    readonly developmentBaseUrl: string = "http://localhost:8085";
+    readonly developmentBaseUrl: string = "https://quakechain.smilo.network";
+    // readonly developmentBaseUrl: string = "http://localhost:8085";
 
     constructor() {}
 

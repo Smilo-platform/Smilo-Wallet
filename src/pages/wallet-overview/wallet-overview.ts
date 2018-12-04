@@ -536,7 +536,7 @@ export class WalletOverviewPage {
      */
     getTransactionHistory(publicKey: string): Promise<void> {
         return this.transactionHistoryService.getTransactionHistory(publicKey, 0, 10, true).then(data => {
-            this.transactionsHistory = data.transactions;
+            this.transactionsHistory = data.content;
             console.log(this.transactionsHistory);
             this.transactionsHistory.forEach (
                 history => {
